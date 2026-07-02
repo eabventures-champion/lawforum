@@ -340,16 +340,16 @@
                                     </form>
                                 </div>
                             </div>
+                            <div class="card mt-3">
+                              @include('ads.small_ads_image_table_of_content')
+                           </div>
                         </div>
                     </div>
-                
-
             </div>
-
         </div>
 
         {{-- <div class="col-md-3 content_container p-3 bg-white rounded shadow-sm"></div> --}}
-        <div class="col-md-3 content_container">
+        <div class="col-md-3 content_container p-3 bg-white rounded shadow-sm">
           @include('ads.adsense_vertical')
         </div>
 

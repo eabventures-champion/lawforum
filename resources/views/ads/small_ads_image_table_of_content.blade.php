@@ -1,0 +1,1 @@
+<img src="{{ asset('home_background/2.jpg') }}" class="card-img-top" alt="...">

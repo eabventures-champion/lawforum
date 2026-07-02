@@ -1,0 +1,1 @@
+<img src="{{ asset('home_background/sms.jpg') }}" class="card-img-top" alt="...">

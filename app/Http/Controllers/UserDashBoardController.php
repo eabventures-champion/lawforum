@@ -44,7 +44,15 @@ class UserDashBoardController extends Controller
             }  
         else{
             $user_bookmark = UserBookmark::Create(
-                ['user_section' => $user_section, 'act_title' => $act, 'act_section' => $section, 'user_name' => $user_name, 'user_id' => $user_id, 'section_id' => $section_id, 'act_id' => $act_id, 'act_group' => $act_group]
+                [
+                    'user_section' => $user_section, 
+                    'act_title' => $act, 
+                    'act_section' => $section, 
+                    'user_name' => $user_name, 
+                    'user_id' => $user_id, 
+                    'section_id' => $section_id, 
+                    'act_id' => $act_id, 
+                    'act_group' => $act_group]
                 );  
             }
             $user_bookmark->save();           

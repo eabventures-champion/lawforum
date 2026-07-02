@@ -592,17 +592,15 @@
                                 @endforeach  
                               </tbody>
                           </table>
-                          </div>
-                          
+                          </div>  
                       </div>
                     </div>
                   </div>
-        
             </div>
         </div>
 
         {{-- For ads --}}
-        <div class="col-md-3 fixing_top">
+        <div class="col-md-3 fixing_top p-3 bg-white rounded shadow-sm">
           @include('ads.content_adsense_vertical')
         </div>
         

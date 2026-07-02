@@ -19,7 +19,8 @@ class NewsController extends Controller
         // $newsContents          = NewsContent::where(['news_category' => $category])->orderBy('created_at', 'desc')->paginate(5); 
         $carouselSelectors         = NewsContent::where(['news_category' => $category])->orderBy('created_at', 'desc')->paginate(5);
         $newsSelectors         = NewsContent::where(['news_category' => $category])->orderBy('created_at', 'desc')->paginate(7);
-        return view('news.ghana_news_homepage', compact('newsCategories','newsContents','latestNewsContents','newsSelectors','newscategory','carouselSelectors'));
+        // return view('news.ghana_news_homepage', compact('newsCategories','latestNewsContents','newsSelectors','newscategory','carouselSelectors'));
+        return view('news.coming_soon');
         // return view('news.news_category', compact('newsCategories','newsContents','latestNewsContents','newsSelectors','newscategory'));
     }
 

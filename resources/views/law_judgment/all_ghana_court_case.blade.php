@@ -522,7 +522,8 @@
         </div>
 
         {{-- Reserved Sidebar for Adsense --}}
-        <div class="col-md-3 fixing_top">
+        <div class="col-md-3 fixing_top p-3 bg-white rounded shadow-sm">
+        {{-- <div class="col-md-3 fixing_top p-3 bg-white rounded shadow-sm"> --}}
           @include('ads.content_adsense_vertical')
         </div>
         
@@ -530,13 +531,6 @@
     </div>
     
 </div>
-
-
-
-
-
-
-
 
 <script src="{{ asset('js/jquery.min.js') }}"></script>
 {{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}

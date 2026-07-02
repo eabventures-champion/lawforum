@@ -86,6 +86,7 @@
                 <a href="/" class="">
                     <img src="{{ asset('/logo/lawsghlog.png') }}" class="img-responsive" style="width:12em; padding-top: 1px; padding-bottom:1px;padding-left:1px;"> 
                 </a>
+                {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#subscribe">Healing Streams</button> --}}
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>

@@ -6,8 +6,6 @@
     
 @endsection
 
-
-
 @section('content')
 
     <!-- The Carousel Part 1 -->

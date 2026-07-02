@@ -79,8 +79,10 @@
         {{ csrf_field() }}
             <input style="padding: 13px;" class="form-control" name="search_text" type="text" placeholder="Word-search" aria-label="Search">
       </form>
-        
       </div>
+    </div>
+    <div class="card mt-3">
+      @include('ads.small_ads_image_content')
     </div>
   </div>
         @include('layouts.plain_view_no_subscription')

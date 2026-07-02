@@ -43,19 +43,13 @@
 @section('content')
 <header>
   <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-    
     <div class="carousel-indicators">
-      {{-- <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-      <li data-target="#carouselExampleIndicators" data-slide-to="3"></li> --}}
       <form action="{{ url('main_home_search') }}" method="GET">
         {{ csrf_field() }}
         <div class="input-group">         
-          <input style="font-size:12pt;height:35px;width:350px;" type="text" class="form-control border border-dark rounded-lg" name="search_text" placeholder="Search any law or case in Ghana...">
+          <input style="font-size:12pt; height:35px; width:350px;" type="text" class="form-control border border-dark rounded-lg" name="search_text" placeholder="Search any law or case in Ghana...">
         </div>
       </form>
-    
     </div>
   
     <div class="carousel-inner" role="listbox">
@@ -97,13 +91,12 @@
           <span class="sr-only">Next</span>
     </a> --}}
   </div>
+  @include('ads.manual_ads_homepage_popup')
 </header>
-
 <!-- Page Content -->
 <section class="pt-1">
   <div class="container-fluid mb-0 mt-0">
     <div class="pricing card-deck flex-column flex-md-row mb-0">
-        {{-- @foreach($subscriptions as $subscription) --}}
         <div class="card card-pricing text-center pt-1 mb-0">
             <span class="h5 w-60 mx-auto px-4 py-1 rounded-bottom text-primary shadow-sm"><a href="/constitution/Republic/Ghana/1"><b>Constitution</b></a></span>
             <a href="/constitution/Republic/Ghana/1">
@@ -114,7 +107,6 @@
             </div>
             </a>
         </div>
-        {{-- @endforeach --}}
         <div class="card card-pricing text-center pt-1 mb-0">
           <span class="h5 w-60 mx-auto px-4 py-1 rounded-bottom text-primary shadow-sm"><a href="/pre-1992-legislation"><b>Old Laws</b></a></span>
           <a href="/pre-1992-legislation">
@@ -147,21 +139,27 @@
         </div>
         <div class="card card-pricing text-center pt-1 mb-0">
           <span class="h5 w-60 mx-auto px-4 py-1 rounded-bottom text-primary shadow-sm"><a href="/News/Ghana-News/1"><b>News</b></a></span>
+          {{-- <span class="h5 w-60 mx-auto px-4 py-1 rounded-bottom text-primary shadow-sm"><b>News</b></span> --}}
           <a href="/News/Ghana-News/1">
           <div class="card-body pt-0">
               <ul class="list-unstyled mb-0 text-dark">
                   <li><b>Access relevant legal and business news content in Ghana, Africa, Asia, Europe and America</b></li>
               </ul>
           </div>
-          </a>
+          {{-- </a> --}}
         </div>
       
     </div>
   </div>
 </section>
-
 @endsection
 
-@section('content')
-  <script src="{{ asset('js/jquery-3.0.0.js') }}"></script>
+@section('scripts')
+  {{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
+  {{-- <script src="{{ asset('js/jquery-3.0.0.js') }}"></script> --}}
+  <script>
+    $(document).ready(function(){
+      $('#exampleModal').modal('show');
+    });
+  </script>
 @endsection

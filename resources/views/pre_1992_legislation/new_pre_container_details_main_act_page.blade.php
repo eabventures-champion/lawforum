@@ -70,16 +70,11 @@
               Expanded View
           </button>
         <div>
-          
-        </center>
-          
-
-
-          
-
-          
-                
+        </center>                
       </div>
+    </div>
+    <div class="card mt-3">
+      @include('ads.small_ads_image_content')
     </div>
   </div>
         

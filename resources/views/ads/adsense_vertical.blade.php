@@ -1,3 +1,5 @@
+@include('ads.manual_ads_main_page')
+  
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Lawsghana_sidebar -->
 <ins class="adsbygoogle"
@@ -10,7 +12,6 @@
 <script>
     (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
-
 <br>
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -25,7 +26,6 @@
 <script>
     (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
-
 <br>
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>

@@ -18,9 +18,9 @@
         .pricing_text_color{
             color: #396871;
         }
-        
+
     </style>
-    
+
 @endsection
 
 @section('scripts_first')
@@ -36,7 +36,7 @@
 @section('content')
 
 <div class="container mb-1 mt-customised">
-    <h1 class="text-muted text-center mb-3">Choose your package</h1>
+    <h1 class="text-muted text-center mb-3">Downloads are not available</h1>
     <div class="pricing card-deck flex-column flex-md-row mb-3">
         {{-- STARTER --}}
         @foreach($subscriptions as $subscription)
@@ -50,7 +50,7 @@
                         <li>{{$subscription->general_notes}}</li>
                         <li>{{$subscription->specific_notes}}</li>
                     </ul>
-                    <button type="button" class="btn btn-outline-secondary mb-3" onClick="makePayment({{$subscription->id}}, {{$subscription->price}})">Subscribe</button>
+                    {{-- <button type="button" class="btn btn-outline-secondary mb-3" onClick="makePayment({{$subscription->id}}, {{$subscription->price}})">Subscribe</button> --}}
                 </div>
             </div>
         @endforeach
@@ -64,58 +64,58 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script>
-    function makePayment(subscription, amount) {
-        var name = '{{ Auth::user()->name }}';
-        var email = '{{ Auth::user()->email }}';
-        var phone = '{{ Auth::user()->phone }}';
+        function makePayment(subscription, amount) {
+            var name = '{{ Auth::user()->name }}';
+            var email = '{{ Auth::user()->email }}';
+            var phone = '{{ Auth::user()->phone }}';
 
-        FlutterwaveCheckout({
-        public_key: "FLWPUBK-8f9fbb57646670b5149ef0af2fd24834-X",
-        //local key
-        // public_key: "FLWPUBK_TEST-504cb06bb23964c64b49447c1ea7fd50-X",
-        tx_ref: "hooli-tx-1920bbtyt",
-        amount: amount,
-        currency:"GHS",
-        payment_options: "card,mobilemoney,ussd",
-        meta: {
-            consumer_id: "{{ Auth::user()->id }}",
-            consumer_mac: "92a3-912ba-1192a",
-        },
-        customer: {
-            email:email,
-            phone_number: phone,
-            name: name,
-        },
-        callback: function (data) {
-            console.log(data);
-
-            $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.ajax({
-            url:"/process/" +subscription,
-            type:'GET',
-            success:function(data){
-                //redirect to articles page
-                window.location.href = "/";
-                alert('Your subscription Package is activated');
+            FlutterwaveCheckout({
+            public_key: "FLWPUBK-8f9fbb57646670b5149ef0af2fd24834-X",
+            //local key
+            // public_key: "FLWPUBK_TEST-504cb06bb23964c64b49447c1ea7fd50-X",
+            tx_ref: "hooli-tx-1920bbtyt",
+            amount: amount,
+            currency:"GHS",
+            payment_options: "card,mobilemoney,ussd",
+            meta: {
+                consumer_id: "{{ Auth::user()->id }}",
+                consumer_mac: "92a3-912ba-1192a",
             },
-            error: function(){
-                //do something when there is an error
-                alert('Something went wrong. Please try again');
+            customer: {
+                email:email,
+                phone_number: phone,
+                name: name,
             },
-         });
-        },
-        customizations: {
-            title: "My package",
-            description: "Payment for items in cart",
-            // logo: "https://assets.piedpiper.com/logo.png",
-            // logo: "{{ asset('/logo/lawsghlog.png') }}"
-        },
-        });
-    }
+            callback: function (data) {
+                console.log(data);
+
+                $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                url:"/process/" +subscription,
+                type:'GET',
+                success:function(data){
+                    //redirect to articles page
+                    window.location.href = "/";
+                    alert('Your subscription Package is activated');
+                },
+                error: function(){
+                    //do something when there is an error
+                    alert('Something went wrong. Please try again');
+                },
+            });
+            },
+            customizations: {
+                title: "My package",
+                description: "Payment for items in cart",
+                // logo: "https://assets.piedpiper.com/logo.png",
+                // logo: "{{ asset('/logo/lawsghlog.png') }}"
+            },
+            });
+        }
     </script>
 @endsection

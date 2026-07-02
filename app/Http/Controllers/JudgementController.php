@@ -22,9 +22,7 @@ class JudgementController extends Controller
         // return view('law_judgment.ghana_law_judgments', compact('footer_notes','ghlawjudgments', 'ghcategories'));
         // return view('law_judgment.ghana_law_judgments_b4', compact('footer_notes','ghlawjudgments', 'ghcategories'));
         return view('layouts.app_main_header', compact('footer_notes','ghlawjudgments', 'ghcategories'));
-
     }
-    
     
     //ALL GHANA LAW JUDGMENT FILTERING
     public function all_judgment_filter($year, $category){

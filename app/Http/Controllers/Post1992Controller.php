@@ -133,10 +133,7 @@ class Post1992Controller extends Controller
 
         //     ])->toArray()[0];
 
-        $allPostArticles1      = Post1992Article::where(
-            [
-                'post_act' => $title
-                ])->get();
+        $allPostArticles1      = Post1992Article::where(['post_act' => $title])->get();
 
         $unique                = $allPostArticles1->sortBy('part')->sortBy('priority');
         $allPost1992Articles   = $unique;    
