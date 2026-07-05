@@ -14,6 +14,10 @@ use Carbon\Carbon;
 
 class UserDashBoardController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth', 'verified']);
+    }
     //----------------------------------------------------------Dashboard-------------------------------------------------------------
     public function dashboard(){
         return view('user_dashboard.dashboard');

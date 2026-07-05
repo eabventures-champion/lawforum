@@ -1,60 +1,89 @@
-@extends('layouts.app_logout_only')
+@extends('layouts.user')
+
+@section('title', 'Change Password')
 
 @section('content')
+<div class="content-card">
+    <h1 class="card-title">Security & Password</h1>
+    <p class="card-subtitle">Ensure your account remains secure by updating your password credentials regularly.</p>
 
-<div class="container mt-customised">
-
-        <div id="app">
-            @include('flash-message')
-            @yield('content')
+    <!-- Alert Banners -->
+    @if(session('success'))
+        <div class="alert-banner alert-banner-success">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>{{ session('success') }}</span>
         </div>
+    @endif
 
-        @include('user_dashboard.accounts_dropdown')
-
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Change Password</div>
-                <div class="card-body">
-                    <form method="POST" action="{{ route('change.password') }}">
-                        @csrf 
-                         @foreach ($errors->all() as $error)
-                            <p class="text-danger">{{ $error }}</p>
-                         @endforeach 
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">Current Password</label>
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="current_password" autocomplete="current-password">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">New Password</label>
-                            <div class="col-md-6">
-                                <input id="new_password" type="password" class="form-control" name="new_password" autocomplete="current-password">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">New Confirm Password</label>
-                            <div class="col-md-6">
-                                <input id="new_confirm_password" type="password" class="form-control" name="new_confirm_password" autocomplete="current-password">
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Update Password
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+    @if ($errors->any())
+        <div class="alert-banner alert-banner-danger">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+                @foreach ($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
             </div>
         </div>
-    </div>
-</div>
+    @endif
 
+    <form method="POST" action="{{ route('change.password') }}">
+        @csrf
+
+        <div style="max-width: 600px;">
+            <!-- Current Password -->
+            <div class="form-group">
+                <label for="current_password" class="form-label">Current Password</label>
+                <div class="input-wrapper">
+                    <input id="current_password" type="password" class="form-control" name="current_password" placeholder="••••••••" required style="padding-right: 48px;">
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    <i class="fa-solid fa-eye toggle-password" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); transition: var(--transition-smooth);" onclick="togglePasswordVisibility('current_password', this)"></i>
+                </div>
+            </div>
+
+            <!-- New Password -->
+            <div class="form-group">
+                <label for="new_password" class="form-label">New Password</label>
+                <div class="input-wrapper">
+                    <input id="new_password" type="password" class="form-control" name="new_password" placeholder="••••••••" required style="padding-right: 48px;">
+                    <i class="fa-solid fa-key input-icon"></i>
+                    <i class="fa-solid fa-eye toggle-password" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); transition: var(--transition-smooth);" onclick="togglePasswordVisibility('new_password', this)"></i>
+                </div>
+            </div>
+
+            <!-- Confirm New Password -->
+            <div class="form-group">
+                <label for="new_confirm_password" class="form-label">Confirm New Password</label>
+                <div class="input-wrapper">
+                    <input id="new_confirm_password" type="password" class="form-control" name="new_confirm_password" placeholder="••••••••" required style="padding-right: 48px;">
+                    <i class="fa-solid fa-circle-check input-icon"></i>
+                    <i class="fa-solid fa-eye toggle-password" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); transition: var(--transition-smooth);" onclick="togglePasswordVisibility('new_confirm_password', this)"></i>
+                </div>
+            </div>
+
+            <div style="margin-top: 10px;">
+                <button type="submit" class="btn-primary">
+                    <i class="fa-solid fa-key"></i>
+                    <span>Update Security Password</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+@endsection
+
+@section('scripts')
+<script>
+    function togglePasswordVisibility(fieldId, icon) {
+        const passwordField = document.getElementById(fieldId);
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passwordField.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
 @endsection

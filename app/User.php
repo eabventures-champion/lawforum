@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends \TCG\Voyager\Models\User
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
 
@@ -17,7 +17,7 @@ class User extends \TCG\Voyager\Models\User
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'phone', 'country', 'lname', 'check_subscription', 'subscription_id', 'subscription_expiry'
+        'name', 'email', 'password', 'phone', 'country', 'lname', 'check_subscription', 'subscription_id', 'subscription_expiry', 'role_id'
     ];
 
     /**
@@ -43,5 +43,10 @@ class User extends \TCG\Voyager\Models\User
             return true;
         }
         return false;
+    }
+
+    public function isAdmin()
+    {
+        return $this->role_id == 1 || $this->email === 'admin@admin.com';
     }
 }

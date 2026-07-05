@@ -1,89 +1,126 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <link rel="stylesheet" href="{{ asset('css/tooltipster.bundle.min.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('css/tooltipster-sideTip-borderless.min.css') }}" type="text/css"> 
-    <style>
-        .btn-customised{
-          font-weight: 550;
-          padding: .175rem .75rem;
-          line-height: 1.3;
-          font-size: .8rem;
-        }
-        .scroll-view {
-          height: auto;
-          max-height: 280px;
-          width: 380px;
-          /* overflow-x: scroll;
-          overflow-y: scroll; */
-          overflow: scroll;
-          -ms-overflow-style: -ms-autohiding-scrollbar;
-        }
-    </style>   
-</head>
+<style>
+    /* Premium details card styling */
+    .premium-details-card {
+        background: rgba(30, 41, 59, 0.45);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        transition: border-color 0.3s ease;
+    }
+    
+    .premium-details-card:hover {
+        border-color: rgba(255, 255, 255, 0.12);
+    }
+    
+    .details-header-title {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .details-header-title i {
+        color: var(--gold);
+        font-size: 12px;
+    }
+    
+    /* Premium Action Buttons */
+    .btn-action-premium {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.02) !important;
+        border: 1px solid var(--border-color) !important;
+        color: var(--text-primary) !important;
+        padding: 10px 16px !important;
+        border-radius: 8px !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        transition: all 0.2s ease !important;
+        text-decoration: none !important;
+        cursor: pointer;
+    }
+    
+    .btn-action-premium:hover {
+        background: rgba(255, 255, 255, 0.06) !important;
+        border-color: rgba(255, 255, 255, 0.15) !important;
+        color: #fff !important;
+    }
+    
+    .nav-buttons-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
+    }
+    
+    .btn-nav-premium {
+        background: rgba(255, 255, 255, 0.01) !important;
+        border: 1px solid var(--border-color) !important;
+        color: var(--text-secondary) !important;
+        padding: 8px 12px !important;
+        border-radius: 8px !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        transition: all 0.2s ease !important;
+        cursor: pointer;
+    }
+    
+    .btn-nav-premium:hover {
+        background: rgba(255, 255, 255, 0.04) !important;
+        border-color: rgba(255, 255, 255, 0.10) !important;
+        color: var(--text-primary) !important;
+    }
+</style>
 
-<body>
-
-<div class="col-md-3 mobile-filter-hide">
-  <div class="sidebar">
-    <div class="card border-secondary" style="max-width: 18rem;">
-      <div class="card-header" style="padding: .25rem 1.25rem;">Filter</div>
-      <div class="card-body text-dark">
+<div class="premium-details-card">
+    <div class="details-header-title">
+        <i class="fa-solid fa-sliders"></i> Reader Actions
+    </div>
+    
+    <div style="display: flex; flex-direction: column; gap: 12px; align-items: center;">
+        <!-- Select Articles Modal Trigger -->
+        <button type="button" class="btn-action-premium" data-toggle="modal" data-target="#selectArticlesModal">
+            <i class="fa-solid fa-list-check"></i> Select Articles
+        </button>
         
-        <center>
-            <div class="dropdown mb-3">
-              <a class="btn btn-outline-dark dropdown-toggle btn-customised" href="#" role="button" id="dropdownMenuLink-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span>Select Articles</span>
-              </a>
-              <div class="dropdown-menu scroll-view" aria-labelledby="dropdownMenuLink-3">
-                @foreach($constitutionContents as $constitutionContent)
-                    <a data-scroll-to="body"
-                    data-scroll-focus="body"
-                    data-scroll-speed="400"
-                    data-scroll-offset="-60" class="constitution_view_all_section_link_with_prev_next dropdown-item" sid="{{$constitutionContent->id}}" href="/constitution/Republic/constitution_content/{{ $constitutionContent->id }}">{{$constitutionContent->section }}
-                    </a>
-                @endforeach              
-              </div>
+        
+        
+        <!-- Unified View Options Dropdown Trigger -->
+        <div class="dropdown" style="width: 100%;">
+            <button class="btn-action-premium dropdown-toggle" type="button" id="sidebarViewOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
+                <i class="fa-solid fa-images"></i> View Options
+            </button>
+            <div class="dropdown-menu dropdown-menu-premium" aria-labelledby="sidebarViewOptions" style="width: 100%;">
+                <a class="dropdown-item dropdown-item-premium expanded_link toggle_expanded_view" href="/constitution/Republic/expanded_view/{{ $ghana_act['id'] }}">
+                    <i class="fa-solid fa-expand"></i> Expanded View
+                </a>
+                <a class="dropdown-item dropdown-item-premium" href="#" onclick="triggerSplitView('horizontal')">
+                    <i class="fa-solid fa-columns"></i> Horizontal Split
+                </a>
+                <a class="dropdown-item dropdown-item-premium" href="#" onclick="triggerSplitView('vertical')">
+                    <i class="fa-solid fa-window-maximize" style="transform: rotate(90deg); font-size: 10px;"></i> Vertical Split
+                </a>
             </div>
-
-            
-        <div class="mb-2 preamble_hide_pre_next">
-            <button a data-scroll-to="body"
-            data-scroll-focus="body"
-            data-scroll-speed="400"
-            data-scroll-offset="-60" type="button" class="btn btn-outline-dark btn-sm previous_content_constitution_act btn-customised">
-            &laquo;&nbsp;Previous
-            </button>
-            <button a data-scroll-to="body"
-            data-scroll-focus="body"
-            data-scroll-speed="400"
-            data-scroll-offset="-60" type="button" class="btn btn-outline-dark btn-sm next_content_constitution_act btn-customised">
-            Next&nbsp;&raquo;
-            </button>
         </div>
-        <hr>
-        <div class="mt-5">
-          <button a data-scroll-to="body"
-              data-scroll-focus="body"
-              data-scroll-speed="400"
-              data-scroll-offset="-60" type="button" class="btn btn-outline-dark btn-sm expanded_link toggle_expanded_view btn-customised" href="/constitution/Republic/expanded_view/{{ $ghana_act['id'] }}">
-              Expanded View
-          </button>
-        <div>
-          
-        </center>
-                
-      </div>
-      
     </div>
-    <div class="card mt-3">
-      @include('ads.small_ads_image_main_page')
-    </div>
-  </div>
-        
 </div>
 
-</body>
-
-</html>
-  
+<div class="premium-ad-card">
+    @include('ads.small_ads_image_main_page')
+</div>

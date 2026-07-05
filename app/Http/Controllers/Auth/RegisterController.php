@@ -75,8 +75,20 @@ class RegisterController extends Controller
             'country' => $data['country'],
             'email' => $data['email'],
             'phone' => $data['phone'],
-            'password' => Hash::make($data['password']),
-            'phone' => $data['phone']
+            'password' => Hash::make($data['password'])
         ]);
+    }
+
+    /**
+     * The user has been registered.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function registered(\Illuminate\Http\Request $request, $user)
+    {
+        session()->flash('new_registration', true);
+        return redirect('/email/verify');
     }
 }

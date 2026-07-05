@@ -560,14 +560,24 @@ Route::get('/News/{category}/{title}/{id}','NewsController@news_content');//disp
 Route::get('/caption/{caption_name}/{id}','Post1992Controller@footer_content');
 
 
-//ADMIN LOGIN
-Route::group(['prefix' => 'ajaxx'], function () {
-    Voyager::routes();
-});
 
-Auth::routes();
+
+Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+// CUSTOM ADMIN DASHBOARD ROUTES
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
+    Route::get('/', 'Admin\DashboardController@index')->name('admin.dashboard');
+    Route::resource('users', 'Admin\UserController', ['as' => 'admin']);
+    Route::resource('news', 'Admin\NewsController', ['as' => 'admin']);
+    Route::get('laws', 'Admin\LawController@index')->name('admin.laws.index');
+    Route::get('laws/create/{type}', 'Admin\LawController@create')->name('admin.laws.create');
+    Route::post('laws/store/{type}', 'Admin\LawController@store')->name('admin.laws.store');
+    Route::get('laws/{id}/edit/{type}', 'Admin\LawController@edit')->name('admin.laws.edit');
+    Route::put('laws/{id}/update/{type}', 'Admin\LawController@update')->name('admin.laws.update');
+    Route::delete('laws/{id}/delete/{type}', 'Admin\LawController@destroy')->name('admin.laws.destroy');
+});
 
 
 

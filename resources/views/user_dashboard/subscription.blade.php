@@ -1,63 +1,54 @@
-@extends('layouts.app')
+@extends('layouts.user')
 
 @section('title', 'Subscription Plan')
 
-@section('assets')
-    <style type="text/css">
-        .card-pricing.popular {
-        z-index: 1;
-        border: 2px solid #396871;
-        }
-        .card-pricing .list-unstyled li {
-        padding: .5rem 0;
-        color: #6c757d;
-        }
-        .template_color{
-            background-color: #396871;
-        }
-        .pricing_text_color{
-            color: #396871;
-        }
-
-    </style>
-
-@endsection
-
-@section('scripts_first')
+@section('styles')
     <script src="https://checkout.flutterwave.com/v3.js"></script>
 @endsection
 
-
-{{-- https://dashboard.flutterwave.com/signup --}}
-{{-- currency: "{{ env('RAVE_CURRENCY')}}", --}}
-{{-- url:"/process/subscription/" +subscription+"/check/{{Auth::user()->id}}", --}}
-
-
 @section('content')
+<div class="content-card">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 class="card-title" style="font-size: 28px;">Choose Your Subscription Plan</h1>
+        <p class="card-subtitle" style="max-width: 600px; margin: 8px auto 0 auto; line-height: 1.6;">
+            Get unlimited access to database search engines, legal preambles, and official PDF downloads.
+        </p>
+    </div>
 
-<div class="container mb-1 mt-customised">
-    <h1 class="text-muted text-center mb-3">Downloads are not available</h1>
-    <div class="pricing card-deck flex-column flex-md-row mb-3">
-        {{-- STARTER --}}
+    <!-- Pricing Grid -->
+    <div class="pricing-grid">
         @foreach($subscriptions as $subscription)
-            <div class="card card-pricing text-center px-3 mb-4">
-                <span class="h6 w-60 mx-auto px-4 py-1 rounded-bottom template_color text-white shadow-sm">{{ $subscription->type }}</span>
-                <div class="bg-transparent card-header pt-4 border-0">
-                    <h1 class="h1 font-weight-normal pricing_text_color text-center mb-0" data-pricing-value="15">Gh<span class="price">{{$subscription->price}}</span></h1>
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="plan-name">{{ $subscription->type }}</div>
+                    <div class="plan-price">
+                        <span style="font-size: 20px; font-weight: 600; vertical-align: top; color: var(--accent-color);">GHS</span>{{ $subscription->price }}
+                    </div>
+                    <span class="plan-duration">per package activation</span>
                 </div>
-                <div class="card-body pt-0">
-                    <ul class="list-unstyled mb-4">
-                        <li>{{$subscription->general_notes}}</li>
-                        <li>{{$subscription->specific_notes}}</li>
-                    </ul>
-                    {{-- <button type="button" class="btn btn-outline-secondary mb-3" onClick="makePayment({{$subscription->id}}, {{$subscription->price}})">Subscribe</button> --}}
-                </div>
+                
+                <ul class="plan-features">
+                    <li>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>{{ $subscription->general_notes }}</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>{{ $subscription->specific_notes }}</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Access PDF Downloads</span>
+                    </li>
+                </ul>
+
+                <button type="button" class="btn-purchase" onclick="makePayment({{ $subscription->id }}, {{ $subscription->price }})">
+                    Subscribe Now
+                </button>
             </div>
         @endforeach
     </div>
 </div>
-
-
 @endsection
 
 @section('scripts')
@@ -70,51 +61,45 @@
             var phone = '{{ Auth::user()->phone }}';
 
             FlutterwaveCheckout({
-            public_key: "FLWPUBK-8f9fbb57646670b5149ef0af2fd24834-X",
-            //local key
-            // public_key: "FLWPUBK_TEST-504cb06bb23964c64b49447c1ea7fd50-X",
-            tx_ref: "hooli-tx-1920bbtyt",
-            amount: amount,
-            currency:"GHS",
-            payment_options: "card,mobilemoney,ussd",
-            meta: {
-                consumer_id: "{{ Auth::user()->id }}",
-                consumer_mac: "92a3-912ba-1192a",
-            },
-            customer: {
-                email:email,
-                phone_number: phone,
-                name: name,
-            },
-            callback: function (data) {
-                console.log(data);
-
-                $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $.ajax({
-                url:"/process/" +subscription,
-                type:'GET',
-                success:function(data){
-                    //redirect to articles page
-                    window.location.href = "/";
-                    alert('Your subscription Package is activated');
+                public_key: "FLWPUBK-8f9fbb57646670b5149ef0af2fd24834-X",
+                tx_ref: "hooli-tx-" + Math.floor(Math.random() * 1000000000),
+                amount: amount,
+                currency: "GHS",
+                payment_options: "card,mobilemoney,ussd",
+                meta: {
+                    consumer_id: "{{ Auth::user()->id }}",
+                    consumer_mac: "92a3-912ba-1192a",
                 },
-                error: function(){
-                    //do something when there is an error
-                    alert('Something went wrong. Please try again');
+                customer: {
+                    email: email,
+                    phone_number: phone,
+                    name: name,
                 },
-            });
-            },
-            customizations: {
-                title: "My package",
-                description: "Payment for items in cart",
-                // logo: "https://assets.piedpiper.com/logo.png",
-                // logo: "{{ asset('/logo/lawsghlog.png') }}"
-            },
+                callback: function (data) {
+                    console.log(data);
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+
+                    $.ajax({
+                        url: "/process/" + subscription,
+                        type: 'GET',
+                        success: function(data){
+                            window.location.href = "/home";
+                            alert('Your subscription package has been activated successfully!');
+                        },
+                        error: function(){
+                            alert('Something went wrong during the activation. Please contact support.');
+                        }
+                    });
+                },
+                customizations: {
+                    title: "LawsGhana Subscription",
+                    description: "Payment for subscription plan: " + subscription,
+                },
             });
         }
     </script>

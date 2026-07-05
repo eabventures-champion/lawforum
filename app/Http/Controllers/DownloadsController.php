@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\DB;
 
 class DownloadsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth', 'verified']);
+    }
     //
     public function show_user_downloads($user_id){
 

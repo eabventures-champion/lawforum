@@ -370,9 +370,8 @@ class ConstitutionController extends Controller
            $bool = true;
        }
 
-        $africaConstitutions       = ($bool)?AllConstitution::where($where)->where(['continent' => $name])->get():AllConstitution::all();
-        $africanCountries       = Country::where(['continent_name' => $name])->get();
-        return view('constitution.display_only_african_countries', compact('africaConstitutions', 'africanCountries'));
+        $africaConstitutions       = ($bool)?AllConstitution::where($where)->where(['continent' => $name])->get():AllConstitution::where(['continent' => $name])->get();
+        return view('constitution.new_display_only_african_countries', compact('africaConstitutions'));
        }
 
     //ASIA
@@ -400,9 +399,8 @@ class ConstitutionController extends Controller
            $bool = true;
        }
 
-        $asiaConstitutions       = ($bool)?AllConstitution::where($where)->where(['continent' => $name])->get():AllConstitution::all();
-        $asiaCountries       = Country::where(['continent_name' => $name])->get();
-        return view('constitution.display_only_asia_countries', compact('asiaConstitutions', 'asiaCountries'));
+        $asiaConstitutions       = ($bool)?AllConstitution::where($where)->where(['continent' => $name])->get():AllConstitution::where(['continent' => $name])->get();
+        return view('constitution.new_display_only_asia_countries', compact('asiaConstitutions'));
        }
 
     //EUROPE
@@ -430,9 +428,8 @@ class ConstitutionController extends Controller
            $bool = true;
        }
 
-        $europeConstitutions       = ($bool)?AllConstitution::where($where)->where(['continent' => $name])->get():AllConstitution::all();
-        $europeCountries       = Country::where(['continent_name' => $name])->get();
-        return view('constitution.display_only_europe_countries', compact('europeConstitutions', 'europeCountries'));
+        $europeConstitutions       = ($bool)?AllConstitution::where($where)->where(['continent' => $name])->get():AllConstitution::where(['continent' => $name])->get();
+        return view('constitution.new_display_only_europe_countries', compact('europeConstitutions'));
        }
 
     //NORTH AMERICA
@@ -460,9 +457,8 @@ class ConstitutionController extends Controller
            $bool = true;
        }
 
-        $north_americaConstitutions       = ($bool)?AllConstitution::where($where)->where(['continent' => $name])->get():AllConstitution::all();
-        $north_americaCountries       = Country::where(['continent_name' => $name])->get();
-        return view('constitution.display_only_north_america_countries', compact('north_americaConstitutions', 'north_americaCountries'));
+        $north_americaConstitutions       = ($bool)?AllConstitution::where($where)->where(['continent' => $name])->get():AllConstitution::where(['continent' => $name])->get();
+        return view('constitution.new_display_only_north_america_countries', compact('north_americaConstitutions'));
        }
 
     //SOUTH AMERICA
@@ -490,8 +486,7 @@ class ConstitutionController extends Controller
            $bool = true;
        }
 
-        $south_americaConstitutions       = ($bool)?AllConstitution::where($where)->where(['continent' => $name])->get():AllConstitution::all();
-        $south_americaCountries       = Country::where(['continent_name' => $name])->get();
-        return view('constitution.display_only_south_america_countries', compact('south_americaConstitutions', 'south_americaCountries'));
+        $south_americaConstitutions       = ($bool)?AllConstitution::where($where)->where(['continent' => $name])->get():AllConstitution::where(['continent' => $name])->get();
+        return view('constitution.new_display_only_south_america_countries', compact('south_americaConstitutions'));
        }
 }

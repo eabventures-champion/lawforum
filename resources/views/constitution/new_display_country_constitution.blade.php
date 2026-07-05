@@ -1,592 +1,781 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <script data-ad-client="ca-pub-4293461101625028" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Jekyll v4.1.1">
-    <title>{{ucwords(strtolower($allCountriesConstitution['title']))}}</title>
+    <title>{{ ucwords(strtolower($allCountriesConstitution['title'])) }} - LawsGhana</title>
 
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/offcanvas/">
-
-    <!-- Bootstrap core CSS -->
+    <!-- Google Fonts & Stylesheets -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    {{-- <link href="{{ asset('css/app_update.css') }}" rel="stylesheet"> --}}
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
-
-    <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('logo/favicon/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('logo/favicon/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('logo/favicon/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ asset('logo/favicon/site.webmanifest') }}">
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 
     <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
-      .mt-customised {
-            margin-top: 15px !important;
-            margin-bottom: 25px !important;
-      }
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
+        :root {
+            --bg-primary: #070a13;
+            --bg-secondary: #0f172a;
+            --card-bg: rgba(17, 24, 39, 0.55);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent: #2563eb;
+            --accent-light: #60a5fa;
+            --accent-glow: rgba(37, 99, 235, 0.15);
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --gold: #f59e0b;
+            --gold-light: #fbbf24;
         }
-      }
-      .navbar-custom{
-        box-shadow: 0 1px 8px #e0e0e0;
-      }
-      .navbar{
-          padding: .4rem 1rem;
-      }
-      .p-m{
-        padding: .15rem!important;
-      }
-      .my-m {
-        margin-bottom: .15rem!important;
-      }
-      .content_container {
-        margin-top: .1rem!important;
-        margin-bottom: .1rem!important;
-        padding: .5rem!important
-      }
-      .pt_for_content{
-        margin-bottom: .3rem!important;
-      }
-      .bg-header-color{
-            background-color: #004353;
-      }
-      
-      .header_only {
-            position: -webkit-sticky;
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 50% 0%, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ====== PREMIUM NAVIGATION ====== */
+        .nav-wrap {
             position: sticky;
             top: 0;
+            z-index: 1000;
+            background: rgba(7, 10, 19, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
         }
-        .dimension_align{
-            padding: 3px 1px 0.1px 1px;
-            background: #f5f5f5;
-            color: black;
-            text-align: center;
-            margin-bottom: 15px; 
-            border: .1px solid #ddd;
+
+        .nav-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
         }
-        .alignment{
-          text-align: center;
-          /* border: .1px solid #ddd; */
+
+        .nav-logo img {
+            height: 38px;
+            width: auto;
+            transition: transform 0.3s ease;
         }
-        ::-webkit-scrollbar {
-            width: 7px;
-            }
-            div::-webkit-scrollbar-button {
-            display: block;
-            width: 1px;
+
+        .nav-logo:hover img {
+            transform: scale(1.03);
+        }
+
+        .nav-menu-links-premium {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-link-dropdown {
+            position: relative;
+        }
+
+        .nav-link-btn {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            padding: 8px 14px;
+            border-radius: 8px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-link-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link-dropdown:hover .nav-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 220px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 8px;
+            margin-top: 8px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 100;
+        }
+
+        .nav-dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.15s ease;
+        }
+
+        .nav-dropdown-menu a:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .nav-auth {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-login {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none !important;
+            padding: 8px 16px;
+            transition: color 0.2s;
+        }
+
+        .btn-login:hover {
+            color: var(--accent-light);
+        }
+
+        .btn-signup {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #fff !important;
+            background: var(--accent-gradient);
+            padding: 8px 18px;
+            border-radius: 8px;
+            text-decoration: none !important;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .btn-signup:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+        }
+
+        .nav-user-dropdown {
+            position: relative;
+        }
+
+        .nav-user-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 13.5px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-user-dropdown.active .nav-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-dropdown-divider {
             height: 1px;
-            }
-            div::-webkit-scrollbar-button:decrement:start {
-            background-color:lightblue;
-            border:1px solid #eee;
-            }
-            div::-webkit-scrollbar-button:increment:start {
-            background-color:lightblue;
-            border:1px solid #eee;
-            }
-            div::-webkit-scrollbar-button:decrement:end {
-            background-color:lightblue;
-            border:1px solid #eee;
-            }
-            div::-webkit-scrollbar-button:increment:end {
-            background-color:lightblue;
-            border:1px solid #eee;;
-            }
-            ::-webkit-scrollbar-thumb {
-            background: #888; 
-            }
-            ::-webkit-scrollbar-track {
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
-            border-radius: 10px;
-            } 
-            ::-webkit-scrollbar-thumb:hover {
-            background: #555; 
-            }
-            .bg-header-color{
-            background-color: #004353;
-            }
-            .back-to-top {
-            position: sticky;
-            bottom: 80px;
-            left: 950px;
-            }
-            .nav-link {
+            background: var(--border-color);
+            margin: 6px 0;
+        }
+
+        /* Continent / Sub-navigation header */
+        .continent-nav-wrap {
+            background: rgba(15, 23, 42, 0.4);
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px 0;
+        }
+
+        .continent-nav-wrap .nav-underline {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+        }
+
+        .continent-nav-wrap .nav-underline::-webkit-scrollbar {
+            display: none;
+        }
+
+        .continent-nav-wrap .nav-link {
+            font-size: 13.5px;
+            font-weight: 500;
+            color: var(--text-secondary) !important;
+            padding: 6px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .continent-nav-wrap .nav-link:hover {
+            color: var(--text-primary) !important;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .continent-nav-wrap .nav-link.active {
+            color: #fff !important;
+            background: rgba(59, 130, 246, 0.15) !important;
+            border: 1px solid rgba(59, 130, 246, 0.3) !important;
+        }
+
+        /* ====== MAIN CONTENT & LAYOUT ====== */
+        .main-container {
+            max-width: 1400px;
+            margin: 40px auto 80px;
+            padding: 0 24px;
+        }
+
+        .premium-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header-styled {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .card-header-styled h5 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ====== READABLE TYPOGRAPHY ====== */
+        .reading-header-premium {
+            margin-bottom: 24px;
+        }
+
+        .continent-badge {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
             display: block;
-            padding: .1rem .9rem;
-            }
-            .fixing_top{
+            margin-bottom: 6px;
+        }
+
+        .reading-header-premium h2 {
+            font-size: 26px;
+            font-weight: 800;
+            color: #fff;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.5px;
+            line-height: 1.3;
+        }
+
+        .year-badge {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .judgement_display .content {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        /* Force database inline white HTML text to adapt to dark background */
+        .judgement_display .content p,
+        .judgement_display .content span,
+        .judgement_display .content li,
+        .judgement_display .content div,
+        .judgement_display .content table,
+        .judgement_display .content td,
+        .judgement_display .content th,
+        .judgement_display .content h1,
+        .judgement_display .content h2,
+        .judgement_display .content h3,
+        .judgement_display .content h4,
+        .judgement_display .content h5,
+        .judgement_display .content h6 {
+            background-color: transparent !important;
+            background: transparent !important;
+            color: var(--text-primary) !important;
+            font-family: 'Inter', sans-serif !important;
+        }
+
+        .judgement_display .content p {
+            margin-bottom: 24px;
+        }
+
+        /* ====== SEARCH BAR UTILITY ====== */
+        .search-bar-wrap {
+            margin-bottom: 24px;
+        }
+
+        .search-input-premium {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            padding: 12px 16px 12px 42px;
+            font-size: 14px;
+            outline: none;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .search-input-premium:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent-glow);
+        }
+
+        .search-bar-wrap i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        /* ====== ACTIONS BUTTONS ====== */
+        .btn-custom-outline {
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+            font-weight: 500 !important;
+            font-size: 13px !important;
+            padding: 8px 16px !important;
+            border-radius: 8px !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .btn-custom-outline:hover {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .back-to-top {
             position: fixed;
-            bottom: 10;
-            right: 0;
-            }
-            body {
-                height: 655px;
-            }
-            @media screen and (max-width: 1120px) {                 
-                .fixing_top{
-                position: relative;
-              }                
-            }
-            /* https://www.youtube.com/watch?v=O9toDm97VQM */
+            bottom: 40px;
+            right: 40px;
+            background: var(--accent-gradient);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff !important;
+            box-shadow: 0 4px 16px var(--accent-glow);
+            transition: all 0.2s ease;
+            z-index: 99;
+            text-decoration: none !important;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        /* ====== DATATABLES PREMIUM OVERRIDES ====== */
+        .dataTables_wrapper {
+            padding: 0;
+            color: var(--text-secondary) !important;
+        }
+
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_paginate {
+            color: var(--text-secondary) !important;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+
+        .dataTables_wrapper .dataTables_filter input {
+            background: rgba(17, 24, 39, 0.6) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 8px !important;
+            color: var(--text-primary) !important;
+            padding: 6px 12px !important;
+            outline: none !important;
+            margin-left: 8px !important;
+            transition: all 0.3s ease;
+        }
+
+        .dataTables_wrapper .dataTables_filter input:focus {
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 0 2px var(--accent-glow) !important;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            color: var(--text-secondary) !important;
+            border-radius: 6px !important;
+            border: 1px solid var(--border-color) !important;
+            padding: 4px 10px !important;
+            background: transparent !important;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: var(--accent-gradient) !important;
+            color: #fff !important;
+            border: none !important;
+        }
+
+        .table-premium {
+            background: transparent !important;
+            border-collapse: separate !important;
+            border-spacing: 0 8px !important;
+            width: 100% !important;
+        }
+
+        .table-premium th {
+            color: var(--gold) !important;
+            font-size: 13px !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            padding: 12px 16px !important;
+            font-weight: 700 !important;
+        }
+
+        .table-premium tr {
+            background: rgba(255, 255, 255, 0.02) !important;
+        }
+
+        .table-premium td {
+            border-top: 1px solid var(--border-color) !important;
+            border-bottom: 1px solid var(--border-color) !important;
+            padding: 14px 16px !important;
+            color: var(--text-primary) !important;
+        }
+
+        .table-premium td a {
+            color: var(--accent-light) !important;
+            font-weight: 600 !important;
+        }
     </style>
-    <!-- Custom styles for this template -->
-    <link href="{{ asset('css/offcanvas.css') }}" rel="stylesheet">
-    {{-- navbar-white bg-white --}}
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-174662621-1"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'UA-174662621-1');
-    </script>
   </head>
-  <!--Start of Tawk.to Script-->
-  <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/5e398d16298c395d1ce62ab4/default';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
-</script>
-<!--End of Tawk.to Script-->
-  <body class="bg-light">
-      
-    <nav class="navbar navbar-custom navbar-expand-lg fixed-top navbar-light bg-white">
-  {{-- <a class="navbar-brand mr-auto mr-lg-0" href="#">Laws Ghana</a> --}}
-  <a href="/" class="">
-    <img src="{{ asset('/logo/lawsghlog.png') }}" class="img-responsive" style="width:12em; padding-top: 1px; padding-bottom:1px;padding-left:1px;"> 
-    </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <body>
 
-  <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+    <!-- ====== PREMIUM NAVIGATION ====== -->
+    <nav class="nav-wrap" id="mainNav">
+        <div class="nav-inner">
+            <a href="/" class="nav-logo">
+                <img src="{{ asset('logo/lawsghlog.png') }}" alt="LawsGhana">
+            </a>
 
-  <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
-    <ul class="navbar-nav ml-auto">
-      {{-- <li class="nav-item active">
-        <a class="nav-link" href="#">Constitution <span class="sr-only">(current)</span></a>
-      </li> --}}
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle text-dark" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Constitution</a>
-        <div class="dropdown-menu" aria-labelledby="dropdown01">
-          <a class="dropdown-item" href="/constitution/Republic/Ghana/1">Ghana</a>
-          <a class="dropdown-item" href="/constitution/all-countries/1/Africa">Africa</a>
-          <a class="dropdown-item" href="/constitution/all-countries/2/Asia">Asia</a>
-          <a class="dropdown-item" href="/constitution/all-countries/3/Europe">Europe</a>
-          <a class="dropdown-item" href="/constitution/all-countries/4/North-America">North America</a>
-          <a class="dropdown-item" href="/constitution/all-countries/5/South-America">South America</a>
-        </div>
-      </li>
-      &nbsp;&nbsp;
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle text-dark" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pre-4th Republic Laws</a>
-        <div class="dropdown-menu" aria-labelledby="dropdown01">
-          <a class="dropdown-item" href="/pre_1992_legislation/1/First Republic">1st Republic</a>
-          <a class="dropdown-item" href="/pre_1992_legislation/2/Second Republic">2nd Republic</a>
-          <a class="dropdown-item" href="/pre_1992_legislation/3/Third Republic">3rd Republic</a>
-          <a class="dropdown-item" href="/pre_1992_legislation/5/NLC Decree">NLC Decree</a>
-          <a class="dropdown-item" href="/pre_1992_legislation/6/NRC Decree">NRC Decree</a>
-          <a class="dropdown-item" href="/pre_1992_legislation/7/SMC Decree">SMC Decree</a>
-          <a class="dropdown-item" href="/pre_1992_legislation/8/AFRC Decree">AFRC Decree</a>
-          <a class="dropdown-item" href="/pre_1992_legislation/4/PNDC Law">PNDC Law</a>
-        </div>
-      </li>
-      &nbsp;&nbsp;
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle text-dark" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">4th Republic Laws</a>
-        <div class="dropdown-menu" aria-labelledby="dropdown01">
-          <a class="dropdown-item" href="/post-1992-legislation/1/Acts of Parliament">Acts of Parliament</a>
-          <a class="dropdown-item" href="/post-1992-legislation/only-regulations">Legislative Instruments</a>
-          <a class="dropdown-item" href="/post-1992-legislation/Constitutional-Intruments">Constitutional Instruments</a>
-          <a class="dropdown-item" href="/post-1992-legislation/Executive-Intruments">Executive Instruments</a>
-          <a class="dropdown-item" href="/post-1992-legislation/only-amendments">Amendments</a>
-        </div>
-      </li>
-      &nbsp;&nbsp;
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="/judgement/Ghana">Case Laws</a>
-      </li>
-      &nbsp;&nbsp;
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="/News/Ghana-News/1">News</a>
-      </li>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-      <div>
-        <!-- Right Side Of Navbar -->
-        <ul class="navbar-nav ml-auto">
-            <!-- Authentication Links -->
-            @guest
-            &nbsp;<a class="btn btn-sm bg-header-color text-white" href="{{ route('login') }}">Login</a>&nbsp;
-
-                @if (Route::has('register'))
-                    <a class="btn btn-sm bg-header-color text-white" href="{{ route('register') }}">Sign Up</a>
-                @endif
-                
-            @else
-                <li class="nav-item dropdown">
-                    <a style="color: blue;" id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        Hi, {{ Auth::user()->name }} <span class="caret"></span>
-                    </a>
-
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/accounts/profile/{{ Auth::user()->id }}"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
-                            <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                            <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
-                          </svg>&nbsp;&nbsp;Profile</a>
-                        <a class="dropdown-item" href="/accounts/manage-password"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M8.837 1.626c-.246-.835-1.428-.835-1.674 0l-.094.319A1.873 1.873 0 0 1 4.377 3.06l-.292-.16c-.764-.415-1.6.42-1.184 1.185l.159.292a1.873 1.873 0 0 1-1.115 2.692l-.319.094c-.835.246-.835 1.428 0 1.674l.319.094a1.873 1.873 0 0 1 1.115 2.693l-.16.291c-.415.764.42 1.6 1.185 1.184l.292-.159a1.873 1.873 0 0 1 2.692 1.116l.094.318c.246.835 1.428.835 1.674 0l.094-.319a1.873 1.873 0 0 1 2.693-1.115l.291.16c.764.415 1.6-.42 1.184-1.185l-.159-.291a1.873 1.873 0 0 1 1.116-2.693l.318-.094c.835-.246.835-1.428 0-1.674l-.319-.094a1.873 1.873 0 0 1-1.115-2.692l.16-.292c.415-.764-.42-1.6-1.185-1.184l-.291.159A1.873 1.873 0 0 1 8.93 1.945l-.094-.319zm-2.633-.283c.527-1.79 3.065-1.79 3.592 0l.094.319a.873.873 0 0 0 1.255.52l.292-.16c1.64-.892 3.434.901 2.54 2.541l-.159.292a.873.873 0 0 0 .52 1.255l.319.094c1.79.527 1.79 3.065 0 3.592l-.319.094a.873.873 0 0 0-.52 1.255l.16.292c.893 1.64-.902 3.434-2.541 2.54l-.292-.159a.873.873 0 0 0-1.255.52l-.094.319c-.527 1.79-3.065 1.79-3.592 0l-.094-.319a.873.873 0 0 0-1.255-.52l-.292.16c-1.64.893-3.433-.902-2.54-2.541l.159-.292a.873.873 0 0 0-.52-1.255l-.319-.094c-1.79-.527-1.79-3.065 0-3.592l.319-.094a.873.873 0 0 0 .52-1.255l-.16-.292c-.892-1.64.902-3.433 2.541-2.54l.292.159a.873.873 0 0 0 1.255-.52l.094-.319z"/>
-                            <path fill-rule="evenodd" d="M8 5.754a2.246 2.246 0 1 0 0 4.492 2.246 2.246 0 0 0 0-4.492zM4.754 8a3.246 3.246 0 1 1 6.492 0 3.246 3.246 0 0 1-6.492 0z"/>
-                          </svg>&nbsp;&nbsp;Manage Accounts </a>
-                        <a class="dropdown-item" href="/accounts/downloads/{{ Auth::user()->id }}"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-download" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M.5 8a.5.5 0 0 1 .5.5V12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8.5a.5.5 0 0 1 1 0V12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V8.5A.5.5 0 0 1 .5 8z"/>
-                            <path fill-rule="evenodd" d="M5 7.5a.5.5 0 0 1 .707 0L8 9.793 10.293 7.5a.5.5 0 1 1 .707.707l-2.646 2.647a.5.5 0 0 1-.708 0L5 8.207A.5.5 0 0 1 5 7.5z"/>
-                            <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0v-8A.5.5 0 0 1 8 1z"/>
-                          </svg>&nbsp;&nbsp;Downloads</a>
-                        <a class="dropdown-item" href="/accounts/bookmarks/{{ Auth::user()->id }}"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bookmarks-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12l-5-3-5 3V4z"/>
-                            <path d="M14 14l-1-.6V2a1 1 0 0 0-1-1H4.268A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v12z"/>
-                          </svg>&nbsp;&nbsp;Bookmarks</a>
-                        @if( Auth::user()->subscription_id == null)
-                            <a class="dropdown-item" style="color: red;"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-cart-dash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M6 7.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z"/>
-                                <path fill-rule="evenodd" d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-                              </svg>&nbsp;&nbsp;No Subscription</a>
-                            @else
-                                <a class="dropdown-item" href="/accounts/subscription/{{ Auth::user()->subscription_id }}"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-cart-check" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M11.354 5.646a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L8 8.293l2.646-2.647a.5.5 0 0 1 .708 0z"/>
-                                    <path fill-rule="evenodd" d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-                                  </svg>&nbsp;&nbsp;My Subscription</a>
-                        @endif
-                        <a class="dropdown-item" href="{{ route('logout') }}"
-                        onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-power" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M5.578 4.437a5 5 0 1 0 4.922.044l.5-.866a6 6 0 1 1-5.908-.053l.486.875z"/>
-                                <path fill-rule="evenodd" d="M7.5 8V1h1v7h-1z"/>
-                              </svg>&nbsp;&nbsp;{{ __('Logout') }}
-                        </a>
-
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
+            <div class="nav-menu-links-premium">
+                <!-- Constitution Dropdown -->
+                <div class="nav-link-dropdown">
+                    <button class="nav-link-btn">Constitution <i class="fa-solid fa-chevron-down"></i></button>
+                    <div class="nav-dropdown-menu">
+                        <a href="/constitution/Republic/Ghana/1">Ghana</a>
+                        <a href="/constitution/all-countries/1/Africa">Africa</a>
+                        <a href="/constitution/all-countries/2/Asia">Asia</a>
+                        <a href="/constitution/all-countries/3/Europe">Europe</a>
+                        <a href="/constitution/all-countries/4/North-America">North America</a>
+                        <a href="/constitution/all-countries/5/South-America">South America</a>
                     </div>
-                </li>
-            @endguest
-        </ul>
-    </div>
-    </ul>
-  </div>
-</nav>
+                </div>
 
-<div class="container-fluid mt-customised">
-    <div class="row">
-        <div class="col-md-9">
-            <div class="d-flex p-m my-m">
-                <div class="lh-100">
-                    <form action="{{ url('all_constitution_index_search') }}" method="GET" class="form-inline my-2 my-lg-0 justify-content-center">
+                <!-- Pre-4th Republic Laws Dropdown -->
+                <div class="nav-link-dropdown">
+                    <button class="nav-link-btn">Pre-4th Republic Laws <i class="fa-solid fa-chevron-down"></i></button>
+                    <div class="nav-dropdown-menu">
+                        <a href="/pre_1992_legislation/1/First Republic">1st Republic</a>
+                        <a href="/pre_1992_legislation/2/Second Republic">2nd Republic</a>
+                        <a href="/pre_1992_legislation/3/Third Republic">3rd Republic</a>
+                        <a href="/pre_1992_legislation/5/NLC Decree">NLC Decree</a>
+                        <a href="/pre_1992_legislation/6/NRC Decree">NRC Decree</a>
+                        <a href="/pre_1992_legislation/7/SMC Decree">SMC Decree</a>
+                        <a href="/pre_1992_legislation/8/AFRC Decree">AFRC Decree</a>
+                        <a href="/pre_1992_legislation/4/PNDC Law">PNDC Law</a>
+                    </div>
+                </div>
+
+                <!-- 4th Republic Laws Dropdown -->
+                <div class="nav-link-dropdown">
+                    <button class="nav-link-btn">4th Republic Laws <i class="fa-solid fa-chevron-down"></i></button>
+                    <div class="nav-dropdown-menu">
+                        <a href="/post-1992-legislation/1/Acts of Parliament">Acts of Parliament</a>
+                        <a href="/post-1992-legislation/only-regulations">Legislative Instruments</a>
+                        <a href="/post-1992-legislation/Constitutional-Intruments">Constitutional Instruments</a>
+                        <a href="/post-1992-legislation/Executive-Intruments">Executive Instruments</a>
+                        <a href="/post-1992-legislation/only-amendments">Amendments</a>
+                    </div>
+                </div>
+
+                <a href="/judgement/Ghana" class="nav-link-btn" style="text-decoration:none !important;">Case Laws</a>
+                <a href="/News/Ghana-News/1" class="nav-link-btn" style="text-decoration:none !important;">News</a>
+            </div>
+
+            <div class="nav-auth">
+                @guest
+                    <a href="{{ route('login') }}" class="btn-login">Log In</a>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}" class="btn-signup">Sign Up</a>
+                    @endif
+                @else
+                    <div class="nav-user-dropdown" id="userDropdown">
+                        <button class="nav-user-btn" onclick="document.getElementById('userDropdown').classList.toggle('active')">
+                            <i class="fa-solid fa-circle-user"></i>
+                            {{ Auth::user()->name }}
+                            <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 2px;"></i>
+                        </button>
+                        <div class="nav-dropdown-menu dropdown-menu-right" style="right: 0; left: auto;">
+                            <a href="/home"><i class="fa-solid fa-house"></i> Dashboard</a>
+                            <a href="/accounts/profile/{{ Auth::user()->id }}"><i class="fa-solid fa-user"></i> Profile</a>
+                            <a href="/accounts/manage-password"><i class="fa-solid fa-gear"></i> Settings</a>
+                            <div class="nav-dropdown-divider"></div>
+                            <a href="/accounts/downloads/{{ Auth::user()->id }}"><i class="fa-solid fa-download"></i> Downloads</a>
+                            <a href="/accounts/bookmarks/{{ Auth::user()->id }}"><i class="fa-solid fa-bookmark"></i> Bookmarks</a>
+                            <a href="/subscription"><i class="fa-solid fa-credit-card"></i> Subscription</a>
+                            <div class="nav-dropdown-divider"></div>
+                            <a href="{{ route('logout') }}" class="logout-link"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="fa-solid fa-power-off"></i> Sign Out
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </div>
+                    </div>
+                @endguest
+            </div>
+        </div>
+    </nav>
+
+    <!-- Continent/Sub-Navigation header -->
+    <div class="continent-nav-wrap">
+        <div class="nav-scroller">
+            <nav class="nav nav-underline">
+                <a class="nav-link" href="/constitution/all_countries">All Countries</a>
+                <a class="nav-link" href="/constitution/Republic/Ghana/1">Ghana</a>
+                <a class="nav-link @if($allCountriesConstitution['continent'] == 'Africa') active @endif" href="/constitution/all-countries/1/Africa">Africa</a>
+                <a class="nav-link @if($allCountriesConstitution['continent'] == 'Asia') active @endif" href="/constitution/all-countries/2/Asia">Asia</a>
+                <a class="nav-link @if($allCountriesConstitution['continent'] == 'Europe') active @endif" href="/constitution/all-countries/3/Europe">Europe</a>
+                <a class="nav-link @if($allCountriesConstitution['continent'] == 'North America') active @endif" href="/constitution/all-countries/4/North-America">North America</a>
+                <a class="nav-link @if($allCountriesConstitution['continent'] == 'South America') active @endif" href="/constitution/all-countries/5/South-America">South America</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- ====== MAIN CONTAINER ====== -->
+    <div class="main-container">
+        <div class="row">
+            <!-- Main Content: Reading Panel -->
+            <div class="col-lg-9">
+                <!-- Search bar across all laws -->
+                <div class="search-bar-wrap position-relative">
+                    <form action="{{ url('all_constitution_index_search') }}" method="GET">
                         {{ csrf_field() }}
-                        <input style="width:300px;" class="form-control mr-sm-2" type="search" placeholder="Search any word..." aria-label="Search" name="search_text">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input class="search-input-premium" type="search" placeholder="Search keyword in all laws database..." name="search_text">
                     </form>
                 </div>
-            </div>
 
-            <div class="content_container bg-white rounded shadow-sm">
-                <div class="pt_for_content">
-                    <div class="nav-scroller bg-header-color rounded shadow-sm">
-                        <nav class="nav nav-underline">
-                            <a class="nav-link active text-white" href="/constitution/all_countries">All Countries</a>
-                            <a class="nav-link active text-white" href="/constitution/Republic/Ghana/1">Ghana</a>
-                            {{-- <a class="nav-link active text-white" href="/constitution_amended/Republic/Ghana/1">Ghana(Amended)</a> --}}
-                            <a class="nav-link text-white" href="/constitution/all-countries/1/Africa">Africa</a>
-                            <a class="nav-link text-white" href="/constitution/all-countries/2/Asia">Asia</a>
-                            <a class="nav-link text-white" href="/constitution/all-countries/3/Europe">Europe</a>
-                            <a class="nav-link text-white" href="/constitution/all-countries/4/North-America">North America</a>
-                            <a class="nav-link text-white" href="/constitution/all-countries/5/South-America">South America</a>
-                        </nav>
-                    </div>
-                </div>
-                {{-- For the filter --}}
-                <div class="text-right mb-1">
-                    <button id="print_options"  type="button" class="btn btn-outline-secondary btn-sm open">
-                        <span class="glyphicon glyphicon-tasks"></span>Print Options&nbsp;
-                    </button>
-                
-                    <button type="button" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#viewCases">
-                        Select Country in {{$allCountriesConstitution['continent']}}
-                    </button>
-                    
-                </div>
-
-                {{-- Start of container content --}}
-                <div class="judgement_display" style="height: auto;">
-                    <div id="display_content">
-                            <div class="header_only dimension_align">
-                                <h6 class="font-weight-bold">{{ $allCountriesConstitution['title'] }}</h6>
-                            </div>
-                            <div class="menu_options text-right" style="display: none;">
-                                @if (Route::has('login'))
-                                    @auth
-                                            
-                                            {{-- No Subscription --}}
-                                            @if(auth()->user()->check_subscription == 0)
-                                                @include('layouts.no_subscription')
-                                                    
-                                                {{-- Subscription has expired --}}
-                                                @elseif(auth()->user()->subscription_expiry < today())
-                                                @include('layouts.expired_subscription')
-                                                    
-                                                {{-- Subscription download limit reached --}}
-                                                @elseif(auth()->user()->subscription_downloads <= auth()->user()->downloads_counts)
-                                                @include('layouts.exceeded_downloads_subscription')
-                                                    
-                                                {{-- Download PDF and Others --}}
-                                                @else
-                                                    {{-- DOWNLOAD PDF --}}
-                                                    {{-- <a class="case_download_link" href="javascript:;" rel="/judgement/1/case_law/pdf_view/{{ $allGhanaLaw['case_title'] }}/{{$allGhanaLaw['id']}}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp; --}}
-                                                    
-                                                    {{-- SAVE USER DOWNLOAD --}}
-                                                    {{-- <a class="case_id d-none" href="javascript:;" rel="/acts-downloads/{{$allGhanaLaw['case_title']}}/{{ Auth::user()->name }}/{{ Auth::user()->id }}/{{$allGhanaLaw['gh_law_judgment_group_name']}}/{{$allGhanaLaw['id']}}/{{ Auth::user()->id }}{{$allGhanaLaw['case_title']}}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a> --}}
-
-                                                    {{-- PLAIN VIEW --}}
-                                                    {{-- <a href="/judgement/plain/simple-preview/{{$allGhanaLaw['id']}}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp; --}}
-                                                    
-                                                    {{-- PRINT --}}
-                                                    {{-- <a href="/judgement/print/simple-preview/{{$allGhanaLaw['id']}}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --}}
-                                            
-                                            @endif
-
-                                        @else
-
-                                        {{-- Create Account --}}
-                                        <a href="" data-toggle="modal" data-target="#exampleModal"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
-                                        {{-- PLAIN --}}
-                                        {{-- <a href="/judgement/plain_view/{{$allGhanaLaw['id']}}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp; --}}
-                                        <a href="" data-toggle="modal" data-target="#exampleModal">Plain View</a>&nbsp;&nbsp;||&nbsp;
-
-                                        <a href="" data-toggle="modal" data-target="#exampleModal"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel"><b>Kindly Log In or Sign Up to Create An Account</b></h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <a class="btn btn-sm bg-header-color text-white" href="{{ route('login') }}">Login</a>
-                                                    <a class="btn btn-sm bg-header-color text-white" href="{{ route('register') }}">Sign Up</a>
-                                                </div>
-                                            </div>
-                                            </div>
-                                        </div> 
-
-                                        
-                                    
-                                    @endauth
-                                @endif
-
-                            </div>
-                            
-
-                        <div class="content">  
-                            <p style="background-color: #FFFFFF;">{!! $allCountriesConstitution['preamble'] !!}</p>
-                            <p style="background-color: #FFFFFF;">{!! $allCountriesConstitution['content'] !!}</p>
+                <div class="premium-card">
+                    <!-- Action Headers -->
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                        <div class="reading-header-premium">
+                            <span class="continent-badge">{{ $allCountriesConstitution['continent'] }}</span>
+                            <h2>{{ $allCountriesConstitution['country'] }} Constitution</h2>
+                            <span class="year-badge">{{ $allCountriesConstitution['year'] }} Edition</span>
                         </div>
-                    </div> 
 
-                    <!-- View Other cases -->
-                    <div class="modal fade" id="viewCases" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel"><b>Select Country in <b>{{$allCountriesConstitution['continent']}}</b></h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <button id="print_options" type="button" class="btn btn-custom-outline open">
+                                <i class="fa-solid fa-print mr-1"></i> Print Options
                             </button>
-                            </div>
-                            <div class="modal-body text-left">
-                              <table class="table table-striped table-condensed" id="datatable">
-                                <thead>
-                                    <tr>
-                                        <th>Name of Country</th>
-                                        <th>Constitution Title</th>
-                                        <th>Year</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($allCountriesConstitutions as $allCountriesConstitution)
-                                    <tr>
-                                        <td>{{ $allCountriesConstitution->country }}</td>
-                                        <td>
-                                        <a href="/constitution/1/{{$allCountriesConstitution->continent}}/{{$allCountriesConstitution->country}}/{{$allCountriesConstitution->id}}">{{$allCountriesConstitution->country }}</a>
-                                        </td>
-                                        <td>{{ $allCountriesConstitution->year }}</td>
-                                    </tr>
-                                @endforeach 
-                                </tbody>
-                            </table>
-                            </div>
-                            
+                            <button type="button" class="btn btn-custom-outline" data-toggle="modal" data-target="#viewCases">
+                                <i class="fa-solid fa-globe mr-1"></i> Select Country
+                            </button>
                         </div>
-                      </div>
                     </div>
 
-                    <div id="display_view_all_section"></div>
+                    <!-- Print Menu Options (If Auth and Subscribed) -->
+                    <div class="menu_options text-right mb-4" style="display: none; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+                        @if (Route::has('login'))
+                            @auth
+                                @if(auth()->user()->check_subscription == 0)
+                                    @include('layouts.no_subscription')
+                                @elseif(auth()->user()->subscription_expiry < today())
+                                    @include('layouts.expired_subscription')
+                                @elseif(auth()->user()->subscription_downloads <= auth()->user()->downloads_counts)
+                                    @include('layouts.exceeded_downloads_subscription')
+                                @else
+                                    <!-- Options placeholder -->
+                                @endif
+                            @else
+                                <a href="" data-toggle="modal" data-target="#exampleModal" class="btn btn-sm btn-accent"><i class="fa-solid fa-file-pdf"></i> Download PDF</a>
+                                <a href="" data-toggle="modal" data-target="#exampleModal" class="btn btn-sm btn-custom-outline">Plain View</a>
+                                <a href="" data-toggle="modal" data-target="#exampleModal" class="btn btn-sm btn-custom-outline"><i class="fa-solid fa-print"></i> Print</a>
 
+                                <!-- Sign-In Modal -->
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Log In Required</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true" style="color:#fff;">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body text-center py-4">
+                                                <p class="text-secondary mb-4">Please log in or register a premium account to view, print, or download PDF versions of constitutions.</p>
+                                                <div class="d-flex justify-content-center gap-3">
+                                                    <a class="btn btn-accent" href="{{ route('login') }}">Log In</a>
+                                                    <a class="btn btn-custom-outline" href="{{ route('register') }}">Sign Up</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                            @endauth
+                        @endif
+                    </div>
 
+                    <!-- Preamble & Document Text Body -->
+                    <div class="judgement_display">
+                        <div class="content">  
+                            <div class="mb-4">{!! $allCountriesConstitution['preamble'] !!}</div>
+                            <div>{!! $allCountriesConstitution['content'] !!}</div>
+                        </div>
+                    </div>
                 </div>
-                
-
-
-                {{-- End of content container --}}
-        
             </div>
-            {{-- <a id="back-to-top" href="#" class="btn btn-light back-to-top" role="button"><i class="fas fa-chevron-up"></i></a> --}}
-            <a id="back-to-top" href="#" class="back-to-top">
-              <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-arrow-up-circle-fill" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-10.646.354a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 6.207V11a.5.5 0 0 1-1 0V6.207L5.354 8.354z"/>
-              </svg>
-            </a>
+
+            <!-- Right Sidebar: Advertisements -->
+            <div class="col-lg-3">
+                <div class="premium-card text-center p-3">
+                    @include('ads.content_adsense_vertical')
+                </div>
+            </div>
         </div>
-
-
-        <div class="col-md-3 fixing_top p-3 bg-white rounded shadow-sm">
-          @include('ads.content_adsense_vertical')
-        </div>
-        
-
     </div>
-    
-</div>
 
+    <!-- Country Selector Modal -->
+    <div class="modal fade" id="viewCases" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-globe mr-2 text-primary"></i> Select Country in {{ $allCountriesConstitution['continent'] }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="color:#fff;">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-left">
+                    <table class="table-premium table table-striped" id="datatable">
+                        <thead>
+                            <tr>
+                                <th>Name of Country</th>
+                                <th>Constitution Title</th>
+                                <th>Year</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($allCountriesConstitutions as $allCountriesCont)
+                                <tr>
+                                    <td>{{ $allCountriesCont->country }}</td>
+                                    <td>
+                                        <a href="/constitution/1/{{ $allCountriesCont->continent }}/{{ $allCountriesCont->country }}/{{ $allCountriesCont->id }}">
+                                            {{ $allCountriesCont->title }}
+                                        </a>
+                                    </td>
+                                    <td>{{ $allCountriesCont->year }}</td>
+                                </tr>
+                            @endforeach 
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Back to top floating button -->
+    <a id="back-to-top" href="#" class="back-to-top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
 
+    <!-- Scripts -->
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="{{ asset('js/offcanvas.js') }}"></script>
+    <script src="{{ asset('js/myscript.js') }}"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 
+    <script>
+        $(document).ready(function(){
+            $('#datatable').DataTable({
+                "pageLength": 10,
+                "ordering": true,
+                "responsive": true
+            });
 
+            // back-to-top scroll animation
+            $('#back-to-top').click(function (e) {
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 400);
+            });
 
+            // Disable copy paste on document body
+            $('body').bind('cut copy paste', function (e) {
+                e.preventDefault();
+            });
 
-
-<script src="{{ asset('js/jquery.min.js') }}"></script>
-{{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
-{{-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> --}}
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-
-<script src="{{ asset('js/tooltipster.bundle.min.js') }}"></script>
-<script src="{{ asset('js/print-preview.js') }}"></script>
-<script src="{{ asset('js/offcanvas.js') }}"></script>
-
-<script src="{{ asset('js/myscript.js') }}"></script>
-
-
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-<script>
-    $(document).ready(function(){
-        $('#datatable').DataTable();
-    });
-</script>
-
-<script>
-  $(document).ready(function(){
-		// scroll body to 0px on click
-		$('#back-to-top').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 400);
-			return false;
-		});
-});
-</script>
-
-<script type="text/javascript">
-  $(document).ready(function () {
-      //Disable full page
-      $('body').bind('cut copy paste', function (e) {
-          e.preventDefault();
-      });
-      
-      //Disable part of page
-      $('#id').bind('cut copy paste', function (e) {
-          e.preventDefault();
-      });
-  });
-</script>
-
-
-<script>
-    $(".case_id").click(function(e){
-        e.preventDefault();
-        var case_id = $(this).attr("rel");
-        console.log(case_id);
-
-        $.ajax({
-            url: case_id,
-            type: "GET",
-            success:function(response){
-            if(response.success){
-                  $("#bookmarked").notify(
-                      response.message,
-                { position:"left", className: "info", autoHideDelay: 900000}
-                );
-            }else{
-                $("#bookmarked").notify(
-               "Section to Download",
-                { position:"left", className: "success", autoHideDelay: 10000}
-                );
-              }
-            },
-            error:function (){
-                $("#bookmarked").notify(
-               "Issue with database entry",
-                { position:"left", className: "error" }
-                );
-            }
+            // Close user dropdown on click outside
+            document.addEventListener('click', (e) => {
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown && !dropdown.contains(e.target)) {
+                    dropdown.classList.remove('active');
+                }
+            });
         });
-
-    });
-    
-</script>
-
-<script>
-    $(".case_download_link").click(function(e){
-        e.preventDefault();
-        var case_download_link = $(this).attr("rel");
-        $('.case_id').trigger("click");
-       
-        $.ajax({
-            url: case_download_link,
-            type: "GET",
-        });
-    });  
-</script>
-
-</body>
+    </script>
+  </body>
 </html>
