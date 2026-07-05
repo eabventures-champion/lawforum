@@ -94,13 +94,6 @@
     </div>
     
     <div style="display: flex; flex-direction: column; gap: 12px; align-items: center;">
-        <!-- Select Articles Modal Trigger -->
-        <button type="button" class="btn-action-premium" data-toggle="modal" data-target="#selectArticlesModal">
-            <i class="fa-solid fa-list-check"></i> Select Articles
-        </button>
-        
-        
-        
         <!-- Unified View Options Dropdown Trigger -->
         <div class="dropdown" style="width: 100%;">
             <button class="btn-action-premium dropdown-toggle" type="button" id="sidebarViewOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">

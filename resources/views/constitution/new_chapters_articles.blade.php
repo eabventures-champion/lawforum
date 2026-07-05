@@ -27,15 +27,12 @@
                         $oldchapter = $constitutionContent->chapter; ?>
             <ul>
                 <li style="list-style: none !important;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <input type="checkbox" class="article-audio-checkbox" data-sid="{{ $constitutionContent->id }}" data-section="{{ strtolower($constitutionContent->section) }}" style="accent-color: var(--gold); cursor: pointer; width: 14px; height: 14px; flex-shrink: 0; position: relative; top: 1px;">
                     <a data-scroll-to="body"
                     data-scroll-focus="body"
                     data-scroll-speed="400"
-                    data-scroll-offset="-60" class="constitution_content_link" sid="{{ $constitutionContent->id }}"  href="/constitution/Republic/constitution_content/{{ $constitutionContent->id }}" style="flex-grow: 1;">
+                    data-scroll-offset="-60" class="constitution_content_link" sid="{{ $constitutionContent->id }}"  href="/constitution/Republic/constitution_content/{{ $constitutionContent->id }}">
                     <span>{{ $constitutionContent->section }}</span>
                     </a>
-                </div>
                 </li>
             </ul>      
             

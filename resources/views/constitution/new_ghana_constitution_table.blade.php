@@ -924,7 +924,7 @@
         /* ============================================
            DYNAMICAL INNER ARTICLE OVERRIDES
            ============================================ */
-        #display_content, #acts_expanded_view {
+        #display_content, #acts_expanded_view, .split-panel-body {
             color: var(--text-primary) !important;
             transition: font-size 0.25s ease;
         }
@@ -943,32 +943,36 @@
             position: static !important;
         }
 
-        #display_content .content, #acts_expanded_view .content {
+        .split-panel-body .nav-links {
+            display: none !important;
+        }
+
+        #display_content .content, #acts_expanded_view .content, .split-panel-body .content {
             font-size: 1em !important;
             line-height: 1.8 !important;
             color: var(--text-primary) !important;
             padding: 10px 0 !important;
         }
 
-        #display_content .content p, #acts_expanded_view .content p {
+        #display_content .content p, #acts_expanded_view .content p, .split-panel-body .content p {
             margin-bottom: 20px !important;
         }
 
-        #display_content .content u, #acts_expanded_view .content u {
+        #display_content .content u, #acts_expanded_view .content u, .split-panel-body .content u {
             color: var(--gold) !important;
             text-decoration: none !important;
             border-bottom: 1px dashed var(--gold);
             padding-bottom: 2px;
         }
 
-        #display_content a#print_options, #acts_expanded_view a#print_options {
+        #display_content a#print_options, #acts_expanded_view a#print_options, .split-panel-body a#print_options {
             color: var(--accent-light) !important;
             font-weight: 600 !important;
             font-size: 13px !important;
             text-decoration: none !important;
         }
 
-        #display_content .menu_options, #acts_expanded_view .menu_options {
+        #display_content .menu_options, #acts_expanded_view .menu_options, .split-panel-body .menu_options {
             background: rgba(17, 24, 39, 0.85) !important;
             border: 1px solid var(--border-color) !important;
             border-radius: 8px !important;
@@ -977,7 +981,7 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
         }
 
-        #display_content .menu_options a, #acts_expanded_view .menu_options a {
+        #display_content .menu_options a, #acts_expanded_view .menu_options a, .split-panel-body .menu_options a {
             color: var(--text-secondary) !important;
             font-weight: 600 !important;
             font-size: 13px !important;
@@ -1016,7 +1020,7 @@
            MODAL & TABLE CUSTOMIZATION
            ============================================ */
         .modal-content {
-            background: var(--bg-secondary) !important;
+            background: #0c1220 !important;
             border: 1px solid var(--border-color) !important;
             color: var(--text-primary) !important;
             border-radius: 16px !important;
@@ -1024,7 +1028,12 @@
         }
 
         .modal-header {
+            background: #0c1220 !important;
             border-bottom: 1px solid var(--border-color) !important;
+        }
+
+        .modal-body {
+            background: #0c1220 !important;
         }
 
         .modal-header .close {
@@ -1038,10 +1047,12 @@
         }
 
         #datatable {
+            background-color: #0c1220 !important;
             color: var(--text-secondary) !important;
         }
 
         #datatable th {
+            background-color: #0c1220 !important;
             border-bottom: 2px solid var(--border-color) !important;
             color: var(--text-primary) !important;
             font-weight: 700 !important;
@@ -1050,14 +1061,22 @@
         }
 
         #datatable td {
+            background-color: #0c1220 !important;
             border-bottom: 1px solid var(--border-color) !important;
-            color: var(--text-secondary) !important;
+            color: rgba(255, 255, 255, 0.7) !important;
             font-size: 14px !important;
         }
 
-        #datatable tr:hover td {
-            background: rgba(255, 255, 255, 0.02) !important;
-            color: var(--text-primary) !important;
+        /* Force Datatables hover highlight backgrounds to be subtle and dark */
+        #datatable tbody tr:hover,
+        #datatable tbody tr:hover td,
+        table.dataTable.hover tbody tr:hover,
+        table.dataTable.display tbody tr:hover,
+        .table-hover tbody tr:hover,
+        .table-hover tbody tr:hover td {
+            background-color: rgba(255, 255, 255, 0.06) !important;
+            background: rgba(255, 255, 255, 0.06) !important;
+            color: #fff !important;
         }
 
         #datatable td a {
@@ -1303,6 +1322,35 @@
             font-weight: 600;
             margin: 0;
             line-height: 1.4;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translate(-50%, 20px);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+        
+        .audio-floating-pane {
+            position: fixed !important;
+            bottom: 24px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            z-index: 1040 !important;
+            background: rgba(15, 23, 42, 0.95) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 50px !important;
+            padding: 6px 20px !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8) !important;
+            height: 44px !important;
+            max-width: 90vw !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
 
         /* ============================================
@@ -1678,22 +1726,35 @@
         <main class="workspace-main">
             <div class="reading-toolbar">
                 <div class="toolbar-left">
-                    <div id="tabs" class="nav nav-tabs-premium" role="tablist">
-                        <a class="nav-tab-premium tabPanedHide_acts_content active tab-hidden-initially" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="true">
-                            <i class="fa-solid fa-book-open"></i> Reader
-                        </a>
-                        <a class="nav-tab-premium tabPanedHide_expanded_view tab-hidden-initially" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">
-                            <i class="fa-solid fa-expand"></i> Expanded View
-                        </a>
-                        <a class="nav-tab-premium tabPanedHide_split_view tab-hidden-initially" id="v-pills-split-tab" data-toggle="pill" href="#v-pills-split" role="tab" aria-controls="v-pills-split" aria-selected="false">
-                            <i class="fa-solid fa-columns"></i> Split View
-                        </a>
+                    <!-- Hidden actual Bootstrap tab anchors for trigger functionality -->
+                    <div id="tabs" class="nav" role="tablist" style="display: none !important;">
+                        <a class="nav-tab-premium tabPanedHide_acts_content active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile">Reader</a>
+                        <a class="nav-tab-premium tabPanedHide_expanded_view" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages">Expanded View</a>
+                        <a class="nav-tab-premium tabPanedHide_split_view" id="v-pills-split-tab" data-toggle="pill" href="#v-pills-split">Split View</a>
+                    </div>
+                    
+                    <!-- Premium View Mode Dropdown -->
+                    <div class="dropdown tab-hidden-initially" id="viewModeSelectorWrap">
+                        <button class="nav-tab-premium dropdown-toggle" type="button" id="viewModeSelectorBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="min-width: 150px; justify-content: space-between !important; background: var(--accent-gradient) !important; color: #fff !important; border-color: var(--accent) !important; box-shadow: 0 4px 12px var(--accent-glow) !important; cursor: pointer; padding: 8px 16px !important;">
+                            <span><i class="fa-solid fa-book-open mr-2"></i> Reader</span>
+                        </button>
+                        <div class="dropdown-menu bg-dark border-secondary" aria-labelledby="viewModeSelectorBtn" style="border-radius: 8px; margin-top: 5px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid var(--border-color); background-color: rgb(17, 24, 39) !important; z-index: 1050;">
+                            <a class="dropdown-item text-white py-2 px-3 active" href="#" onclick="selectViewMode('reader')" style="font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; color: #fff !important; cursor: pointer;">
+                                <i class="fa-solid fa-book-open" style="width: 16px;"></i> Reader
+                            </a>
+                            <a class="dropdown-item text-white py-2 px-3" href="#" onclick="selectViewMode('expanded')" style="font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; color: #fff !important; cursor: pointer;">
+                                <i class="fa-solid fa-expand" style="width: 16px;"></i> Expanded View
+                            </a>
+                            <a class="dropdown-item text-white py-2 px-3" href="#" onclick="selectViewMode('split')" style="font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; color: #fff !important; cursor: pointer;">
+                                <i class="fa-solid fa-columns" style="width: 16px;"></i> Split View
+                            </a>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Toolbar Center: Keyword Search Box -->
-                <div class="toolbar-center">
-                    <div class="content-search-box">
+                <!-- Toolbar Center: Keyword Search Box & Integrated Audio controls -->
+                <div class="toolbar-center" style="display: flex; align-items: center; gap: 15px; flex-grow: 1; justify-content: center; max-width: 50%;">
+                    <div class="content-search-box" style="flex-shrink: 0; visibility: hidden;">
                         <i class="fa-solid fa-magnifying-glass"></i>
                         <input type="text" id="keywordSearch" placeholder="Find in document...">
                         <span class="search-matches-count" id="searchMatchCount" style="display:none;"></span>
@@ -1702,21 +1763,74 @@
                             <button id="searchNextBtn" onclick="navigateMatches('next')" title="Next match"><i class="fa-solid fa-chevron-down"></i></button>
                         </div>
                     </div>
+
+                    <!-- Integrated Audio Reader Panel -->
+                    <div id="audioPlayerBanner" style="display: none; align-items: center; gap: 8px; background: rgba(17, 24, 39, 0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 3px 8px; height: 36px; flex-shrink: 0;">
+                        <!-- Left controls: Play / Pause / Stop -->
+                        <div class="d-flex align-items-center" style="gap: 4px;">
+                            <button id="audioPlayBtn" class="audio-player-btn play-btn" onclick="handleAudioPlay()" title="Play Speech" style="width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border: none; color: #fff; cursor: pointer;">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button id="audioPauseBtn" class="audio-player-btn play-btn" onclick="handleAudioPause()" title="Pause Speech" style="display:none; background: var(--accent-gradient); width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; border: none; color: #fff; cursor: pointer;">
+                                <i class="fa-solid fa-pause"></i>
+                            </button>
+                            <button id="audioStopBtn" class="audio-player-btn stop-btn" onclick="handleAudioStop()" title="Stop Speech" style="width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border: none; color: #fff; cursor: pointer;">
+                                <i class="fa-solid fa-stop"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Status text -->
+                        <div class="audio-status-wrap" style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--text-secondary); display: flex; flex-direction: column; justify-content: center; line-height: 1.2;">
+                            <span class="audio-status-label" id="audioStatusLabel" style="font-size: 10px; font-weight: 600;">Audio Off</span>
+                            <span class="audio-playing-title" id="audioPlayingTitle" style="display:none; font-size: 9px; color: var(--text-muted);"></span>
+                        </div>
+                        
+                        <!-- Mode selector dropdown -->
+                        <div id="audioModeSelectorContainer" style="display: flex; align-items: center;">
+                            <select class="form-control text-white bg-dark border-secondary" id="audioModeSelectDropdown" onchange="setAudioMode(this.value)" style="height: 26px; font-size: 11px; padding: 2px 5px; border-radius: 5px; width: 110px; background-color: rgba(17, 24, 39, 0.8) !important; color: #fff; border: 1px solid var(--border-color); outline: none;">
+                                <option value="current">Current Article</option>
+                                <option value="all">Read All</option>
+                            </select>
+                        </div>
+
+                        <!-- Split Layout controls -->
+                        <div id="splitLayoutControls" style="display: none; align-items: center; gap: 3px;">
+                            <button class="mode-btn active split-layout-btn" id="btnSplitHorizontal" onclick="setSplitDirection('horizontal')" title="Side-by-Side" style="height: 26px; font-size: 10px; padding: 2px 8px; border-radius: 5px; margin: 0; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; cursor: pointer;">
+                                <i class="fa-solid fa-columns"></i> Side
+                            </button>
+                            <button class="mode-btn split-layout-btn" id="btnSplitVertical" onclick="setSplitDirection('vertical')" title="Stacked" style="height: 26px; font-size: 10px; padding: 2px 8px; border-radius: 5px; margin: 0; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; cursor: pointer;">
+                                <i class="fa-solid fa-window-maximize" style="transform: rotate(90deg); font-size: 9px;"></i> Stack
+                            </button>
+                        </div>
+                        
+                        <!-- Settings Popover/Dropdown (Volume / Rate) -->
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-dark text-muted border-0 p-0" type="button" id="audioSettingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: transparent; cursor: pointer;">
+                                <i class="fa-solid fa-sliders" style="font-size: 11px; color: var(--text-muted);"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right bg-dark border-secondary p-3" aria-labelledby="audioSettingsDropdown" style="width: 250px; border-radius: 8px; margin-top: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid var(--border-color); background-color: rgb(17, 24, 39) !important; z-index: 1050;">
+                                <h6 class="dropdown-header text-white px-0 pb-2 mb-2 border-bottom border-secondary" style="font-size: 12px; font-weight: 700; color: #fff !important; border-bottom: 1px solid rgba(255,255,255,0.1) !important;">Audio Settings</h6>
+                                
+                                <div class="form-group mb-2">
+                                    <label class="text-muted mb-1" style="font-size: 10px; font-weight: 600; color: var(--text-secondary) !important;">Voice Engine</label>
+                                    <select id="audioVoiceSelect" class="form-control text-white bg-dark border-secondary" onchange="VoicePlayer.stop()" style="font-size: 11px; height: 28px; padding: 2px; background-color: rgba(0,0,0,0.5) !important; color: #fff;"></select>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <label class="text-muted mb-1 d-flex justify-content-between" style="font-size: 10px; font-weight: 600; color: var(--text-secondary) !important;">
+                                        <span>Reading Speed</span>
+                                        <span class="text-warning" id="audioRateLabel">1.0x</span>
+                                    </label>
+                                    <input type="range" id="audioRateRange" class="w-100" min="0.5" max="2.0" step="0.1" value="1.0" onchange="updateRateLabel(this.value)" style="accent-color: var(--accent-light);">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="toolbar-right">
-                    <!-- Split layout direction controls -->
-                    <div class="split-layout-controls" id="splitLayoutControls" style="display: none; margin-right: 8px;">
-                        <button class="split-layout-btn active" id="btnSplitHorizontal" onclick="setSplitDirection('horizontal')" title="Split Horizontally (Side-by-Side)">
-                            <i class="fa-solid fa-columns"></i> Side-by-Side
-                        </button>
-                        <button class="split-layout-btn" id="btnSplitVertical" onclick="setSplitDirection('vertical')" title="Split Vertically (Stacked)">
-                            <i class="fa-solid fa-window-maximize" style="transform: rotate(90deg); font-size: 10px;"></i> Stacked
-                        </button>
-                    </div>
 
                     <!-- Font adjuster -->
-                    <div class="font-adjuster">
+                    <div class="font-adjuster" style="visibility: hidden;">
                         <button onclick="changeFontSize('decrease')" title="Decrease text size"><i class="fa-solid fa-minus"></i></button>
                         <span>Aa</span>
                         <button onclick="changeFontSize('increase')" title="Increase text size"><i class="fa-solid fa-plus"></i></button>
@@ -1736,46 +1850,6 @@
                     <button class="toolbar-icon-btn" onclick="toggleSidebar('right')" title="Toggle Info Panel">
                         <i class="fa-solid fa-sliders"></i>
                     </button>
-                </div>
-            </div>
-
-            <!-- Premium Audio Player Banner -->
-            <div class="audio-player-banner" id="audioPlayerBanner" style="display: none;">
-                <div class="audio-controls-left">
-                    <button id="audioPlayBtn" class="audio-player-btn play-btn" onclick="handleAudioPlay()" title="Play Speech">
-                        <i class="fa-solid fa-play"></i>
-                    </button>
-                    <button id="audioPauseBtn" class="audio-player-btn play-btn" onclick="handleAudioPause()" title="Pause Speech" style="display:none; background: var(--accent-gradient);">
-                        <i class="fa-solid fa-pause"></i>
-                    </button>
-                    <button id="audioStopBtn" class="audio-player-btn stop-btn" onclick="handleAudioStop()" title="Stop Speech">
-                        <i class="fa-solid fa-stop"></i>
-                    </button>
-                    <div class="audio-status-wrap">
-                        <span class="audio-status-label" id="audioStatusLabel">Audio Reader Off</span>
-                        <span class="audio-playing-title" id="audioPlayingTitle" style="display:none;"></span>
-                    </div>
-                </div>
-
-                <div class="audio-controls-center">
-                    <div class="audio-mode-selector">
-                        <button class="mode-btn active" id="modeBtnCurrent" onclick="setAudioMode('current')" title="Read only the active article shown in the reader">Current Article</button>
-                        <button class="mode-btn" id="modeBtnSelected" onclick="setAudioMode('selected')" title="Read articles selected using checkboxes">Selected Articles</button>
-                        <button class="mode-btn" id="modeBtnAll" onclick="setAudioMode('all')" title="Read the entire constitution sequentially">Read All</button>
-                    </div>
-                    <span class="audio-selection-count" id="audioSelectionCount" style="display:none;">0 selected</span>
-                </div>
-
-                <div class="audio-controls-right">
-                    <div class="audio-setting-item">
-                        <i class="fa-solid fa-volume-high text-muted"></i>
-                        <select id="audioVoiceSelect" class="audio-select-dropdown" onchange="VoicePlayer.stop()"></select>
-                    </div>
-                    <div class="audio-setting-item">
-                        <i class="fa-solid fa-gauge-high text-muted"></i>
-                        <input type="range" id="audioRateRange" class="audio-rate-slider" min="0.5" max="2.0" step="0.1" value="1.0" onchange="updateRateLabel(this.value)">
-                        <span class="audio-rate-label" id="audioRateLabel">1.0x</span>
-                    </div>
                 </div>
             </div>
 
@@ -1822,27 +1896,49 @@
                         <div class="split-view-container split-direction-horizontal" id="splitViewContainer">
                             <!-- Panel A -->
                             <div class="split-panel active" id="splitPanelA" onclick="focusSplitPanel('A')">
-                                <div class="split-panel-header">
-                                    <span class="panel-badge" id="badgePanelA">Panel A (Active)</span>
-                                    <span class="loaded-title" id="titlePanelA">No Article Loaded</span>
+                                <div class="split-panel-header" style="justify-content: space-between !important; flex-wrap: wrap; gap: 10px;">
+                                    <div class="d-flex align-items-center" style="gap: 10px;">
+                                        <span class="panel-badge" id="badgePanelA">Panel A (Active)</span>
+                                        <span class="loaded-title" id="titlePanelA" style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">No Article Loaded</span>
+                                    </div>
+                                    <div style="width: 200px;">
+                                        <select class="form-control text-white bg-dark border-secondary split-article-select" data-panel="A" style="height: 32px; font-size: 12px; padding: 2px 8px; border-radius: 6px; background-color: rgba(17, 24, 39, 0.8) !important;">
+                                            <option value="">-- Load Article --</option>
+                                            <option value="/constitution/Republic/constitution_preamble/{{ $ghana_act['id'] }}">Introductory Text (Preamble)</option>
+                                            @foreach($constitutionContents as $art)
+                                                <option value="/constitution/Republic/constitution_content/{{ $art->id }}">{{ $art->section }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="split-panel-body" id="bodyPanelA">
                                     <div class="text-center py-5 text-muted">
                                         <i class="fa-solid fa-book-open fa-2x mb-3" style="opacity: 0.3;"></i>
-                                        <p>Make sure this panel is active (highlighted border) and select any article from the left Table of Contents to compare.</p>
+                                        <p>Make sure this panel is active (highlighted border) and select any article from the dropdown at the top right of this panel (or the left Table of Contents) to compare.</p>
                                     </div>
                                 </div>
                             </div>
                             <!-- Panel B -->
                             <div class="split-panel" id="splitPanelB" onclick="focusSplitPanel('B')">
-                                <div class="split-panel-header">
-                                    <span class="panel-badge" id="badgePanelB">Panel B</span>
-                                    <span class="loaded-title" id="titlePanelB">No Article Loaded</span>
+                                <div class="split-panel-header" style="justify-content: space-between !important; flex-wrap: wrap; gap: 10px;">
+                                    <div class="d-flex align-items-center" style="gap: 10px;">
+                                        <span class="panel-badge" id="badgePanelB">Panel B</span>
+                                        <span class="loaded-title" id="titlePanelB" style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">No Article Loaded</span>
+                                    </div>
+                                    <div style="width: 200px;">
+                                        <select class="form-control text-white bg-dark border-secondary split-article-select" data-panel="B" style="height: 32px; font-size: 12px; padding: 2px 8px; border-radius: 6px; background-color: rgba(17, 24, 39, 0.8) !important;">
+                                            <option value="">-- Load Article --</option>
+                                            <option value="/constitution/Republic/constitution_preamble/{{ $ghana_act['id'] }}">Introductory Text (Preamble)</option>
+                                            @foreach($constitutionContents as $art)
+                                                <option value="/constitution/Republic/constitution_content/{{ $art->id }}">{{ $art->section }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="split-panel-body" id="bodyPanelB">
                                     <div class="text-center py-5 text-muted">
                                         <i class="fa-solid fa-book-open fa-2x mb-3" style="opacity: 0.3;"></i>
-                                        <p>Make sure this panel is active (highlighted border) and select any article from the left Table of Contents to compare.</p>
+                                        <p>Make sure this panel is active (highlighted border) and select any article from the dropdown at the top right of this panel (or the left Table of Contents) to compare.</p>
                                     </div>
                                 </div>
                             </div>
@@ -1913,47 +2009,7 @@
             </div>
         </div>
     </div>
-    <!-- Select Articles Modal -->
-    <div class="modal fade" id="selectArticlesModal" tabindex="-1" aria-labelledby="articlesModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="articlesModalLabel"><i class="fa-solid fa-book-open mr-2 text-primary"></i> Select Article</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true" style="color:#fff;">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-search-bar">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="articleFilterInput" placeholder="Filter articles by keyword or section name...">
-                </div>
-                <div class="modal-body">
-                    <div class="articles-grid-layout" id="modalArticlesGrid">
-                        @foreach($constitutionContents as $constitutionContent)
-                            <div class="article-modal-card" data-section="{{ strtolower($constitutionContent->section) }}">
-                                <input type="checkbox" class="article-modal-card-checkbox" data-sid="{{ $constitutionContent->id }}">
-                                <a data-scroll-to="body"
-                                   data-scroll-focus="body"
-                                   data-scroll-speed="400"
-                                   data-scroll-offset="-60" 
-                                   class="constitution_view_all_section_link_with_prev_next constitution_content_link" 
-                                   sid="{{$constitutionContent->id}}" 
-                                   href="/constitution/Republic/constitution_content/{{ $constitutionContent->id }}" 
-                                   data-dismiss="modal">
-                                    <div class="article-card-header">
-                                        <span class="chapter-badge">{{ ($constitutionContent->chapter == '') ? 'Sections' : $constitutionContent->chapter }}</span>
-                                    </div>
-                                    <div class="article-card-body">
-                                        <h6>{{ $constitutionContent->section }}</h6>
-                                    </div>
-                                </a>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Scripts -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
@@ -1974,6 +2030,28 @@
                 "ordering": true,
                 "responsive": true
             });
+
+            // Observer to dynamically hide/show search input and font size adjuster on welcome screen
+            function checkWelcomeScreenState() {
+                const hasWelcome = $('#display_content').find('.toc-welcome').length > 0;
+                if (hasWelcome) {
+                    $('.content-search-box').css('visibility', 'hidden');
+                    $('.font-adjuster').css('visibility', 'hidden');
+                } else {
+                    $('.content-search-box').css('visibility', 'visible');
+                    $('.font-adjuster').css('visibility', 'visible');
+                }
+            }
+
+            const welcomeObserver = new MutationObserver(function() {
+                checkWelcomeScreenState();
+            });
+            
+            const displayEl = document.getElementById('display_content');
+            if (displayEl) {
+                welcomeObserver.observe(displayEl, { childList: true, subtree: true });
+                checkWelcomeScreenState();
+            }
         });
 
         // Close user dropdown on click outside
@@ -1995,6 +2073,19 @@
            WORKSPACE CONTROL SCRIPTS
            ============================================ */
         
+        // Audio Player layout responsive docking / floating helper
+        function syncAudioPlayerLayout() {
+            const rightSidebar = document.getElementById('rightSidebar');
+            const audioBanner = $('#audioPlayerBanner');
+            if (rightSidebar && audioBanner.length) {
+                if (!rightSidebar.classList.contains('collapsed')) {
+                    audioBanner.addClass('audio-floating-pane');
+                } else {
+                    audioBanner.removeClass('audio-floating-pane');
+                }
+            }
+        }
+
         // Sidebar Toggle Handler
         function toggleSidebar(side) {
             const sidebar = document.getElementById(side + 'Sidebar');
@@ -2006,6 +2097,10 @@
             } else {
                 sidebar.classList.add('collapsed');
                 restoreBtn.style.display = 'flex';
+            }
+            
+            if (side === 'right') {
+                syncAudioPlayerLayout();
             }
         }
 
@@ -2037,6 +2132,10 @@
                 sidebar.classList.remove('collapsed');
                 if (restoreBtn) restoreBtn.style.display = 'none';
             }
+            
+            if (side === 'right') {
+                syncAudioPlayerLayout();
+            }
         }
 
         // Toggle expanded view tab programmatically from button clicks
@@ -2048,6 +2147,19 @@
         // Dynamic Right sidebar module switcher and auto sidebar toggle based on Active Tab
         $('#tabs a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
             const targetId = $(e.target).attr('href');
+            
+            // Sync View Mode Selector dropdown button state
+            $('#viewModeSelectorWrap .dropdown-item').removeClass('active');
+            if (targetId === '#v-pills-profile') {
+                $('#viewModeSelectorBtn').html(`<span><i class="fa-solid fa-book-open mr-2"></i> Reader</span>`);
+                $('#viewModeSelectorWrap .dropdown-item').eq(0).addClass('active');
+            } else if (targetId === '#v-pills-messages') {
+                $('#viewModeSelectorBtn').html(`<span><i class="fa-solid fa-expand mr-2"></i> Expanded View</span>`);
+                $('#viewModeSelectorWrap .dropdown-item').eq(1).addClass('active');
+            } else if (targetId === '#v-pills-split') {
+                $('#viewModeSelectorBtn').html(`<span><i class="fa-solid fa-columns mr-2"></i> Split View</span>`);
+                $('#viewModeSelectorWrap .dropdown-item').eq(2).addClass('active');
+            }
             
             // Clear current search state on tab switch to prevent highlight corruption
             $('#keywordSearch').val('');
@@ -2065,10 +2177,15 @@
             currentMatchIndex = -1;
             updateSearchUI();
             
+            // Show audio player banner when content views are selected
+            $('#audioPlayerBanner').css('display', 'flex');
+
             if (targetId === '#v-pills-profile') {
                 // Restore sidebars to normal view
                 setSidebarState('left', false);
                 setSidebarState('right', false);
+                $('#splitLayoutControls').hide();
+                $('#audioModeSelectorContainer').show();
                 
                 if ($('#display_content').find('.toc-welcome').length > 0) {
                     $('.toc-sidebar-module').show();
@@ -2077,13 +2194,35 @@
                     $('.toc-sidebar-module').hide();
                     $('.content-sidebar-module').show();
                 }
+            } else if (targetId === '#v-pills-split') {
+                // Split View Tab: collapse both sidebars for widescreen presentation
+                setSidebarState('left', true);
+                setSidebarState('right', true);
+                $('#splitLayoutControls').css('display', 'flex');
+                $('#audioModeSelectorContainer').hide();
+                setAudioMode('current');
+                
+                $('.toc-sidebar-module').hide();
+                $('.content-sidebar-module').hide();
             } else {
                 // Expanded View Tab: collapse both sidebars for widescreen presentation
                 setSidebarState('left', true);
                 setSidebarState('right', true);
+                $('#splitLayoutControls').hide();
+                $('#audioModeSelectorContainer').hide();
+                setAudioMode('current');
                 
                 $('.toc-sidebar-module').hide();
                 $('.content-sidebar-module').hide();
+                
+                // Fetch content if it's not loaded yet (still showing spinner)
+                const expandedContainer = $('#acts_expanded_view');
+                if (expandedContainer.find('.fa-spinner').length > 0) {
+                    const expandedUrl = `/constitution/Republic/expanded_view/${ghanaActId}`;
+                    $.get(expandedUrl, function(response) {
+                        expandedContainer.html(response);
+                    });
+                }
             }
         });
 
@@ -2473,12 +2612,22 @@
         };
 
         function prepareSentencesForHighlighting() {
-            const contentEl = $('#display_content .content');
-            if (!contentEl.length) return [];
+            let container = null;
+            if ($('#v-pills-messages-tab').hasClass('active')) {
+                container = document.getElementById('acts_expanded_view');
+            } else if ($('#v-pills-split-tab').hasClass('active')) {
+                const root = document.querySelector('.split-panel.active .split-panel-body');
+                container = root ? root.querySelector('.content') : null;
+            } else {
+                container = document.getElementById('display_content');
+            }
             
-            if (contentEl.find('.tts-sentence').length) {
+            if (!container) return [];
+            
+            // Check if sentences are already prepared
+            if ($(container).find('.tts-sentence').length) {
                 const list = [];
-                contentEl.find('.tts-sentence').each(function() {
+                $(container).find('.tts-sentence').each(function() {
                     list.push({
                         el: this,
                         text: $(this).text().trim()
@@ -2488,10 +2637,10 @@
             }
             
             const textNodes = [];
-            const walker = document.createTreeWalker(contentEl[0], NodeFilter.SHOW_TEXT, null, false);
+            const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
             while (walker.nextNode()) {
                 const parent = walker.currentNode.parentNode;
-                if (parent && parent.tagName !== 'SCRIPT' && parent.tagName !== 'STYLE') {
+                if (parent && parent.tagName !== 'SCRIPT' && parent.tagName !== 'STYLE' && !parent.classList.contains('loaded-title') && !parent.classList.contains('panel-badge')) {
                     textNodes.push(walker.currentNode);
                 }
             }
@@ -2540,7 +2689,14 @@
                     setTimeout(callback, 250);
                 });
                 
-                const displayEl = document.getElementById('display_content');
+                // Determine target container for mutation observation
+                let displayEl = null;
+                if ($('#v-pills-split-tab').hasClass('active')) {
+                    displayEl = document.getElementById(`bodyPanel${activeSplitPanel}`);
+                } else {
+                    displayEl = document.getElementById('display_content');
+                }
+                
                 if (displayEl) {
                     observer.observe(displayEl, { childList: true, subtree: true });
                 }
@@ -2555,8 +2711,24 @@
 
         function setAudioMode(mode) {
             activeAudioMode = mode;
-            $('.audio-mode-selector .mode-btn').removeClass('active');
-            $(`#modeBtn${mode.charAt(0).toUpperCase() + mode.slice(1)}`).addClass('active');
+            
+            // Sync dropdown value if exists
+            const selectDropdown = document.getElementById('audioModeSelectDropdown');
+            if (selectDropdown) {
+                selectDropdown.value = mode;
+            }
+            
+            // Update checkbox count visibility
+            if (mode === 'selected') {
+                $('#audioSelectionCount').show();
+            } else {
+                $('#audioSelectionCount').hide();
+            }
+            
+            if (mode === 'all') {
+                // Auto switch to Expanded View format when Read All is active
+                selectViewMode('expanded');
+            }
             
             if (VoicePlayer.isPlaying) {
                 VoicePlayer.stop();
@@ -2572,17 +2744,37 @@
             let playlist = [];
             
             if (activeAudioMode === 'current') {
-                const readerContent = document.getElementById('display_content');
-                if (readerContent && readerContent.querySelector('.toc-welcome')) {
-                    alert("Please select an article from the left panel first.");
-                    return;
+                let container = null;
+                let titleText = '';
+                let articleBody = '';
+                let idVal = typeof gsid !== 'undefined' ? gsid : null;
+                
+                if ($('#v-pills-messages-tab').hasClass('active')) {
+                    // Expanded View: read from #acts_expanded_view
+                    container = document.getElementById('acts_expanded_view');
+                    titleText = 'Expanded Constitution View';
+                    articleBody = $(container).text().trim();
+                } else if ($('#v-pills-split-tab').hasClass('active')) {
+                    // Split View: read from active split panel content
+                    container = document.querySelector('.split-panel.active .split-panel-body');
+                    const activeLetter = $('.split-panel.active').attr('id') === 'splitPanelA' ? 'A' : 'B';
+                    titleText = $(`#titlePanel${activeLetter}`).text().trim();
+                    const contentEl = container ? container.querySelector('.content') : null;
+                    articleBody = contentEl ? $(contentEl).text().trim() : $(container).text().trim();
+                } else {
+                    // Reader View: read from #display_content
+                    container = document.getElementById('display_content');
+                    if (container && container.querySelector('.toc-welcome')) {
+                        alert("Please select an article from the left panel first.");
+                        return;
+                    }
+                    titleText = $('#display_content .nav-links').text().trim();
+                    articleBody = $('#display_content .content').text().trim();
                 }
                 
-                const titleText = $('#display_content .nav-links').text().trim();
-                const articleBody = $('#display_content .content').text().trim();
                 playlist.push({
-                    id: typeof gsid !== 'undefined' ? gsid : null,
-                    title: titleText || 'Current Article',
+                    id: idVal,
+                    title: titleText || 'Current Content',
                     text: (titleText ? titleText + ". " : "") + articleBody
                 });
             } else if (activeAudioMode === 'selected') {
@@ -2798,6 +2990,17 @@
                 const titleText = $(this).text().trim();
                 const targetPanel = activeSplitPanel;
                 
+                // Extract sid from link
+                let sid = 'preamble';
+                if (link.includes('constitution_content')) {
+                    const match = link.match(/\/(\d+)$/);
+                    if (match) sid = match[1];
+                }
+                $(`#bodyPanel${targetPanel}`).attr('data-loaded-sid', sid);
+                
+                // Sync dropdown selector with this loaded article
+                $(`.split-article-select[data-panel="${targetPanel}"]`).val(link);
+                
                 $(`#bodyPanel${targetPanel}`).html(`
                     <div class="text-center py-5 text-muted">
                         <i class="fa-solid fa-spinner fa-spin fa-2x mb-3" style="opacity: 0.3;"></i>
@@ -2814,6 +3017,141 @@
                     $(`#bodyPanel${targetPanel} a`).css('color', 'var(--gold)');
                 });
             }
+        });
+
+        // Handle direct article loading from header dropdowns inside Split panels
+        $(document).on('change', '.split-article-select', function() {
+            const panel = $(this).attr('data-panel');
+            const link = $(this).val();
+            if (!link) return;
+            
+            // Set the panel as active
+            focusSplitPanel(panel);
+            
+            // Extract sid from link
+            let sid = 'preamble';
+            if (link.includes('constitution_content')) {
+                const match = link.match(/\/(\d+)$/);
+                if (match) sid = match[1];
+            }
+            $(`#bodyPanel${panel}`).attr('data-loaded-sid', sid);
+            
+            const titleText = $(this).find('option:selected').text().trim();
+            
+            $(`#bodyPanel${panel}`).html(`
+                <div class="text-center py-5 text-muted">
+                    <i class="fa-solid fa-spinner fa-spin fa-2x mb-3" style="opacity: 0.3;"></i>
+                    <p>Loading article content...</p>
+                </div>
+            `);
+            
+            $(`#titlePanel${panel}`).text(titleText);
+            
+            $.get(link, function(response) {
+                $(`#bodyPanel${panel}`).html(response);
+                
+                // Style links inside the loaded panel to be clean
+                $(`#bodyPanel${panel} a`).css('color', 'var(--gold)');
+            });
+        });
+
+        // Intercept Toolbar Previous / Next article navigation clicks in Split View
+        $(document).on('click', '.previous_content_constitution_act, .next_content_constitution_act', function(e) {
+            if ($('#v-pills-split-tab').hasClass('active')) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                
+                const isNext = $(this).hasClass('next_content_constitution_act');
+                const panel = activeSplitPanel;
+                const currentSid = $(`#bodyPanel${panel}`).attr('data-loaded-sid');
+                
+                let targetArticle = null;
+                let targetUrl = '';
+                
+                if (!currentSid || currentSid === 'preamble') {
+                    // Preamble loaded or welcome screen
+                    if (isNext && allArticlesData.length > 0) {
+                        targetArticle = allArticlesData[0];
+                        targetUrl = `/constitution/Republic/constitution_content/${targetArticle.id}`;
+                    } else {
+                        // Previous clicked on preamble: do nothing
+                        return;
+                    }
+                } else {
+                    const currentIndex = allArticlesData.findIndex(item => String(item.id) === String(currentSid));
+                    if (isNext) {
+                        if (currentIndex >= 0 && currentIndex < allArticlesData.length - 1) {
+                            targetArticle = allArticlesData[currentIndex + 1];
+                            targetUrl = `/constitution/Republic/constitution_content/${targetArticle.id}`;
+                        }
+                    } else {
+                        if (currentIndex === 0) {
+                            // First article: go to preamble
+                            targetUrl = `/constitution/Republic/constitution_preamble/${ghanaActId}`;
+                            $(`#bodyPanel${panel}`).attr('data-loaded-sid', 'preamble');
+                            $(`.split-article-select[data-panel="${panel}"]`).val(targetUrl);
+                            $(`#titlePanel${panel}`).text('Introductory Text (Preamble)');
+                            
+                            $(`#bodyPanel${panel}`).html(`
+                                <div class="text-center py-5 text-muted">
+                                    <i class="fa-solid fa-spinner fa-spin fa-2x mb-3" style="opacity: 0.3;"></i>
+                                    <p>Loading preamble content...</p>
+                                </div>
+                            `);
+                            $.get(targetUrl, function(response) {
+                                $(`#bodyPanel${panel}`).html(response);
+                                $(`#bodyPanel${panel} a`).css('color', 'var(--gold)');
+                            });
+                            return;
+                        } else if (currentIndex > 0) {
+                            targetArticle = allArticlesData[currentIndex - 1];
+                            targetUrl = `/constitution/Republic/constitution_content/${targetArticle.id}`;
+                        }
+                    }
+                }
+                
+                if (targetArticle && targetUrl) {
+                    $(`#bodyPanel${panel}`).attr('data-loaded-sid', targetArticle.id);
+                    $(`.split-article-select[data-panel="${panel}"]`).val(targetUrl);
+                    $(`#titlePanel${panel}`).text(targetArticle.section);
+                    
+                    $(`#bodyPanel${panel}`).html(`
+                        <div class="text-center py-5 text-muted">
+                            <i class="fa-solid fa-spinner fa-spin fa-2x mb-3" style="opacity: 0.3;"></i>
+                            <p>Loading article content...</p>
+                        </div>
+                    `);
+                    
+                    $.get(targetUrl, function(response) {
+                        $(`#bodyPanel${panel}`).html(response);
+                        $(`#bodyPanel${panel} a`).css('color', 'var(--gold)');
+                    });
+                }
+            }
+        });
+
+        // Toggle View modes programmatically from Dropdown Selector
+        function selectViewMode(mode) {
+            $('#viewModeSelectorWrap .dropdown-item').removeClass('active');
+            let tabId = '';
+            
+            if (mode === 'reader') {
+                tabId = '#v-pills-profile-tab';
+            } else if (mode === 'expanded') {
+                tabId = '#v-pills-messages-tab';
+            } else if (mode === 'split') {
+                tabId = '#v-pills-split-tab';
+            }
+            
+            // Trigger bootstrap tab switch
+            if (tabId) {
+                $(tabId).trigger('click');
+            }
+        }
+        window.selectViewMode = selectViewMode;
+
+        $(document).ready(function() {
+            syncAudioPlayerLayout();
         });
 
         // Cancel voice synthesis when navigating away
