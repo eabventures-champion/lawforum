@@ -61,6 +61,20 @@
         /* ============================================
            PREMIUM FIXED NAVIGATION BAR
            ============================================ */
+        /* Font-family isolation to prevent font changes from loaded articles */
+        .nav-wrap,
+        .nav-wrap *,
+        .nav-menu-links-premium,
+        .nav-menu-links-premium *,
+        .nav-link-btn,
+        .nav-link-btn *,
+        .nav-dropdown-menu,
+        .nav-dropdown-menu a,
+        .continent-nav-wrap,
+        .continent-nav-wrap * {
+            font-family: var(--font) !important;
+        }
+
         .nav-wrap {
             position: fixed;
             top: 0;
@@ -924,7 +938,7 @@
         /* ============================================
            DYNAMICAL INNER ARTICLE OVERRIDES
            ============================================ */
-        #display_content, #acts_expanded_view, .split-panel-body {
+e        #display_content, #acts_expanded_view, .split-panel-body {
             color: var(--text-primary) !important;
             transition: font-size 0.25s ease;
         }

@@ -22,6 +22,9 @@
         <div class="sidebar-header">
             <i class="fa-solid fa-scale-balanced fa-lg" style="color: #3b82f6;"></i>
             <div class="sidebar-logo">Lawsforum Admin</div>
+            <button id="toggle-sidebar" class="sidebar-toggle-btn" title="Toggle Sidebar">
+                <i class="fa-solid fa-angles-left"></i>
+            </button>
         </div>
 
         <ul class="sidebar-menu">
@@ -66,7 +69,7 @@
     <main class="main-content">
         <!-- Flash Message Container -->
         @if(session('success'))
-            <div class="stat-card" style="border-left: 4px solid var(--success-color); margin-bottom: 24px; padding: 16px 24px; flex-direction: row; align-items: center; justify-content: space-between;">
+            <div class="stat-card" style="border-left: 4px solid var(--success-color); margin-top: 32px; margin-bottom: 24px; padding: 16px 24px; flex-direction: row; align-items: center; justify-content: space-between;">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <i class="fa-solid fa-circle-check" style="color: var(--success-color); font-size: 20px;"></i>
                     <span style="font-size: 14px; font-weight: 500;">{{ session('success') }}</span>
@@ -75,7 +78,7 @@
         @endif
 
         @if(session('error'))
-            <div class="stat-card" style="border-left: 4px solid var(--danger-color); margin-bottom: 24px; padding: 16px 24px; flex-direction: row; align-items: center; justify-content: space-between;">
+            <div class="stat-card" style="border-left: 4px solid var(--danger-color); margin-top: 32px; margin-bottom: 24px; padding: 16px 24px; flex-direction: row; align-items: center; justify-content: space-between;">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <i class="fa-solid fa-triangle-exclamation" style="color: var(--danger-color); font-size: 20px;"></i>
                     <span style="font-size: 14px; font-weight: 500;">{{ session('error') }}</span>
@@ -85,6 +88,47 @@
 
         @yield('content')
     </main>
+
+    <!-- Inline script to prevent layout shift/flicker -->
+    <script>
+        (function() {
+            if (localStorage.getItem('admin_sidebar_collapsed') === 'true') {
+                document.querySelector('.sidebar').classList.add('collapsed');
+                document.querySelector('.main-content').classList.add('collapsed-sidebar');
+            }
+        })();
+    </script>
+
+    <!-- Sidebar Toggle Event Listener -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.getElementById('toggle-sidebar');
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            const toggleIcon = toggleBtn ? toggleBtn.querySelector('i') : null;
+
+            if (toggleBtn && sidebar && mainContent) {
+                // Initialize toggle button icon based on active state
+                if (sidebar.classList.contains('collapsed') && toggleIcon) {
+                    toggleIcon.classList.replace('fa-angles-left', 'fa-angles-right');
+                }
+
+                toggleBtn.addEventListener('click', function() {
+                    const collapsed = sidebar.classList.toggle('collapsed');
+                    mainContent.classList.toggle('collapsed-sidebar', collapsed);
+                    
+                    if (toggleIcon) {
+                        if (collapsed) {
+                            toggleIcon.classList.replace('fa-angles-left', 'fa-angles-right');
+                        } else {
+                            toggleIcon.classList.replace('fa-angles-right', 'fa-angles-left');
+                        }
+                    }
+                    localStorage.setItem('admin_sidebar_collapsed', collapsed);
+                });
+            }
+        });
+    </script>
 
     @yield('scripts')
 </body>

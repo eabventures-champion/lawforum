@@ -48,17 +48,21 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'lname' => ['required', 'string', 'max:255'],
             'country' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'phone' => ['nullable','numeric', 'digits_between:10,14','unique:users']
+        ];
 
-            // 'phone' => 'required|regex:/(01)[0-9]{9}/'
-            // This will check the input starts with 01 and is followed by 9 numbers. By using regex you don't need the numeric or size validation rules.
-        ]);
+        if (isset($data['country']) && $data['country'] === 'Ghana') {
+            $rules['phone'] = ['nullable', 'numeric', 'digits:10', 'unique:users'];
+        } else {
+            $rules['phone'] = ['nullable', 'numeric', 'digits_between:10,14', 'unique:users'];
+        }
+
+        return Validator::make($data, $rules);
     }
 
     /**
@@ -90,5 +94,27 @@ class RegisterController extends Controller
     {
         session()->flash('new_registration', true);
         return redirect('/email/verify');
+    }
+
+    public function checkDuplicate(\Illuminate\Http\Request $request)
+    {
+        $email = $request->input('email');
+        $phone = $request->input('phone');
+        
+        $emailExists = false;
+        $phoneExists = false;
+
+        if ($email) {
+            $emailExists = User::where('email', $email)->exists();
+        }
+
+        if ($phone) {
+            $phoneExists = User::where('phone', $phone)->exists();
+        }
+
+        return response()->json([
+            'email_taken' => $emailExists,
+            'phone_taken' => $phoneExists
+        ]);
     }
 }

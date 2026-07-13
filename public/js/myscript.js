@@ -1,4 +1,28 @@
 //-------------------------------------------------------------------------------------------------------------------------
+// Intercept XMLHttpRequest to prevent page flickering on readyState changes
+(function() {
+    let proto = XMLHttpRequest.prototype;
+    let descriptor = Object.getOwnPropertyDescriptor(proto, 'onreadystatechange');
+    if (!descriptor && window.XMLHttpRequestEventTarget) {
+        proto = window.XMLHttpRequestEventTarget.prototype;
+        descriptor = Object.getOwnPropertyDescriptor(proto, 'onreadystatechange');
+    }
+    if (descriptor && descriptor.set) {
+        const originalSet = descriptor.set;
+        Object.defineProperty(proto, 'onreadystatechange', {
+            set: function(callback) {
+                const xhr = this;
+                originalSet.call(xhr, function(e) {
+                    if (xhr.readyState === 4) {
+                        callback.call(xhr, e);
+                    }
+                });
+            },
+            configurable: true,
+            enumerable: true
+        });
+    }
+})();
 
 // TOGGLE DISPLAY BETWEEN REGULATION PREAMBLE AND REGULATION CONTENT
 $(document).ready(function(){
@@ -250,10 +274,19 @@ $(document).ready(function(){
   });
 
 
-  //To toggle print and view options
+  // To toggle print and view options scoped to the clicked button's panel with click-outside auto-close support
   $(document).on('click', '#print_options', function(e){
-    e.preventDefault();
-      $('.menu_options').toggle("slide");
+      e.preventDefault();
+      e.stopPropagation();
+      const dropdown = $(this).siblings('.menu_options');
+      dropdown.slideToggle(200);
+      $('.menu_options').not(dropdown).slideUp(150);
+  });
+
+  $(document).on('click', function(e) {
+      if (!$(e.target).closest('#print_options, .menu_options').length) {
+          $('.menu_options').slideUp(150);
+      }
   });
 
     //TOGGLE ALL AMENDMENTS AND REGULATION UNDER AN ACT
