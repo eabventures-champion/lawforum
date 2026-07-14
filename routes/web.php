@@ -563,6 +563,7 @@ Route::get('/caption/{caption_name}/{id}','Post1992Controller@footer_content');
 
 
 Route::get('register/check-duplicate', 'Auth\RegisterController@checkDuplicate')->name('register.check-duplicate');
+Route::post('complaints/submit', 'ComplaintController@store')->name('complaints.store');
 Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -570,6 +571,15 @@ Route::get('/home', 'HomeController@index')->name('home');
 // CUSTOM ADMIN DASHBOARD ROUTES
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
     Route::get('/', 'Admin\DashboardController@index')->name('admin.dashboard');
+    
+    // Notifications Dashboard & Replies
+    Route::get('notifications', 'Admin\NotificationController@index')->name('admin.notifications.index');
+    Route::post('notifications/{id}/read', 'Admin\NotificationController@markRead')->name('admin.notifications.read');
+    Route::post('notifications/read-all', 'Admin\NotificationController@markAllRead')->name('admin.notifications.read-all');
+    Route::delete('notifications/{id}', 'Admin\NotificationController@destroy')->name('admin.notifications.destroy');
+    Route::delete('notifications', 'Admin\NotificationController@destroyAll')->name('admin.notifications.destroy-all');
+    Route::post('complaints/{id}/reply', 'Admin\NotificationController@reply')->name('admin.complaints.reply');
+
     Route::get('users/continents-preview', 'Admin\UserController@continentsPreview')->name('admin.users.continents-preview');
     Route::get('users/export', 'Admin\UserController@export')->name('admin.users.export');
     Route::delete('users/bulk-destroy', 'Admin\UserController@bulkDestroy')->name('admin.users.bulk-destroy');

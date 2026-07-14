@@ -40,6 +40,20 @@
                     <span>Users Management</span>
                 </a>
             </li>
+            <li class="menu-item {{ Request::is('admin/notifications*') ? 'active' : '' }}">
+                <a href="{{ route('admin.notifications.index') }}" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <i class="fa-solid fa-bell"></i>
+                        <span>Notifications</span>
+                    </div>
+                    @php
+                        $unreadNotificationsCount = \App\AdminNotification::whereNull('read_at')->count();
+                    @endphp
+                    @if($unreadNotificationsCount > 0)
+                        <span style="background-color: #ef4444; color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; line-height: 1;">{{ $unreadNotificationsCount }}</span>
+                    @endif
+                </a>
+            </li>
             <li class="menu-item {{ Request::is('admin/news*') ? 'active' : '' }}">
                 <a href="{{ route('admin.news.index') }}">
                     <i class="fa-solid fa-newspaper"></i>

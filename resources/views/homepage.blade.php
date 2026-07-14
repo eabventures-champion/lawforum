@@ -1703,6 +1703,171 @@
     </section>
     @endguest
 
+    <!-- ====== COMPLAINTS & SUGGESTIONS FLOATING WIDGET ====== -->
+    <!-- Floating Action Button -->
+    <button type="button" onclick="openFeedbackModal()" id="feedback-trigger-btn" style="position: fixed; bottom: 30px; left: 30px; z-index: 9999; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s; outline: none;" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 15px 30px rgba(59, 130, 246, 0.6)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 10px 25px rgba(59, 130, 246, 0.4)';">
+        <i class="fa-solid fa-comments" style="font-size: 24px; transition: transform 0.3s;" id="feedback-icon"></i>
+        <!-- Pulsing Wave Ring -->
+        <span style="position: absolute; inset: -4px; border-radius: 50%; border: 2px solid #3b82f6; opacity: 0.4; animation: feedback-pulse 2s infinite;"></span>
+    </button>
+
+    <!-- Floating Modal Overlay -->
+    <div id="feedback-modal" style="display: none; position: fixed; inset: 0; z-index: 10000; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
+        <div id="feedback-modal-card" style="background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; width: 480px; max-width: 90%; max-height: calc(100vh - 60px); overflow-y: auto; margin: 30px 0; padding: 28px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transform: translateY(30px); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); display: flex; flex-direction: column; position: relative;">
+            
+            <!-- Top Gradient Accent -->
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #3b82f6, #8b5cf6);"></div>
+
+            <!-- Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h3 style="margin: 0; font-size: 20px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-headset" style="color: #3b82f6;"></i> Support & Suggestions
+                </h3>
+                <button type="button" onclick="closeFeedbackModal()" style="background: transparent; border: none; color: rgba(255, 255, 255, 0.4); cursor: pointer; font-size: 20px; transition: color 0.2s;" onmouseover="this.style.color='#fff';" onmouseout="this.style.color='rgba(255, 255, 255, 0.4)';">&times;</button>
+            </div>
+
+            <!-- Form Container -->
+            <div id="feedback-form-container">
+                <form id="ajax-feedback-form" onsubmit="submitFeedbackForm(event)">
+                    @csrf
+                    <!-- Name & Email Row -->
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div>
+                            <label for="feedback-name" style="display: block; color: rgba(255, 255, 255, 0.7); font-size: 11px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Your Name (Optional)</label>
+                            <input id="feedback-name" type="text" name="name" value="{{ auth()->user() ? auth()->user()->name . ' ' . auth()->user()->lname : '' }}" placeholder="John Doe" style="width: 100%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 12px; border-radius: 8px; color: #fff; font-size: 13px; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#3b82f6';" onblur="this.style.borderColor='rgba(255, 255, 255, 0.08)';">
+                        </div>
+                        <div>
+                            <label for="feedback-email" style="display: block; color: rgba(255, 255, 255, 0.7); font-size: 11px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Email Address</label>
+                            <input id="feedback-email" type="email" name="email" value="{{ auth()->user() ? auth()->user()->email : '' }}" placeholder="john@example.com" required style="width: 100%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 12px; border-radius: 8px; color: #fff; font-size: 13px; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#3b82f6';" onblur="this.style.borderColor='rgba(255, 255, 255, 0.08)';">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px;">
+                        <!-- Type -->
+                        <div>
+                            <label for="feedback-type" style="display: block; color: rgba(255, 255, 255, 0.7); font-size: 11px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Feedback Type</label>
+                            <select id="feedback-type" name="type" required style="width: 100%; background: #1e293b; border: 1px solid rgba(255, 255, 255, 0.08); padding: 12px; border-radius: 8px; color: #fff; font-size: 13px; outline: none; cursor: pointer;">
+                                <option value="complaint">Complaint</option>
+                                <option value="suggestion">Suggestion</option>
+                            </select>
+                        </div>
+                        <!-- Subject -->
+                        <div>
+                            <label for="feedback-subject" style="display: block; color: rgba(255, 255, 255, 0.7); font-size: 11px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Subject</label>
+                            <input id="feedback-subject" type="text" name="subject" required placeholder="Brief topic summary" style="width: 100%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 12px; border-radius: 8px; color: #fff; font-size: 13px; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#3b82f6';" onblur="this.style.borderColor='rgba(255, 255, 255, 0.08)';">
+                        </div>
+                    </div>
+
+                    <!-- Message -->
+                    <div style="margin-bottom: 24px;">
+                        <label for="feedback-message" style="display: block; color: rgba(255, 255, 255, 0.7); font-size: 11px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Message Description</label>
+                        <textarea id="feedback-message" name="message" required placeholder="Describe your issue or suggestion in detail..." style="width: 100%; height: 120px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 12px; border-radius: 8px; color: #fff; font-size: 13px; outline: none; resize: vertical; line-height: 1.5;" onfocus="this.style.borderColor='#3b82f6';" onblur="this.style.borderColor='rgba(255, 255, 255, 0.08)';"></textarea>
+                  </div>
+
+                  <!-- Submit Button -->
+                  <button type="submit" id="feedback-submit-btn" style="width: 100%; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border: none; color: #fff; padding: 14px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2); transition: background 0.2s;">
+                      <i class="fa-solid fa-paper-plane"></i> Submit Feedback
+                  </button>
+              </form>
+          </div>
+
+          <!-- Success Message Container -->
+          <div id="feedback-success-container" style="display: none; text-align: center; padding: 40px 0;">
+              <div style="width: 70px; height: 70px; background: rgba(16, 185, 129, 0.1); border: 2px solid #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
+                  <i class="fa-solid fa-check" style="font-size: 32px; color: #10b981;"></i>
+              </div>
+              <h4 style="color: #fff; font-size: 18px; font-weight: 700; margin: 0 0 10px 0;">Submission Successful!</h4>
+              <p style="color: rgba(255, 255, 255, 0.6); font-size: 14px; margin: 0; line-height: 1.5;">Thank you for your feedback. Our administrative team will review it and reply via email shortly.</p>
+          </div>
+
+      </div>
+  </div>
+
+  <style>
+      @keyframes feedback-pulse {
+          0% { transform: scale(1); opacity: 0.6; }
+          100% { transform: scale(1.3); opacity: 0; }
+      }
+  </style>
+
+  <script>
+      function openFeedbackModal() {
+          const modal = document.getElementById('feedback-modal');
+          const card = document.getElementById('feedback-modal-card');
+          const icon = document.getElementById('feedback-icon');
+          
+          if (icon) icon.style.transform = 'rotate(15deg)';
+          
+          modal.style.display = 'flex';
+          setTimeout(() => {
+              modal.style.opacity = '1';
+              card.style.transform = 'translateY(0)';
+          }, 10);
+      }
+
+      function closeFeedbackModal() {
+          const modal = document.getElementById('feedback-modal');
+          const card = document.getElementById('feedback-modal-card');
+          const icon = document.getElementById('feedback-icon');
+          
+          if (icon) icon.style.transform = 'none';
+
+          modal.style.opacity = '0';
+          card.style.transform = 'translateY(30px)';
+          setTimeout(() => {
+              modal.style.display = 'none';
+              // Reset containers
+              document.getElementById('feedback-form-container').style.display = 'block';
+              document.getElementById('feedback-success-container').style.display = 'none';
+              document.getElementById('ajax-feedback-form').reset();
+          }, 300);
+      }
+
+      function submitFeedbackForm(event) {
+          event.preventDefault();
+          const form = document.getElementById('ajax-feedback-form');
+          const formData = new FormData(form);
+          const submitBtn = document.getElementById('feedback-submit-btn');
+
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Submitting...`;
+
+          fetch('{{ route("complaints.store") }}', {
+              method: 'POST',
+              headers: {
+                  'X-Requested-With': 'XMLHttpRequest',
+                  'X-CSRF-TOKEN': '{{ csrf_token() }}'
+              },
+              body: formData
+          })
+          .then(res => res.json())
+          .then(data => {
+              if (data.success) {
+                  document.getElementById('feedback-form-container').style.display = 'none';
+                  document.getElementById('feedback-success-container').style.display = 'block';
+                  
+                  // Auto close modal after 3 seconds
+                  setTimeout(() => {
+                      closeFeedbackModal();
+                  }, 3000);
+              } else {
+                  alert(data.message || 'An error occurred during submission.');
+                  submitBtn.disabled = false;
+                  submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Submit Feedback`;
+              }
+          })
+          .catch(err => {
+              console.error('Error submitting feedback:', err);
+              // Fallback
+              document.getElementById('feedback-form-container').style.display = 'none';
+              document.getElementById('feedback-success-container').style.display = 'block';
+              setTimeout(() => {
+                  closeFeedbackModal();
+              }, 3000);
+          });
+      }
+  </script>
+
     <!-- ====== FOOTER ====== -->
     <footer class="footer">
         <div class="footer-inner">

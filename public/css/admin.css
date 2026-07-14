@@ -167,9 +167,21 @@ body {
 /* Glassmorphism Cards */
 .grid-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
     margin-bottom: 40px;
+}
+
+@media (max-width: 1024px) {
+    .grid-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .grid-stats {
+        grid-template-columns: 1fr;
+    }
 }
 
 .stat-card {
@@ -178,10 +190,10 @@ body {
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--border-color);
     border-radius: 16px;
-    padding: 24px;
+    padding: 18px 20px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     transition: var(--transition-smooth);
     position: relative;
     overflow: hidden;
@@ -216,7 +228,7 @@ body {
 }
 
 .stat-title {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     color: var(--text-secondary);
     text-transform: uppercase;
@@ -224,23 +236,23 @@ body {
 }
 
 .stat-value {
-    font-size: 32px;
+    font-size: 26px;
     font-weight: 800;
     color: #fff;
-    letter-spacing: -1px;
+    letter-spacing: -0.5px;
 }
 
 .stat-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border-color);
     color: var(--accent-color);
-    font-size: 20px;
+    font-size: 16px;
 }
 
 /* Premium Table Styles */

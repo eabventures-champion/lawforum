@@ -73,7 +73,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'lname' => $data['lname'],
             'country' => $data['country'],
@@ -81,6 +81,18 @@ class RegisterController extends Controller
             'phone' => $data['phone'],
             'password' => Hash::make($data['password'])
         ]);
+
+        \App\AdminNotification::create([
+            'type' => 'signup',
+            'data' => [
+                'user_id' => $user->id,
+                'name' => $user->name . ' ' . $user->lname,
+                'email' => $user->email,
+                'country' => $user->country
+            ]
+        ]);
+
+        return $user;
     }
 
     /**

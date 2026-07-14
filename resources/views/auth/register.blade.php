@@ -18,7 +18,7 @@
         :root {
             --bg-primary: #040814;
             --bg-glow: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 60%);
-            --card-bg: rgba(13, 20, 38, 0.45);
+            --card-bg: rgba(13, 20, 38, 0.75);
             --border-color: rgba(255, 255, 255, 0.08);
             --accent-color: #3b82f6;
             --accent-glow: rgba(59, 130, 246, 0.3);
@@ -38,6 +38,7 @@
 
         html {
             overflow-x: hidden;
+            overflow-y: auto;
         }
 
         body {
@@ -45,12 +46,8 @@
             background-image: var(--bg-glow);
             color: var(--text-primary);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
+            padding: 60px 20px;
             position: relative;
-            overflow-x: hidden;
         }
 
         /* Ambient background blobs */
@@ -62,9 +59,11 @@
             height: 40vw;
             background: rgba(59, 130, 246, 0.08);
             border-radius: 50%;
-            filter: blur(100px);
+            filter: blur(80px);
             z-index: 0;
             animation: float 20s ease-in-out infinite alternate;
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
         }
 
         .ambient-blob-2 {
@@ -75,23 +74,26 @@
             height: 40vw;
             background: rgba(236, 72, 153, 0.05);
             border-radius: 50%;
-            filter: blur(100px);
+            filter: blur(80px);
             z-index: 0;
             animation: float 25s ease-in-out infinite alternate-reverse;
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
         }
 
         @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(50px, 50px) scale(1.1); }
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            100% { transform: translate3d(50px, 50px, 0) scale(1.1); }
         }
 
         /* Glassmorphism Auth Container */
         .auth-container {
             width: 100%;
             max-width: 600px;
+            margin: 0 auto;
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--border-color);
             border-radius: 24px;
             padding: 48px 40px;
@@ -295,8 +297,10 @@
 </head>
 <body>
 
-    <div class="ambient-blob-1"></div>
-    <div class="ambient-blob-2"></div>
+    <div style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;">
+        <div class="ambient-blob-1"></div>
+        <div class="ambient-blob-2"></div>
+    </div>
 
     <div class="auth-container">
         <!-- Logo Area -->

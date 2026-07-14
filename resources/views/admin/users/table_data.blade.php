@@ -4,7 +4,6 @@
             <th style="width: 40px; text-align: center;"><input type="checkbox" id="select-all-users" style="width: 16px; height: 16px; cursor: pointer; vertical-align: middle;"></th>
             <th>Name</th>
             <th>Email</th>
-            <th>Country</th>
             <th>Role</th>
             <th>Subscription Status</th>
             <th>Actions</th>
@@ -22,16 +21,20 @@
                 </td>
                 <td>{{ $user->name }} {{ $user->lname }}</td>
                 <td>
-                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
                         <span style="font-weight: 500;">{{ $user->email }}</span>
-                        @if($user->phone && $user->phone !== 'N/A')
-                            <span class="badge" style="width: fit-content; font-size: 11px; padding: 2px 8px; background: rgba(255,255,255,0.05); color: var(--text-secondary); border: 1px solid var(--border-color); border-radius: 4px;">
-                                <i class="fa-solid fa-phone" style="font-size: 9px; margin-right: 4px; opacity: 0.7;"></i>{{ $user->phone }}
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            @if($user->phone && $user->phone !== 'N/A')
+                                <span class="badge" style="width: fit-content; font-size: 11px; padding: 2px 8px; background: rgba(255,255,255,0.05); color: var(--text-secondary); border: 1px solid var(--border-color); border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">
+                                    <i class="fa-solid fa-phone" style="font-size: 9px; opacity: 0.7;"></i>{{ $user->phone }}
+                                </span>
+                            @endif
+                            <span class="badge" style="width: fit-content; font-size: 11px; padding: 2px 8px; background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 4px; box-shadow: 0 0 6px rgba(16, 185, 129, 0.15); display: inline-flex; align-items: center; gap: 4px;">
+                                <i class="fa-solid fa-globe" style="font-size: 9px;"></i>{{ $user->country ?? 'Ghana' }}
                             </span>
-                        @endif
+                        </div>
                     </div>
                 </td>
-                <td>{{ $user->country ?? 'N/A' }}</td>
                 <td>
                     @if($user->isAdmin())
                         <span class="badge badge-accent">Admin</span>
@@ -66,7 +69,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 32px;">No users found.</td>
+                <td colspan="6" style="text-align: center; color: var(--text-secondary); padding: 32px;">No users found.</td>
             </tr>
         @endforelse
     </tbody>

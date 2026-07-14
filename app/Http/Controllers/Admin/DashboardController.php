@@ -18,6 +18,7 @@ class DashboardController extends Controller
         $totalUsers = User::count();
         
         $activeSubscriptions = User::where('subscription_expiry', '>=', Carbon::today())->count();
+        $activeSubscribers = User::where('subscription_expiry', '>=', Carbon::today())->get();
         
         $totalNews = NewsContent::count();
         
@@ -35,6 +36,7 @@ class DashboardController extends Controller
         return view('admin.dashboard', compact(
             'totalUsers', 
             'activeSubscriptions', 
+            'activeSubscribers',
             'totalNews', 
             'totalLaws', 
             'recentUsers',
