@@ -14,10 +14,15 @@ class AddPhoneAndCountryAndLnameToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
-            $table->string('lname');
-            $table->string('phone')->nullable();
-            $table->string('country')->nullable();
+            if (!Schema::hasColumn('users', 'lname')) {
+                $table->string('lname');
+            }
+            if (!Schema::hasColumn('users', 'phone')) {
+                $table->string('phone')->nullable();
+            }
+            if (!Schema::hasColumn('users', 'country')) {
+                $table->string('country')->nullable();
+            }
         });
     }
 
@@ -29,10 +34,15 @@ class AddPhoneAndCountryAndLnameToUsers extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
-            $table->dropColumn('lname');
-            $table->dropColumn('phone');
-            $table->dropColumn('country');
+            if (Schema::hasColumn('users', 'lname')) {
+                $table->dropColumn('lname');
+            }
+            if (Schema::hasColumn('users', 'phone')) {
+                $table->dropColumn('phone');
+            }
+            if (Schema::hasColumn('users', 'country')) {
+                $table->dropColumn('country');
+            }
         });
     }
 }

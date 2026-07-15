@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <script data-ad-client="ca-pub-4293461101625028" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- <meta name="google-site-verification" content="jas-VciTimEJrxn7M-3dFRyt1pNIDaMgvgrs8uEUXlU"/> -->
@@ -127,9 +127,10 @@
                      
                      <!--logo-->
                      <div class="navbar-header">
-                         <a href="/">
-                            <img alt="Brand" src="{{ asset('/logo/lawsghlog.png') }}" class="img-responsive" style="width:20em; padding-top: 10px; padding-bottom:10px;padding-left:50px;">
-                        </a>
+                         <a href="/" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; padding-left: 50px; padding-top: 10px; padding-bottom: 10px; transition: transform 0.2s ease; vertical-align: middle;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; font-size: 1.8em; margin: 0; line-height: 1;"></i>
+                <span style="font-size: 1.8em; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(to right, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.3;">Legals Forum</span>
+            </a>
                      </div>
                      
                     <!-- Brand and toggle get grouped for better mobile display -->

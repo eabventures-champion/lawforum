@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" style="background-color:#060a13;">
   <head>
-    <script data-ad-client="ca-pub-4293461101625028" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Read and search the Constitution of the Republic of Ghana 1992 on LawsGhana.">
+    <meta name="description" content="Read and search the Constitution of the Republic of Ghana 1992 on Legals Forum.">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ucwords(strtolower($ghana_act['title']))}} — LawsGhana</title>
+    <title>{{ucwords(strtolower($ghana_act['title']))}} — Legals Forum</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -55,7 +55,7 @@
             height: 100vh;
             min-height: 100vh;
             overflow: hidden;
-            padding-top: 70px; /* offset for fixed navbar */
+            padding-top: 62px; /* offset for fixed navbar */
         }
 
         /* ============================================
@@ -73,6 +73,12 @@
         .continent-nav-wrap,
         .continent-nav-wrap * {
             font-family: var(--font) !important;
+        }
+        .nav-wrap i.fa,
+        .nav-wrap i.fa-solid,
+        .nav-wrap i.fa-regular {
+            font-family: 'Font Awesome 6 Free' !important;
+            font-weight: 900 !important;
         }
 
         .nav-wrap {
@@ -276,10 +282,10 @@
            ============================================ */
         .workspace-wrapper {
             display: flex;
-            height: calc(100vh - 70px);
+            height: calc(100vh - 82px);
             width: 100vw;
             position: fixed;
-            top: 70px;
+            top: 74px;
             left: 0;
             overflow: hidden;
             background: var(--bg-primary);
@@ -1027,7 +1033,13 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
         .continent-nav-wrap {
             max-width: 1440px;
             margin: 0 auto;
-            padding: 16px 24px 0 24px;
+            padding: 16px 24px 12px 24px;
+            position: sticky;
+            top: 62px;
+            z-index: 99;
+            background: rgba(7, 10, 19, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         /* ============================================
@@ -1600,6 +1612,214 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             padding: 0 4px;
             box-shadow: 0 0 6px rgba(245, 158, 11, 0.15);
         }
+
+        /* ============================================
+           NOTES PANEL — RIGHT SIDEBAR
+           ============================================ */
+        .notes-section { margin-top: 16px; }
+        .notes-section-header {
+            font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+            text-transform: uppercase; color: var(--text-secondary);
+            margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+        }
+        .notes-section-header i { color: var(--accent-light); font-size: 12px; }
+        .notes-count-badge {
+            background: var(--accent); color: #fff; font-size: 10px;
+            padding: 1px 7px; border-radius: 10px; font-weight: 700;
+            letter-spacing: 0;
+        }
+        .note-textarea {
+            width: 100%; min-height: 90px; max-height: 200px;
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 12px 14px; color: var(--text-primary);
+            font-size: 13px; font-family: var(--font-primary); resize: vertical;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            line-height: 1.5;
+        }
+        .note-textarea:focus {
+            outline: none; border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+        }
+        .note-textarea::placeholder { color: var(--text-muted); font-size: 12px; }
+        .note-color-picker { display: flex; gap: 8px; margin: 10px 0; align-items: center; }
+        .note-color-picker label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-right: 4px; }
+        .color-dot {
+            width: 20px; height: 20px; border-radius: 50%; cursor: pointer;
+            border: 2px solid transparent; transition: all 0.2s ease;
+            position: relative;
+        }
+        .color-dot:hover { transform: scale(1.2); }
+        .color-dot.active { border-color: #fff; box-shadow: 0 0 8px currentColor; }
+        .color-dot[data-color="yellow"] { background: #f59e0b; }
+        .color-dot[data-color="blue"] { background: #3b82f6; }
+        .color-dot[data-color="green"] { background: #10b981; }
+        .color-dot[data-color="pink"] { background: #ec4899; }
+        .color-dot[data-color="purple"] { background: #8b5cf6; }
+
+        .note-actions { display: flex; gap: 8px; margin-top: 8px; }
+        .btn-save-note {
+            flex: 1; background: var(--accent-gradient); color: #fff;
+            border: none; padding: 9px 16px; border-radius: 8px;
+            font-size: 12px; font-weight: 700; cursor: pointer;
+            transition: all 0.2s ease; letter-spacing: 0.3px;
+        }
+        .btn-save-note:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+        .btn-save-note:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-clear-note {
+            background: rgba(255,255,255,0.04); color: var(--text-secondary);
+            border: 1px solid var(--border-color); padding: 9px 14px; border-radius: 8px;
+            font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn-clear-note:hover { background: rgba(255,255,255,0.08); color: var(--text-primary); }
+
+        .highlighted-text-preview {
+            background: rgba(245,158,11,0.08); border-left: 3px solid #f59e0b;
+            padding: 8px 12px; border-radius: 0 8px 8px 0; margin-bottom: 10px;
+            font-size: 12px; color: var(--text-secondary); line-height: 1.5;
+            max-height: 80px; overflow-y: auto; font-style: italic;
+        }
+        .highlighted-text-preview .close-highlight {
+            float: right; cursor: pointer; color: var(--text-muted); font-size: 14px;
+            margin-left: 8px; transition: color 0.2s;
+        }
+        .highlighted-text-preview .close-highlight:hover { color: #ef4444; }
+
+        /* Saved Notes List */
+        .notes-list { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+        .notes-list-header {
+            font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+            text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;
+        }
+        .note-card {
+            background: rgba(255,255,255,0.02); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 12px 14px; position: relative;
+            transition: all 0.25s ease; border-left: 3px solid #f59e0b;
+            animation: noteSlideIn 0.3s ease;
+        }
+        @keyframes noteSlideIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .note-card:hover { border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); }
+        .note-card[data-color="blue"] { border-left-color: #3b82f6; }
+        .note-card[data-color="green"] { border-left-color: #10b981; }
+        .note-card[data-color="pink"] { border-left-color: #ec4899; }
+        .note-card[data-color="purple"] { border-left-color: #8b5cf6; }
+        .note-card-quote {
+            font-size: 11px; color: var(--text-muted); font-style: italic;
+            border-left: 2px solid rgba(255,255,255,0.08); padding-left: 8px;
+            margin-bottom: 6px; line-height: 1.4; max-height: 40px; overflow: hidden;
+        }
+        .note-card-content { font-size: 12.5px; color: var(--text-primary); line-height: 1.5; margin-bottom: 6px; }
+        .note-card-meta {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 10px; color: var(--text-muted);
+        }
+        .note-card-delete {
+            cursor: pointer; color: var(--text-muted); font-size: 13px;
+            transition: color 0.2s; padding: 2px 4px;
+        }
+        .note-card-delete:hover { color: #ef4444; }
+
+        /* Login Prompt for Notes */
+        .notes-login-prompt {
+            background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15);
+            border-radius: 10px; padding: 16px; text-align: center;
+            margin-top: 12px; display: none;
+        }
+        .notes-login-prompt p { font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; line-height: 1.5; }
+        .notes-login-prompt .btn-login-prompt {
+            display: inline-block; background: var(--accent-gradient); color: #fff;
+            padding: 7px 18px; border-radius: 8px; font-size: 12px; font-weight: 700;
+            text-decoration: none; transition: all 0.2s ease; margin: 0 4px;
+        }
+        .notes-login-prompt .btn-login-prompt:hover { transform: translateY(-1px); }
+        .notes-login-prompt .btn-signup-prompt {
+            display: inline-block; background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color); color: var(--text-primary);
+            padding: 7px 18px; border-radius: 8px; font-size: 12px; font-weight: 600;
+            text-decoration: none; transition: all 0.2s ease; margin: 0 4px;
+        }
+        .notes-login-prompt .btn-signup-prompt:hover { background: rgba(255,255,255,0.1); }
+
+        /* ============================================
+           FLOATING TEXT SELECTION TOOLTIP
+           ============================================ */
+        .text-select-tooltip {
+            position: fixed; z-index: 9999; display: none;
+            background: #1e293b; border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px; padding: 6px 8px; box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            animation: tooltipPop 0.15s ease;
+        }
+        @keyframes tooltipPop {
+            from { opacity: 0; transform: scale(0.92); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .text-select-tooltip button {
+            background: transparent; border: none; color: var(--text-secondary);
+            padding: 6px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
+            transition: all 0.15s ease; white-space: nowrap;
+        }
+        .text-select-tooltip button:hover { background: rgba(255,255,255,0.08); color: #fff; }
+        .text-select-tooltip .tooltip-divider {
+            display: inline-block; width: 1px; height: 20px;
+            background: rgba(255,255,255,0.1); vertical-align: middle; margin: 0 2px;
+        }
+
+        /* ============================================
+           READING PROGRESS BAR
+           ============================================ */
+        .reading-progress-wrap {
+            padding: 12px 0; margin-bottom: 8px;
+        }
+        .reading-progress-label {
+            font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+            text-transform: uppercase; color: var(--text-muted);
+            display: flex; justify-content: space-between; margin-bottom: 6px;
+        }
+        .reading-progress-label span { color: var(--accent-light); }
+        .reading-progress-track {
+            width: 100%; height: 4px; background: rgba(255,255,255,0.06);
+            border-radius: 4px; overflow: hidden;
+        }
+        .reading-progress-fill {
+            height: 100%; width: 0%; border-radius: 4px;
+            background: var(--accent-gradient); transition: width 0.2s ease;
+        }
+
+        /* ============================================
+           TOAST NOTIFICATION
+           ============================================ */
+        .toast-notification {
+            position: fixed; bottom: 30px; right: 30px; z-index: 99999;
+            background: #1e293b; border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; padding: 14px 20px; display: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: toastSlideIn 0.3s ease;
+            max-width: 350px;
+        }
+        @keyframes toastSlideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .toast-notification.success { border-left: 3px solid #10b981; }
+        .toast-notification.error { border-left: 3px solid #ef4444; }
+        .toast-notification.info { border-left: 3px solid #3b82f6; }
+        .toast-notification .toast-content {
+            display: flex; align-items: center; gap: 10px;
+        }
+        .toast-notification .toast-icon { font-size: 16px; }
+        .toast-notification.success .toast-icon { color: #10b981; }
+        .toast-notification.error .toast-icon { color: #ef4444; }
+        .toast-notification.info .toast-icon { color: #3b82f6; }
+        .toast-notification .toast-text { font-size: 13px; color: var(--text-primary); font-weight: 500; }
+
+        /* Separator line between sidebar sections */
+        .sidebar-divider {
+            height: 1px; background: var(--border-color);
+            margin: 16px 0;
+        }
     </style>
   </head>
   <body class="bg-light">
@@ -1607,53 +1827,26 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
     <!-- ====== PREMIUM NAVIGATION ====== -->
     <nav class="nav-wrap" id="mainNav">
         <div class="nav-inner">
-            <a href="/" class="nav-logo">
-                <img src="{{ asset('logo/lawsghlog.png') }}" alt="LawsGhana">
+            <a href="/" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; padding-left: 0px; padding-top: 5px; padding-bottom: 5px; transition: transform 0.2s ease; vertical-align: middle;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; font-size: 22px; margin: 0; line-height: 1;"></i>
+                <span style="font-size: 22px; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(to right, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.3;">Legals Forum</span>
             </a>
 
-            <div class="nav-menu-links-premium">
-                <!-- Constitution Dropdown -->
-                <div class="nav-link-dropdown">
-                    <button class="nav-link-btn">Constitution <i class="fa-solid fa-chevron-down"></i></button>
-                    <div class="nav-dropdown-menu">
-                        <a href="/constitution/Republic/Ghana/1">Ghana</a>
-                        <a href="/constitution/all-countries/1/Africa">Africa</a>
-                        <a href="/constitution/all-countries/2/Asia">Asia</a>
-                        <a href="/constitution/all-countries/3/Europe">Europe</a>
-                        <a href="/constitution/all-countries/4/North-America">North America</a>
-                        <a href="/constitution/all-countries/5/South-America">South America</a>
-                    </div>
-                </div>
-
-                <!-- Pre-4th Republic Laws Dropdown -->
-                <div class="nav-link-dropdown">
-                    <button class="nav-link-btn">Pre-4th Republic Laws <i class="fa-solid fa-chevron-down"></i></button>
-                    <div class="nav-dropdown-menu">
-                        <a href="/pre_1992_legislation/1/First Republic">1st Republic</a>
-                        <a href="/pre_1992_legislation/2/Second Republic">2nd Republic</a>
-                        <a href="/pre_1992_legislation/3/Third Republic">3rd Republic</a>
-                        <a href="/pre_1992_legislation/5/NLC Decree">NLC Decree</a>
-                        <a href="/pre_1992_legislation/6/NRC Decree">NRC Decree</a>
-                        <a href="/pre_1992_legislation/7/SMC Decree">SMC Decree</a>
-                        <a href="/pre_1992_legislation/8/AFRC Decree">AFRC Decree</a>
-                        <a href="/pre_1992_legislation/4/PNDC Law">PNDC Law</a>
-                    </div>
-                </div>
-
-                <!-- 4th Republic Laws Dropdown -->
-                <div class="nav-link-dropdown">
-                    <button class="nav-link-btn">4th Republic Laws <i class="fa-solid fa-chevron-down"></i></button>
-                    <div class="nav-dropdown-menu">
-                        <a href="/post-1992-legislation/1/Acts of Parliament">Acts of Parliament</a>
-                        <a href="/post-1992-legislation/only-regulations">Legislative Instruments</a>
-                        <a href="/post-1992-legislation/Constitutional-Intruments">Constitutional Instruments</a>
-                        <a href="/post-1992-legislation/Executive-Intruments">Executive Instruments</a>
-                        <a href="/post-1992-legislation/only-amendments">Amendments</a>
-                    </div>
-                </div>
-
-                <a href="/judgement/Ghana" class="nav-link-btn" style="text-decoration:none !important;">Case Laws</a>
-                <a href="/News/Ghana-News/1" class="nav-link-btn" style="text-decoration:none !important;">News</a>
+                        <div class="nav-menu-links-premium">
+                @foreach($headerMenus as $menu)
+                    @if($menu->is_dropdown)
+                        <div class="nav-link-dropdown">
+                            <button class="nav-link-btn">{{ $menu->title }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></button>
+                            <div class="nav-dropdown-menu">
+                                @foreach($menu->children as $child)
+                                    <a href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">{{ $child->title }}</a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}" class="nav-link-btn" style="text-decoration:none !important;">{{ $menu->title }}</a>
+                    @endif
+                @endforeach
             </div>
 
             <div class="nav-auth">
@@ -1691,21 +1884,6 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             </div>
         </div>
     </nav>
-
-    <!-- Continent/Sub-Navigation header -->
-    <div class="continent-nav-wrap">
-        <div class="nav-scroller bg-header-color rounded shadow-sm">
-            <nav class="nav nav-underline">
-                <a class="nav-link active text-white" href="/constitution/all_countries">All Countries</a>
-                <a class="nav-link active text-white" href="/constitution/Republic/Ghana/1">Ghana</a>
-                <a class="nav-link text-white" href="/constitution/all-countries/1/Africa">Africa</a>
-                <a class="nav-link text-white" href="/constitution/all-countries/2/Asia">Asia</a>
-                <a class="nav-link text-white" href="/constitution/all-countries/3/Europe">Europe</a>
-                <a class="nav-link text-white" href="/constitution/all-countries/4/North-America">North America</a>
-                <a class="nav-link text-white" href="/constitution/all-countries/5/South-America">South America</a>
-            </nav>
-        </div>
-    </div>
 
     <!-- ====== THREE PANEL SPLIT WORKSPACE ====== -->
     <div class="workspace-wrapper">
@@ -1962,7 +2140,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             </div>
         </main>
 
-        <!-- Right Panel: Filters & Context -->
+        <!-- Right Panel: Reader Tools -->
         <aside class="workspace-sidebar right-sidebar" id="rightSidebar">
             <div class="sidebar-header">
                 <button class="toggle-sidebar-btn" onclick="toggleSidebar('right')" title="Collapse Info Panel">
@@ -1972,6 +2150,75 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             </div>
             <div class="sidebar-content">
                 <div id="rightSidebarContent">
+
+                    <!-- Reading Progress -->
+                    <div class="reading-progress-wrap">
+                        <div class="reading-progress-label">
+                            <span>Reading Progress</span>
+                            <span id="progressPercent">0%</span>
+                        </div>
+                        <div class="reading-progress-track">
+                            <div class="reading-progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-divider"></div>
+
+                    <!-- Notes Section -->
+                    <div class="notes-section" id="notesSection">
+                        <div class="notes-section-header">
+                            <i class="fa-solid fa-pen-to-square"></i> My Notes
+                            <span class="notes-count-badge" id="notesCountBadge">0</span>
+                        </div>
+
+                        <!-- Highlighted text preview (shown when text is selected and "Add Note" clicked) -->
+                        <div class="highlighted-text-preview" id="highlightedTextPreview" style="display:none;">
+                            <span class="close-highlight" onclick="clearHighlightedText()">&times;</span>
+                            <span id="highlightedTextContent"></span>
+                        </div>
+
+                        <!-- Note textarea -->
+                        <textarea class="note-textarea" id="noteTextarea" placeholder="Write your note here... Select text in the document and click 'Add Note' to attach it."></textarea>
+
+                        <!-- Color picker -->
+                        <div class="note-color-picker">
+                            <label>Label:</label>
+                            <div class="color-dot active" data-color="yellow" onclick="selectNoteColor(this)"></div>
+                            <div class="color-dot" data-color="blue" onclick="selectNoteColor(this)"></div>
+                            <div class="color-dot" data-color="green" onclick="selectNoteColor(this)"></div>
+                            <div class="color-dot" data-color="pink" onclick="selectNoteColor(this)"></div>
+                            <div class="color-dot" data-color="purple" onclick="selectNoteColor(this)"></div>
+                        </div>
+
+                        <!-- Action buttons -->
+                        <div class="note-actions">
+                            <button class="btn-save-note" id="btnSaveNote" onclick="saveNote()">
+                                <i class="fa-solid fa-check mr-1"></i> Save Note
+                            </button>
+                            <button class="btn-clear-note" onclick="clearNoteForm()">Clear</button>
+                        </div>
+
+                        <!-- Login prompt (shown for guests on save attempt) -->
+                        <div class="notes-login-prompt" id="notesLoginPrompt">
+                            <p><i class="fa-solid fa-lock" style="margin-right:4px;"></i> Create an account to save your notes to your dashboard</p>
+                            <a href="{{ route('login') }}" class="btn-login-prompt">Log In</a>
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="btn-signup-prompt">Sign Up</a>
+                            @endif
+                        </div>
+
+                        <!-- Saved notes list -->
+                        <div class="notes-list" id="notesList">
+                            <div class="notes-list-header">Saved Notes</div>
+                            <div id="notesContainer">
+                                <!-- Notes loaded via AJAX -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-divider"></div>
+
+                    <!-- Existing View Options -->
                     <div class="toc-sidebar-module">
                         @include('constitution.new_container_plain')
                     </div>
@@ -3172,6 +3419,364 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
         window.addEventListener('beforeunload', () => {
             window.speechSynthesis.cancel();
         });
+    </script>
+
+    <!-- Floating Text Selection Tooltip -->
+    <div class="text-select-tooltip" id="textSelectTooltip">
+        <button onclick="addNoteFromSelection()" title="Add Note"><i class="fa-solid fa-pen-to-square"></i> Note</button>
+        <span class="tooltip-divider"></span>
+        <button onclick="copySelectedText()" title="Copy"><i class="fa-regular fa-copy"></i> Copy</button>
+        <span class="tooltip-divider"></span>
+        <button onclick="copyWithCitation()" title="Copy with Citation"><i class="fa-solid fa-quote-left"></i> Cite</button>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="toastNotification">
+        <div class="toast-content">
+            <i class="toast-icon fa-solid fa-check-circle"></i>
+            <span class="toast-text" id="toastText">Success!</span>
+        </div>
+    </div>
+
+    <script>
+    // ============================================
+    // NOTES SYSTEM
+    // ============================================
+    var selectedNoteColor = 'yellow';
+    var selectedHighlightText = '';
+    var currentDocumentId = {{ $ghana_act['id'] }};
+    var currentDocumentTitle = @json($ghana_act['title']);
+    var currentDocumentType = 'constitution';
+
+    // Color picker
+    function selectNoteColor(el) {
+        document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+        el.classList.add('active');
+        selectedNoteColor = el.getAttribute('data-color');
+    }
+
+    // Clear the form
+    function clearNoteForm() {
+        document.getElementById('noteTextarea').value = '';
+        clearHighlightedText();
+        document.getElementById('notesLoginPrompt').style.display = 'none';
+    }
+
+    // Clear highlighted text
+    function clearHighlightedText() {
+        selectedHighlightText = '';
+        document.getElementById('highlightedTextPreview').style.display = 'none';
+        document.getElementById('highlightedTextContent').textContent = '';
+    }
+
+    // Set highlighted text from selection
+    function setHighlightedText(text) {
+        if (!text || text.trim().length === 0) return;
+        selectedHighlightText = text.trim().substring(0, 2000);
+        var preview = document.getElementById('highlightedTextPreview');
+        document.getElementById('highlightedTextContent').textContent =
+            selectedHighlightText.length > 200 ? selectedHighlightText.substring(0, 200) + '...' : selectedHighlightText;
+        preview.style.display = 'block';
+    }
+
+    // Save note via AJAX
+    function saveNote() {
+        var noteContent = document.getElementById('noteTextarea').value.trim();
+        if (!noteContent) {
+            showToast('Please write a note before saving.', 'error');
+            return;
+        }
+
+        var btn = document.getElementById('btnSaveNote');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saving...';
+
+        $.ajax({
+            url: '/notes/save',
+            type: 'POST',
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            data: {
+                document_type: currentDocumentType,
+                document_id: currentDocumentId,
+                document_title: currentDocumentTitle,
+                note_content: noteContent,
+                note_color: selectedNoteColor,
+                highlighted_text: selectedHighlightText || null,
+                article_section: getCurrentArticleSection(),
+                page_url: window.location.pathname + window.location.hash
+            },
+            success: function(response) {
+                if (response.success) {
+                    showToast('Note saved successfully!', 'success');
+                    clearNoteForm();
+                    prependNoteCard(response.note);
+                    updateNotesCount(1);
+                }
+            },
+            error: function(xhr) {
+                if (xhr.status === 401) {
+                    document.getElementById('notesLoginPrompt').style.display = 'block';
+                    showToast('Please log in to save notes.', 'info');
+                } else if (xhr.status === 422) {
+                    showToast('Please fill in all required fields.', 'error');
+                } else {
+                    showToast('Failed to save note. Please try again.', 'error');
+                }
+            },
+            complete: function() {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Save Note';
+            }
+        });
+    }
+
+    // Get current article/section being read
+    function getCurrentArticleSection() {
+        var activeLink = document.querySelector('.accordion-content .toc-link.toc-active');
+        if (activeLink) return activeLink.textContent.trim();
+        return null;
+    }
+
+    // Load notes for current document
+    function loadDocumentNotes() {
+        $.ajax({
+            url: '/notes/document',
+            type: 'GET',
+            data: {
+                document_type: currentDocumentType,
+                document_id: currentDocumentId
+            },
+            success: function(response) {
+                var container = document.getElementById('notesContainer');
+                container.innerHTML = '';
+                if (response.notes && response.notes.length > 0) {
+                    response.notes.forEach(function(note) {
+                        appendNoteCard(note, container);
+                    });
+                    document.getElementById('notesCountBadge').textContent = response.notes.length;
+                } else {
+                    container.innerHTML = '<div style="text-align:center; padding:16px; color: var(--text-muted); font-size:12px;"><i class="fa-regular fa-note-sticky" style="font-size:24px; margin-bottom:8px; display:block; opacity:0.4;"></i>No notes yet for this document</div>';
+                    document.getElementById('notesCountBadge').textContent = '0';
+                }
+            }
+        });
+    }
+
+    // Prepend a note card (newest first)
+    function prependNoteCard(note) {
+        var container = document.getElementById('notesContainer');
+        // Remove empty state if present
+        var emptyState = container.querySelector('div[style*="text-align:center"]');
+        if (emptyState) emptyState.remove();
+
+        var card = createNoteCardElement(note);
+        container.insertBefore(card, container.firstChild);
+    }
+
+    // Append a note card
+    function appendNoteCard(note, container) {
+        var card = createNoteCardElement(note);
+        container.appendChild(card);
+    }
+
+    // Create note card DOM element
+    function createNoteCardElement(note) {
+        var card = document.createElement('div');
+        card.className = 'note-card';
+        card.setAttribute('data-color', note.note_color);
+        card.setAttribute('data-note-id', note.id);
+
+        var html = '';
+        if (note.highlighted_text) {
+            html += '<div class="note-card-quote">"' + escapeHtml(note.highlighted_text.substring(0, 150)) + (note.highlighted_text.length > 150 ? '..."' : '"') + '</div>';
+        }
+        html += '<div class="note-card-content">' + escapeHtml(note.note_content) + '</div>';
+        html += '<div class="note-card-meta">';
+        html += '<span>' + (note.article_section ? escapeHtml(note.article_section.substring(0, 30)) : '') + ' · ' + note.created_at + '</span>';
+        html += '<i class="fa-solid fa-trash-can note-card-delete" onclick="deleteNote(' + note.id + ', this)" title="Delete note"></i>';
+        html += '</div>';
+        card.innerHTML = html;
+        return card;
+    }
+
+    // Delete note
+    function deleteNote(noteId, el) {
+        if (!confirm('Delete this note?')) return;
+        $.ajax({
+            url: '/notes/' + noteId,
+            type: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            success: function(response) {
+                if (response.success) {
+                    var card = el.closest('.note-card');
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateX(20px)';
+                    card.style.transition = 'all 0.3s ease';
+                    setTimeout(function() { card.remove(); updateNotesCount(-1); }, 300);
+                    showToast('Note deleted.', 'success');
+                }
+            },
+            error: function() { showToast('Failed to delete note.', 'error'); }
+        });
+    }
+
+    // Update notes count badge
+    function updateNotesCount(delta) {
+        var badge = document.getElementById('notesCountBadge');
+        var count = parseInt(badge.textContent) + delta;
+        badge.textContent = Math.max(0, count);
+    }
+
+    // ============================================
+    // TEXT SELECTION FLOATING TOOLTIP
+    // ============================================
+    var currentSelection = '';
+
+    document.addEventListener('mouseup', function(e) {
+        var tooltip = document.getElementById('textSelectTooltip');
+        var readingPane = document.getElementById('display_content') || document.getElementById('v-pills-profile');
+
+        if (!readingPane || !readingPane.contains(e.target)) {
+            if (!tooltip.contains(e.target)) {
+                tooltip.style.display = 'none';
+            }
+            return;
+        }
+
+        setTimeout(function() {
+            var sel = window.getSelection();
+            var text = sel.toString().trim();
+
+            if (text.length > 3) {
+                currentSelection = text;
+                var range = sel.getRangeAt(0);
+                var rect = range.getBoundingClientRect();
+
+                tooltip.style.top = (rect.top - 50) + 'px';
+                tooltip.style.left = Math.min(rect.left + (rect.width / 2) - 100, window.innerWidth - 250) + 'px';
+                tooltip.style.display = 'block';
+            } else {
+                tooltip.style.display = 'none';
+            }
+        }, 10);
+    });
+
+    // Hide tooltip on scroll
+    document.addEventListener('scroll', function() {
+        document.getElementById('textSelectTooltip').style.display = 'none';
+    }, true);
+
+    // Add Note from text selection
+    function addNoteFromSelection() {
+        if (currentSelection) {
+            setHighlightedText(currentSelection);
+            document.getElementById('noteTextarea').focus();
+
+            // Ensure right sidebar is open
+            var rightSidebar = document.getElementById('rightSidebar');
+            if (rightSidebar.classList.contains('collapsed')) {
+                toggleSidebar('right');
+            }
+        }
+        document.getElementById('textSelectTooltip').style.display = 'none';
+        window.getSelection().removeAllRanges();
+    }
+
+    // Copy selected text
+    function copySelectedText() {
+        if (currentSelection) {
+            navigator.clipboard.writeText(currentSelection).then(function() {
+                showToast('Text copied to clipboard!', 'success');
+            });
+        }
+        document.getElementById('textSelectTooltip').style.display = 'none';
+        window.getSelection().removeAllRanges();
+    }
+
+    // Copy with citation
+    function copyWithCitation() {
+        if (currentSelection) {
+            var section = getCurrentArticleSection() || '';
+            var citation = currentSelection + '\n\n— ' + currentDocumentTitle;
+            if (section) citation += ', ' + section;
+            citation += ' (Legals Forum)';
+
+            navigator.clipboard.writeText(citation).then(function() {
+                showToast('Copied with citation!', 'success');
+            });
+        }
+        document.getElementById('textSelectTooltip').style.display = 'none';
+        window.getSelection().removeAllRanges();
+    }
+
+    // ============================================
+    // READING PROGRESS TRACKER
+    // ============================================
+    function updateReadingProgress() {
+        var readingPane = document.getElementById('display_content');
+        if (!readingPane) return;
+
+        var scrollContainer = readingPane.closest('.reading-body') || readingPane.parentElement;
+        if (!scrollContainer) return;
+
+        var scrollTop = scrollContainer.scrollTop;
+        var scrollHeight = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+        var progress = scrollHeight > 0 ? Math.round((scrollTop / scrollHeight) * 100) : 0;
+        progress = Math.min(100, Math.max(0, progress));
+
+        document.getElementById('progressFill').style.width = progress + '%';
+        document.getElementById('progressPercent').textContent = progress + '%';
+    }
+
+    // Attach scroll listener to reading pane
+    $(document).ready(function() {
+        // Try multiple possible scroll containers
+        var containers = [
+            document.querySelector('.reading-body'),
+            document.getElementById('display_content'),
+            document.querySelector('.workspace-main')
+        ];
+
+        containers.forEach(function(el) {
+            if (el) {
+                el.addEventListener('scroll', updateReadingProgress);
+            }
+        });
+
+        // Load saved notes on page load
+        loadDocumentNotes();
+    });
+
+    // ============================================
+    // TOAST NOTIFICATION
+    // ============================================
+    var toastTimeout;
+    function showToast(message, type) {
+        type = type || 'success';
+        var toast = document.getElementById('toastNotification');
+        var text = document.getElementById('toastText');
+        var icon = toast.querySelector('.toast-icon');
+
+        toast.className = 'toast-notification ' + type;
+        text.textContent = message;
+
+        if (type === 'success') icon.className = 'toast-icon fa-solid fa-check-circle';
+        else if (type === 'error') icon.className = 'toast-icon fa-solid fa-exclamation-circle';
+        else icon.className = 'toast-icon fa-solid fa-info-circle';
+
+        toast.style.display = 'block';
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(function() {
+            toast.style.display = 'none';
+        }, 3000);
+    }
+
+    // HTML escape helper
+    function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(text));
+        return div.innerHTML;
+    }
     </script>
   </body>
 </html>

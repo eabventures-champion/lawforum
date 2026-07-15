@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 class HomeSearchController extends Controller
 {
     /**
-     * Main Search Endpoint for LawsGhana
+     * Main Search Endpoint for Legals Forum
      */
     public function main_home_search(Request $request)
     {

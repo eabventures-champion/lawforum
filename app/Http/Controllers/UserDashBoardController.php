@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\UserBookmark;
+use App\UserNote;
 use App\Subscription;
 use App\User;
 use Carbon\Carbon;
@@ -16,7 +17,7 @@ class UserDashBoardController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth', 'verified'])->except(['save_note', 'get_document_notes']);
     }
     //----------------------------------------------------------Dashboard-------------------------------------------------------------
     public function dashboard(){
@@ -91,6 +92,141 @@ class UserDashBoardController extends Controller
         $user->saveOrFail();
 
         return 'successful';
+    }
+
+    //----------------------------------------------------------Notes-------------------------------------------------------------
+    /**
+     * Save a new note (AJAX POST).
+     * Guests are rejected with a 401 JSON response.
+     */
+    public function save_note(Request $request)
+    {
+        if (!auth()->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You must be logged in to save notes.',
+                'require_login' => true
+            ], 401);
+        }
+
+        $request->validate([
+            'document_type'  => 'required|string|max:50',
+            'document_id'    => 'required|integer',
+            'document_title' => 'required|string|max:500',
+            'note_content'   => 'required|string|max:5000',
+            'note_color'     => 'nullable|string|in:yellow,blue,green,pink,purple',
+            'highlighted_text' => 'nullable|string|max:2000',
+            'article_section'  => 'nullable|string|max:500',
+            'page_url'       => 'required|string|max:1000',
+        ]);
+
+        $note = UserNote::create([
+            'user_id'         => auth()->id(),
+            'document_type'   => $request->document_type,
+            'document_id'     => $request->document_id,
+            'document_title'  => $request->document_title,
+            'highlighted_text' => $request->highlighted_text,
+            'note_content'    => $request->note_content,
+            'note_color'      => $request->note_color ?? 'yellow',
+            'article_section' => $request->article_section,
+            'page_url'        => $request->page_url,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Note saved successfully!',
+            'note'    => [
+                'id'               => $note->id,
+                'note_content'     => $note->note_content,
+                'highlighted_text' => $note->highlighted_text,
+                'note_color'       => $note->note_color,
+                'article_section'  => $note->article_section,
+                'created_at'       => $note->created_at->diffForHumans(),
+            ]
+        ]);
+    }
+
+    /**
+     * Get notes for the current document (AJAX GET).
+     * Returns empty array for guests.
+     */
+    public function get_document_notes(Request $request)
+    {
+        if (!auth()->check()) {
+            return response()->json(['notes' => []]);
+        }
+
+        $notes = UserNote::where('user_id', auth()->id())
+            ->where('document_type', $request->document_type)
+            ->where('document_id', $request->document_id)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($note) {
+                return [
+                    'id'               => $note->id,
+                    'note_content'     => $note->note_content,
+                    'highlighted_text' => $note->highlighted_text,
+                    'note_color'       => $note->note_color,
+                    'article_section'  => $note->article_section,
+                    'created_at'       => $note->created_at->diffForHumans(),
+                ];
+            });
+
+        return response()->json(['notes' => $notes]);
+    }
+
+    /**
+     * Show all notes for the user on the dashboard.
+     */
+    public function show_user_notes($user_id)
+    {
+        $notes = UserNote::where('user_id', $user_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('user_dashboard.notes', compact('notes'));
+    }
+
+    /**
+     * Update an existing note (AJAX PATCH).
+     */
+    public function update_note(Request $request, $id)
+    {
+        $note = UserNote::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        $request->validate([
+            'note_content' => 'required|string|max:5000',
+            'note_color'   => 'nullable|string|in:yellow,blue,green,pink,purple',
+        ]);
+
+        $note->update([
+            'note_content' => $request->note_content,
+            'note_color'   => $request->note_color ?? $note->note_color,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Note updated successfully!',
+        ]);
+    }
+
+    /**
+     * Delete a note (AJAX DELETE).
+     */
+    public function delete_note($id)
+    {
+        $note = UserNote::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        $note->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Note deleted successfully!',
+        ]);
     }
 
 }

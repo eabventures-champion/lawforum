@@ -30,43 +30,7 @@
         </span>
 	 </div>
 
-    <div style="margin-bottom: 5px;">
-        &nbsp;&nbsp;&nbsp;&nbsp;<a class="pull-right" id="print_options" href="#">Print Options</a>
-        <div class="menu_options pull-right" style="display: none;">
-            @if (Route::has('login'))
-				@auth
-                <a href="/constitution/Republic/pdf_preamble_content/{{$ghana_act['title']}}/{{ $ghana_act['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
-                {{-- <a href="/constitution/Republic/plain_preamble_content/{{ $ghana_act['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp; --}}
-                <!-- <a href="/post_1992_legislation/pdf_content/{{ $ghana_act['id'] }}"><img alt="Brand" src="{{ asset('/logo/word.png') }}" style="width:1.5em;">&nbsp;WORD</a>&nbsp;&nbsp;||&nbsp; -->
-                <a href="/constitution/Republic/print_preamble_content/{{ $ghana_act['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print Preview</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				
-					@else
 
-                    <a href="" data-toggle="modal" data-target="#myModalp"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
-                    <a href="" data-toggle="modal" data-target="#myModalp"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="myModalp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel"><b>Kindly Log In or Sign Up to Create An Account</b></h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            </div>
-                            <div class="modal-body">
-                                <a class="btn btn-sm bg-header-color text-white" href="{{ route('login') }}">Login</a>
-                                <a class="btn btn-sm bg-header-color text-white" href="{{ route('register') }}">Sign Up</a>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-				
-				@endauth
-			@endif
-        </div>
-    </div>
 
     <div class="content">	
         <p>{!! $ghana_act['preamble'] !!}</p>  

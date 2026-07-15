@@ -71,6 +71,24 @@ body {
     flex-direction: column;
     gap: 8px;
     flex: 1;
+    overflow-y: auto;
+}
+
+.sidebar-menu::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sidebar-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .menu-item a {
@@ -487,7 +505,7 @@ textarea.form-control {
     gap: 0;
 }
 
-.sidebar.collapsed .sidebar-header .fa-scale-balanced {
+.sidebar.collapsed .sidebar-header .fa-balance-scale {
     display: none;
 }
 
@@ -497,7 +515,7 @@ textarea.form-control {
 }
 
 .sidebar.collapsed .menu-item a span {
-    display: none;
+    display: none !important;
 }
 
 .sidebar.collapsed .logout-btn span {
@@ -540,5 +558,25 @@ textarea.form-control {
 
 .sidebar.collapsed .sidebar-toggle-btn {
     margin-left: 0;
+}
+
+/* Premium Alert Animations */
+@keyframes slideInDown {
+    from {
+        transform: translateY(-25px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+@keyframes shrinkProgress {
+    from {
+        transform: scaleX(1);
+    }
+    to {
+        transform: scaleX(0);
+    }
 }
 

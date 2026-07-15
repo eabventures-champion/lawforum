@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Dashboard | LawsGhana</title>
+    <title>Dashboard | Legals Forum</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -342,9 +342,9 @@
         <header class="dashboard-header">
             <a href="/" class="brand-link">
                 <div class="brand-logo">
-                    <i class="fa-solid fa-scale-balanced"></i>
+                    <i class="fa fa-balance-scale"></i>
                 </div>
-                <span class="brand-title">LawsGhana</span>
+                <span class="brand-title">Legals Forum</span>
             </a>
             
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -415,6 +415,15 @@
                 </div>
                 <h3 class="portal-title">My Bookmarks</h3>
                 <p class="portal-desc">View your compiled list of saved law sections and referenced articles.</p>
+            </a>
+
+            <!-- My Notes -->
+            <a href="/accounts/notes/{{ auth()->user()->id }}" class="portal-card">
+                <div class="portal-icon-wrapper">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <h3 class="portal-title">My Notes</h3>
+                <p class="portal-desc">Access, organize, and edit your personal study notes and text highlights.</p>
             </a>
 
             <!-- My Downloads -->

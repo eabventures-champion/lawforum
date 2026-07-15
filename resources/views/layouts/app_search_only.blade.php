@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <script data-ad-client="ca-pub-4293461101625028" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="@yield('meta_description')"/>
@@ -9,8 +9,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    {{-- <title>{{ config('app.name', 'LawsGhana') }}</title> --}}
-    {{-- <title>LawsGhana</title> --}}
+    {{-- <title>{{ config('app.name', 'Legals Forum') }}</title> --}}
+    {{-- <title>Legals Forum</title> --}}
     <title> 
         @hasSection('title')
             @yield('title')
@@ -80,11 +80,12 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white fixed-top shadow-sm">
             <div class="container">
                 {{-- <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'LawsGhana') }}
+                    {{ config('app.name', 'Legals Forum') }}
                 </a> --}}
-                <a href="/" class="">
-                    <img src="{{ asset('/logo/lawsghlog.png') }}" class="img-responsive" style="width:12em; padding-top: 1px; padding-bottom:1px;padding-left:1px;"> 
-                </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="/" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; padding-left: 1px; padding-top: 1px; padding-bottom: 1px; transition: transform 0.2s ease; vertical-align: middle;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; font-size: 1.5em; margin: 0; line-height: 1;"></i>
+                <span style="font-size: 1.5em; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(to right, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.3;">Legals Forum</span>
+            </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>

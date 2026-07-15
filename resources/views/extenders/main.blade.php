@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <script data-ad-client="ca-pub-4293461101625028" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        
         <meta charset="utf-8">
         {{-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
         <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
@@ -196,7 +196,7 @@
                      <div class="navbar-header">
                          <a href="/">
                             {{-- <img alt="Brand" src="{{ asset('/logo/gh_flag.png') }}" class="img-responsive" style="width:3em; padding-top: 5px;"> --}}
-                            <img alt="Brand" src="{{ asset('/logo/lawsghlog.png') }}" class="img-responsive" style="width:20em; padding-top: 10px; padding-bottom:10px;padding-left:50px;">
+                            <img alt="Brand" src="{{ asset('/logo/legalsforumlog.png') }}" class="img-responsive" style="width:20em; padding-top: 10px; padding-bottom:10px;padding-left:50px;">
 
                         </a>
                      </div>

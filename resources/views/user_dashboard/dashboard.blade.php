@@ -37,9 +37,10 @@ The above copyright notice and this permission notice shall be included in all c
         Tip 2: you can also add an image using data-image tag
     -->
       <div class="logo">
-        <a href="/" class="simple-text logo-normal">
-          <img alt="Brand" src="{{ asset('/logo/lawsghlog.png') }}" class="img-responsive" style="width:10em;">
-        </a>
+        <a href="/" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; padding-left: 0px; padding-top: 5px; padding-bottom: 5px; transition: transform 0.2s ease; vertical-align: middle;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; font-size: 1.3em; margin: 0; line-height: 1;"></i>
+                <span style="font-size: 1.3em; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(to right, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.3;">Legals Forum</span>
+            </a>
       </div>
       <div class="sidebar-wrapper">
         <ul class="nav">

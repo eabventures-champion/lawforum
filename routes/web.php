@@ -38,6 +38,13 @@ Route::get('/acts-downloads/{act_title}/{user_name}/{user_id}/{act_group}/{act_i
 Route::get('/accounts/downloads/{user_id}','DownloadsController@show_user_downloads'); //Download page.........shows all list of downloads
 Route::resource('/downloads', 'DownloadsController'); //To delete a record of bookmark
 
+// -----------------------------------------------------NOTES-------------------------------------
+Route::post('/notes/save','UserDashBoardController@save_note'); //AJAX save note
+Route::get('/notes/document','UserDashBoardController@get_document_notes'); //AJAX get notes for current document
+Route::get('/accounts/notes/{user_id}','UserDashBoardController@show_user_notes'); //Dashboard notes page
+Route::patch('/notes/{id}','UserDashBoardController@update_note'); //AJAX update note
+Route::delete('/notes/{id}','UserDashBoardController@delete_note'); //AJAX delete note
+
 //-------------------------------------------------------SUBSCRIPTION-------------------------------------
 Route::get('/subscription','UserDashBoardController@subscription_index');
 // Route::get('/process/subscription/{subscription}/check/{user_id}', 'UserDashBoardController@process')->name('process');
@@ -102,6 +109,7 @@ Route::view('/scan', 'scan');
 //-------------------------------------------------------------------------------CONSTITUTION-----------------------------------------------------------------------------------------------
     //All Countries Constitution
     Route::get('/constitution/all_countries','ConstitutionController@all_countries_constitution');//display all countries constitution
+    Route::get('/constitution/ajax-data','ConstitutionController@constitution_ajax_data'); //AJAX JSON data for tab switching
         Route::get('/constitution/filter/{year}/{country}','ConstitutionController@all_countries_constitution_filter'); //all constitution filtering
         Route::get('/constitution/1/{continent}/{country}/{id}','ConstitutionController@display_country_constitution');
         Route::get('/constitution/print/content/{id}','ConstitutionController@print_constitution_content');//display plain act content
@@ -174,6 +182,7 @@ Route::view('/scan', 'scan');
 //------------------------------------------------------------------------------------PRE_1992_LEGISLATION------------------------------------------------------------------------------------
 
 Route::get('/pre-1992-legislation','Pre1992Controller@index');//display all acts
+    Route::get('/pre_1992_legislation/ajax-data','Pre1992Controller@pre1992_ajax_data'); //AJAX JSON data for tab switching
     Route::get('/pre_1992_legislation/filter/{year}/{category}','Pre1992Controller@all_pre_1992_legislation_filter'); //all pre-1992 filtering
     Route::get('/pre_1992_legislation/{group}/{title}/{id}','Pre1992Controller@pre_1992_legislation_table_of_content');//display acts table of content
     Route::get('/pre_1992_legislation/preamble/{id}','Pre1992Controller@pre_1992_legislation_preamble');//display act preamble
@@ -591,8 +600,35 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::get('laws/{id}/edit/{type}', 'Admin\LawController@edit')->name('admin.laws.edit');
     Route::put('laws/{id}/update/{type}', 'Admin\LawController@update')->name('admin.laws.update');
     Route::delete('laws/{id}/delete/{type}', 'Admin\LawController@destroy')->name('admin.laws.destroy');
+
+    // Homepage Settings Management
+    Route::get('homepage-settings', 'Admin\HomepageSettingController@index')->name('admin.homepage-settings.index');
+    Route::post('homepage-settings/update', 'Admin\HomepageSettingController@update')->name('admin.homepage-settings.update');
+
+    // Homepage Custom Slides Management (Dynamic Panels)
+    Route::resource('homepage-custom-slides', 'Admin\HomepageCustomSlideController', ['as' => 'admin']);
+
+    // Maintenance Mode Settings
+    Route::get('maintenance-settings', 'Admin\MaintenanceSettingController@index')->name('admin.maintenance-settings.index');
+    Route::post('maintenance-settings/update', 'Admin\MaintenanceSettingController@update')->name('admin.maintenance-settings.update');
+
+    // Header Navigation Menus CRUD Management
+    Route::resource('navigation-menus', 'Admin\NavigationMenuController');
+
+    // Sidebar Ads Management
+    Route::resource('sidebar-ads', 'Admin\SidebarAdController', ['as' => 'admin'])->only(['index', 'edit', 'update']);
 });
 
+// Dedicated Admin Login Routes
+Route::get('/admin/login', 'Admin\LoginController@showLoginForm')->name('admin.login');
+Route::post('/admin/login', 'Admin\LoginController@login')->name('admin.login.submit');
+
+// Dynamic Page Routing
+Route::get('page/{slug}', 'PageController@show')->name('dynamic.page');
+
+// Maintenance Mode Public Routes
+Route::get('maintenance', 'MaintenanceController@show')->name('maintenance.show');
+Route::post('maintenance/verify', 'MaintenanceController@verify')->name('maintenance.verify');
 
 
 /*

@@ -2,7 +2,7 @@
 <html lang="en">
    <head>
       {{-- Google Ads --}}
-      <script data-ad-client="ca-pub-4293461101625028" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <meta name="description" content="">
@@ -129,10 +129,11 @@
    <!--End of Tawk.to Script-->
    <body class="bg-light">
       <nav class="navbar navbar-custom navbar-expand-lg fixed-top navbar-light bg-white">
-         {{-- <a class="navbar-brand mr-auto mr-lg-0" href="#">Laws Ghana</a> --}}
-         <a href="/" class="">
-         <img src="{{ asset('/logo/lawsghlog.png') }}" class="img-responsive" style="width:12em; padding-top: 1px; padding-bottom:1px;padding-left:1px;"> 
-         </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         {{-- <a class="navbar-brand mr-auto mr-lg-0" href="#">Legals Forum</a> --}}
+         <a href="/" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; padding-left: 1px; padding-top: 1px; padding-bottom: 1px; transition: transform 0.2s ease; vertical-align: middle;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; font-size: 1.5em; margin: 0; line-height: 1;"></i>
+                <span style="font-size: 1.5em; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(to right, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.3;">Legals Forum</span>
+            </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
          <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
          <span class="navbar-toggler-icon"></span>
@@ -144,50 +145,24 @@
                   <a class="nav-link" href="#">Constitution <span class="sr-only">(current)</span></a>
                </li>
                --}}
-               <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle text-dark" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Constitution</a>
-                  <div class="dropdown-menu" aria-labelledby="dropdown01">
-                     <a class="dropdown-item" href="/constitution/Republic/Ghana/1">Ghana</a>
-                     <a class="dropdown-item" href="/constitution/all-countries/1/Africa">Africa</a>
-                     <a class="dropdown-item" href="/constitution/all-countries/2/Asia">Asia</a>
-                     <a class="dropdown-item" href="/constitution/all-countries/3/Europe">Europe</a>
-                     <a class="dropdown-item" href="/constitution/all-countries/4/North-America">North America</a>
-                     <a class="dropdown-item" href="/constitution/all-countries/5/South-America">South America</a>
-                  </div>
-               </li>
-               &nbsp;&nbsp;
-               <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle text-dark" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pre-4th Republic Laws</a>
-                  <div class="dropdown-menu" aria-labelledby="dropdown01">
-                     <a class="dropdown-item" href="/pre_1992_legislation/1/First Republic">1st Republic</a>
-                     <a class="dropdown-item" href="/pre_1992_legislation/2/Second Republic">2nd Republic</a>
-                     <a class="dropdown-item" href="/pre_1992_legislation/3/Third Republic">3rd Republic</a>
-                     <a class="dropdown-item" href="/pre_1992_legislation/5/NLC Decree">NLC Decree</a>
-                     <a class="dropdown-item" href="/pre_1992_legislation/6/NRC Decree">NRC Decree</a>
-                     <a class="dropdown-item" href="/pre_1992_legislation/7/SMC Decree">SMC Decree</a>
-                     <a class="dropdown-item" href="/pre_1992_legislation/8/AFRC Decree">AFRC Decree</a>
-                     <a class="dropdown-item" href="/pre_1992_legislation/4/PNDC Law">PNDC Law</a>
-                  </div>
-               </li>
-               &nbsp;&nbsp;
-               <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle text-dark" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">4th Republic Laws</a>
-                  <div class="dropdown-menu" aria-labelledby="dropdown01">
-                     <a class="dropdown-item" href="/post-1992-legislation/1/Acts of Parliament">Acts of Parliament</a>
-                     <a class="dropdown-item" href="/post-1992-legislation/only-regulations">Legislative Instruments</a>
-                     <a class="dropdown-item" href="/post-1992-legislation/Constitutional-Intruments">Constitutional Instruments</a>
-                     <a class="dropdown-item" href="/post-1992-legislation/Executive-Intruments">Executive Instruments</a>
-                     <a class="dropdown-item" href="/post-1992-legislation/only-amendments">Amendments</a>
-                  </div>
-               </li>
-               &nbsp;&nbsp;
-               <li class="nav-item">
-                  <a class="nav-link text-dark" href="/judgement/Ghana">Case Laws</a>
-               </li>
-               &nbsp;&nbsp;
-               <li class="nav-item">
-                  <a class="nav-link text-dark" href="/News/Ghana-News/1">News</a>
-               </li>
+               @foreach($headerMenus as $menu)
+                   @if($menu->is_dropdown)
+                       <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown{{ $menu->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $menu->title }}</a>
+                          <div class="dropdown-menu" aria-labelledby="navbarDropdown{{ $menu->id }}">
+                             @foreach($menu->children as $child)
+                                <a class="dropdown-item" href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">{{ $child->title }}</a>
+                             @endforeach
+                          </div>
+                       </li>
+                       &nbsp;&nbsp;
+                   @else
+                       <li class="nav-item">
+                          <a class="nav-link text-dark" href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}">{{ $menu->title }}</a>
+                       </li>
+                       &nbsp;&nbsp;
+                   @endif
+                @endforeach
                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                <div>

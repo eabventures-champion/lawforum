@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Login | LawsGhana</title>
+    <title>Login | Legals Forum</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -309,9 +309,9 @@
         <div class="brand-header">
             <a href="/" style="text-decoration: none; color: inherit; display: inline-block; cursor: pointer;">
                 <div class="brand-logo">
-                    <i class="fa-solid fa-scale-balanced"></i>
+                    <i class="fa fa-balance-scale"></i>
                 </div>
-                <h1 class="brand-name">LawsGhana</h1>
+                <h1 class="brand-name">Legals Forum</h1>
             </a>
             <p class="brand-tagline">Access premium legal directory & forum</p>
         </div>

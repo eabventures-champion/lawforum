@@ -411,7 +411,7 @@
         {{-- For the bookmark --}}
         <div class="nav-links">
             <span>
-                <i class="fa-solid fa-scale-balanced"></i>
+                <i class="fa fa-balance-scale"></i>
                 <span class="nav-title-text">{{ $allPost1992Article['section'] }}</span>
                 
                 @if (Route::has('login'))

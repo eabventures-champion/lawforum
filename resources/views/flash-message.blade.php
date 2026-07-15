@@ -2,7 +2,7 @@
     <div class="alert alert-success alert-block">
         <button type="button" class="close" data-dismiss="alert">×</button>    
         <strong>{{ $message }}</strong>&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="/" class="pull-right">Login to LawsGhana</a>
+        <a href="/" class="pull-right">Login to Legals Forum</a>
     </div>
 @endif
 
@@ -10,7 +10,7 @@
     <div class="alert alert-success alert-block">
         <button type="button" class="close" data-dismiss="alert">×</button>    
         <strong>{{ $message }}</strong>&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="/" class="pull-right">Continue to LawsGhana</a>
+        <a href="/" class="pull-right">Continue to Legals Forum</a>
     </div>
 @endif
 

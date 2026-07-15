@@ -129,7 +129,7 @@ class ConstitutionalActController extends Controller
                 'constitutional_act' => $title
             ])->toArray()[0];
         $pdf = PDF::loadView('post_1992_legislation.displayed_constitutional_act_pdf_section_content', compact('allConstitutionalArticle'));
-        return $pdf->download($title.'.lawsghana.pdf');
+        return $pdf->download($title.'.legalsforum.pdf');
     }
 
     //Display Pdf View for Expanded view
@@ -144,7 +144,7 @@ class ConstitutionalActController extends Controller
         $unique                     = $allConstitutionalArticles1->unique()->sortBy('part')->sortBy('priority'); 
         $allConstitutionalArticles         = $unique;
         $pdf = PDF::loadView('post_1992_legislation.displayed_constitutional_act_pdf_full_act_content', compact('allConstitutionalAct','allConstitutionalArticles'));
-        return $pdf->download($title.'.lawsghana.pdf');
+        return $pdf->download($title.'.legalsforum.pdf');
     }
 
 }

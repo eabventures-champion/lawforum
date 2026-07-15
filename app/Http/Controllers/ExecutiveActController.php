@@ -129,7 +129,7 @@ class ExecutiveActController extends Controller
                 'executive_act' => $title
             ])->toArray()[0];
         $pdf = PDF::loadView('post_1992_legislation.displayed_executive_act_pdf_section_content', compact('allExecutiveArticle'));
-        return $pdf->download($title.'.lawsghana.pdf');
+        return $pdf->download($title.'.legalsforum.pdf');
     }
 
     //Display Pdf View for Expanded view
@@ -145,6 +145,6 @@ class ExecutiveActController extends Controller
         $unique                     = $allExecutiveArticles1->unique()->sortBy('part')->sortBy('priority'); 
         $allExecutiveArticles         = $unique;
         $pdf = PDF::loadView('post_1992_legislation.displayed_executive_act_pdf_full_act_content', compact('allExecutiveAct','allExecutiveArticles'));
-        return $pdf->download($title.'.lawsghana.pdf');
+        return $pdf->download($title.'.legalsforum.pdf');
     }
 }

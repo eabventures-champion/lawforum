@@ -100,7 +100,7 @@ class Pre1992Controller extends Controller
                 'pre_1992_act' => $title
             ])->toArray()[0];
         $pdf = PDF::loadView('pre_1992_legislation.displayed_pdf_content_view', compact('allPre1992Act'));
-        return $pdf->download($id.'.lawsghana.pdf');
+        return $pdf->download($id.'.legalsforum.pdf');
     }
 
     //Display Plain Content for preamble
@@ -184,7 +184,7 @@ class Pre1992Controller extends Controller
         $unique                     = $allPreArticles1->unique()->sortBy('part')->sortBy('priority'); 
         $allPre1992Articles         = $unique;
         $pdf = PDF::loadView('pre_1992_legislation.displayed_pdfView', compact('allPre1992Act','allPre1992Articles'));
-        return $pdf->download($title.'.lawsghana.pdf');
+        return $pdf->download($title.'.legalsforum.pdf');
     }
 
     //Display First Republic Acts
@@ -407,5 +407,43 @@ class Pre1992Controller extends Controller
         $footer_notes           = FooterNote::all();
         return view('pre_1992_legislation.new_displayed_afrc_decree_view', compact('footer_notes','afrcDecrees', 'afrcCategories'));
         // return view('pre_1992_legislation.displayed_afrc_decree_view', compact('footer_notes','afrcDecrees', 'afrcCategories'));
+    }
+
+    /**
+     * AJAX endpoint: Return JSON data for a given pre-1992 tab group.
+     * Used for client-side tab switching without page refresh.
+     */
+    public function pre1992_ajax_data(Request $request)
+    {
+        $group = $request->query('group', 'all');
+
+        // Map group keys to their database pre_1992_group values
+        $groupMap = [
+            '1' => 'First Republic',
+            '2' => 'Second Republic',
+            '3' => 'Third Republic',
+            '4' => 'PNDC Law',
+            '5' => 'NLC Decree',
+            '6' => 'NRC Decree',
+            '7' => 'SMC Decree',
+            '8' => 'AFRC Decree',
+        ];
+
+        if ($group === 'all') {
+            $acts = Pre1992LegislationAct::all();
+        } else {
+            $groupName = isset($groupMap[$group]) ? $groupMap[$group] : $group;
+            $acts = Pre1992LegislationAct::where(['pre_1992_group' => $groupName])->get();
+        }
+
+        $data = $acts->map(function ($act) {
+            return [
+                'title' => $act->title,
+                'year'  => $act->year,
+                'url'   => '/pre_1992_legislation/' . $act->pre_1992_group . '/' . $act->title . '/' . $act->id,
+            ];
+        });
+
+        return response()->json(['data' => $data]);
     }
 }

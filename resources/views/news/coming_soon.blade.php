@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laws Ghana EcoSystem</title>
+    <title>Legals Forum EcoSystem</title>
 
     <!-- load CSS -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300">  <!-- Google web font "Open Sans" -->
@@ -26,8 +26,8 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-6 col-lg-6 col-md-col-xl-6 mb-md-0 mb-sm-4 mb-4 tm-site-header-col">
                         <div class="tm-site-header">
-                            <a href="/">Back to Laws Ghana</a>
-                            <h1 class="mb-4 mt-4">Laws Ghana EcoSystem <br><code>coming soon</code></h1>
+                            <a href="/">Back to Legals Forum</a>
+                            <h1 class="mb-4 mt-4">Legals Forum EcoSystem <br><code>coming soon</code></h1>
                             <img src="{{ asset('news/img/underline.png') }}" class="img-fluid mb-4">
                             <p>Connecting minds beyond</p>  
                                   
@@ -150,7 +150,7 @@
                                                 </div>
                                                 <div class="row mb-4">
                                                     <div class="col-12">
-                                                        <p>Laws Ghana Ecosystem...</p>
+                                                        <p>Legals Forum Ecosystem...</p>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -181,7 +181,7 @@
                 </div>                
             </div>
             <footer>
-                <p class="small tm-copyright-text">Copyright &copy; <span class="tm-current-year">2020</span> Laws Ghana. 
+                <p class="small tm-copyright-text">Copyright &copy; <span class="tm-current-year">2020</span> Legals Forum. 
                 
                 {{-- Design: <a rel="nofollow" href="https://www.tooplate.com" class="tm-text-highlight">Tooplate</a></p> --}}
             </footer>

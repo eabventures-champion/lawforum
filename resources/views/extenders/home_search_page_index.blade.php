@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="Search results for {{ $query }} — LawsGhana Legal Research Platform">
-    <title>Search Results — LawsGhana</title>
+    <meta name="description" content="Search results for {{ $query }} — Legals Forum Legal Research Platform">
+    <title>Search Results — Legals Forum</title>
 
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('logo/favicon/apple-touch-icon.png') }}">
@@ -898,9 +898,9 @@
         <div class="header-inner">
             <a href="/" class="brand-link">
                 <div class="brand-icon">
-                    <i class="fa-solid fa-scale-balanced"></i>
+                    <i class="fa fa-balance-scale"></i>
                 </div>
-                <span class="brand-name">LawsGhana</span>
+                <span class="brand-name">Legals Forum</span>
             </a>
 
             <div class="header-search-form">
@@ -1141,7 +1141,7 @@
         function getBadgeIcon(cat) {
             switch(cat) {
                 case '4th_republic': return 'fa-solid fa-gavel';
-                case 'case_laws': return 'fa-solid fa-scale-balanced';
+                case 'case_laws': return 'fa fa-balance-scale';
                 case 'constitution_ghana': return 'fa-solid fa-book-open';
                 case 'pre_4th_republic': return 'fa-solid fa-landmark';
                 case 'constitution_others': return 'fa-solid fa-globe';
@@ -1239,7 +1239,7 @@
                 // 1. Reset results feed to clean Suggestion/Welcome landing card
                 elements.resultsFeed.innerHTML = `
                     <div class="no-results search-welcome">
-                        <div class="no-results-icon" style="color: var(--accent);"><i class="fa-solid fa-scale-balanced"></i></div>
+                        <div class="no-results-icon" style="color: var(--accent);"><i class="fa fa-balance-scale"></i></div>
                         <h3>Discover Laws & Cases in Ghana</h3>
                         <p>Search through the Constitution, Acts of Parliament, Case Judgments, and Regulations. Enter a keyword above to start your research.</p>
                         

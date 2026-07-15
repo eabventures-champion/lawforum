@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title') | LawsGhana</title>
+    <title>@yield('title') | Legals Forum</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,9 +29,9 @@
         <header class="dashboard-header">
             <a href="/" class="brand-link">
                 <div class="brand-logo">
-                    <i class="fa-solid fa-scale-balanced"></i>
+                    <i class="fa fa-balance-scale"></i>
                 </div>
-                <span class="brand-title">LawsGhana</span>
+                <span class="brand-title">Legals Forum</span>
             </a>
             
             <div class="header-actions">
@@ -61,6 +61,9 @@
         </a>
         <a href="/accounts/bookmarks/{{ auth()->user()->id }}" class="tab-link {{ request()->is('accounts/bookmarks*') ? 'active' : '' }}">
             <i class="fa-solid fa-bookmark"></i> Bookmarks
+        </a>
+        <a href="/accounts/notes/{{ auth()->user()->id }}" class="tab-link {{ request()->is('accounts/notes*') ? 'active' : '' }}">
+            <i class="fa-solid fa-pen-to-square"></i> Notes
         </a>
         <a href="/accounts/downloads/{{ auth()->user()->id }}" class="tab-link {{ request()->is('accounts/downloads*') ? 'active' : '' }}">
             <i class="fa-solid fa-cloud-arrow-down"></i> Downloads

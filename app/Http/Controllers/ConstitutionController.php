@@ -48,7 +48,7 @@ class ConstitutionController extends Controller
                 'title' => $title
             ])->toArray()[0];
         $pdf = PDF::loadView('constitution.country_constitution_pdf_article_content_view', compact('country_act'));
-        return $pdf->download($id.'.lawsghana.pdf');
+        return $pdf->download($id.'.legalsforum.pdf');
     }
 
     public function ghana_constitution_preamble($id){
@@ -157,7 +157,7 @@ class ConstitutionController extends Controller
                 'chapter' => $title
             ])->toArray()[0];
         $pdf = PDF::loadView('constitution.ghana_constitution_pdf_article_content_view', compact('ghana_act'));
-        return $pdf->download($id.'.lawsghana.pdf');
+        return $pdf->download($id.'.legalsforum.pdf');
     }
 
     //Display Pdf View for Expanded view
@@ -172,7 +172,7 @@ class ConstitutionController extends Controller
         $unique                 = $ghana_acts1->unique()->sortBy('chapter')->sortBy('priority'); 
         $ghana_acts             = $unique;
         $pdf = PDF::loadView('constitution.ghana_constitution_pdf_article_expanded_view', compact('ghana_act','ghana_acts'));
-        return $pdf->download($title.'.lawsghana.pdf');
+        return $pdf->download($title.'.legalsforum.pdf');
     }
 
 
@@ -263,7 +263,7 @@ class ConstitutionController extends Controller
                 'chapter' => $title
             ])->toArray()[0];
         $pdf = PDF::loadView('constitution.ghana_constitution_pdf_article_content_view_amended', compact('ghana_act_amended'));
-        return $pdf->download($id.'.lawsghana.pdf');
+        return $pdf->download($id.'.legalsforum.pdf');
     }
 
     //Display Pdf View for Expanded view
@@ -278,7 +278,7 @@ class ConstitutionController extends Controller
         $unique                 = $ghana_acts1->unique()->sortBy('chapter')->sortBy('priority'); 
         $ghana_act_amendeds             = $unique;
         $pdf = PDF::loadView('constitution.ghana_constitution_pdf_article_expanded_view_amended', compact('ghana_act_amended','ghana_act_amendeds'));
-        return $pdf->download($title.'.lawsghana.pdf');
+        return $pdf->download($title.'.legalsforum.pdf');
     }
 
     public function ghana_constitution_preamble_amended($id){
@@ -489,4 +489,40 @@ class ConstitutionController extends Controller
         $south_americaConstitutions       = ($bool)?AllConstitution::where($where)->where(['continent' => $name])->get():AllConstitution::where(['continent' => $name])->get();
         return view('constitution.new_display_only_south_america_countries', compact('south_americaConstitutions'));
        }
+
+    /**
+     * AJAX endpoint: Return JSON data for a given continent.
+     * Used for client-side tab switching without page refresh.
+     */
+    public function constitution_ajax_data(Request $request)
+    {
+        $continent = $request->query('continent', 'all');
+
+        // Map continent query param keys to database continent values
+        $continentMap = [
+            'Africa'        => 'Africa',
+            'Asia'          => 'Asia',
+            'Europe'        => 'Europe',
+            'North-America' => 'North America',
+            'South-America' => 'South America',
+        ];
+
+        if ($continent === 'all') {
+            $constitutions = AllConstitution::all();
+        } else {
+            $dbContinent = isset($continentMap[$continent]) ? $continentMap[$continent] : $continent;
+            $constitutions = AllConstitution::where(['continent' => $dbContinent])->get();
+        }
+
+        $data = $constitutions->map(function ($con) {
+            return [
+                'country' => $con->country,
+                'title'   => $con->title,
+                'year'    => $con->year,
+                'url'     => '/constitution/1/' . $con->continent . '/' . $con->country . '/' . $con->id,
+            ];
+        });
+
+        return response()->json(['data' => $data]);
+    }
 }

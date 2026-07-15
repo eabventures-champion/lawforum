@@ -97,7 +97,7 @@
                     });
                 },
                 customizations: {
-                    title: "LawsGhana Subscription",
+                    title: "Legals Forum Subscription",
                     description: "Payment for subscription plan: " + subscription,
                 },
             });

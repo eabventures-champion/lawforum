@@ -1,11 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" style="background-color:#070a13;">
   <head>
-    <script data-ad-client="ca-pub-4293461101625028" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Explore constitutions of all countries around the world on LawsGhana.">
-    <title>All Constitutions - LawsGhana</title>
+    <meta name="description" content="Explore constitution laws on Legals Forum.">
+    <title>Constitutions of the World - Legals Forum</title>
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -233,13 +232,9 @@
 
         .nav-user-btn:hover {
             background: var(--card-bg-hover);
+            border-color: var(--border-hover);
         }
 
-        .nav-user-btn i {
-            color: var(--accent-light);
-        }
-
-        .nav-user-dropdown:hover .nav-dropdown-menu,
         .nav-user-dropdown.active .nav-dropdown-menu {
             opacity: 1;
             visibility: visible;
@@ -275,18 +270,22 @@
             margin-bottom: 24px;
         }
 
-        /* Premium Continent Scroller */
+        /* Premium Tabs Scroller */
         .nav-underline-premium {
             display: flex;
             gap: 6px;
-            border: none !important;
             overflow-x: auto;
-            padding: 6px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-color);
+            padding: 8px;
+            background: rgba(148, 163, 184, 0.08) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.25) !important;
             border-radius: 12px;
             margin-bottom: 24px;
             flex-wrap: nowrap !important;
+            position: sticky;
+            top: 62px;
+            z-index: 99;
         }
 
         .nav-link-premium {
@@ -315,6 +314,27 @@
             background: var(--accent-gradient) !important;
             border-color: var(--accent) !important;
             box-shadow: 0 4px 12px var(--accent-glow) !important;
+        }
+
+        /* Loading spinner overlay */
+        .table-loading-overlay {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(6,10,19,0.7); display: flex; align-items: center;
+            justify-content: center; z-index: 10; border-radius: 16px;
+            backdrop-filter: blur(4px); opacity: 0; visibility: hidden;
+            transition: all 0.2s ease;
+        }
+        .table-loading-overlay.show { opacity: 1; visibility: visible; }
+        .spinner-dot {
+            width: 10px; height: 10px; border-radius: 50%; margin: 0 4px;
+            animation: dotPulse 1.2s ease-in-out infinite;
+        }
+        .spinner-dot:nth-child(1) { background: var(--accent); animation-delay: 0s; }
+        .spinner-dot:nth-child(2) { background: #8b5cf6; animation-delay: 0.15s; }
+        .spinner-dot:nth-child(3) { background: var(--accent-light); animation-delay: 0.3s; }
+        @keyframes dotPulse {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40% { transform: scale(1); opacity: 1; }
         }
 
         /* ============================================
@@ -421,40 +441,6 @@
             box-shadow: 0 4px 12px var(--accent-glow) !important;
         }
 
-        /* ============================================
-           FORM CONTROL INPUT STYLING
-           ============================================ */
-        .premium-input {
-            background: rgba(17, 24, 39, 0.6) !important;
-            border: 1px solid var(--border-color) !important;
-            color: #fff !important;
-            border-radius: 8px !important;
-            padding: 8px 12px !important;
-            font-size: 13px !important;
-            outline: none !important;
-            transition: all 0.3s ease;
-        }
-
-        .premium-input:focus {
-            border-color: var(--accent) !important;
-            box-shadow: 0 0 0 2px var(--accent-glow) !important;
-        }
-
-        .premium-select {
-            background: rgba(17, 24, 39, 0.8) !important;
-            border: 1px solid var(--border-color) !important;
-            color: #fff !important;
-            border-radius: 8px !important;
-            padding: 6px 12px !important;
-            font-size: 13px !important;
-            outline: none !important;
-        }
-
-        .premium-select option {
-            background-color: #0c1220;
-            color: #fff;
-        }
-
         /* Scrollbars styling */
         ::-webkit-scrollbar {
             width: 8px;
@@ -477,53 +463,26 @@
     <!-- ====== PREMIUM NAVIGATION ====== -->
     <nav class="nav-wrap" id="mainNav">
         <div class="nav-inner">
-            <a href="/" class="nav-logo">
-                <img src="{{ asset('logo/lawsghlog.png') }}" alt="LawsGhana">
+            <a href="/" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; padding-left: 0px; padding-top: 5px; padding-bottom: 5px; transition: transform 0.2s ease; vertical-align: middle;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; font-size: 22px; margin: 0; line-height: 1;"></i>
+                <span style="font-size: 22px; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(to right, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.3;">Legals Forum</span>
             </a>
 
             <div class="nav-menu-links-premium">
-                <!-- Constitution Dropdown -->
-                <div class="nav-link-dropdown">
-                    <button class="nav-link-btn">Constitution <i class="fa-solid fa-chevron-down"></i></button>
-                    <div class="nav-dropdown-menu">
-                        <a href="/constitution/Republic/Ghana/1">Ghana</a>
-                        <a href="/constitution/all-countries/1/Africa">Africa</a>
-                        <a href="/constitution/all-countries/2/Asia">Asia</a>
-                        <a href="/constitution/all-countries/3/Europe">Europe</a>
-                        <a href="/constitution/all-countries/4/North-America">North America</a>
-                        <a href="/constitution/all-countries/5/South-America">South America</a>
-                    </div>
-                </div>
-
-                <!-- Pre-4th Republic Laws Dropdown -->
-                <div class="nav-link-dropdown">
-                    <button class="nav-link-btn">Pre-4th Republic Laws <i class="fa-solid fa-chevron-down"></i></button>
-                    <div class="nav-dropdown-menu">
-                        <a href="/pre_1992_legislation/1/First Republic">1st Republic</a>
-                        <a href="/pre_1992_legislation/2/Second Republic">2nd Republic</a>
-                        <a href="/pre_1992_legislation/3/Third Republic">3rd Republic</a>
-                        <a href="/pre_1992_legislation/5/NLC Decree">NLC Decree</a>
-                        <a href="/pre_1992_legislation/6/NRC Decree">NRC Decree</a>
-                        <a href="/pre_1992_legislation/7/SMC Decree">SMC Decree</a>
-                        <a href="/pre_1992_legislation/8/AFRC Decree">AFRC Decree</a>
-                        <a href="/pre_1992_legislation/4/PNDC Law">PNDC Law</a>
-                    </div>
-                </div>
-
-                <!-- 4th Republic Laws Dropdown -->
-                <div class="nav-link-dropdown">
-                    <button class="nav-link-btn">4th Republic Laws <i class="fa-solid fa-chevron-down"></i></button>
-                    <div class="nav-dropdown-menu">
-                        <a href="/post-1992-legislation/1/Acts of Parliament">Acts of Parliament</a>
-                        <a href="/post-1992-legislation/only-regulations">Legislative Instruments</a>
-                        <a href="/post-1992-legislation/Constitutional-Intruments">Constitutional Instruments</a>
-                        <a href="/post-1992-legislation/Executive-Intruments">Executive Instruments</a>
-                        <a href="/post-1992-legislation/only-amendments">Amendments</a>
-                    </div>
-                </div>
-
-                <a href="/judgement/Ghana" class="nav-link-btn" style="text-decoration:none !important;">Case Laws</a>
-                <a href="/News/Ghana-News/1" class="nav-link-btn" style="text-decoration:none !important;">News</a>
+                @foreach($headerMenus as $menu)
+                    @if($menu->is_dropdown)
+                        <div class="nav-link-dropdown">
+                            <button class="nav-link-btn">{{ $menu->title }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></button>
+                            <div class="nav-dropdown-menu">
+                                @foreach($menu->children as $child)
+                                    <a href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">{{ $child->title }}</a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}" class="nav-link-btn" style="text-decoration:none !important;">{{ $menu->title }}</a>
+                    @endif
+                @endforeach
             </div>
 
             <div class="nav-auth">
@@ -563,35 +522,71 @@
     </nav>
 
     <!-- ====== MAIN PORTAL AREA ====== -->
-    <div class="container-fluid px-md-5">
+    <div class="container-fluid px-md-5 mt-4">
+        
+        <!-- Header Text Block -->
+        <div class="mb-4">
+            <h1 class="page-title" style="font-size: 2.2rem; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Constitutions of the World</h1>
+            <p class="page-subtitle" style="font-size: 15px; color: var(--text-secondary); max-width: 700px; line-height: 1.6;">Explore and search constitution indexes and documents across different countries.</p>
+        </div>
+
         <div class="row">
             
             <!-- Left Main Column -->
             <div class="col-md-9">
-                <!-- Search bar input at the top -->
-                <div class="d-flex mb-3">
-                    <form action="{{ url('all_constitution_index_search') }}" method="GET" class="form-inline w-100">
-                        {{ csrf_field() }}
-                        <div class="position-relative w-100 d-flex" style="max-width: 450px;">
-                            <i class="fa-solid fa-magnifying-glass position-absolute text-muted" style="left: 14px; top: 12px; font-size: 14px;"></i>
-                            <input style="padding-left: 38px !important; width: 100%; height: 38px;" class="form-control premium-input" type="search" placeholder="Search any word in Constitution..." aria-label="Search" name="search_text">
-                        </div>
-                    </form>
-                </div>
 
                 <!-- Premium Continent Tabs Menu -->
                 <div class="nav-underline-premium">
-                    <a class="nav-link-premium active" href="/constitution/all_countries"><i class="fa-solid fa-globe mr-2"></i> All Countries</a>
-                    <a class="nav-link-premium" href="/constitution/Republic/Ghana/1"><i class="fa-solid fa-book-open mr-2"></i> Ghana</a>
-                    <a class="nav-link-premium" href="/constitution/all-countries/1/Africa"><i class="fa-solid fa-earth-africa mr-2"></i> Africa</a>
-                    <a class="nav-link-premium" href="/constitution/all-countries/2/Asia"><i class="fa-solid fa-earth-asia mr-2"></i> Asia</a>
-                    <a class="nav-link-premium" href="/constitution/all-countries/3/Europe"><i class="fa-solid fa-earth-europe mr-2"></i> Europe</a>
-                    <a class="nav-link-premium" href="/constitution/all-countries/4/North-America"><i class="fa-solid fa-earth-americas mr-2"></i> North America</a>
-                    <a class="nav-link-premium" href="/constitution/all-countries/5/South-America"><i class="fa-solid fa-earth-americas mr-2"></i> South America</a>
+                    <a class="nav-link-premium {{ request()->is('constitution/all_countries') ? 'active' : '' }}" href="/constitution/all_countries"><i class="fa-solid fa-globe mr-2"></i> All Countries</a>
+                    @foreach($headerMenus as $m)
+                        @if($m->slug === 'constitution' || strtolower($m->title) === 'constitution')
+                            @foreach($m->children as $child)
+                                @if(stripos($child->title, 'Ghana') !== false)
+                                    @continue
+                                @endif
+                                @php
+                                    $iconClass = 'fa-book-open';
+                                    if (stripos($child->title, 'Africa') !== false) $iconClass = 'fa-earth-africa';
+                                    elseif (stripos($child->title, 'Asia') !== false) $iconClass = 'fa-earth-asia';
+                                    elseif (stripos($child->title, 'Europe') !== false) $iconClass = 'fa-earth-europe';
+                                    elseif (stripos($child->title, 'America') !== false) $iconClass = 'fa-earth-americas';
+                                @endphp
+                                @php
+                                    $isActive = false;
+                                    if ('all' == 'all') {
+                                        $isActive = false;
+                                    } elseif ('all' == 'Africa' && stripos($child->title, 'Africa') !== false) {
+                                        $isActive = true;
+                                    } elseif ('all' == 'Asia' && stripos($child->title, 'Asia') !== false) {
+                                        $isActive = true;
+                                    } elseif ('all' == 'Europe' && stripos($child->title, 'Europe') !== false) {
+                                        $isActive = true;
+                                    } elseif ('all' == 'North-America' && stripos($child->title, 'North America') !== false) {
+                                        $isActive = true;
+                                    } elseif ('all' == 'South-America' && stripos($child->title, 'South America') !== false) {
+                                        $isActive = true;
+                                    }
+                                @endphp
+                                <a class="nav-link-premium {{ $isActive ? 'active' : '' }}" 
+                                   href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">
+                                    <i class="fa-solid {{ $iconClass }} mr-2"></i> {{ $child->title }}
+                                </a>
+                            @endforeach
+                        @endif
+                    @endforeach
                 </div>
 
                 <!-- Premium Table Card -->
-                <div class="premium-card">
+                <div class="premium-card" style="position: relative;">
+                    <!-- Loading overlay -->
+                    <div class="table-loading-overlay" id="tableLoader">
+                        <div style="display: flex; align-items: center;">
+                            <div class="spinner-dot"></div>
+                            <div class="spinner-dot"></div>
+                            <div class="spinner-dot"></div>
+                        </div>
+                    </div>
+
                     <div class="table-responsive">
                         <table class="table table-hover" id="datatable" style="width: 100%;">
                             <thead>
@@ -619,35 +614,7 @@
 
             <!-- Right Sidebar Column -->
             <div class="col-md-3">
-                
-                <!-- Premium Sidebar filter card -->
-                <div class="premium-sidebar-card">
-                    <h5 class="text-white mb-3" style="font-size: 14px; font-weight: 700; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
-                        <i class="fa-solid fa-filter text-warning mr-1"></i> Interactive Filter
-                    </h5>
-                    
-                    <div class="form-group mb-3">
-                        <label class="text-muted mb-1" style="font-size: 11px; font-weight: 600;">Select Country</label>
-                        <select class="form-control premium-select all_judgment_filter_category w-100" style="height: 36px;">
-                            <option selected value="">Select Country</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group mb-0">
-                        <label class="text-muted mb-1" style="font-size: 11px; font-weight: 600;">Keyword Search</label>
-                        <form action="{{ url('all_constitution_index_search') }}" method="GET">
-                            {{ csrf_field() }}
-                            <div class="position-relative d-flex">
-                                <input style="height: 36px; padding-right: 32px;" class="form-control premium-input w-100" name="search_text" type="text" placeholder="Search word in Constitution..." aria-label="Search">
-                                <button type="submit" class="position-absolute border-0 bg-transparent text-muted" style="right: 10px; top: 8px; cursor: pointer;">
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Advertisement Card -->
+                <!-- Advertisement Cards -->
                 <div class="premium-sidebar-card p-2" style="background: transparent !important; border: none !important; box-shadow: none !important;">
                     @include('ads.small_ads_image_main_page')
                 </div>
@@ -661,9 +628,9 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/slim.js') }}"></script>
-    <script>window.jQuery || document.write('<script src="/docs/4.5/assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
-    <script src="{{ asset('js/bootstrap_update.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <script src="{{ asset('js/offcanvas.js') }}"></script>
     
     <!-- DataTables JS -->
@@ -671,36 +638,115 @@
     
     <script>
         $(document).ready(function(){
-            // Initialize DataTables with premium styling features
-            const table = $('#datatable').DataTable({
-                "pageLength": 10,
+            // Initialize DataTable with default pageLength 5
+            var table = $('#datatable').DataTable({
+                "pageLength": 5,
+                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
                 "ordering": true,
                 "responsive": true
             });
 
-            // Extract unique country options from table column 0 and populate dropdown filter
-            const countries = [];
-            $('#datatable tbody tr').each(function(){
-                const country = $(this).find('td:first-child').text().trim();
-                if (country && !countries.includes(country)) {
-                    countries.push(country);
+            // Intercept tab clicks for AJAX content switching
+            $('.nav-underline-premium').on('click', 'a.nav-link-premium', function(e) {
+                var href = $(this).attr('href');
+                
+                // Bypass AJAX for Ghana or JavaScript links
+                if (href.indexOf('/constitution/Republic/Ghana') !== -1 || href.indexOf('javascript:') !== -1) {
+                    return;
                 }
-            });
-            countries.sort();
 
-            const selectEl = $('.all_judgment_filter_category');
-            countries.forEach(function(c){
-                selectEl.append(`<option value="${c}">${c}</option>`);
+                e.preventDefault();
+                var $link = $(this);
+
+                if ($link.hasClass('active')) return;
+
+                // Extract continent key from href
+                var continent = 'all';
+                if (href.indexOf('/1/Africa') !== -1) continent = 'Africa';
+                else if (href.indexOf('/2/Asia') !== -1) continent = 'Asia';
+                else if (href.indexOf('/3/Europe') !== -1) continent = 'Europe';
+                else if (href.indexOf('/4/North') !== -1) continent = 'North-America';
+                else if (href.indexOf('/5/South') !== -1) continent = 'South-America';
+
+                // Update active link state
+                $('.nav-underline-premium a.nav-link-premium').removeClass('active');
+                $link.addClass('active');
+
+                // Show loading spinner
+                $('#tableLoader').addClass('show');
+
+                // Update title & subtitle on the screen
+                var headerMap = {
+                    'all': {
+                        h1: 'Constitutions of the World',
+                        p: 'Explore and search constitution indexes and documents across different countries.'
+                    },
+                    'Africa': {
+                        h1: 'African Constitutions',
+                        p: 'Browse, filter, and search constitution indexes and documents across Africa.'
+                    },
+                    'Asia': {
+                        h1: 'Asian Constitutions',
+                        p: 'Browse, filter, and search constitution indexes and documents across Asia.'
+                    },
+                    'Europe': {
+                        h1: 'European Constitutions',
+                        p: 'Browse, filter, and search constitution indexes and documents across Europe.'
+                    },
+                    'North-America': {
+                        h1: 'North American Constitutions',
+                        p: 'Browse, filter, and search constitution indexes and documents across North America.'
+                    },
+                    'South-America': {
+                        h1: 'South American Constitutions',
+                        p: 'Browse, filter, and search constitution indexes and documents across South America.'
+                    }
+                };
+
+                if (headerMap[continent]) {
+                    $('h1.page-title').text(headerMap[continent].h1);
+                    $('p.page-subtitle').text(headerMap[continent].p);
+                    document.title = headerMap[continent].h1 + ' - Legals Forum';
+                }
+
+                // Fetch data via AJAX
+                $.ajax({
+                    url: '/constitution/ajax-data',
+                    data: { continent: continent },
+                    dataType: 'json',
+                    success: function(response) {
+                        // Clear existing data and add new rows
+                        table.clear();
+                        if (response.data && response.data.length > 0) {
+                            response.data.forEach(function(item) {
+                                table.row.add([
+                                    item.country,
+                                    '<a href="' + item.url + '">' + item.title + '</a>',
+                                    item.year
+                                ]);
+                            });
+                        }
+                        table.draw();
+
+                        // Update browser URL without reload
+                        history.pushState({ continent: continent }, '', href);
+
+                        // Hide loading spinner
+                        $('#tableLoader').removeClass('show');
+                    },
+                    error: function() {
+                        $('#tableLoader').removeClass('show');
+                        alert('Failed to load constitution data. Please try again.');
+                    }
+                });
             });
 
-            // Bind filter change action
-            selectEl.on('change', function(){
-                const val = $(this).val();
-                if (val) {
-                    // Precise search matching
-                    table.column(0).search('^' + $.fn.dataTable.util.escapeRegex(val) + '$', true, false).draw();
-                } else {
-                    table.column(0).search('').draw();
+            // Handle browser back/forward buttons
+            window.addEventListener('popstate', function(e) {
+                var path = window.location.pathname;
+                var link = $('.nav-underline-premium a.nav-link-premium[href="' + path + '"]');
+                if (link.length) {
+                    link.trigger('click');
                 }
             });
 

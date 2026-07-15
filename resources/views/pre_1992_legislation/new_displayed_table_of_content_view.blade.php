@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <script data-ad-client="ca-pub-4293461101625028" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -202,6 +202,237 @@
             }
             
             /* https://www.youtube.com/watch?v=O9toDm97VQM */
+    
+        /* ============================================
+           PREMIUM FIXED NAVIGATION BAR (SHARED)
+           ============================================ */
+        :root {
+            --bg-primary: #060a13;
+            --bg-secondary: #0c1220;
+            --bg-tertiary: #111827;
+            --card-bg: rgba(17, 24, 39, 0.65);
+            --card-bg-hover: rgba(25, 35, 55, 0.8);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.12);
+            --accent: #3b82f6;
+            --accent-light: #60a5fa;
+            --accent-glow: rgba(59, 130, 246, 0.25);
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --gold: #f59e0b;
+            --gold-glow: rgba(245, 158, 11, 0.2);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .nav-wrap,
+        .nav-wrap *,
+        .nav-menu-links-premium,
+        .nav-menu-links-premium *,
+        .nav-link-btn,
+        .nav-link-btn *,
+        .nav-dropdown-menu,
+        .nav-dropdown-menu a {
+            font-family: var(--font) !important;
+        }
+
+        .nav-wrap {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            z-index: 1000;
+            background: rgba(6, 10, 19, 0.88) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color) !important;
+            padding: 0 !important;
+        }
+
+        .nav-inner {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-logo img {
+            height: 38px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-menu-links-premium {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-link-dropdown {
+            position: relative;
+        }
+
+        .nav-link-btn {
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            color: var(--text-secondary) !important;
+            padding: 8px 14px !important;
+            border-radius: 8px !important;
+            background: transparent !important;
+            border: none !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-link-btn:hover {
+            color: var(--text-primary) !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+        }
+
+        .nav-link-btn i {
+            font-size: 10px !important;
+            color: var(--text-muted) !important;
+        }
+
+        .nav-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            min-width: 220px;
+            background: rgba(17, 24, 39, 0.95) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color) !important;
+            border-radius: 12px !important;
+            padding: 8px !important;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-link-dropdown:hover .nav-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-dropdown-menu a {
+            display: flex !important;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px !important;
+            border-radius: 8px !important;
+            font-size: 14px !important;
+            color: var(--text-secondary) !important;
+            transition: all 0.2s ease;
+            text-align: left;
+            text-decoration: none !important;
+        }
+
+        .nav-dropdown-menu a:hover {
+            color: var(--text-primary) !important;
+            background: rgba(255, 255, 255, 0.06) !important;
+        }
+
+        .nav-dropdown-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 6px 0;
+        }
+
+        .nav-auth {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-login {
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            color: var(--text-primary) !important;
+            padding: 8px 18px !important;
+            border-radius: 8px !important;
+            border: 1px solid var(--border-hover) !important;
+            background: transparent !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none !important;
+        }
+
+        .btn-login:hover {
+            background: rgba(255, 255, 255, 0.06) !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .btn-signup {
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            color: #fff !important;
+            padding: 8px 18px !important;
+            border-radius: 8px !important;
+            border: none !important;
+            background: var(--accent-gradient) !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px var(--accent-glow) !important;
+            text-decoration: none !important;
+        }
+
+        .btn-signup:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px var(--accent-glow) !important;
+        }
+
+        .nav-user-dropdown {
+            position: relative;
+        }
+
+        .nav-user-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px !important;
+            border-radius: 8px !important;
+            border: 1px solid var(--border-color) !important;
+            background: var(--card-bg) !important;
+            color: var(--text-primary) !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-user-btn:hover {
+            background: var(--card-bg-hover) !important;
+            border-color: var(--border-hover) !important;
+        }
+
+        .nav-user-dropdown.active .nav-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-dropdown-menu a.logout-link {
+            color: #f43f5e !important;
+        }
+
+        .nav-dropdown-menu a.logout-link:hover {
+            background: rgba(244, 63, 94, 0.1) !important;
+        }
+
     </style>
     <!-- Custom styles for this template -->
     <link href="{{ asset('css/offcanvas.css') }}" rel="stylesheet">
@@ -231,136 +462,67 @@
 <!--End of Tawk.to Script-->
   <body class="bg-light">
       
-    <nav class="navbar navbar-custom navbar-expand-lg fixed-top navbar-light bg-white">
-  {{-- <a class="navbar-brand mr-auto mr-lg-0" href="#">Laws Ghana</a> --}}
-  <a href="/" class="">
-    <img src="{{ asset('/logo/lawsghlog.png') }}" class="img-responsive" style="width:12em; padding-top: 1px; padding-bottom:1px;padding-left:1px;"> 
-    </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <!-- ====== PREMIUM NAVIGATION ====== -->
+    <nav class="nav-wrap" id="mainNav">
+        <div class="nav-inner">
+            <a href="/" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; padding-left: 0px; padding-top: 5px; padding-bottom: 5px; transition: transform 0.2s ease; vertical-align: middle;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; font-size: 22px; margin: 0; line-height: 1;"></i>
+                <span style="font-size: 22px; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(to right, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.3;">Legals Forum</span>
+            </a>
 
-  <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+            <div class="nav-menu-links-premium">
+                @foreach($headerMenus as $menu)
+                    @if($menu->is_dropdown)
+                        <div class="nav-link-dropdown">
+                            <button class="nav-link-btn">{{ $menu->title }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></button>
+                            <div class="nav-dropdown-menu">
+                                @foreach($menu->children as $child)
+                                    <a href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">{{ $child->title }}</a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}" class="nav-link-btn" style="text-decoration:none !important;">{{ $menu->title }}</a>
+                    @endif
+                @endforeach
+            </div>
 
-  <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
-    <ul class="navbar-nav ml-auto">
-      {{-- <li class="nav-item active">
-        <a class="nav-link" href="#">Constitution <span class="sr-only">(current)</span></a>
-      </li> --}}
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle text-dark" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Constitution</a>
-        <div class="dropdown-menu" aria-labelledby="dropdown01">
-          <a class="dropdown-item" href="/constitution/Republic/Ghana/1">Ghana</a>
-          <a class="dropdown-item" href="/constitution/all-countries/1/Africa">Africa</a>
-          <a class="dropdown-item" href="/constitution/all-countries/2/Asia">Asia</a>
-          <a class="dropdown-item" href="/constitution/all-countries/3/Europe">Europe</a>
-          <a class="dropdown-item" href="/constitution/all-countries/4/North-America">North America</a>
-          <a class="dropdown-item" href="/constitution/all-countries/5/South-America">South America</a>
-        </div>
-      </li>
-      &nbsp;&nbsp;
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle text-dark" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pre-4th Republic Laws</a>
-        <div class="dropdown-menu" aria-labelledby="dropdown01">
-          <a class="dropdown-item" href="/pre_1992_legislation/1/First Republic">1st Republic</a>
-          <a class="dropdown-item" href="/pre_1992_legislation/2/Second Republic">2nd Republic</a>
-          <a class="dropdown-item" href="/pre_1992_legislation/3/Third Republic">3rd Republic</a>
-          <a class="dropdown-item" href="/pre_1992_legislation/5/NLC Decree">NLC Decree</a>
-          <a class="dropdown-item" href="/pre_1992_legislation/6/NRC Decree">NRC Decree</a>
-          <a class="dropdown-item" href="/pre_1992_legislation/7/SMC Decree">SMC Decree</a>
-          <a class="dropdown-item" href="/pre_1992_legislation/8/AFRC Decree">AFRC Decree</a>
-          <a class="dropdown-item" href="/pre_1992_legislation/4/PNDC Law">PNDC Law</a>
-        </div>
-      </li>
-      &nbsp;&nbsp;
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle text-dark" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">4th Republic Laws</a>
-        <div class="dropdown-menu" aria-labelledby="dropdown01">
-          <a class="dropdown-item" href="/post-1992-legislation/1/Acts of Parliament">Acts of Parliament</a>
-          <a class="dropdown-item" href="/post-1992-legislation/only-regulations">Legislative Instruments</a>
-          <a class="dropdown-item" href="/post-1992-legislation/Constitutional-Intruments">Constitutional Instruments</a>
-          <a class="dropdown-item" href="/post-1992-legislation/Executive-Intruments">Executive Instruments</a>
-          <a class="dropdown-item" href="/post-1992-legislation/only-amendments">Amendments</a>
-        </div>
-      </li>
-      &nbsp;&nbsp;
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="/judgement/Ghana">Case Laws</a>
-      </li>
-      &nbsp;&nbsp;
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="/News/Ghana-News/1">News</a>
-      </li>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-      <div>
-        <!-- Right Side Of Navbar -->
-        <ul class="navbar-nav ml-auto">
-            <!-- Authentication Links -->
-            @guest
-            &nbsp;<a class="btn btn-sm bg-header-color text-white" href="{{ route('login') }}">Login</a>&nbsp;
-
-                @if (Route::has('register'))
-                    <a class="btn btn-sm bg-header-color text-white" href="{{ route('register') }}">Sign Up</a>
-                @endif
-                
-            @else
-                <li class="nav-item dropdown">
-                    <a style="color: blue;" id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        Hi, {{ Auth::user()->name }} <span class="caret"></span>
-                    </a>
-
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/accounts/profile/{{ Auth::user()->id }}"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
-                            <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                            <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
-                          </svg>&nbsp;&nbsp;Profile</a>
-                        <a class="dropdown-item" href="/accounts/manage-password"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M8.837 1.626c-.246-.835-1.428-.835-1.674 0l-.094.319A1.873 1.873 0 0 1 4.377 3.06l-.292-.16c-.764-.415-1.6.42-1.184 1.185l.159.292a1.873 1.873 0 0 1-1.115 2.692l-.319.094c-.835.246-.835 1.428 0 1.674l.319.094a1.873 1.873 0 0 1 1.115 2.693l-.16.291c-.415.764.42 1.6 1.185 1.184l.292-.159a1.873 1.873 0 0 1 2.692 1.116l.094.318c.246.835 1.428.835 1.674 0l.094-.319a1.873 1.873 0 0 1 2.693-1.115l.291.16c.764.415 1.6-.42 1.184-1.185l-.159-.291a1.873 1.873 0 0 1 1.116-2.693l.318-.094c.835-.246.835-1.428 0-1.674l-.319-.094a1.873 1.873 0 0 1-1.115-2.692l.16-.292c.415-.764-.42-1.6-1.185-1.184l-.291.159A1.873 1.873 0 0 1 8.93 1.945l-.094-.319zm-2.633-.283c.527-1.79 3.065-1.79 3.592 0l.094.319a.873.873 0 0 0 1.255.52l.292-.16c1.64-.892 3.434.901 2.54 2.541l-.159.292a.873.873 0 0 0 .52 1.255l.319.094c1.79.527 1.79 3.065 0 3.592l-.319.094a.873.873 0 0 0-.52 1.255l.16.292c.893 1.64-.902 3.434-2.541 2.54l-.292-.159a.873.873 0 0 0-1.255.52l-.094.319c-.527 1.79-3.065 1.79-3.592 0l-.094-.319a.873.873 0 0 0-1.255-.52l-.292.16c-1.64.893-3.433-.902-2.54-2.541l.159-.292a.873.873 0 0 0-.52-1.255l-.319-.094c-1.79-.527-1.79-3.065 0-3.592l.319-.094a.873.873 0 0 0 .52-1.255l-.16-.292c-.892-1.64.902-3.433 2.541-2.54l.292.159a.873.873 0 0 0 1.255-.52l.094-.319z"/>
-                            <path fill-rule="evenodd" d="M8 5.754a2.246 2.246 0 1 0 0 4.492 2.246 2.246 0 0 0 0-4.492zM4.754 8a3.246 3.246 0 1 1 6.492 0 3.246 3.246 0 0 1-6.492 0z"/>
-                          </svg>&nbsp;&nbsp;Manage Accounts </a>
-                        <a class="dropdown-item" href="/accounts/downloads/{{ Auth::user()->id }}"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-download" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M.5 8a.5.5 0 0 1 .5.5V12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8.5a.5.5 0 0 1 1 0V12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V8.5A.5.5 0 0 1 .5 8z"/>
-                            <path fill-rule="evenodd" d="M5 7.5a.5.5 0 0 1 .707 0L8 9.793 10.293 7.5a.5.5 0 1 1 .707.707l-2.646 2.647a.5.5 0 0 1-.708 0L5 8.207A.5.5 0 0 1 5 7.5z"/>
-                            <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0v-8A.5.5 0 0 1 8 1z"/>
-                          </svg>&nbsp;&nbsp;Downloads</a>
-                        <a class="dropdown-item" href="/accounts/bookmarks/{{ Auth::user()->id }}"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bookmarks-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12l-5-3-5 3V4z"/>
-                            <path d="M14 14l-1-.6V2a1 1 0 0 0-1-1H4.268A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v12z"/>
-                          </svg>&nbsp;&nbsp;Bookmarks</a>
-                        @if( Auth::user()->subscription_id == null)
-                            <a class="dropdown-item" style="color: red;"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-cart-dash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M6 7.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z"/>
-                                <path fill-rule="evenodd" d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-                              </svg>&nbsp;&nbsp;No Subscription</a>
-                            @else
-                                <a class="dropdown-item" href="/accounts/subscription/{{ Auth::user()->subscription_id }}"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-cart-check" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M11.354 5.646a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L8 8.293l2.646-2.647a.5.5 0 0 1 .708 0z"/>
-                                    <path fill-rule="evenodd" d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-                                  </svg>&nbsp;&nbsp;My Subscription</a>
-                        @endif
-                        <a class="dropdown-item" href="{{ route('logout') }}"
-                        onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-power" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M5.578 4.437a5 5 0 1 0 4.922.044l.5-.866a6 6 0 1 1-5.908-.053l.486.875z"/>
-                                <path fill-rule="evenodd" d="M7.5 8V1h1v7h-1z"/>
-                              </svg>&nbsp;&nbsp;{{ __('Logout') }}
-                        </a>
-
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
+            <div class="nav-auth">
+                @guest
+                    <a href="{{ route('login') }}" class="btn-login">Log In</a>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}" class="btn-signup">Sign Up</a>
+                    @endif
+                @else
+                    <div class="nav-user-dropdown" id="userDropdown">
+                        <button class="nav-user-btn" onclick="document.getElementById('userDropdown').classList.toggle('active')">
+                            <i class="fa-solid fa-circle-user"></i>
+                            {{ Auth::user()->name }}
+                            <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 2px;"></i>
+                        </button>
+                        <div class="nav-dropdown-menu dropdown-menu-right" style="right: 0; left: auto;">
+                            <a href="/home"><i class="fa-solid fa-house"></i> Dashboard</a>
+                            <a href="/accounts/profile/{{ Auth::user()->id }}"><i class="fa-solid fa-user"></i> Profile</a>
+                            <a href="/accounts/manage-password"><i class="fa-solid fa-gear"></i> Settings</a>
+                            <div class="nav-dropdown-divider"></div>
+                            <a href="/accounts/downloads/{{ Auth::user()->id }}"><i class="fa-solid fa-download"></i> Downloads</a>
+                            <a href="/accounts/bookmarks/{{ Auth::user()->id }}"><i class="fa-solid fa-bookmark"></i> Bookmarks</a>
+                            <a href="/subscription"><i class="fa-solid fa-credit-card"></i> Subscription</a>
+                            <div class="nav-dropdown-divider"></div>
+                            <a href="{{ route('logout') }}" class="logout-link"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="fa-solid fa-power-off"></i> Sign Out
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </div>
                     </div>
-                </li>
-            @endguest
-        </ul>
-    </div>
-    </ul>
-  </div>
-</nav>
+                @endguest
+            </div>
+        </div>
+    </nav>
+
 
 <div class="container-fluid mt-customised">
     <div class="row">

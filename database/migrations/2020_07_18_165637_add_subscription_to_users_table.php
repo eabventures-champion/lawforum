@@ -14,9 +14,15 @@ class AddSubscriptionToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('check_subscription')->default(0);
-            $table->bigInteger('subscription_id')->nullable();
-            $table->date('subscription_expiry')->nullable();
+            if (!Schema::hasColumn('users', 'check_subscription')) {
+                $table->boolean('check_subscription')->default(0);
+            }
+            if (!Schema::hasColumn('users', 'subscription_id')) {
+                $table->bigInteger('subscription_id')->nullable();
+            }
+            if (!Schema::hasColumn('users', 'subscription_expiry')) {
+                $table->date('subscription_expiry')->nullable();
+            }
         });
     }
 

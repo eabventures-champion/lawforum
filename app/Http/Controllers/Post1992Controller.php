@@ -242,7 +242,7 @@ class Post1992Controller extends Controller
         $unique                     = $allPostArticles1->unique()->sortBy('part')->sortBy('priority'); 
         $allPost1992Articles         = $unique;
         $pdf = PDF::loadView('post_1992_legislation.displayed_pdfView', compact('allPost1992Act','allPost1992Articles'));
-        return $pdf->download($title.'.lawsghana.pdf');
+        return $pdf->download($title.'.legalsforum.pdf');
     }
 
     //Display Pdf View for section Content view
@@ -254,7 +254,7 @@ class Post1992Controller extends Controller
                 'post_act' => $title
             ])->toArray()[0];
         $pdf = PDF::loadView('post_1992_legislation.displayed_pdf_content_view', compact('allPost1992Article'));
-        return $pdf->download($title.'.lawsghana.pdf');
+        return $pdf->download($title.'.legalsforum.pdf');
     }
 
      //Display Pdf View for preamble Content view
@@ -372,7 +372,7 @@ class Post1992Controller extends Controller
                                     'act_title' => $title
                                 ])->toArray()[0];
                             $pdf = PDF::loadView('post_1992_legislation.displayed_pdf_amended_content_view', compact('amendedAct'));
-                            return $pdf->download($id.'.lawsghana.pdf');
+                            return $pdf->download($id.'.legalsforum.pdf');
                         }
                         //------------------------------------------------------------------------------------------------------------------------------------------
                         //ALL REGULATIONS FOR A SPECIFIC ACT
@@ -498,7 +498,7 @@ class Post1992Controller extends Controller
                                     'regulation_title' => $title
                                 ])->toArray()[0];
                             $pdf = PDF::loadView('post_1992_legislation.displayed_pdf_regulation_act_content_view', compact('ActsRegulationArticle'));
-                            return $pdf->download($id.'.lawsghana.pdf');
+                            return $pdf->download($id.'.legalsforum.pdf');
                         }
 
                          //Display Pdf View for Expanded view
@@ -513,7 +513,7 @@ class Post1992Controller extends Controller
                             $unique                     = $ActsRegulationArticles1->unique()->sortBy('part')->sortBy('priority'); 
                             $ActsRegulationArticles         = $unique;
                             $pdf = PDF::loadView('post_1992_legislation.displayed_regulation_pdfView', compact('regulationtitle','ActsRegulationArticles'));
-                            return $pdf->download($title.'.lawsghana.pdf');
+                            return $pdf->download($title.'.legalsforum.pdf');
                         }
 
                        
@@ -679,7 +679,7 @@ class Post1992Controller extends Controller
                 'title' => $title
             ])->toArray()[0];
         $pdf = PDF::loadView('post_1992_legislation.displayed_pdf_regulation_amends_content_view', compact('allregAmendment'));
-        return $pdf->download($id.'.lawsghana.pdf');
+        return $pdf->download($id.'.legalsforum.pdf');
     }
 
     //Display Pdf View for Expanded view
@@ -694,7 +694,7 @@ class Post1992Controller extends Controller
         $unique                     = $allAmendedArticles1->unique()->sortBy('part')->sortBy('priority'); 
         $allAmendedArticles         = $unique;
         $pdf = PDF::loadView('post_1992_legislation.displayed_regulation_amends_expanded_pdfView', compact('allAmendment','allAmendedArticles'));
-        return $pdf->download($title.'.lawsghana.pdf');
+        return $pdf->download($title.'.legalsforum.pdf');
     }
 
     //---------------------------ACTS AMENDMENTS-------------------------------------------------
@@ -772,7 +772,7 @@ class Post1992Controller extends Controller
                 'post_act' => $title
             ])->toArray()[0];
         $pdf = PDF::loadView('post_1992_legislation.displayed_pdf_amendments_content_view', compact('allAmendment'));
-        return $pdf->download($id.'.lawsghana.pdf');
+        return $pdf->download($id.'.legalsforum.pdf');
     }
 
     //Display Pdf View for Expanded view
@@ -787,7 +787,7 @@ class Post1992Controller extends Controller
         $unique                     = $allAmendedArticles1->unique()->sortBy('part')->sortBy('priority'); 
         $allAmendedArticles         = $unique;
         $pdf = PDF::loadView('post_1992_legislation.displayed_expanded_pdfView', compact('allAmendment','allAmendedArticles'));
-        return $pdf->download($title.'.lawsghana.pdf');
+        return $pdf->download($title.'.legalsforum.pdf');
     }
 
     //------------------------------------------------------------------------------------------------------------------------------
@@ -911,7 +911,7 @@ class Post1992Controller extends Controller
                 'post_act' => $title
             ])->toArray()[0];
         $pdf = PDF::loadView('post_1992_legislation.displayed_regulation_pdf_content_view', compact('regulationAct'));
-        return $pdf->download($id.'.lawsghana.pdf');
+        return $pdf->download($id.'.legalsforum.pdf');
     }
 
     //Regulation Act Preamble
@@ -1045,7 +1045,7 @@ class Post1992Controller extends Controller
                                 'title' => $title
                             ])->toArray()[0];
                         $pdf = PDF::loadView('post_1992_legislation.displayed_pdf_amended_regulation_content_view', compact('amendedRegulationContent'));
-                        return $pdf->download($id.'.lawsghana.pdf');
+                        return $pdf->download($id.'.legalsforum.pdf');
                     }
     //-----------------------------------------------------------------------------------------------------------------------------------------
 

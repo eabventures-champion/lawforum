@@ -1,4 +1,9 @@
-<img src="{{ asset('home_background/2.jpg') }}" class="card-img-top" alt="...">
-{{-- <video width="220" height="240" controls autoplay>
-<source src="{{ asset('home_background/video_1.mp4') }}" type="video/mp4" />
-</video> --}}
+@if(isset($sidebarAds['slot_1']))
+    @if($sidebarAds['slot_1']->target_url)
+        <a href="{{ $sidebarAds['slot_1']->target_url }}" target="_blank">
+            <img src="{{ $sidebarAds['slot_1']->image_url }}" class="card-img-top" alt="Advertisement">
+        </a>
+    @else
+        <img src="{{ $sidebarAds['slot_1']->image_url }}" class="card-img-top" alt="Advertisement">
+    @endif
+@endif

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Verify Your Email | LawsGhana</title>
+    <title>Verify Your Email | Legals Forum</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -361,7 +361,7 @@
                 </div>
                 <h2 class="modal-title">Account Created!</h2>
                 <p class="modal-message">
-                    Welcome to LawsGhana! Your account has been registered successfully. We have sent a verification email to your address. Please check your inbox and click the activation link to verify your account.
+                    Welcome to Legals Forum! Your account has been registered successfully. We have sent a verification email to your address. Please check your inbox and click the activation link to verify your account.
                 </p>
                 <button type="button" class="btn-modal-close" onclick="closeWelcomeModal()">
                     <span>Got It, Thanks</span>

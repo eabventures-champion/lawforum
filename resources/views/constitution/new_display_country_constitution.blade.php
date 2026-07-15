@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" style="background-color:#070a13;">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>{{ ucwords(strtolower($allCountriesConstitution['title'])) }} - LawsGhana</title>
+    <title>{{ ucwords(strtolower($allCountriesConstitution['title'])) }} - Legals Forum</title>
 
     <!-- Google Fonts & Stylesheets -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -26,6 +26,33 @@
             --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
             --gold: #f59e0b;
             --gold-light: #fbbf24;
+        }
+
+        /* Search Highlighting */
+        mark.search-highlight {
+            background: rgba(234, 179, 8, 0.35) !important;
+            color: #fff !important;
+            border-radius: 4px !important;
+            padding: 2px 4px !important;
+            transition: all 0.2s ease !important;
+        }
+
+        mark.search-highlight.active-highlight {
+            background: #eab308 !important;
+            color: #0b0f17 !important;
+            box-shadow: 0 0 10px rgba(234, 179, 8, 0.6) !important;
+        }
+
+        .sidebar-sticky-wrap {
+            position: sticky;
+            top: 75px;
+            z-index: 10;
+        }
+
+        #word-search-card {
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            border-radius: 16px;
         }
 
         body {
@@ -206,45 +233,47 @@
             margin: 6px 0;
         }
 
-        /* Continent / Sub-navigation header */
-        .continent-nav-wrap {
-            background: rgba(15, 23, 42, 0.4);
-            border-bottom: 1px solid var(--border-color);
-            padding: 8px 0;
-        }
-
-        .continent-nav-wrap .nav-underline {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 24px;
+                /* Premium Continent Scroller */
+        .nav-underline-premium {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             overflow-x: auto;
+            padding: 8px;
+            background: rgba(148, 163, 184, 0.08) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.25) !important;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            flex-wrap: nowrap !important;
+            position: sticky;
+            top: 62px;
+            z-index: 99;
         }
 
-        .continent-nav-wrap .nav-underline::-webkit-scrollbar {
-            display: none;
-        }
-
-        .continent-nav-wrap .nav-link {
-            font-size: 13.5px;
-            font-weight: 500;
+        .nav-link-premium {
+            font-size: 13px !important;
+            font-weight: 600 !important;
             color: var(--text-secondary) !important;
-            padding: 6px 16px;
-            border-radius: 20px;
-            text-decoration: none;
-            transition: all 0.2s ease;
+            background: transparent !important;
+            border: 1px solid transparent !important;
+            padding: 8px 16px !important;
+            border-radius: 8px !important;
+            transition: all 0.2s ease !important;
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none !important;
         }
 
-        .continent-nav-wrap .nav-link:hover {
+        .nav-link-premium:hover {
             color: var(--text-primary) !important;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.04) !important;
         }
 
-        .continent-nav-wrap .nav-link.active {
+        .nav-link-premium.active {
             color: #fff !important;
-            background: rgba(59, 130, 246, 0.15) !important;
-            border: 1px solid rgba(59, 130, 246, 0.3) !important;
+            background: rgba(59, 130, 246, 0.18) !important;
+            border-color: rgba(59, 130, 246, 0.35) !important;
         }
 
         /* ====== MAIN CONTENT & LAYOUT ====== */
@@ -265,6 +294,20 @@
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
         }
 
+        .premium-card.p-0 img.card-img-top,
+        .premium-card.p-0 img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 16px;
+        }
+
+        .premium-card .card {
+            background: transparent !important;
+            border: none !important;
+            margin-bottom: 0 !important;
+        }
+
         .card-header-styled {
             display: flex;
             align-items: center;
@@ -282,6 +325,122 @@
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        /* ============================================
+           MODAL & TABLE CUSTOMIZATION
+           ============================================ */
+        .modal-content {
+            background: #0f172a !important; /* Premium dark background */
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--border-color) !important;
+            padding: 20px 24px !important;
+        }
+
+        .modal-title {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            color: var(--text-primary) !important;
+        }
+
+        .modal-body {
+            padding: 24px !important;
+            background: #0b0f17 !important; /* Slightly darker inner body */
+        }
+
+        /* Customize the datatable inside modal */
+        #viewCases table.table {
+            background: transparent !important;
+            color: var(--text-primary) !important;
+            margin-bottom: 0 !important;
+        }
+
+        #viewCases table.table th {
+            color: var(--gold) !important;
+            font-size: 11px !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            font-weight: 700 !important;
+            border-bottom: 1px solid var(--border-color) !important;
+            padding: 12px 16px !important;
+        }
+
+        #viewCases table.table td {
+            padding: 12px 16px !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
+            color: var(--text-secondary) !important;
+            vertical-align: middle !important;
+        }
+
+        #viewCases table.table tr:hover td {
+            color: var(--text-primary) !important;
+            background: rgba(255, 255, 255, 0.02) !important;
+        }
+
+        #viewCases table.table td a {
+            color: #60a5fa !important;
+            text-decoration: none !important;
+            font-weight: 600 !important;
+            transition: all 0.2s ease !important;
+        }
+
+        #viewCases table.table td a:hover {
+            color: #3b82f6 !important;
+            text-decoration: underline !important;
+        }
+
+        /* DataTables controls inside modal */
+        #viewCases .dataTables_wrapper {
+            color: var(--text-secondary) !important;
+        }
+
+        #viewCases .dataTables_length select,
+        #viewCases .dataTables_filter input {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+            border-radius: 8px !important;
+            padding: 6px 12px !important;
+            outline: none !important;
+        }
+
+        #viewCases .dataTables_info {
+            color: var(--text-muted) !important;
+            font-size: 13px !important;
+            padding-top: 16px !important;
+        }
+
+        #viewCases .dataTables_paginate {
+            padding-top: 16px !important;
+        }
+
+        #viewCases .dataTables_paginate .paginate_button {
+            color: var(--text-secondary) !important;
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 8px !important;
+            padding: 6px 12px !important;
+            margin: 0 2px !important;
+            transition: all 0.2s ease !important;
+        }
+
+        #viewCases .dataTables_paginate .paginate_button:hover {
+            color: var(--text-primary) !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        #viewCases .dataTables_paginate .paginate_button.current,
+        #viewCases .dataTables_paginate .paginate_button.current:hover {
+            color: #fff !important;
+            background: rgba(59, 130, 246, 0.2) !important;
+            border-color: rgba(59, 130, 246, 0.4) !important;
         }
 
         /* ====== READABLE TYPOGRAPHY ====== */
@@ -399,7 +558,7 @@
         .back-to-top {
             position: fixed;
             bottom: 40px;
-            right: 40px;
+            right: calc(25% + 20px);
             background: var(--accent-gradient);
             border-radius: 50%;
             width: 44px;
@@ -502,53 +661,26 @@
     <!-- ====== PREMIUM NAVIGATION ====== -->
     <nav class="nav-wrap" id="mainNav">
         <div class="nav-inner">
-            <a href="/" class="nav-logo">
-                <img src="{{ asset('logo/lawsghlog.png') }}" alt="LawsGhana">
+            <a href="/" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; padding-left: 0px; padding-top: 5px; padding-bottom: 5px; transition: transform 0.2s ease; vertical-align: middle;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; font-size: 22px; margin: 0; line-height: 1;"></i>
+                <span style="font-size: 22px; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(to right, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.3;">Legals Forum</span>
             </a>
 
-            <div class="nav-menu-links-premium">
-                <!-- Constitution Dropdown -->
-                <div class="nav-link-dropdown">
-                    <button class="nav-link-btn">Constitution <i class="fa-solid fa-chevron-down"></i></button>
-                    <div class="nav-dropdown-menu">
-                        <a href="/constitution/Republic/Ghana/1">Ghana</a>
-                        <a href="/constitution/all-countries/1/Africa">Africa</a>
-                        <a href="/constitution/all-countries/2/Asia">Asia</a>
-                        <a href="/constitution/all-countries/3/Europe">Europe</a>
-                        <a href="/constitution/all-countries/4/North-America">North America</a>
-                        <a href="/constitution/all-countries/5/South-America">South America</a>
-                    </div>
-                </div>
-
-                <!-- Pre-4th Republic Laws Dropdown -->
-                <div class="nav-link-dropdown">
-                    <button class="nav-link-btn">Pre-4th Republic Laws <i class="fa-solid fa-chevron-down"></i></button>
-                    <div class="nav-dropdown-menu">
-                        <a href="/pre_1992_legislation/1/First Republic">1st Republic</a>
-                        <a href="/pre_1992_legislation/2/Second Republic">2nd Republic</a>
-                        <a href="/pre_1992_legislation/3/Third Republic">3rd Republic</a>
-                        <a href="/pre_1992_legislation/5/NLC Decree">NLC Decree</a>
-                        <a href="/pre_1992_legislation/6/NRC Decree">NRC Decree</a>
-                        <a href="/pre_1992_legislation/7/SMC Decree">SMC Decree</a>
-                        <a href="/pre_1992_legislation/8/AFRC Decree">AFRC Decree</a>
-                        <a href="/pre_1992_legislation/4/PNDC Law">PNDC Law</a>
-                    </div>
-                </div>
-
-                <!-- 4th Republic Laws Dropdown -->
-                <div class="nav-link-dropdown">
-                    <button class="nav-link-btn">4th Republic Laws <i class="fa-solid fa-chevron-down"></i></button>
-                    <div class="nav-dropdown-menu">
-                        <a href="/post-1992-legislation/1/Acts of Parliament">Acts of Parliament</a>
-                        <a href="/post-1992-legislation/only-regulations">Legislative Instruments</a>
-                        <a href="/post-1992-legislation/Constitutional-Intruments">Constitutional Instruments</a>
-                        <a href="/post-1992-legislation/Executive-Intruments">Executive Instruments</a>
-                        <a href="/post-1992-legislation/only-amendments">Amendments</a>
-                    </div>
-                </div>
-
-                <a href="/judgement/Ghana" class="nav-link-btn" style="text-decoration:none !important;">Case Laws</a>
-                <a href="/News/Ghana-News/1" class="nav-link-btn" style="text-decoration:none !important;">News</a>
+                        <div class="nav-menu-links-premium">
+                @foreach($headerMenus as $menu)
+                    @if($menu->is_dropdown)
+                        <div class="nav-link-dropdown">
+                            <button class="nav-link-btn">{{ $menu->title }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></button>
+                            <div class="nav-dropdown-menu">
+                                @foreach($menu->children as $child)
+                                    <a href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">{{ $child->title }}</a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}" class="nav-link-btn" style="text-decoration:none !important;">{{ $menu->title }}</a>
+                    @endif
+                @endforeach
             </div>
 
             <div class="nav-auth">
@@ -587,34 +719,53 @@
         </div>
     </nav>
 
-    <!-- Continent/Sub-Navigation header -->
-    <div class="continent-nav-wrap">
-        <div class="nav-scroller">
-            <nav class="nav nav-underline">
-                <a class="nav-link" href="/constitution/all_countries">All Countries</a>
-                <a class="nav-link" href="/constitution/Republic/Ghana/1">Ghana</a>
-                <a class="nav-link @if($allCountriesConstitution['continent'] == 'Africa') active @endif" href="/constitution/all-countries/1/Africa">Africa</a>
-                <a class="nav-link @if($allCountriesConstitution['continent'] == 'Asia') active @endif" href="/constitution/all-countries/2/Asia">Asia</a>
-                <a class="nav-link @if($allCountriesConstitution['continent'] == 'Europe') active @endif" href="/constitution/all-countries/3/Europe">Europe</a>
-                <a class="nav-link @if($allCountriesConstitution['continent'] == 'North America') active @endif" href="/constitution/all-countries/4/North-America">North America</a>
-                <a class="nav-link @if($allCountriesConstitution['continent'] == 'South America') active @endif" href="/constitution/all-countries/5/South-America">South America</a>
-            </nav>
-        </div>
-    </div>
-
     <!-- ====== MAIN CONTAINER ====== -->
     <div class="main-container">
         <div class="row">
             <!-- Main Content: Reading Panel -->
             <div class="col-lg-9">
                 <!-- Search bar across all laws -->
-                <div class="search-bar-wrap position-relative">
-                    <form action="{{ url('all_constitution_index_search') }}" method="GET">
-                        {{ csrf_field() }}
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input class="search-input-premium" type="search" placeholder="Search keyword in all laws database..." name="search_text">
-                    </form>
+                <!-- Premium Continent Tabs Menu -->
+                <div class="nav-underline-premium">
+                    <a class="nav-link-premium {{ request()->is('constitution/all_countries') ? 'active' : '' }}" href="/constitution/all_countries"><i class="fa-solid fa-globe mr-2"></i> All Countries</a>
+                    @foreach($headerMenus as $m)
+                        @if($m->slug === 'constitution' || strtolower($m->title) === 'constitution')
+                            @foreach($m->children as $child)
+                                @if(stripos($child->title, 'Ghana') !== false)
+                                    @continue
+                                @endif
+                                @php
+                                    $iconClass = 'fa-book-open';
+                                    if (stripos($child->title, 'Africa') !== false) $iconClass = 'fa-earth-africa';
+                                    elseif (stripos($child->title, 'Asia') !== false) $iconClass = 'fa-earth-asia';
+                                    elseif (stripos($child->title, 'Europe') !== false) $iconClass = 'fa-earth-europe';
+                                    elseif (stripos($child->title, 'America') !== false) $iconClass = 'fa-earth-americas';
+
+                                    // Match active tab based on the current constitution's continent
+                                    $currentContinent = isset($allCountriesConstitution) ? $allCountriesConstitution['continent'] : '';
+                                    $tabIsActive = false;
+                                    if (stripos($child->title, 'Africa') !== false && stripos($currentContinent, 'Africa') !== false) {
+                                        $tabIsActive = true;
+                                    } elseif (stripos($child->title, 'Asia') !== false && stripos($currentContinent, 'Asia') !== false) {
+                                        $tabIsActive = true;
+                                    } elseif (stripos($child->title, 'Europe') !== false && stripos($currentContinent, 'Europe') !== false) {
+                                        $tabIsActive = true;
+                                    } elseif (stripos($child->title, 'North America') !== false && stripos($currentContinent, 'North') !== false) {
+                                        $tabIsActive = true;
+                                    } elseif (stripos($child->title, 'South America') !== false && stripos($currentContinent, 'South') !== false) {
+                                        $tabIsActive = true;
+                                    }
+                                @endphp
+                                <a class="nav-link-premium {{ $tabIsActive ? 'active' : '' }}" 
+                                   href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">
+                                    <i class="fa-solid {{ $iconClass }} mr-2"></i> {{ $child->title }}
+                                </a>
+                            @endforeach
+                        @endif
+                    @endforeach
                 </div>
+
+
 
                 <div class="premium-card">
                     <!-- Action Headers -->
@@ -626,60 +777,15 @@
                         </div>
 
                         <div class="d-flex align-items-center gap-2">
-                            <button id="print_options" type="button" class="btn btn-custom-outline open">
-                                <i class="fa-solid fa-print mr-1"></i> Print Options
-                            </button>
                             <button type="button" class="btn btn-custom-outline" data-toggle="modal" data-target="#viewCases">
                                 <i class="fa-solid fa-globe mr-1"></i> Select Country
                             </button>
                         </div>
                     </div>
 
-                    <!-- Print Menu Options (If Auth and Subscribed) -->
-                    <div class="menu_options text-right mb-4" style="display: none; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
-                        @if (Route::has('login'))
-                            @auth
-                                @if(auth()->user()->check_subscription == 0)
-                                    @include('layouts.no_subscription')
-                                @elseif(auth()->user()->subscription_expiry < today())
-                                    @include('layouts.expired_subscription')
-                                @elseif(auth()->user()->subscription_downloads <= auth()->user()->downloads_counts)
-                                    @include('layouts.exceeded_downloads_subscription')
-                                @else
-                                    <!-- Options placeholder -->
-                                @endif
-                            @else
-                                <a href="" data-toggle="modal" data-target="#exampleModal" class="btn btn-sm btn-accent"><i class="fa-solid fa-file-pdf"></i> Download PDF</a>
-                                <a href="" data-toggle="modal" data-target="#exampleModal" class="btn btn-sm btn-custom-outline">Plain View</a>
-                                <a href="" data-toggle="modal" data-target="#exampleModal" class="btn btn-sm btn-custom-outline"><i class="fa-solid fa-print"></i> Print</a>
-
-                                <!-- Sign-In Modal -->
-                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Log In Required</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true" style="color:#fff;">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body text-center py-4">
-                                                <p class="text-secondary mb-4">Please log in or register a premium account to view, print, or download PDF versions of constitutions.</p>
-                                                <div class="d-flex justify-content-center gap-3">
-                                                    <a class="btn btn-accent" href="{{ route('login') }}">Log In</a>
-                                                    <a class="btn btn-custom-outline" href="{{ route('register') }}">Sign Up</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> 
-                            @endauth
-                        @endif
-                    </div>
-
                     <!-- Preamble & Document Text Body -->
                     <div class="judgement_display">
-                        <div class="content">  
+                        <div class="content" id="constitution-reading-content">  
                             <div class="mb-4">{!! $allCountriesConstitution['preamble'] !!}</div>
                             <div>{!! $allCountriesConstitution['content'] !!}</div>
                         </div>
@@ -687,10 +793,97 @@
                 </div>
             </div>
 
-            <!-- Right Sidebar: Advertisements -->
+            <!-- Right Sidebar: Search & Advertisements -->
             <div class="col-lg-3">
-                <div class="premium-card text-center p-3">
-                    @include('ads.content_adsense_vertical')
+                <div class="sidebar-sticky-wrap">
+                    <!-- Premium Word Finder Card -->
+                    <div class="premium-card mb-4" id="word-search-card" style="padding: 20px;">
+                        <div class="card-header-styled" style="margin-bottom: 15px; padding-bottom: 8px;">
+                            <h5 style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-magnifying-glass text-primary"></i> Word Finder
+                            </h5>
+                        </div>
+                        <div class="search-box-premium-wrap">
+                            <div class="input-group" style="display: flex; width: 100%;">
+                                <input type="text" id="document-search-input" class="form-control" placeholder="Find word..." style="
+                                    background: rgba(11, 15, 23, 0.6);
+                                    border: 1px solid var(--border-color);
+                                    color: var(--text-primary);
+                                    border-radius: 8px 0 0 8px;
+                                    height: 38px;
+                                    font-size: 13px;
+                                    font-weight: 500;
+                                    padding: 8px 12px;
+                                    flex: 1;
+                                    outline: none;
+                                ">
+                                <button type="button" id="search-clear-btn" title="Clear search" style="
+                                    background: rgba(255, 255, 255, 0.05);
+                                    border: 1px solid var(--border-color);
+                                    border-left: none;
+                                    border-right: none;
+                                    color: var(--text-muted);
+                                    height: 38px;
+                                    width: 30px;
+                                    cursor: pointer;
+                                    display: none;
+                                    align-items: center;
+                                    justify-content: center;
+                                    outline: none;
+                                    transition: color 0.2s ease;
+                                "><i class="fa-solid fa-xmark" style="font-size: 12px;"></i></button>
+                                <span id="document-search-count" style="
+                                    background: rgba(11, 15, 23, 0.6);
+                                    border-top: 1px solid var(--border-color);
+                                    border-bottom: 1px solid var(--border-color);
+                                    border-left: none;
+                                    border-right: none;
+                                    color: var(--text-secondary);
+                                    font-size: 11px;
+                                    font-weight: 700;
+                                    height: 38px;
+                                    display: flex;
+                                    align-items: center;
+                                    padding: 0 8px;
+                                    white-space: nowrap;
+                                    user-select: none;
+                                ">0/0</span>
+                                <button type="button" id="search-prev-btn" style="
+                                    background: rgba(255, 255, 255, 0.05);
+                                    border: 1px solid var(--border-color);
+                                    border-left: none;
+                                    border-right: none;
+                                    color: var(--text-secondary);
+                                    height: 38px;
+                                    width: 32px;
+                                    cursor: pointer;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    outline: none;
+                                " disabled><i class="fa-solid fa-chevron-up" style="font-size: 11px;"></i></button>
+                                <button type="button" id="search-next-btn" style="
+                                    background: rgba(255, 255, 255, 0.05);
+                                    border: 1px solid var(--border-color);
+                                    border-left: none;
+                                    border-radius: 0 8px 8px 0;
+                                    color: var(--text-secondary);
+                                    height: 38px;
+                                    width: 32px;
+                                    cursor: pointer;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    outline: none;
+                                " disabled><i class="fa-solid fa-chevron-down" style="font-size: 11px;"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advertisement Module -->
+                    <div class="premium-card p-0" style="overflow: hidden;">
+                        @include('ads.small_ads_image_main_page')
+                    </div>
                 </div>
             </div>
         </div>
@@ -775,6 +968,132 @@
                     dropdown.classList.remove('active');
                 }
             });
+
+            // Premium document word search highlighting and navigation
+            let currentIndex = -1;
+            let highlights = [];
+            let originalHTML = "";
+            const contentArea = document.getElementById('constitution-reading-content');
+            if (contentArea) {
+                originalHTML = contentArea.innerHTML;
+            }
+            
+            const searchInput = document.getElementById('document-search-input');
+            const prevBtn = document.getElementById('search-prev-btn');
+            const nextBtn = document.getElementById('search-next-btn');
+            const clearBtn = document.getElementById('search-clear-btn');
+            const countLabel = document.getElementById('document-search-count');
+            
+            if (searchInput && prevBtn && nextBtn && countLabel) {
+                searchInput.addEventListener('input', function() {
+                    performSearch(searchInput.value.trim());
+                    // Show/hide clear button based on input content
+                    if (clearBtn) {
+                        clearBtn.style.display = searchInput.value.length > 0 ? 'flex' : 'none';
+                    }
+                });
+                
+                // Clear button: reset input, remove highlights, hide self
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', function() {
+                        searchInput.value = '';
+                        performSearch('');
+                        clearBtn.style.display = 'none';
+                        searchInput.focus();
+                    });
+                }
+                
+                prevBtn.addEventListener('click', function() {
+                    if (highlights.length > 0) {
+                        currentIndex = (currentIndex - 1 + highlights.length) % highlights.length;
+                        navigateToHighlight();
+                    }
+                });
+                
+                nextBtn.addEventListener('click', function() {
+                    if (highlights.length > 0) {
+                        currentIndex = (currentIndex + 1) % highlights.length;
+                        navigateToHighlight();
+                    }
+                });
+            }
+            
+            function performSearch(query) {
+                if (!contentArea) return;
+                
+                // Clear previous highlights
+                contentArea.innerHTML = originalHTML;
+                currentIndex = -1;
+                highlights = [];
+                
+                if (!query || query.length < 2) {
+                    countLabel.textContent = "0/0";
+                    prevBtn.disabled = true;
+                    nextBtn.disabled = true;
+                    return;
+                }
+                
+                highlightTextNodes(contentArea, query);
+                highlights = contentArea.querySelectorAll('.search-highlight');
+                
+                if (highlights.length > 0) {
+                    currentIndex = 0;
+                    countLabel.textContent = `1/${highlights.length}`;
+                    prevBtn.disabled = false;
+                    nextBtn.disabled = false;
+                    navigateToHighlight();
+                } else {
+                    countLabel.textContent = "0/0";
+                    prevBtn.disabled = true;
+                    nextBtn.disabled = true;
+                }
+            }
+            
+            function highlightTextNodes(node, query) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    const text = node.nodeValue;
+                    const regex = new RegExp('(' + escapeRegExp(query) + ')', 'gi');
+                    if (regex.test(text)) {
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = text.replace(regex, '<mark class="search-highlight">$1</mark>');
+                        while (tempDiv.firstChild) {
+                            node.parentNode.insertBefore(tempDiv.firstChild, node);
+                        }
+                        node.parentNode.removeChild(node);
+                    }
+                } else if (node.nodeType === Node.ELEMENT_NODE && node.nodeName !== 'SCRIPT' && node.nodeName !== 'STYLE') {
+                    const children = Array.from(node.childNodes);
+                    for (const child of children) {
+                        highlightTextNodes(child, query);
+                    }
+                }
+            }
+            
+            function escapeRegExp(string) {
+                return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            }
+            
+            function navigateToHighlight() {
+                highlights.forEach(h => {
+                    h.classList.remove('active-highlight');
+                    h.style.background = 'rgba(234, 179, 8, 0.35)';
+                    h.style.color = '#fff';
+                });
+                
+                if (currentIndex >= 0 && currentIndex < highlights.length) {
+                    const active = highlights[currentIndex];
+                    active.classList.add('active-highlight');
+                    active.style.background = '#eab308';
+                    active.style.color = '#0b0f17';
+                    
+                    countLabel.textContent = `${currentIndex + 1}/${highlights.length}`;
+                    
+                    active.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }
+            }
         });
     </script>
   </body>

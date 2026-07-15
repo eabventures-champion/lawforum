@@ -44,6 +44,6 @@
         @foreach($footer_notes as $caption)
         |&nbsp;&nbsp;<li style="display: inline-block"><a style="color: #ffffff;" href="/caption/{{$caption->name}}/{{$caption->id}}">{{ $caption->name }}</a></li>&nbsp;&nbsp;
         @endforeach
-        
+        |&nbsp;&nbsp;<li style="display: inline-block"><a style="color: #60a5fa; font-weight: bold;" href="{{ route('admin.login') }}">Admin Portal</a></li>&nbsp;&nbsp;
     </ul>
 </div>
