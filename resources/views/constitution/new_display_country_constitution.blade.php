@@ -564,7 +564,7 @@
             border-radius: 50%;
             width: 44px;
             height: 44px;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             color: #fff !important;
@@ -1687,19 +1687,28 @@
         });
         @endauth
 
-        // Reading progress tracker
-        var readingEl = document.querySelector('.judgement_display');
-        if (readingEl) {
-            window.addEventListener('scroll', function() {
-                var rect = readingEl.getBoundingClientRect();
-                var docHeight = readingEl.scrollHeight;
-                var scrolled = Math.max(0, -rect.top);
-                var viewable = docHeight - window.innerHeight;
-                var progress = viewable > 0 ? Math.min(100, Math.max(0, Math.round((scrolled / viewable) * 100))) : 0;
-                document.getElementById('progressFill').style.width = progress + '%';
-                document.getElementById('progressPercent').textContent = progress + '%';
-            });
-        }
+        // Reading progress tracker & back-to-top toggle
+        window.addEventListener('scroll', function() {
+            var scrollTop = window.scrollY || document.documentElement.scrollTop;
+            var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var progress = scrollHeight > 0 ? Math.round((scrollTop / scrollHeight) * 100) : 0;
+            progress = Math.min(100, Math.max(0, progress));
+
+            var progressFill = document.getElementById('progressFill');
+            var progressPercent = document.getElementById('progressPercent');
+            if (progressFill) progressFill.style.width = progress + '%';
+            if (progressPercent) progressPercent.textContent = progress + '%';
+
+            // Show/hide back to top button when scrolled down
+            var backToTopBtn = document.getElementById('back-to-top');
+            if (backToTopBtn) {
+                if (scrollTop > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            }
+        });
     });
 
     // ============================================

@@ -1947,6 +1947,36 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             height: 1px; background: var(--border-color);
             margin: 16px 0;
         }
+
+        /* Floating Back to Top Button */
+        .workspace-back-to-top {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            background: var(--accent-gradient);
+            color: #fff !important;
+            border: none;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        .workspace-back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+            background: var(--accent-light);
+            color: #fff !important;
+        }
+        .workspace-back-to-top i {
+            font-size: 16px;
+        }
     </style>
   </head>
   <body class="bg-light">
@@ -2265,6 +2295,10 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                     </div>
                 </div>
             </div>
+            <!-- Floating Back to Top Button for reading workspace -->
+            <button id="workspace-back-to-top" class="workspace-back-to-top" title="Back to top">
+                <i class="fa-solid fa-arrow-up"></i>
+            </button>
         </main>
 
         <!-- Right Panel: Reader Tools -->
@@ -3939,13 +3973,10 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
     }
 
     // ============================================
-    // READING PROGRESS TRACKER
+    // READING PROGRESS TRACKER & BACK TO TOP
     // ============================================
     function updateReadingProgress() {
-        var readingPane = document.getElementById('display_content');
-        if (!readingPane) return;
-
-        var scrollContainer = readingPane.closest('.reading-body') || readingPane.parentElement;
+        var scrollContainer = document.querySelector('.workspace-body');
         if (!scrollContainer) return;
 
         var scrollTop = scrollContainer.scrollTop;
@@ -3953,23 +3984,40 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
         var progress = scrollHeight > 0 ? Math.round((scrollTop / scrollHeight) * 100) : 0;
         progress = Math.min(100, Math.max(0, progress));
 
-        document.getElementById('progressFill').style.width = progress + '%';
-        document.getElementById('progressPercent').textContent = progress + '%';
+        var progressFill = document.getElementById('progressFill');
+        var progressPercent = document.getElementById('progressPercent');
+        if (progressFill) progressFill.style.width = progress + '%';
+        if (progressPercent) progressPercent.textContent = progress + '%';
+
+        // Show/hide back to top button when scrolled down
+        var backToTopBtn = document.getElementById('workspace-back-to-top');
+        if (backToTopBtn) {
+            if (scrollTop > 300) {
+                backToTopBtn.style.display = 'flex';
+            } else {
+                backToTopBtn.style.display = 'none';
+            }
+        }
     }
 
     // Attach scroll listener to reading pane
     $(document).ready(function() {
-        // Try multiple possible scroll containers
-        var containers = [
-            document.querySelector('.reading-body'),
-            document.getElementById('display_content'),
-            document.querySelector('.workspace-main')
-        ];
+        var scrollContainer = document.querySelector('.workspace-body');
+        if (scrollContainer) {
+            scrollContainer.addEventListener('scroll', updateReadingProgress);
+        }
 
-        containers.forEach(function(el) {
-            if (el) {
-                el.addEventListener('scroll', updateReadingProgress);
+        // Click handler for Back to Top button
+        $('#workspace-back-to-top').click(function() {
+            var scrollContainer = $('.workspace-body');
+            if (scrollContainer.length) {
+                scrollContainer.animate({ scrollTop: 0 }, 400);
             }
+        });
+
+        // Also update progress on tab switch to reset/recalculate for new tab heights
+        $('#tabs a[data-toggle="pill"]').on('shown.bs.tab', function () {
+            updateReadingProgress();
         });
 
         // Load saved notes on page load
