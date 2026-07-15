@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         if (env('APP_ENV') === 'production') {
-            URL::forceSchema('https');
+            URL::forceScheme('https');
         }
 
         // Share active navigation menus and sidebar ads globally with all views

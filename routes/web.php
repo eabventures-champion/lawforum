@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\URL;
 //<a href="{{route('customer.printpdf')}}">Print PDF</a>
 
 if (env('APP_ENV') === 'production') {
-    URL::forceSchema('https');
+    URL::forceScheme('https');
 }
 
 //WELCOME PAGE
