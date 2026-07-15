@@ -1684,16 +1684,106 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
         }
         .highlighted-text-preview .close-highlight:hover { color: #ef4444; }
 
-        /* Saved Notes List */
-        .notes-list { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+        /* Saved Notes List Layout */
+        .notes-list { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
         .notes-list-header {
             font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
             text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;
         }
+        
+        /* Notes search bar inside sidebar */
+        .notes-search-wrap {
+            position: relative;
+            margin-bottom: 6px;
+        }
+        .notes-search-wrap i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .notes-search-sidebar {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 10px 6px 26px;
+            color: var(--text-primary);
+            font-size: 11px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .notes-search-sidebar:focus {
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Color filters tab bar inside sidebar */
+        .notes-filter-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 6px;
+            align-items: center;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        .notes-filter-tabs::-webkit-scrollbar {
+            height: 2px;
+        }
+        .notes-filter-tag {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-muted);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .notes-filter-tag:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .notes-filter-tag.active {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: var(--accent);
+            color: var(--accent-light);
+        }
+
+        /* Scrollable container viewport */
+        .notes-container-scroll {
+            max-height: 260px;
+            overflow-y: auto;
+            padding-right: 4px;
+            margin-top: 4px;
+        }
+        .notes-container-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .notes-container-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+        }
+        .notes-container-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 4px;
+        }
+        .notes-container-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Interactive Note Cards */
         .note-card {
             background: rgba(255,255,255,0.02); border: 1px solid var(--border-color);
             border-radius: 10px; padding: 12px 14px; position: relative;
             transition: all 0.25s ease; border-left: 3px solid #f59e0b;
+            margin-bottom: 8px;
             animation: noteSlideIn 0.3s ease;
         }
         @keyframes noteSlideIn {
@@ -1705,15 +1795,52 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
         .note-card[data-color="green"] { border-left-color: #10b981; }
         .note-card[data-color="pink"] { border-left-color: #ec4899; }
         .note-card[data-color="purple"] { border-left-color: #8b5cf6; }
+        
         .note-card-quote {
             font-size: 11px; color: var(--text-muted); font-style: italic;
             border-left: 2px solid rgba(255,255,255,0.08); padding-left: 8px;
-            margin-bottom: 6px; line-height: 1.4; max-height: 40px; overflow: hidden;
+            margin-bottom: 6px; line-height: 1.4; max-height: 38px; overflow: hidden;
+            transition: max-height 0.3s ease;
         }
-        .note-card-content { font-size: 12.5px; color: var(--text-primary); line-height: 1.5; margin-bottom: 6px; }
+        .note-card-content {
+            font-size: 12px; color: var(--text-primary); line-height: 1.4; margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            transition: max-height 0.3s ease;
+        }
+        .note-card.expanded .note-card-content {
+            display: block;
+            overflow: visible;
+            max-height: none;
+        }
+        .note-card.expanded .note-card-quote {
+            max-height: none;
+            overflow: visible;
+        }
+        .note-card-expand-indicator {
+            display: block;
+            text-align: center;
+            font-size: 9px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .note-card-expand-indicator:hover {
+            color: var(--text-secondary);
+        }
         .note-card-meta {
             display: flex; justify-content: space-between; align-items: center;
             font-size: 10px; color: var(--text-muted);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding-top: 6px;
+            margin-top: 6px;
         }
         .note-card-delete {
             cursor: pointer; color: var(--text-muted); font-size: 13px;
@@ -2210,8 +2337,28 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                         <!-- Saved notes list -->
                         <div class="notes-list" id="notesList">
                             <div class="notes-list-header">Saved Notes</div>
-                            <div id="notesContainer">
-                                <!-- Notes loaded via AJAX -->
+
+                            <!-- Search notes inside sidebar -->
+                            <div class="notes-search-wrap">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" class="notes-search-sidebar" id="sidebarNotesSearch" placeholder="Search saved notes..." oninput="filterSidebarNotes()">
+                            </div>
+
+                            <!-- Filter by color tag inside sidebar -->
+                            <div class="notes-filter-tabs">
+                                <div class="notes-filter-tag active" data-filter="all" onclick="filterSidebarColor('all', this)">All</div>
+                                <div class="notes-filter-tag" data-filter="yellow" onclick="filterSidebarColor('yellow', this)">Yellow</div>
+                                <div class="notes-filter-tag" data-filter="blue" onclick="filterSidebarColor('blue', this)">Blue</div>
+                                <div class="notes-filter-tag" data-filter="green" onclick="filterSidebarColor('green', this)">Green</div>
+                                <div class="notes-filter-tag" data-filter="pink" onclick="filterSidebarColor('pink', this)">Pink</div>
+                                <div class="notes-filter-tag" data-filter="purple" onclick="filterSidebarColor('purple', this)">Purple</div>
+                            </div>
+
+                            <!-- Scroll viewport container -->
+                            <div class="notes-container-scroll">
+                                <div id="notesContainer">
+                                    <!-- Notes loaded via AJAX -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2402,6 +2549,11 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
         // Toggle expanded view tab programmatically from button clicks
         $(document).on('click', '.toggle_expanded_view, .expanded_link', function(e) {
             e.preventDefault();
+            // Reveal all toolbar elements that are hidden until first article load
+            $('.tab-hidden-initially').removeClass('tab-hidden-initially');
+            $('.content-search-box').css('visibility', 'visible');
+            $('.font-adjuster').css('visibility', 'visible');
+            $('#audioPlayerBanner').css('display', 'flex');
             $('#v-pills-messages-tab').trigger('click');
         });
 
@@ -3404,6 +3556,13 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                 tabId = '#v-pills-split-tab';
             }
             
+            // Reveal toolbar elements that may still be hidden
+            if (mode === 'expanded' || mode === 'split') {
+                $('.content-search-box').css('visibility', 'visible');
+                $('.font-adjuster').css('visibility', 'visible');
+                $('#audioPlayerBanner').css('display', 'flex');
+            }
+            
             // Trigger bootstrap tab switch
             if (tabId) {
                 $(tabId).trigger('click');
@@ -3580,6 +3739,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
     }
 
     // Create note card DOM element
+    // Create note card DOM element with expand/collapse logic
     function createNoteCardElement(note) {
         var card = document.createElement('div');
         card.className = 'note-card';
@@ -3588,15 +3748,83 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
 
         var html = '';
         if (note.highlighted_text) {
-            html += '<div class="note-card-quote">"' + escapeHtml(note.highlighted_text.substring(0, 150)) + (note.highlighted_text.length > 150 ? '..."' : '"') + '</div>';
+            html += '<div class="note-card-quote">"' + escapeHtml(note.highlighted_text) + '"</div>';
         }
-        html += '<div class="note-card-content">' + escapeHtml(note.note_content) + '</div>';
+        html += '<div class="note-card-content" onclick="toggleNoteCardExpand(this)">' + escapeHtml(note.note_content) + '</div>';
+        
+        // Add expand/collapse indicator if content is long
+        var isLong = note.note_content.length > 70 || (note.highlighted_text && note.highlighted_text.length > 70);
+        if (isLong) {
+            html += '<div class="note-card-expand-indicator" onclick="toggleNoteCardExpand(this)">Read More</div>';
+        }
+
         html += '<div class="note-card-meta">';
         html += '<span>' + (note.article_section ? escapeHtml(note.article_section.substring(0, 30)) : '') + ' · ' + note.created_at + '</span>';
         html += '<i class="fa-solid fa-trash-can note-card-delete" onclick="deleteNote(' + note.id + ', this)" title="Delete note"></i>';
         html += '</div>';
         card.innerHTML = html;
         return card;
+    }
+
+    // Toggle expand/collapse of note cards
+    function toggleNoteCardExpand(el) {
+        var card = el.closest('.note-card');
+        card.classList.toggle('expanded');
+        var indicator = card.querySelector('.note-card-expand-indicator');
+        if (indicator) {
+            indicator.textContent = card.classList.contains('expanded') ? 'Read Less' : 'Read More';
+        }
+    }
+
+    // Client-side color filter inside sidebar
+    var activeSidebarColorFilter = 'all';
+    function filterSidebarColor(color, el) {
+        document.querySelectorAll('.notes-filter-tag').forEach(tag => tag.classList.remove('active'));
+        el.classList.add('active');
+        activeSidebarColorFilter = color;
+        applySidebarFilters();
+    }
+
+    // Client-side search filter inside sidebar
+    function filterSidebarNotes() {
+        applySidebarFilters();
+    }
+
+    // Apply combined filters
+    function applySidebarFilters() {
+        var searchVal = document.getElementById('sidebarNotesSearch').value.toLowerCase();
+        var cards = document.querySelectorAll('#notesContainer .note-card');
+        var visibleCount = 0;
+
+        cards.forEach(function(card) {
+            var colorMatch = (activeSidebarColorFilter === 'all' || card.getAttribute('data-color') === activeSidebarColorFilter);
+            var contentText = card.textContent.toLowerCase();
+            var searchMatch = !searchVal || contentText.indexOf(searchVal) !== -1;
+
+            if (colorMatch && searchMatch) {
+                card.style.display = 'block';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        var container = document.getElementById('notesContainer');
+        var emptyMsg = document.getElementById('sidebarNotesEmptyFilter');
+        if (visibleCount === 0 && cards.length > 0) {
+            if (!emptyMsg) {
+                emptyMsg = document.createElement('div');
+                emptyMsg.id = 'sidebarNotesEmptyFilter';
+                emptyMsg.style.textAlign = 'center';
+                emptyMsg.style.padding = '12px';
+                emptyMsg.style.color = 'var(--text-muted)';
+                emptyMsg.style.fontSize = '11px';
+                emptyMsg.innerHTML = '<i class="fa-solid fa-filter-circle-xmark" style="font-size:16px; margin-bottom:6px; display:block; opacity:0.5;"></i>No matching notes';
+                container.appendChild(emptyMsg);
+            }
+        } else if (emptyMsg) {
+            emptyMsg.remove();
+        }
     }
 
     // Delete note
@@ -3612,7 +3840,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                     card.style.opacity = '0';
                     card.style.transform = 'translateX(20px)';
                     card.style.transition = 'all 0.3s ease';
-                    setTimeout(function() { card.remove(); updateNotesCount(-1); }, 300);
+                    setTimeout(function() { card.remove(); updateNotesCount(-1); applySidebarFilters(); }, 300);
                     showToast('Note deleted.', 'success');
                 }
             },
@@ -3634,9 +3862,10 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
 
     document.addEventListener('mouseup', function(e) {
         var tooltip = document.getElementById('textSelectTooltip');
-        var readingPane = document.getElementById('display_content') || document.getElementById('v-pills-profile');
+        var readingPane = document.querySelector('.workspace-main');
+        var toolbar = document.querySelector('.reading-toolbar');
 
-        if (!readingPane || !readingPane.contains(e.target)) {
+        if (!readingPane || !readingPane.contains(e.target) || (toolbar && toolbar.contains(e.target))) {
             if (!tooltip.contains(e.target)) {
                 tooltip.style.display = 'none';
             }
