@@ -2554,6 +2554,41 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                 syncAudioPlayerLayout();
             }
         }
+
+        // Show all toolbar elements when content is loaded
+        function showToolbarElements() {
+            if (typeof $ === 'undefined') return;
+            // Show View Mode dropdown
+            $('#viewModeSelectorWrap').removeClass('tab-hidden-initially').css('display', '');
+            // Show search box and font adjusters
+            $('.content-search-box').css('visibility', 'visible');
+            $('.font-adjuster').css('visibility', 'visible');
+            // Show article navigation arrows
+            $('#toolbarArticleNav').css('display', 'flex');
+            // Show audio player banner
+            $('#audioPlayerBanner').css('display', 'flex');
+        }
+
+        // Attach click handlers as soon as jQuery is ready
+        if (typeof $ !== 'undefined') {
+            $(document).on('click', '.pre_content_link, .pre_preamble_content_link, .previous_content_pre_act, .next_content_pre_act', function() {
+                showToolbarElements();
+            });
+
+            // Also set up a MutationObserver on #display_content as a fallback
+            $(document).ready(function() {
+                var displayEl = document.getElementById('display_content');
+                if (displayEl) {
+                    var toolbarObserver = new MutationObserver(function() {
+                        var hasWelcome = displayEl.querySelector('.toc-welcome');
+                        if (!hasWelcome) {
+                            showToolbarElements();
+                        }
+                    });
+                    toolbarObserver.observe(displayEl, { childList: true, subtree: true });
+                }
+            });
+        }
     </script>
 
     <script>
@@ -2571,9 +2606,15 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                 if (hasWelcome) {
                     $('.content-search-box').css('visibility', 'hidden');
                     $('.font-adjuster').css('visibility', 'hidden');
+                    $('#viewModeSelectorWrap').addClass('tab-hidden-initially');
+                    $('#toolbarArticleNav').hide();
+                    $('#audioPlayerBanner').hide();
                 } else {
                     $('.content-search-box').css('visibility', 'visible');
                     $('.font-adjuster').css('visibility', 'visible');
+                    $('#viewModeSelectorWrap').removeClass('tab-hidden-initially');
+                    $('#toolbarArticleNav').css('display', 'flex');
+                    $('#audioPlayerBanner').css('display', 'flex');
                 }
             }
 
