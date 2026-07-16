@@ -1439,6 +1439,11 @@
             .nav-auth { display: none; }
 
             .hero { padding: 120px 20px 80px; }
+            .hero-subtitle {
+                max-width: 88% !important;
+                margin: 0 auto 30px !important;
+                padding: 0 16px !important;
+            }
             .hero-title {
                 font-size: clamp(24px, 5.5vw, 34px);
                 letter-spacing: -0.8px;
