@@ -1444,6 +1444,10 @@
                 margin: 0 auto 30px !important;
                 padding: 0 16px !important;
             }
+            .hero-search {
+                max-width: 88% !important;
+                margin: 0 auto 20px !important;
+            }
             .hero-title {
                 font-size: clamp(24px, 5.5vw, 34px);
                 letter-spacing: -0.8px;
