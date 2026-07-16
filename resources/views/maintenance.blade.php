@@ -360,34 +360,61 @@
         @media (max-width: 768px) {
             body {
                 overflow-y: auto;
+                overflow-x: hidden;
                 height: auto;
                 min-height: 100vh;
-                padding: 40px 16px 80px 16px;
-                align-items: flex-start;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
             }
             .maintenance-container {
                 grid-template-columns: 1fr;
-                gap: 32px;
-                padding: 0;
-                max-width: 480px;
+                gap: 28px;
+                padding: 32px 20px 24px 20px;
+                max-width: 100%;
+                width: 100%;
                 margin: 0 auto;
             }
-            .info-panel h1 { font-size: 28px; }
-            .chat-messages { height: 200px; }
-            .maint-footer {
-                position: relative;
-                margin-top: 48px;
-                bottom: auto;
-                left: auto;
-                right: auto;
-                opacity: 0.5;
+            /* Center all info panel content */
+            .info-panel {
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
-        }
-
-        @media (max-width: 480px) {
+            .info-panel h1 {
+                font-size: 26px;
+                word-break: break-word;
+            }
+            .info-panel p {
+                font-size: 14px;
+                line-height: 1.7;
+                margin-bottom: 24px;
+                max-width: 340px;
+            }
+            .gear-animation {
+                margin-bottom: 20px;
+                justify-content: center;
+            }
+            .gear {
+                font-size: 20px !important;
+            }
+            .gear:nth-child(2) { font-size: 15px !important; }
+            .gear:nth-child(3) { font-size: 17px !important; }
+            .status-badge {
+                font-size: 10px;
+                padding: 5px 12px;
+                margin-bottom: 16px;
+            }
             .maint-stats {
-                gap: 12px;
-                justify-content: space-between;
+                gap: 0;
+                justify-content: center;
+                width: 100%;
+            }
+            .maint-stat-item {
+                flex: 1;
             }
             .maint-stats-divider {
                 display: none;
@@ -397,6 +424,91 @@
             }
             .maint-stat-label {
                 font-size: 10px;
+            }
+            /* Interactive panel full-width */
+            .interactive-panel {
+                width: 100%;
+            }
+            .chat-box {
+                border-radius: 16px;
+                margin-bottom: 16px;
+            }
+            .chat-messages {
+                height: 180px;
+                padding: 16px;
+            }
+            .chat-bubble {
+                font-size: 12px;
+                padding: 8px 14px;
+            }
+            .chat-header {
+                padding: 12px 16px;
+            }
+            .chat-avatar {
+                width: 32px; height: 32px;
+                font-size: 14px;
+            }
+            .chat-header-text h4 {
+                font-size: 12px;
+            }
+            .passcode-card {
+                border-radius: 14px;
+                padding: 20px 16px;
+            }
+            .passcode-card h3 {
+                font-size: 13px;
+            }
+            .passcode-card .card-desc {
+                font-size: 11px;
+                margin-bottom: 12px;
+            }
+            .passcode-input-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .passcode-input {
+                width: 100%;
+                padding: 12px 14px;
+                font-size: 14px;
+            }
+            .unlock-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+            /* Footer flows naturally below content */
+            .maint-footer {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                right: auto;
+                width: 100%;
+                text-align: center;
+                padding: 24px 16px 32px 16px;
+                opacity: 0.5;
+            }
+            /* Tame background orbs on mobile */
+            .bg-orb:nth-child(1) { width: 280px; height: 280px; }
+            .bg-orb:nth-child(2) { width: 220px; height: 220px; }
+            .bg-orb:nth-child(3) { width: 160px; height: 160px; }
+        }
+
+        @media (max-width: 380px) {
+            .maintenance-container {
+                padding: 24px 14px 20px 14px;
+            }
+            .info-panel h1 {
+                font-size: 22px;
+            }
+            .info-panel p {
+                font-size: 13px;
+            }
+            .maint-stat-value {
+                font-size: 18px;
+            }
+            .chat-messages {
+                height: 150px;
             }
         }
 

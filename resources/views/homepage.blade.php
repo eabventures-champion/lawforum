@@ -1120,6 +1120,56 @@
             letter-spacing: 0.5px;
         }
 
+        /* ============================================
+           CUSTOM SLIDES STYLE
+           ============================================ */
+        .custom-slide-inner {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+            min-height: calc(100vh - 150px);
+        }
+        .custom-slide-text {
+            text-align: left;
+        }
+        .custom-slide-title {
+            font-size: clamp(28px, 4.5vw, 40px);
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.2;
+            margin-bottom: 24px;
+        }
+        .custom-slide-subtitle {
+            font-size: clamp(14px, 1.8vw, 16px);
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+        .custom-slide-card-wrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .custom-slide-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
         @media (max-width: 1024px) {
             .students-inner {
                 grid-template-columns: 1fr;
@@ -1381,23 +1431,61 @@
             .nav-inner { padding: 14px 20px; }
             .nav-menu-links-premium { display: none; }
             .nav-mobile-toggle { display: block; }
+            .nav-logo-text {
+                display: inline-block;
+                font-size: 18px !important;
+                letter-spacing: 0.2px !important;
+            }
+            .nav-auth { display: none; }
 
             .hero { padding: 120px 20px 80px; }
+            .hero-title {
+                font-size: clamp(24px, 5.5vw, 34px);
+                letter-spacing: -0.8px;
+            }
 
             .search-container {
                 flex-direction: column;
-                padding: 12px;
-                gap: 8px;
+                padding: 0;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                gap: 12px;
             }
             .search-icon { display: none; }
-            .search-container input { padding: 12px; text-align: center; }
-            .search-btn { width: 100%; padding: 14px; }
+            .search-container input {
+                width: 100%;
+                background: rgba(17, 24, 39, 0.7);
+                border: 1px solid var(--border-hover);
+                border-radius: 12px;
+                padding: 14px 12px;
+                text-align: center;
+                color: var(--text-primary);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+            .search-container input:focus {
+                border-color: var(--accent);
+                box-shadow: 0 0 0 3px var(--accent-glow);
+            }
+            .search-btn {
+                width: 100%;
+                padding: 14px;
+            }
 
             .stats-bar {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 24px;
+                gap: 20px;
+                padding: 24px 12px;
             }
             .stat-item:nth-child(2)::after { display: none; }
+            .stat-number {
+                font-size: 24px;
+                margin-bottom: 2px;
+            }
+            .stat-label {
+                font-size: 10px;
+                letter-spacing: 0.5px;
+            }
 
             .categories { padding: 60px 20px 40px; }
             .categories-grid { grid-template-columns: 1fr; }
@@ -1413,52 +1501,117 @@
             .footer { padding: 40px 20px 24px; }
             .footer-top { grid-template-columns: 1fr; gap: 32px; }
             .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+
+            /* Custom slide responsive adjustments */
+            .custom-slide-inner {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                padding: 100px 20px 60px 20px;
+                text-align: center;
+                min-height: auto;
+            }
+            .custom-slide-text {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .custom-slide-card-wrap {
+                margin: 0 auto;
+                width: 100%;
+                max-width: 320px;
+            }
+            .custom-slide-card {
+                padding: 24px 20px;
+            }
         }
 
         /* Mobile nav panel */
         .mobile-nav-panel {
-            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(6, 10, 19, 0.97);
-            backdrop-filter: blur(20px);
+            background: rgba(6, 10, 19, 0.98);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             z-index: 9999;
+            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 16px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s;
         }
 
         .mobile-nav-panel.open {
-            display: flex;
+            opacity: 1;
+            visibility: visible;
         }
 
         .mobile-nav-panel a {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 600;
             color: var(--text-secondary);
             padding: 12px 24px;
-            border-radius: 10px;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            transform: translateY(24px);
+            opacity: 0;
+            transition: all 0.3s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
         }
+
+        .mobile-nav-panel.open a {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Stagger animation entry delays for links */
+        .mobile-nav-panel.open a:nth-of-type(1) { transition-delay: 0.05s; }
+        .mobile-nav-panel.open a:nth-of-type(2) { transition-delay: 0.1s; }
+        .mobile-nav-panel.open a:nth-of-type(3) { transition-delay: 0.15s; }
+        .mobile-nav-panel.open a:nth-of-type(4) { transition-delay: 0.2s; }
+        .mobile-nav-panel.open a:nth-of-type(5) { transition-delay: 0.25s; }
+        .mobile-nav-panel.open a:nth-of-type(6) { transition-delay: 0.3s; }
+        .mobile-nav-panel.open a:nth-of-type(7) { transition-delay: 0.35s; }
+        .mobile-nav-panel.open a:nth-of-type(8) { transition-delay: 0.4s; }
+        .mobile-nav-panel.open a:nth-of-type(9) { transition-delay: 0.45s; }
+        .mobile-nav-panel.open a:nth-of-type(10) { transition-delay: 0.5s; }
 
         .mobile-nav-panel a:hover {
             color: var(--text-primary);
             background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px) scale(1.05);
         }
 
         .mobile-nav-close {
             position: absolute;
-            top: 20px;
+            top: 24px;
             right: 24px;
             background: none;
             border: none;
             color: var(--text-primary);
             font-size: 28px;
             cursor: pointer;
+            opacity: 0;
+            transform: rotate(-90deg) scale(0.5);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s;
+        }
+
+        .mobile-nav-panel.open .mobile-nav-close {
+            opacity: 1;
+            transform: rotate(0) scale(1);
+        }
+
+        /* Hide indicators and feedback trigger button when mobile nav panel is open */
+        .mobile-nav-panel.open ~ #feedback-trigger-btn,
+        .mobile-nav-panel.open ~ .premium-indicators {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            transition: opacity 0.3s ease, visibility 0.3s ease !important;
         }
 
         /* ============================================
@@ -1622,7 +1775,7 @@
         <div class="nav-inner">
             <a href="/" class="nav-logo">
                 <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; font-size: 22px;"></i>
-                <span style="font-size: 22px; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(to right, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Inter', sans-serif;">Legals Forum</span>
+                <span class="nav-logo-text" style="font-size: 22px; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(to right, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Inter', sans-serif;">Legals Forum</span>
             </a>
 
                         <div class="nav-menu-links-premium">
@@ -1687,11 +1840,20 @@
         <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')">
             <i class="fa-solid fa-xmark"></i>
         </button>
-        <a href="/constitution/Republic/Ghana/1">Constitution</a>
-        <a href="/pre-1992-legislation">Pre-1992 Laws</a>
-        <a href="/post-1992-legislation">Post-1992 Laws</a>
-        <a href="/judgement/Ghana">Case Laws</a>
-        <a href="/News/Ghana-News/1">News</a>
+        @foreach($headerMenus as $menu)
+            @if($menu->is_dropdown)
+                @php
+                    $url = '#';
+                    if ($menu->children && count($menu->children) > 0) {
+                        $firstChild = $menu->children->first();
+                        $url = $firstChild->custom_content ? route('dynamic.page', $firstChild->slug) : $firstChild->url;
+                    }
+                @endphp
+                <a href="{{ $url }}">{{ $menu->title }}</a>
+            @else
+                <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}">{{ $menu->title }}</a>
+            @endif
+        @endforeach
         <div style="height: 16px;"></div>
         @guest
             <a href="{{ route('login') }}">Log In</a>
@@ -2082,9 +2244,9 @@
                     @php
                         $cSlide = $slideInfo['model'];
                     @endphp
-                    <div class="slide slide-custom" id="slide-{{ $index }}" style="background: var(--bg-primary); padding-top: 90px; padding-bottom: 60px; overflow-y: auto;">
-                        <div style="max-width: 1080px; margin: 0 auto; padding: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; min-height: calc(100vh - 150px);">
-                            <div class="reveal">
+                    <div class="slide slide-custom" id="slide-{{ $index }}" style="background: var(--bg-primary); overflow-y: auto;">
+                        <div class="custom-slide-inner">
+                            <div class="reveal custom-slide-text">
                                 @if($cSlide->is_coming_soon)
                                     <div style="background: linear-gradient(135deg, rgba(245,158,11,0.15) 0%, rgba(217,119,6,0.15) 100%); border: 1px solid rgba(245,158,11,0.3); color: #f59e0b; padding: 6px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 16px;">
                                         <i class="fa-solid fa-lock"></i> Coming Soon
@@ -2097,11 +2259,11 @@
                                         </div>
                                     @endif
                                 </div>
-                                <h2 class="section-title" style="font-size: 40px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 24px;">
+                                <h2 class="section-title custom-slide-title" style="font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 24px;">
                                     {{ $cSlide->title }}
                                 </h2>
                                 @if($cSlide->content)
-                                    <div class="section-subtitle" style="font-size: 16px; line-height: 1.8; color: var(--text-secondary); margin-bottom: 32px;">
+                                    <div class="section-subtitle custom-slide-subtitle" style="">
                                         {!! nl2br(e($cSlide->content)) !!}
                                     </div>
                                 @endif
@@ -2117,9 +2279,9 @@
                                     @endif
                                 @endif
                             </div>
-                            <div class="reveal" style="display: flex; justify-content: center; align-items: center; position: relative;">
+                            <div class="reveal custom-slide-card-wrap">
                                 <div style="position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%); filter: blur(30px); z-index: 0;"></div>
-                                <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 40px; border-radius: 24px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); position: relative; z-index: 1; text-align: center; max-width: 400px; width: 100%;">
+                                <div class="custom-slide-card">
                                     @if($cSlide->is_coming_soon)
                                         <div style="position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 50%; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25); display: flex; align-items: center; justify-content: center; color: #f59e0b; font-size: 14px;">
                                             <i class="fa-solid fa-lock"></i>

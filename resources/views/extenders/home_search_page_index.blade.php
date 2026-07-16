@@ -69,13 +69,14 @@
             box-sizing: border-box;
         }
 
-        html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+        }
 
         body {
             font-family: var(--font);
             background: var(--bg-primary);
             color: var(--text-primary);
-            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             min-height: 100vh;
         }
@@ -337,6 +338,14 @@
             font-weight: 600;
         }
 
+        .search-time {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-left: 6px;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
         /* ============================================
            MAIN LAYOUT (Grid)
            ============================================ */
@@ -537,6 +546,19 @@
             position: relative;
             overflow: hidden;
             animation: fadeSlideUp 0.35s ease both;
+            
+            /* Prevent horizontal overflow */
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+        }
+
+        .result-card * {
+            max-width: 100%;
+            word-wrap: break-word !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
         }
 
         .result-card::before {
@@ -847,21 +869,370 @@
            ============================================ */
         @media (max-width: 992px) {
             .search-main {
-                grid-template-columns: 1fr;
-                gap: 28px;
+                display: block !important;
                 padding: 20px 16px 80px;
             }
 
             .filter-sidebar {
-                position: relative;
-                top: 0;
-                max-height: none;
-                overflow-y: visible;
-                padding-right: 0;
+                position: sticky !important;
+                top: var(--header-height) !important;
+                align-self: start !important;
+                max-height: calc(100vh - var(--header-height)) !important;
+                overflow-y: visible !important;
+                padding-right: 0 !important;
+                margin-bottom: 12px !important;
+                z-index: 100 !important;
             }
 
             .filter-panel {
                 border-radius: 14px;
+                padding: 16px 12px;
+                box-shadow: 0 4px 25px rgba(0, 0, 0, 0.25) !important;
+            }
+
+            .mobile-filter-header {
+                display: flex !important;
+                align-items: center;
+                justify-content: space-between;
+                cursor: pointer;
+                user-select: none;
+                padding: 4px 6px;
+            }
+
+            .desktop-only-title,
+            .desktop-only-divider {
+                display: none !important;
+            }
+
+            .filter-panel-collapsible {
+                transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, visibility 0.3s ease;
+                max-height: 1200px;
+                opacity: 1;
+                visibility: visible;
+                overflow: visible;
+                margin-top: 12px;
+            }
+
+            .filter-panel-collapsible.collapsed {
+                max-height: 0 !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                overflow: hidden !important;
+                margin-top: 0 !important;
+            }
+
+            .filter-divider {
+                display: none !important;
+            }
+
+            .filter-title {
+                font-size: 13px !important;
+                margin-bottom: 8px !important;
+            }
+
+            #subcategory-panel, #year-panel {
+                margin-top: 12px !important;
+            }
+
+            /* Years Dropdown styling on mobile */
+            #year-facet-container {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border-radius: 12px !important;
+                background: rgba(13, 17, 28, 0.7) !important;
+                backdrop-filter: blur(10px) !important;
+                -webkit-backdrop-filter: blur(10px) !important;
+                padding: 4px !important;
+                position: relative !important;
+                transition: all 0.3s ease !important;
+                max-height: none !important;
+                overflow-y: visible !important;
+            }
+
+            /* Dropdown collapse state: hide inactive options */
+            #year-facet-container:not(.expanded) .filter-option-year:not(.active) {
+                display: none !important;
+            }
+
+            /* Style active option in collapsed state to act as a trigger */
+            #year-facet-container:not(.expanded) .filter-option-year.active {
+                width: 100% !important;
+                background: transparent !important;
+                border-color: transparent !important;
+                display: flex !important;
+                align-items: center !important;
+                padding: 10px 14px !important;
+            }
+
+            /* Dropdown arrows */
+            #year-facet-container:not(.expanded) .filter-option-year.active::after {
+                content: "\f078" !important;
+                font-family: "Font Awesome 6 Free" !important;
+                font-weight: 900 !important;
+                margin-left: auto !important;
+                color: var(--text-secondary) !important;
+                font-size: 13px !important;
+            }
+
+            #year-facet-container.expanded .filter-option-year.active::after {
+                content: "\f077" !important;
+                font-family: "Font Awesome 6 Free" !important;
+                font-weight: 900 !important;
+                margin-left: auto !important;
+                color: var(--text-secondary) !important;
+                font-size: 13px !important;
+            }
+
+            /* Expanded states */
+            #year-facet-container.expanded {
+                border-color: rgba(59, 130, 246, 0.3) !important;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+            }
+
+            #year-facet-container.expanded .filter-option-year {
+                display: flex !important;
+                width: 100% !important;
+                border-radius: 8px !important;
+                border: 1px solid transparent !important;
+                background: transparent !important;
+                margin-bottom: 2px !important;
+                padding: 10px 14px !important;
+            }
+
+            #year-facet-container.expanded .filter-option-year:hover {
+                background: rgba(255, 255, 255, 0.05) !important;
+            }
+
+            #year-facet-container.expanded .filter-option-year.active {
+                background: rgba(59, 130, 246, 0.1) !important;
+                border-color: rgba(59, 130, 246, 0.2) !important;
+            }
+
+            #year-facet-container.expanded .filter-option-year.active .filter-label {
+                color: var(--accent) !important;
+                font-weight: 600 !important;
+            }
+
+            #year-facet-container.expanded .filter-option-year.active .filter-count {
+                background: rgba(59, 130, 246, 0.15) !important;
+                color: var(--accent) !important;
+            }
+
+            /* Subcategories Dropdown styling on mobile */
+            #subcategory-facet-container {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border-radius: 12px !important;
+                background: rgba(13, 17, 28, 0.7) !important;
+                backdrop-filter: blur(10px) !important;
+                -webkit-backdrop-filter: blur(10px) !important;
+                padding: 4px !important;
+                position: relative !important;
+                transition: all 0.3s ease !important;
+            }
+
+            /* Dropdown collapse state: hide inactive options */
+            #subcategory-facet-container:not(.expanded) .filter-option-sub:not(.active) {
+                display: none !important;
+            }
+
+            /* Style active option in collapsed state to act as a trigger */
+            #subcategory-facet-container:not(.expanded) .filter-option-sub.active {
+                width: 100% !important;
+                background: transparent !important;
+                border-color: transparent !important;
+                display: flex !important;
+                align-items: center !important;
+                padding: 10px 14px !important;
+            }
+
+            /* Dropdown arrows */
+            #subcategory-facet-container:not(.expanded) .filter-option-sub.active::after {
+                content: "\f078" !important;
+                font-family: "Font Awesome 6 Free" !important;
+                font-weight: 900 !important;
+                margin-left: auto !important;
+                color: var(--text-secondary) !important;
+                font-size: 13px !important;
+            }
+
+            #subcategory-facet-container.expanded .filter-option-sub.active::after {
+                content: "\f077" !important;
+                font-family: "Font Awesome 6 Free" !important;
+                font-weight: 900 !important;
+                margin-left: auto !important;
+                color: var(--text-secondary) !important;
+                font-size: 13px !important;
+            }
+
+            /* Expanded states */
+            #subcategory-facet-container.expanded {
+                border-color: rgba(59, 130, 246, 0.3) !important;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+            }
+
+            #subcategory-facet-container.expanded .filter-option-sub {
+                display: flex !important;
+                width: 100% !important;
+                border-radius: 8px !important;
+                border: 1px solid transparent !important;
+                background: transparent !important;
+                margin-bottom: 2px !important;
+                padding: 10px 14px !important;
+            }
+
+            #subcategory-facet-container.expanded .filter-option-sub:hover {
+                background: rgba(255, 255, 255, 0.05) !important;
+            }
+
+            #subcategory-facet-container.expanded .filter-option-sub.active {
+                background: rgba(59, 130, 246, 0.1) !important;
+                border-color: rgba(59, 130, 246, 0.2) !important;
+            }
+
+            #subcategory-facet-container.expanded .filter-option-sub.active .filter-label {
+                color: var(--accent) !important;
+                font-weight: 600 !important;
+            }
+
+            #subcategory-facet-container.expanded .filter-option-sub.active .filter-count {
+                background: rgba(59, 130, 246, 0.15) !important;
+                color: var(--accent) !important;
+            }
+
+            /* Categories Dropdown styling on mobile */
+            #category-facet-container {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border-radius: 12px !important;
+                background: rgba(13, 17, 28, 0.7) !important;
+                backdrop-filter: blur(10px) !important;
+                -webkit-backdrop-filter: blur(10px) !important;
+                padding: 4px !important;
+                position: relative !important;
+                transition: all 0.3s ease !important;
+            }
+
+            /* Dropdown collapse state: hide inactive options */
+            #category-facet-container:not(.expanded) .filter-option:not(.active) {
+                display: none !important;
+            }
+
+            /* Style active option in collapsed state to act as a trigger */
+            #category-facet-container:not(.expanded) .filter-option.active {
+                width: 100% !important;
+                background: transparent !important;
+                border-color: transparent !important;
+                display: flex !important;
+                align-items: center !important;
+                padding: 10px 14px !important;
+            }
+
+            /* Dropdown arrows */
+            #category-facet-container:not(.expanded) .filter-option.active::after {
+                content: "\f078" !important;
+                font-family: "Font Awesome 6 Free" !important;
+                font-weight: 900 !important;
+                margin-left: auto !important;
+                color: var(--text-secondary) !important;
+                font-size: 13px !important;
+            }
+
+            #category-facet-container.expanded .filter-option.active::after {
+                content: "\f077" !important;
+                font-family: "Font Awesome 6 Free" !important;
+                font-weight: 900 !important;
+                margin-left: auto !important;
+                color: var(--text-secondary) !important;
+                font-size: 13px !important;
+            }
+
+            /* Expanded states */
+            #category-facet-container.expanded {
+                border-color: rgba(59, 130, 246, 0.3) !important;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+            }
+
+            #category-facet-container.expanded .filter-option {
+                display: flex !important;
+                width: 100% !important;
+                border-radius: 8px !important;
+                border: 1px solid transparent !important;
+                background: transparent !important;
+                margin-bottom: 2px !important;
+                padding: 10px 14px !important;
+            }
+
+            #category-facet-container.expanded .filter-option:hover {
+                background: rgba(255, 255, 255, 0.05) !important;
+            }
+
+            #category-facet-container.expanded .filter-option.active {
+                background: rgba(59, 130, 246, 0.1) !important;
+                border-color: rgba(59, 130, 246, 0.2) !important;
+            }
+
+            #category-facet-container.expanded .filter-option.active .filter-label {
+                color: var(--accent) !important;
+                font-weight: 600 !important;
+            }
+
+            #category-facet-container.expanded .filter-option.active .filter-count {
+                background: rgba(59, 130, 246, 0.15) !important;
+                color: var(--accent) !important;
+            }
+
+            .filter-option {
+                flex: 0 0 auto !important;
+                margin-bottom: 0 !important;
+                padding: 8px 14px !important;
+                border-radius: 20px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                background: rgba(255, 255, 255, 0.03) !important;
+                border: 1px solid var(--border-color) !important;
+            }
+
+            .filter-option:hover {
+                background: rgba(255, 255, 255, 0.05) !important;
+            }
+
+            .filter-option.active {
+                background: var(--accent-gradient) !important;
+                border-color: transparent !important;
+            }
+
+            .filter-option.active .filter-label {
+                color: #fff !important;
+                font-weight: 600 !important;
+            }
+
+            .filter-option.active .filter-count {
+                background: rgba(255, 255, 255, 0.2) !important;
+                color: #fff !important;
+            }
+
+            .filter-radio-dot {
+                display: none !important;
+            }
+
+            .filter-label {
+                overflow: visible !important;
+                text-overflow: clip !important;
+                white-space: nowrap !important;
+                font-size: 12px !important;
+            }
+
+            .filter-count {
+                margin-left: 6px !important;
+                font-size: 11px !important;
+                padding: 2px 6px !important;
             }
 
             .search-summary { padding: 24px 16px 20px; }
@@ -874,6 +1245,12 @@
             }
 
             .summary-text h1 { font-size: 18px; }
+
+            .search-time {
+                display: block !important;
+                margin-left: 0 !important;
+                margin-top: 4px !important;
+            }
         }
 
         @media (max-width: 640px) {
@@ -959,10 +1336,21 @@
         <!-- FILTER SIDEBAR -->
         <aside class="filter-sidebar">
             <div class="filter-panel">
-                <h3 class="filter-title">
-                    <i class="fa-solid fa-filter"></i> Categories
-                </h3>
-                <div class="filter-divider"></div>
+                <!-- Mobile Toggle Header -->
+                <div class="mobile-filter-header" onclick="toggleFilterPanel()">
+                    <span>
+                        <i class="fa-solid fa-sliders"></i> Search Filters
+                    </span>
+                    <span id="mobile-filter-toggle-icon">
+                        <i class="fa-solid fa-chevron-up"></i>
+                    </span>
+                </div>
+
+                <div class="filter-panel-collapsible" id="filterPanelCollapsible">
+                    <h3 class="filter-title desktop-only-title">
+                        <i class="fa-solid fa-filter"></i> Categories
+                    </h3>
+                    <div class="filter-divider desktop-only-divider"></div>
 
                 <div class="filter-options-grid" id="category-facet-container">
                     <!-- All -->
@@ -1024,8 +1412,7 @@
                     </h3>
                     <div class="filter-divider"></div>
                     <div class="filter-options-grid" id="year-facet-container" style="max-height: 220px; overflow-y: auto; padding-right: 4px;"></div>
-                </div>
-
+                </div> <!-- /filter-panel-collapsible -->
             </div>
         </aside>
 
@@ -1330,7 +1717,7 @@
                 elements.statsContainer.innerHTML = `
                     <span class="result-count">${data.total.toLocaleString()}</span> results found for 
                     &ldquo;<span class="search-query">${escapeHtml(data.query)}</span>&rdquo; 
-                    <span style="color: var(--text-muted); font-size: 12px; margin-left: 6px;">(took ${data.time_ms}ms)</span>
+                    <span class="search-time">(took ${data.time_ms}ms)</span>
                 `;
 
                 // 2. Render cards
@@ -1527,6 +1914,21 @@
 
         // Clicking category filters in sidebar
         elements.categoryContainer.addEventListener('click', (e) => {
+            if (window.innerWidth <= 992) {
+                const option = e.target.closest('.filter-option');
+                if (option && !option.classList.contains('disabled')) {
+                    if (!elements.categoryContainer.classList.contains('expanded')) {
+                        // Open dropdown
+                        elements.categoryContainer.classList.add('expanded');
+                        e.stopPropagation();
+                        return;
+                    } else {
+                        // Close dropdown on selection
+                        elements.categoryContainer.classList.remove('expanded');
+                    }
+                }
+            }
+
             const option = e.target.closest('.filter-option');
             if (option && !option.classList.contains('disabled')) {
                 setActiveCategory(option.dataset.category);
@@ -1537,8 +1939,30 @@
             }
         });
 
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (elements.categoryContainer && !elements.categoryContainer.contains(e.target)) {
+                elements.categoryContainer.classList.remove('expanded');
+            }
+        });
+
         // Clicking subcategory filters (delegated)
         elements.subcategoryContainer.addEventListener('click', (e) => {
+            if (window.innerWidth <= 992) {
+                const option = e.target.closest('.filter-option-sub');
+                if (option) {
+                    if (!elements.subcategoryContainer.classList.contains('expanded')) {
+                        // Open dropdown
+                        elements.subcategoryContainer.classList.add('expanded');
+                        e.stopPropagation();
+                        return;
+                    } else {
+                        // Close dropdown on selection
+                        elements.subcategoryContainer.classList.remove('expanded');
+                    }
+                }
+            }
+
             const option = e.target.closest('.filter-option-sub');
             if (option) {
                 state.subcategory = option.dataset.value;
@@ -1547,13 +1971,42 @@
             }
         });
 
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (elements.subcategoryContainer && !elements.subcategoryContainer.contains(e.target)) {
+                elements.subcategoryContainer.classList.remove('expanded');
+            }
+        });
+
         // Clicking year filters (delegated)
         elements.yearContainer.addEventListener('click', (e) => {
+            if (window.innerWidth <= 992) {
+                const option = e.target.closest('.filter-option-year');
+                if (option) {
+                    if (!elements.yearContainer.classList.contains('expanded')) {
+                        // Open dropdown
+                        elements.yearContainer.classList.add('expanded');
+                        e.stopPropagation();
+                        return;
+                    } else {
+                        // Close dropdown on selection
+                        elements.yearContainer.classList.remove('expanded');
+                    }
+                }
+            }
+
             const option = e.target.closest('.filter-option-year');
             if (option) {
                 state.year = option.dataset.value;
                 state.page = 1;
                 performSearch();
+            }
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (elements.yearContainer && !elements.yearContainer.contains(e.target)) {
+                elements.yearContainer.classList.remove('expanded');
             }
         });
 
@@ -1582,6 +2035,20 @@
             elements.searchInput.value = state.query;
             performSearch();
         }
+
+        // Toggle collapse/expand of mobile filter panel content
+        window.toggleFilterPanel = function() {
+            const content = document.getElementById('filterPanelCollapsible');
+            const icon = document.getElementById('mobile-filter-toggle-icon');
+            if (content && icon) {
+                const isCollapsed = content.classList.toggle('collapsed');
+                if (isCollapsed) {
+                    icon.style.transform = 'rotate(-180deg)';
+                } else {
+                    icon.style.transform = 'rotate(0deg)';
+                }
+            }
+        };
 
         // Load initially
         window.addEventListener('popstate', initFromUrl);

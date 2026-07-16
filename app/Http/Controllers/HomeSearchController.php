@@ -376,7 +376,6 @@ class HomeSearchController extends Controller
                 $subFacets = DB::table('pre1992_legislation_acts')
                     ->leftJoin('pre1992_legislation_articles', 'pre1992_legislation_acts.title', '=', 'pre1992_legislation_articles.pre_1992_act')
                     ->where('content', 'LIKE', "%$query%")
-                    ->groupBy('pre_19_group') // Wait, was it pre_19_group or pre_1992_group? In previous view it was pre_1992_group, let me make sure it is pre_1992_group!
                     ->groupBy('pre_1992_group')
                     ->selectRaw('pre_1992_group, count(*) as count')
                     ->pluck('count', 'pre_1992_group')
