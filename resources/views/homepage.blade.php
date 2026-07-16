@@ -1665,6 +1665,17 @@
             padding-top: 90px;
         }
 
+        body.feedback-modal-open .premium-indicators {
+            opacity: 0 !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
+        }
+        body.feedback-modal-open #feedback-trigger-btn {
+            opacity: 0 !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
+        }
+
         .premium-indicators {
             position: fixed;
             right: 32px;
@@ -2396,6 +2407,7 @@
           
           if (icon) icon.style.transform = 'rotate(15deg)';
           
+          document.body.classList.add('feedback-modal-open');
           modal.style.display = 'flex';
           setTimeout(() => {
               modal.style.opacity = '1';
@@ -2410,6 +2422,7 @@
           
           if (icon) icon.style.transform = 'none';
 
+          document.body.classList.remove('feedback-modal-open');
           modal.style.opacity = '0';
           card.style.transform = 'translateY(30px)';
           setTimeout(() => {
