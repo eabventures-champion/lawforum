@@ -57,9 +57,9 @@ class RegisterController extends Controller
         ];
 
         if (isset($data['country']) && $data['country'] === 'Ghana') {
-            $rules['phone'] = ['nullable', 'numeric', 'digits:10', 'unique:users'];
+            $rules['phone'] = ['required', 'numeric', 'digits:10', 'unique:users'];
         } else {
-            $rules['phone'] = ['nullable', 'numeric', 'digits_between:10,14', 'unique:users'];
+            $rules['phone'] = ['required', 'numeric', 'digits_between:10,14', 'unique:users'];
         }
 
         return Validator::make($data, $rules);

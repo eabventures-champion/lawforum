@@ -618,7 +618,7 @@
                 <div class="form-group">
                     <label for="phone" class="form-label">Phone Number</label>
                     <div class="input-wrapper">
-                        <input id="phone" type="text" class="form-control" name="phone" value="{{ old('phone') }}" placeholder="+233 24 000 0000">
+                        <input id="phone" type="text" class="form-control" name="phone" value="{{ old('phone') }}" placeholder="+233 24 000 0000" required>
                         <i class="fa-solid fa-phone input-icon"></i>
                     </div>
                 </div>
@@ -743,8 +743,8 @@
 
             function checkEmail(emailValue) {
                 if (!emailValue) {
-                    clearInputError(emailInput);
-                    emailValid = true;
+                    setInputError(emailInput, 'Email address is required.');
+                    emailValid = false;
                     updateSubmitBtnState();
                     return;
                 }
@@ -772,10 +772,14 @@
                     .catch(err => console.error('Error checking email:', err));
             }
 
-            function checkPhone(phoneValue) {
+            function checkPhone(phoneValue, skipEmptyError = false) {
                 if (!phoneValue) {
-                    clearInputError(phoneInput);
-                    phoneValid = true;
+                    if (!skipEmptyError) {
+                        setInputError(phoneInput, 'Phone number is required.');
+                    } else {
+                        clearInputError(phoneInput);
+                    }
+                    phoneValid = false;
                     updateSubmitBtnState();
                     return;
                 }
@@ -1015,7 +1019,7 @@
                         phoneInput.removeAttribute('maxLength');
                     }
                     // Run duplicate check again since input value changes
-                    checkPhone(phoneInput.value.trim());
+                    checkPhone(phoneInput.value.trim(), true);
                 }
 
                 // Run on page load
