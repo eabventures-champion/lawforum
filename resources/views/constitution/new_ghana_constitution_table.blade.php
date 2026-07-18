@@ -892,6 +892,20 @@
             padding-left: 14px !important;
         }
 
+        .panel-body a.constitution_content_link.active-article-highlight {
+            background: rgba(59, 130, 246, 0.15) !important;
+            color: var(--accent-light) !important;
+            border-left: 3px solid var(--accent-light) !important;
+            padding-left: 12px !important;
+            font-weight: 600 !important;
+        }
+
+        .panel-body a.constitution_content_link.active-article-highlight.inactive-window {
+            background: rgba(156, 163, 175, 0.08) !important;
+            color: var(--text-secondary) !important;
+            border-left: 3px solid var(--text-secondary) !important;
+        }
+
         .constitution_preamble_link {
             display: inline-block;
             font-size: 14px;
@@ -2163,6 +2177,16 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                         </div>
                     </div>
 
+                    <!-- Reader Mode Article Navigation -->
+                    <div id="readerArticleNav" class="tab-hidden-initially" style="display: none; align-items: center; gap: 6px;">
+                        <a href="#" class="toolbar-icon-btn previous_content_constitution_act" title="Previous Article" style="text-decoration: none;">
+                            <i class="fa-solid fa-chevron-left" style="font-size: 13px;"></i>
+                        </a>
+                        <a href="#" class="toolbar-icon-btn next_content_constitution_act" title="Next Article" style="text-decoration: none;">
+                            <i class="fa-solid fa-chevron-right" style="font-size: 13px;"></i>
+                        </a>
+                    </div>
+
                     <!-- Integrated Audio Reader Panel -->
                     <div id="audioPlayerBanner" style="display: none; align-items: center; gap: 8px; background: rgba(17, 24, 39, 0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 3px 8px; height: 36px; flex-shrink: 0;">
                         <!-- Left controls: Play / Pause / Stop -->
@@ -2539,14 +2563,23 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                 if (hasWelcome) {
                     $('.content-search-box').css('visibility', 'hidden');
                     $('.font-adjuster').css('visibility', 'hidden');
+                    $('#readerArticleNav').hide();
                 } else {
                     $('.content-search-box').css('visibility', 'visible');
                     $('.font-adjuster').css('visibility', 'visible');
+                    if ($('#v-pills-profile-tab').hasClass('active')) {
+                        $('#readerArticleNav').css('display', 'flex');
+                    } else {
+                        $('#readerArticleNav').hide();
+                    }
                 }
             }
 
             const welcomeObserver = new MutationObserver(function() {
                 checkWelcomeScreenState();
+                if (typeof updateActiveTOCHighlight === 'function') {
+                    updateActiveTOCHighlight();
+                }
             });
             
             const displayEl = document.getElementById('display_content');
@@ -2569,6 +2602,53 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             $('body').bind('cut copy paste', function (e) {
                 e.preventDefault();
             });
+        });
+
+        /* ============================================
+           TABLE OF CONTENTS ACTIVE ARTICLE HIGHLIGHTING
+           ============================================ */
+        function updateActiveTOCHighlight(forcedSid) {
+            $('.panel-body a.constitution_content_link').removeClass('active-article-highlight inactive-window');
+            
+            let activeSid = forcedSid;
+            
+            if (!activeSid) {
+                if ($('#v-pills-split-tab').hasClass('active')) {
+                    activeSid = typeof activeSplitPanel !== 'undefined' ? $(`#bodyPanel${activeSplitPanel}`).attr('data-loaded-sid') : null;
+                } else {
+                    activeSid = $('#display_content .premium-article-container').attr('data-sid');
+                }
+            }
+            
+            if (activeSid && activeSid !== 'preamble') {
+                const targetLink = $(`.panel-body a.constitution_content_link[sid="${activeSid}"]`);
+                if (targetLink.length) {
+                    targetLink.addClass('active-article-highlight');
+                    if (!document.hasFocus()) {
+                        targetLink.addClass('inactive-window');
+                    }
+                    
+                    // Auto-expand parent panel/chapter if it is collapsed
+                    const collapsePanel = targetLink.closest('.collapse');
+                    if (collapsePanel.length && !collapsePanel.hasClass('show')) {
+                        collapsePanel.addClass('show');
+                    }
+                }
+            }
+        }
+
+        // Expose globally so myscript.js can call it
+        window.highlightActiveConstitutionTOCItem = function(sid) {
+            updateActiveTOCHighlight(sid);
+        };
+
+        // Window focus/blur listeners to dynamically toggle the highlight's active/inactive style state
+        window.addEventListener('focus', function() {
+            $('.panel-body a.constitution_content_link.active-article-highlight').removeClass('inactive-window');
+        });
+
+        window.addEventListener('blur', function() {
+            $('.panel-body a.constitution_content_link.active-article-highlight').addClass('inactive-window');
         });
 
         /* ============================================
@@ -2696,10 +2776,12 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                     setSidebarState('right', true);
                     $('.toc-sidebar-module').show();
                     $('.content-sidebar-module').hide();
+                    $('#readerArticleNav').hide();
                 } else {
                     setSidebarState('right', false);
                     $('.toc-sidebar-module').hide();
                     $('.content-sidebar-module').show();
+                    $('#readerArticleNav').css('display', 'flex');
                 }
                 $('#splitLayoutControls').hide();
                 $('#audioModeSelectorContainer').show();
@@ -2713,6 +2795,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                 
                 $('.toc-sidebar-module').hide();
                 $('.content-sidebar-module').hide();
+                $('#readerArticleNav').hide();
             } else {
                 // Expanded View Tab: collapse both sidebars for widescreen presentation
                 setSidebarState('left', true);
@@ -2723,6 +2806,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                 
                 $('.toc-sidebar-module').hide();
                 $('.content-sidebar-module').hide();
+                $('#readerArticleNav').hide();
                 
                 // Fetch content if it's not loaded yet (still showing spinner)
                 const expandedContainer = $('#acts_expanded_view');
@@ -2733,6 +2817,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                     });
                 }
             }
+            updateActiveTOCHighlight();
         });
 
         // Toggle modules on left sidebar link clicks
@@ -3456,6 +3541,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                 $('#badgePanelA').text('Panel A');
                 $('#badgePanelB').text('Panel B (Active)');
             }
+            updateActiveTOCHighlight();
         }
         
         function setSplitDirection(dir) {
@@ -3548,6 +3634,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                     if (match) sid = match[1];
                 }
                 $(`#bodyPanel${targetPanel}`).attr('data-loaded-sid', sid);
+                updateActiveTOCHighlight(sid);
                 
                 // Sync dropdown selector with this loaded article
                 $(`.split-article-select[data-panel="${targetPanel}"]`).val(link);
@@ -3586,6 +3673,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                 if (match) sid = match[1];
             }
             $(`#bodyPanel${panel}`).attr('data-loaded-sid', sid);
+            updateActiveTOCHighlight(sid);
             
             const titleText = $(this).find('option:selected').text().trim();
             
@@ -3640,6 +3728,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                             // First article: go to preamble
                             targetUrl = `/constitution/Republic/constitution_preamble/${ghanaActId}`;
                             $(`#bodyPanel${panel}`).attr('data-loaded-sid', 'preamble');
+                            updateActiveTOCHighlight('preamble');
                             $(`.split-article-select[data-panel="${panel}"]`).val(targetUrl);
                             $(`#titlePanel${panel}`).text('Introductory Text (Preamble)');
                             
@@ -3663,6 +3752,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                 
                 if (targetArticle && targetUrl) {
                     $(`#bodyPanel${panel}`).attr('data-loaded-sid', targetArticle.id);
+                    updateActiveTOCHighlight(targetArticle.id);
                     $(`.split-article-select[data-panel="${panel}"]`).val(targetUrl);
                     $(`#titlePanel${panel}`).text(targetArticle.section);
                     
