@@ -2341,14 +2341,26 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                                         </div>
                                         <span class="loaded-title" id="titlePanelA" style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">No Article Loaded</span>
                                     </div>
-                                    <div style="width: 200px;">
-                                        <select class="form-control text-white bg-dark border-secondary split-article-select" data-panel="A" style="height: 32px; font-size: 12px; padding: 2px 8px; border-radius: 6px; background-color: rgba(17, 24, 39, 0.8) !important;">
-                                            <option value="">-- Load Article --</option>
-                                            <option value="/constitution/Republic/constitution_preamble/{{ $ghana_act['id'] }}">Introductory Text (Preamble)</option>
-                                            @foreach($constitutionContents as $art)
-                                                <option value="/constitution/Republic/constitution_content/{{ $art->id }}">{{ $art->section }}</option>
-                                            @endforeach
-                                        </select>
+                                    <div class="d-flex align-items-center" style="gap: 8px;">
+                                        <!-- Panel Search Box -->
+                                        <div class="panel-search-box" style="display: flex; align-items: center; background: rgba(17, 24, 39, 0.6); border: 1px solid var(--border-color); border-radius: 6px; padding: 2px 8px; width: 140px; height: 32px;">
+                                            <i class="fa-solid fa-magnifying-glass" style="font-size: 10px; color: var(--text-muted); margin-right: 4px;"></i>
+                                            <input type="text" class="panel-search-input" data-panel="A" placeholder="Search panel..." style="background: transparent; border: none; color: #fff; font-size: 11px; width: 100%; outline: none;">
+                                            <span class="panel-search-count" id="searchCountA" style="font-size: 9px; color: var(--text-secondary); display: none; margin-left: 2px; white-space: nowrap;"></span>
+                                            <div class="panel-search-nav" id="searchNavA" style="display: none; align-items: center; gap: 2px; margin-left: 4px;">
+                                                <button onclick="navigatePanelMatches('A', 'prev'); event.stopPropagation();" title="Prev match" style="background: transparent; border: none; padding: 0 2px; color: var(--text-secondary); cursor: pointer;"><i class="fa-solid fa-chevron-up" style="font-size: 9px;"></i></button>
+                                                <button onclick="navigatePanelMatches('A', 'next'); event.stopPropagation();" title="Next match" style="background: transparent; border: none; padding: 0 2px; color: var(--text-secondary); cursor: pointer;"><i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i></button>
+                                            </div>
+                                        </div>
+                                        <div style="width: 160px;">
+                                            <select class="form-control text-white bg-dark border-secondary split-article-select" data-panel="A" style="height: 32px; font-size: 12px; padding: 2px 8px; border-radius: 6px; background-color: rgba(17, 24, 39, 0.8) !important;">
+                                                <option value="">-- Load Article --</option>
+                                                <option value="/constitution/Republic/constitution_preamble/{{ $ghana_act['id'] }}">Introductory Text (Preamble)</option>
+                                                @foreach($constitutionContents as $art)
+                                                    <option value="/constitution/Republic/constitution_content/{{ $art->id }}">{{ $art->section }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="split-panel-body" id="bodyPanelA">
@@ -2374,14 +2386,26 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                                         </div>
                                         <span class="loaded-title" id="titlePanelB" style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">No Article Loaded</span>
                                     </div>
-                                    <div style="width: 200px;">
-                                        <select class="form-control text-white bg-dark border-secondary split-article-select" data-panel="B" style="height: 32px; font-size: 12px; padding: 2px 8px; border-radius: 6px; background-color: rgba(17, 24, 39, 0.8) !important;">
-                                            <option value="">-- Load Article --</option>
-                                            <option value="/constitution/Republic/constitution_preamble/{{ $ghana_act['id'] }}">Introductory Text (Preamble)</option>
-                                            @foreach($constitutionContents as $art)
-                                                <option value="/constitution/Republic/constitution_content/{{ $art->id }}">{{ $art->section }}</option>
-                                            @endforeach
-                                        </select>
+                                    <div class="d-flex align-items-center" style="gap: 8px;">
+                                        <!-- Panel Search Box -->
+                                        <div class="panel-search-box" style="display: flex; align-items: center; background: rgba(17, 24, 39, 0.6); border: 1px solid var(--border-color); border-radius: 6px; padding: 2px 8px; width: 140px; height: 32px;">
+                                            <i class="fa-solid fa-magnifying-glass" style="font-size: 10px; color: var(--text-muted); margin-right: 4px;"></i>
+                                            <input type="text" class="panel-search-input" data-panel="B" placeholder="Search panel..." style="background: transparent; border: none; color: #fff; font-size: 11px; width: 100%; outline: none;">
+                                            <span class="panel-search-count" id="searchCountB" style="font-size: 9px; color: var(--text-secondary); display: none; margin-left: 2px; white-space: nowrap;"></span>
+                                            <div class="panel-search-nav" id="searchNavB" style="display: none; align-items: center; gap: 2px; margin-left: 4px;">
+                                                <button onclick="navigatePanelMatches('B', 'prev'); event.stopPropagation();" title="Prev match" style="background: transparent; border: none; padding: 0 2px; color: var(--text-secondary); cursor: pointer;"><i class="fa-solid fa-chevron-up" style="font-size: 9px;"></i></button>
+                                                <button onclick="navigatePanelMatches('B', 'next'); event.stopPropagation();" title="Next match" style="background: transparent; border: none; padding: 0 2px; color: var(--text-secondary); cursor: pointer;"><i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i></button>
+                                            </div>
+                                        </div>
+                                        <div style="width: 160px;">
+                                            <select class="form-control text-white bg-dark border-secondary split-article-select" data-panel="B" style="height: 32px; font-size: 12px; padding: 2px 8px; border-radius: 6px; background-color: rgba(17, 24, 39, 0.8) !important;">
+                                                <option value="">-- Load Article --</option>
+                                                <option value="/constitution/Republic/constitution_preamble/{{ $ghana_act['id'] }}">Introductory Text (Preamble)</option>
+                                                @foreach($constitutionContents as $art)
+                                                    <option value="/constitution/Republic/constitution_content/{{ $art->id }}">{{ $art->section }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="split-panel-body" id="bodyPanelB">
@@ -2722,6 +2746,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             if (isPreamble) {
                 focusSplitPanel(panel);
                 $(`#bodyPanel${panel}`).attr('data-loaded-sid', 'preamble');
+                resetPanelSearch(panel);
                 $(`.split-article-select[data-panel="${panel}"]`).val(targetUrl);
                 $(`#titlePanel${panel}`).text('Introductory Text (Preamble)');
                 
@@ -2741,6 +2766,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             } else if (targetArticle && targetUrl) {
                 focusSplitPanel(panel);
                 $(`#bodyPanel${panel}`).attr('data-loaded-sid', targetArticle.id);
+                resetPanelSearch(panel);
                 $(`.split-article-select[data-panel="${panel}"]`).val(targetUrl);
                 $(`#titlePanel${panel}`).text(targetArticle.section);
                 
@@ -3117,6 +3143,123 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
         function escapeRegExp(string) {
             return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
+
+        /* ============================================
+           SPLIT PANELS SEARCH & HIGHLIGHTS
+           ============================================ */
+        let panelMatches = { A: [], B: [] };
+        let panelCurrentMatchIndex = { A: -1, B: -1 };
+        let panelOriginalHTML = { A: '', B: '' };
+
+        $(document).on('input', '.panel-search-input', function() {
+            const panel = $(this).attr('data-panel');
+            const query = $(this).val().trim();
+            highlightPanelKeyword(panel, query);
+        });
+
+        $(document).on('keypress', '.panel-search-input', function(e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                const panel = $(this).attr('data-panel');
+                navigatePanelMatches(panel, 'next');
+            }
+        });
+
+        function highlightPanelKeyword(panel, query) {
+            const container = document.getElementById(`bodyPanel${panel}`);
+            if (!container) return;
+
+            // Clear previous highlight markers
+            if (panelOriginalHTML[panel]) {
+                container.innerHTML = panelOriginalHTML[panel];
+            } else {
+                panelOriginalHTML[panel] = container.innerHTML;
+            }
+
+            panelMatches[panel] = [];
+            panelCurrentMatchIndex[panel] = -1;
+            updatePanelSearchUI(panel);
+
+            if (!query || query.length < 2) return;
+
+            // Gather all visible text nodes inside the container
+            const nodes = [];
+            const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+            while (walker.nextNode()) {
+                nodes.push(walker.currentNode);
+            }
+
+            const regex = new RegExp('(' + escapeRegExp(query) + ')', 'gi');
+
+            nodes.forEach(node => {
+                const text = node.nodeValue;
+                if (regex.test(text)) {
+                    const span = document.createElement('span');
+                    span.innerHTML = text.replace(regex, '<mark class="highlight-match">$1</mark>');
+                    node.parentNode.replaceChild(span, node);
+                }
+            });
+
+            // Find matches
+            panelMatches[panel] = container.querySelectorAll('mark.highlight-match');
+
+            if (panelMatches[panel].length > 0) {
+                panelCurrentMatchIndex[panel] = 0;
+                panelMatches[panel][0].classList.add('active-match');
+                panelMatches[panel][0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            updatePanelSearchUI(panel);
+        }
+
+        function navigatePanelMatches(panel, direction) {
+            const matches = panelMatches[panel];
+            if (!matches || matches.length === 0) return;
+
+            let currentIndex = panelCurrentMatchIndex[panel];
+            if (currentIndex >= 0 && currentIndex < matches.length) {
+                matches[currentIndex].classList.remove('active-match');
+            }
+
+            if (direction === 'next') {
+                currentIndex = (currentIndex + 1) % matches.length;
+            } else {
+                currentIndex = (currentIndex - 1 + matches.length) % matches.length;
+            }
+
+            panelCurrentMatchIndex[panel] = currentIndex;
+            matches[currentIndex].classList.add('active-match');
+            matches[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            updatePanelSearchUI(panel);
+        }
+
+        function updatePanelSearchUI(panel) {
+            const countEl = document.getElementById(`searchCount${panel}`);
+            const navEl = document.getElementById(`searchNav${panel}`);
+            const matches = panelMatches[panel];
+            const currentIndex = panelCurrentMatchIndex[panel];
+
+            if (countEl && navEl) {
+                if (matches && matches.length > 0) {
+                    countEl.textContent = (currentIndex + 1) + '/' + matches.length;
+                    countEl.style.display = 'block';
+                    navEl.style.display = 'flex';
+                } else {
+                    countEl.style.display = 'none';
+                    navEl.style.display = 'none';
+                }
+            }
+        }
+
+        function resetPanelSearch(panel) {
+            $(`.panel-search-input[data-panel="${panel}"]`).val('');
+            panelMatches[panel] = [];
+            panelCurrentMatchIndex[panel] = -1;
+            panelOriginalHTML[panel] = '';
+            updatePanelSearchUI(panel);
+        }
+
+        window.navigatePanelMatches = navigatePanelMatches;
 
         function navigateMatches(direction) {
             if (searchMatches.length === 0) return;
@@ -3808,6 +3951,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                     if (match) sid = match[1];
                 }
                 $(`#bodyPanel${targetPanel}`).attr('data-loaded-sid', sid);
+                resetPanelSearch(targetPanel);
                 updateActiveTOCHighlight(sid);
                 
                 // Sync dropdown selector with this loaded article
@@ -3847,6 +3991,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                 if (match) sid = match[1];
             }
             $(`#bodyPanel${panel}`).attr('data-loaded-sid', sid);
+            resetPanelSearch(panel);
             updateActiveTOCHighlight(sid);
             
             const titleText = $(this).find('option:selected').text().trim();
@@ -3902,6 +4047,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                             // First article: go to preamble
                             targetUrl = `/constitution/Republic/constitution_preamble/${ghanaActId}`;
                             $(`#bodyPanel${panel}`).attr('data-loaded-sid', 'preamble');
+                            resetPanelSearch(panel);
                             updateActiveTOCHighlight('preamble');
                             $(`.split-article-select[data-panel="${panel}"]`).val(targetUrl);
                             $(`#titlePanel${panel}`).text('Introductory Text (Preamble)');
@@ -3926,6 +4072,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                 
                 if (targetArticle && targetUrl) {
                     $(`#bodyPanel${panel}`).attr('data-loaded-sid', targetArticle.id);
+                    resetPanelSearch(panel);
                     updateActiveTOCHighlight(targetArticle.id);
                     $(`.split-article-select[data-panel="${panel}"]`).val(targetUrl);
                     $(`#titlePanel${panel}`).text(targetArticle.section);
