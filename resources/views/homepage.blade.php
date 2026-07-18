@@ -1125,7 +1125,7 @@
            ============================================ */
         .custom-slide-inner {
             max-width: 1080px;
-            margin: 0 auto;
+            margin: 80px auto 0;
             padding: 40px;
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1518,6 +1518,7 @@
                 padding: 100px 20px 60px 20px;
                 text-align: center;
                 min-height: auto;
+                margin: 0 auto;
             }
             .custom-slide-text {
                 display: flex;

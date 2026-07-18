@@ -117,7 +117,7 @@
         </a>
         
         <div class="dropdown-menu dropdown-menu-premium" aria-labelledby="dropdownMenuLink-2">
-            <a class="dropdown-item dropdown-item-premium expanded_link toggle_expanded_view" href="/constitution/Republic/expanded_view/{{ $ghana_act['id'] }}">
+            <a class="dropdown-item dropdown-item-premium expanded_link toggle_expanded_view" href="/constitution/Republic/expanded_view/{{ $ghana_act['id'] }}" onclick="selectViewMode('expanded'); event.stopImmediatePropagation(); return false;">
                 <i class="fa-solid fa-expand"></i> Expanded View
             </a>
             <a class="dropdown-item dropdown-item-premium" href="#" onclick="triggerSplitView('horizontal')">

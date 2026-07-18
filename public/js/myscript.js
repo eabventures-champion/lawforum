@@ -1344,6 +1344,9 @@ $(document).ready(function(){
         $('.previous_content_pre_act').attr('href', pLink);
         $('.next_content_pre_act').attr('href', nLink);
 
+        if (typeof window.highlightActiveTOCItem === 'function') {
+            window.highlightActiveTOCItem(gsid2);
+        }
     }
     
     // BUILDING THE PREVIOUS AND NEXT--------the process for the constitution act
@@ -1375,6 +1378,9 @@ $(document).ready(function(){
         $('.previous_content_constitution_act').attr('href', pLink);
         $('.next_content_constitution_act').attr('href', nLink);
 
+        if (typeof window.highlightActiveConstitutionTOCItem === 'function') {
+            window.highlightActiveConstitutionTOCItem(gsid3);
+        }
     }
     
     // BUILDING THE PREVIOUS AND NEXT--------the process for the constitution amended act

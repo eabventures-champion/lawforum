@@ -289,6 +289,16 @@
             left: 0;
             overflow: hidden;
             background: var(--bg-primary);
+            transition: all 0.3s ease;
+        }
+
+        body.workspace-maximized .nav-wrap {
+            display: none !important;
+        }
+
+        body.workspace-maximized .workspace-wrapper {
+            height: 100vh !important;
+            top: 0 !important;
         }
 
         .workspace-sidebar {
@@ -419,6 +429,39 @@
             border-right: none;
             border-radius: 8px 0 0 8px;
             box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+            height: 110px !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 8px 0;
+        }
+
+        .right-restore .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulse-emerald 1.8s infinite;
+            position: absolute;
+            top: 8px;
+        }
+
+        @keyframes pulse-emerald {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
         }
 
         .sidebar-restore-btn:hover {
@@ -685,6 +728,13 @@
             color: var(--text-primary);
             border-color: var(--border-hover);
             background: rgba(255, 255, 255, 0.05);
+        }
+
+        .toolbar-icon-btn.active {
+            color: var(--accent-light) !important;
+            border-color: var(--accent) !important;
+            background: rgba(59, 130, 246, 0.15) !important;
+            box-shadow: 0 0 10px var(--accent-glow) !important;
         }
 
         .workspace-body {
@@ -2199,27 +2249,19 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                 </div>
 
                 <div class="toolbar-right">
+                    <!-- Maximize button -->
+                    <button class="toolbar-icon-btn mr-1" id="btnMaximizeWorkspace" onclick="toggleMaximizeWorkspace()" title="Maximize View (Toggle Header)">
+                        <i class="fa-solid fa-expand" id="maximizeIcon" style="font-size: 13px;"></i>
+                    </button>
+
                     <!-- Font adjuster -->
                     <div class="font-adjuster" style="visibility: hidden;">
                         <button onclick="changeFontSize('decrease')" title="Decrease text size"><i class="fa-solid fa-minus"></i></button>
                         <span>Aa</span>
                         <button onclick="changeFontSize('increase')" title="Increase text size"><i class="fa-solid fa-plus"></i></button>
                     </div>
-                    
-                    <!-- Article Navigation (Previous / Next) -->
-                    <div id="toolbarArticleNav" class="font-adjuster ml-2 mr-2" style="background: rgba(17, 24, 39, 0.6); border: 1px solid var(--border-color); border-radius: 8px; padding: 2px; display: none; gap: 2px;">
-                        <a href="#" class="toolbar-icon-btn previous_content_pre_act" title="Previous Section" style="background: transparent; border: none; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; text-decoration: none !important; border-radius: 6px; padding: 0;">
-                            <i class="fa-solid fa-chevron-left" style="font-size: 11px;"></i>
-                        </a>
-                        <a href="#" class="toolbar-icon-btn next_content_pre_act" title="Next Section" style="background: transparent; border: none; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; text-decoration: none !important; border-radius: 6px; padding: 0;">
-                            <i class="fa-solid fa-chevron-right" style="font-size: 11px;"></i>
-                        </a>
-                    </div>
 
-                    <!-- Toggle right sidebar -->
-                    <button class="toolbar-icon-btn" onclick="toggleSidebar('right')" title="Toggle Info Panel">
-                        <i class="fa-solid fa-sliders"></i>
-                    </button>
+
                 </div>
             </div>
 
@@ -2271,6 +2313,15 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                                 <div class="split-panel-header" style="justify-content: space-between !important; flex-wrap: wrap; gap: 10px;">
                                     <div class="d-flex align-items-center" style="gap: 10px;">
                                         <span class="panel-badge" id="badgePanelA">Panel A (Active)</span>
+                                        <!-- Panel Navigation Controls -->
+                                        <div class="panel-nav-controls" style="display: flex; gap: 2px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: 6px; padding: 2px;">
+                                            <button class="panel-nav-btn" onclick="navigatePanelSection('A', 'prev'); event.stopPropagation();" title="Previous Section" style="background: transparent; border: none; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+                                                <i class="fa-solid fa-chevron-left" style="font-size: 10px; color: #fff;"></i>
+                                            </button>
+                                            <button class="panel-nav-btn" onclick="navigatePanelSection('A', 'next'); event.stopPropagation();" title="Next Section" style="background: transparent; border: none; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+                                                <i class="fa-solid fa-chevron-right" style="font-size: 10px; color: #fff;"></i>
+                                            </button>
+                                        </div>
                                         <span class="loaded-title" id="titlePanelA" style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">No Section Loaded</span>
                                     </div>
                                     <div style="width: 200px;">
@@ -2297,6 +2348,15 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                                 <div class="split-panel-header" style="justify-content: space-between !important; flex-wrap: wrap; gap: 10px;">
                                     <div class="d-flex align-items-center" style="gap: 10px;">
                                         <span class="panel-badge" id="badgePanelB">Panel B</span>
+                                        <!-- Panel Navigation Controls -->
+                                        <div class="panel-nav-controls" style="display: flex; gap: 2px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: 6px; padding: 2px;">
+                                            <button class="panel-nav-btn" onclick="navigatePanelSection('B', 'prev'); event.stopPropagation();" title="Previous Section" style="background: transparent; border: none; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+                                                <i class="fa-solid fa-chevron-left" style="font-size: 10px; color: #fff;"></i>
+                                            </button>
+                                            <button class="panel-nav-btn" onclick="navigatePanelSection('B', 'next'); event.stopPropagation();" title="Next Section" style="background: transparent; border: none; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+                                                <i class="fa-solid fa-chevron-right" style="font-size: 10px; color: #fff;"></i>
+                                            </button>
+                                        </div>
                                         <span class="loaded-title" id="titlePanelB" style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">No Section Loaded</span>
                                     </div>
                                     <div style="width: 200px;">
@@ -2329,7 +2389,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
         </main>
 
         <!-- Right Panel: Reader Tools -->
-        <aside class="workspace-sidebar right-sidebar" id="rightSidebar">
+        <aside class="workspace-sidebar right-sidebar collapsed" id="rightSidebar">
             <div class="sidebar-header">
                 <button class="toggle-sidebar-btn" onclick="toggleSidebar('right')" title="Collapse Info Panel">
                     <i class="fa-solid fa-angle-right"></i>
@@ -2438,8 +2498,10 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
         </aside>
 
         <!-- Right restore tab -->
-        <button class="sidebar-restore-btn right-restore" id="rightRestoreBtn" onclick="toggleSidebar('right')" title="Expand Info Panel">
-            <i class="fa-solid fa-angle-left"></i>
+        <button class="sidebar-restore-btn right-restore" id="rightRestoreBtn" onclick="toggleSidebar('right')" title="Reader Tools & Notes (Click to open)">
+            <span class="pulse-dot"></span>
+            <i class="fa-solid fa-angle-left" style="margin-top: 10px;"></i>
+            <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; writing-mode: vertical-rl; transform: rotate(180deg); margin-top: 6px; letter-spacing: 1px; color: var(--text-secondary);">Notes</span>
         </button>
     </div>
 
@@ -2675,9 +2737,16 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             
             // Switch sidebar sub-modules
             if (targetId === '#v-pills-profile') {
-                $('.toc-sidebar-module').hide();
-                $('.content-sidebar-module').show();
-                setSidebarState('right', false); // Ensure right panel is visible
+                const hasWelcome = $('#display_content').find('.toc-welcome').length > 0;
+                if (hasWelcome) {
+                    $('.toc-sidebar-module').show();
+                    $('.content-sidebar-module').hide();
+                    setSidebarState('right', true);
+                } else {
+                    $('.toc-sidebar-module').hide();
+                    $('.content-sidebar-module').show();
+                    setSidebarState('right', false);
+                }
             } else if (targetId === '#v-pills-messages') {
                 $('.toc-sidebar-module').hide();
                 $('.content-sidebar-module').hide();
@@ -2707,6 +2776,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
         $(document).on('click', '.pre_content_link, .pre_preamble_content_link', function() {
             $('.toc-sidebar-module').hide();
             $('.content-sidebar-module').show();
+            setSidebarState('right', false);
         });
 
         // Realtime Table of Contents Search Filter
@@ -3383,6 +3453,47 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
         window.focusSplitPanel = focusSplitPanel;
         window.setSplitDirection = setSplitDirection;
 
+        function toggleMaximizeWorkspace() {
+            const body = document.body;
+            body.classList.toggle('workspace-maximized');
+            
+            const btn = document.getElementById('btnMaximizeWorkspace');
+            if (btn) {
+                if (body.classList.contains('workspace-maximized')) {
+                    btn.innerHTML = `<i class="fa-solid fa-compress" id="maximizeIcon" style="font-size: 13px;"></i>`;
+                    btn.classList.add('active');
+                } else {
+                    btn.innerHTML = `<i class="fa-solid fa-expand" id="maximizeIcon" style="font-size: 13px;"></i>`;
+                    btn.classList.remove('active');
+                }
+            }
+
+            // Enter HTML5 Fullscreen mode for clear distraction-free reading if supported
+            if (body.classList.contains('workspace-maximized')) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                }
+            } else {
+                if (document.exitFullscreen && document.fullscreenElement) {
+                    document.exitFullscreen().catch(() => {});
+                }
+            }
+        }
+        window.toggleMaximizeWorkspace = toggleMaximizeWorkspace;
+
+        // Synchronize state back if browser exits fullscreen via Escape key press
+        document.addEventListener('fullscreenchange', () => {
+            const body = document.body;
+            const btn = document.getElementById('btnMaximizeWorkspace');
+            if (!document.fullscreenElement) {
+                body.classList.remove('workspace-maximized');
+                if (btn) {
+                    btn.innerHTML = `<i class="fa-solid fa-expand" id="maximizeIcon" style="font-size: 13px;"></i>`;
+                    btn.classList.remove('active');
+                }
+            }
+        });
+
         // Intercept article TOC link clicks when Split View is active
         $(document).on('click', '.pre_content_link, .pre_preamble_content_link', function(e) {
             if ($('#v-pills-split-tab').hasClass('active')) {
@@ -3536,15 +3647,55 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
 
         // Toggle View modes programmatically from Dropdown Selector
         function selectViewMode(mode) {
+            $('.tab-hidden-initially').removeClass('tab-hidden-initially');
             $('#viewModeSelectorWrap .dropdown-item').removeClass('active');
             let tabId = '';
             
             if (mode === 'reader') {
                 tabId = '#v-pills-profile-tab';
+                // Restores sidebars for Reader View
+                setSidebarState('left', false);
+                setSidebarState('right', false);
+                $('.toc-sidebar-module').hide();
+                if ($('#display_content').find('.toc-welcome').length > 0) {
+                    $('.toc-sidebar-module').show();
+                    $('.content-sidebar-module').hide();
+                } else {
+                    $('.toc-sidebar-module').hide();
+                    $('.content-sidebar-module').show();
+                }
             } else if (mode === 'expanded') {
                 tabId = '#v-pills-messages-tab';
+                // Collapses sidebars for Expanded View
+                setSidebarState('left', true);
+                setSidebarState('right', true);
+                $('.toc-sidebar-module').hide();
+                $('.content-sidebar-module').hide();
+                
+                // Fetch content if it's not loaded yet (still showing spinner)
+                const expandedContainer = $('#acts_expanded_view');
+                if (expandedContainer.find('.fa-spinner').length > 0 && !expandedContainer.attr('data-loading')) {
+                    expandedContainer.attr('data-loading', 'true');
+                    const expandedUrl = `/pre_1992_legislation/1/${pre1992Group}/${pre1992Title}/expanded-view/${pre1992ActId}`.replace(/ /g, '%20');
+                    const startTime = Date.now();
+                    $.get(expandedUrl, function(response) {
+                        const elapsed = Date.now() - startTime;
+                        const delay = Math.max(0, 300 - elapsed);
+                        setTimeout(function() {
+                            expandedContainer.html(response);
+                            expandedContainer.removeAttr('data-loading');
+                        }, delay);
+                    }).fail(function() {
+                        expandedContainer.removeAttr('data-loading');
+                    });
+                }
             } else if (mode === 'split') {
                 tabId = '#v-pills-split-tab';
+                // Collapses sidebars for Split View
+                setSidebarState('left', true);
+                setSidebarState('right', true);
+                $('.toc-sidebar-module').hide();
+                $('.content-sidebar-module').hide();
             }
             
             // Reveal toolbar elements that may still be hidden
@@ -3557,6 +3708,9 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             // Trigger bootstrap tab switch
             if (tabId) {
                 $(tabId).trigger('click');
+                if (typeof $.fn.tab !== 'undefined') {
+                    $(tabId).tab('show');
+                }
             }
         }
         window.selectViewMode = selectViewMode;
