@@ -878,9 +878,16 @@ $(document).ready(function(){
         preSetPrevNext(psid);
         xhr.open("GET", link, true);
         xhr.onreadystatechange = function receiveUpdate(e) {
-            $("#display_preamble").html("");
-            $("#display_view_all_section").html("");
-            $("#display_content").html(this.responseText);
+            if (this.readyState == 4 && this.status == 200) {
+                $("#display_preamble").html("");
+                $("#display_view_all_section").html("");
+                $("#display_content").html(this.responseText);
+                if (typeof setSidebarState === 'function') {
+                    setSidebarState('right', false);
+                }
+                $('.toc-sidebar-module').hide();
+                $('.content-sidebar-module').show();
+            }
         }
         xhr.send();
     });
@@ -1069,9 +1076,16 @@ $(document).ready(function(){
 
         xhr.open("GET", link, true);
         xhr.onreadystatechange = function receiveUpdate(e) {
-            $("#display_preamble").html("");
-            $("#display_view_all_section").html("");
-            $("#display_content").html(this.responseText);
+            if (this.readyState == 4 && this.status == 200) {
+                $("#display_preamble").html("");
+                $("#display_view_all_section").html("");
+                $("#display_content").html(this.responseText);
+                if (typeof setSidebarState === 'function') {
+                    setSidebarState('right', false);
+                }
+                $('.toc-sidebar-module').hide();
+                $('.content-sidebar-module').show();
+            }
         }
         xhr.send();
     });
@@ -1643,10 +1657,17 @@ $(document).ready(function(){
         
         xhr.open("GET", link, true);
         xhr.onreadystatechange = function receiveUpdate(e) {
-            $("#v-pills-profile-tab").trigger("click");
-            $("#display_view_all_section").html("");
-            $("#display_content").html(this.responseText);
-            $(".preamble_hide_pre_next").css("display", "block"); 
+            if (this.readyState == 4 && this.status == 200) {
+                $("#display_view_all_section").html("");
+                $("#display_content").html(this.responseText);
+                $("#v-pills-profile-tab").trigger("click");
+                $(".preamble_hide_pre_next").css("display", "block"); 
+                if (typeof setSidebarState === 'function') {
+                    setSidebarState('right', false);
+                }
+                $('.toc-sidebar-module').hide();
+                $('.content-sidebar-module').show();
+            }
         }
         xhr.send();
     });
@@ -1663,11 +1684,18 @@ $(document).ready(function(){
         
         xhr.open("GET", link, true);
         xhr.onreadystatechange = function receiveUpdate(e) {
-            // $("#display_preamble").html("");
-            $("#v-pills-profile-tab").trigger("click");
-            $("#display_view_all_section").html("");
-            $("#display_content").html(this.responseText);
-            $(".preamble_hide_pre_next").css("display", "none");            
+            if (this.readyState == 4 && this.status == 200) {
+                // $("#display_preamble").html("");
+                $("#display_view_all_section").html("");
+                $("#display_content").html(this.responseText);
+                $("#v-pills-profile-tab").trigger("click");
+                $(".preamble_hide_pre_next").css("display", "none");            
+                if (typeof setSidebarState === 'function') {
+                    setSidebarState('right', false);
+                }
+                $('.toc-sidebar-module').hide();
+                $('.content-sidebar-module').show();
+            }
         }
         xhr.send();
     });

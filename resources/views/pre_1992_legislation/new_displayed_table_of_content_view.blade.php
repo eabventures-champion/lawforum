@@ -875,7 +875,7 @@
             background: var(--text-muted);
         }
 
-        .panel-body a.constitution_content_link {
+        a.pre_content_link {
             display: block !important;
             padding: 6px 10px !important;
             color: wheat !important;
@@ -886,18 +886,35 @@
             text-decoration: none !important;
         }
 
-        .panel-body a.constitution_content_link:hover {
+        a.pre_content_link:hover {
             background: rgba(59, 130, 246, 0.08) !important;
             color: var(--accent-light) !important;
             padding-left: 14px !important;
         }
 
-        .constitution_preamble_link {
+        .pre_preamble_content_link {
             display: inline-block;
             font-size: 14px;
             font-weight: 700;
             color: var(--accent-light) !important;
             text-decoration: none !important;
+        }
+
+        /* Active section highlighting styles */
+        a.pre_content_link.active-article-highlight,
+        a.pre_content_link.pre_content_active {
+            background: var(--accent-gradient) !important;
+            color: #fff !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 12px var(--accent-glow) !important;
+        }
+        
+        a.pre_content_link.active-article-highlight.inactive-window,
+        a.pre_content_link.pre_content_active.inactive-window {
+            background: rgba(255, 255, 255, 0.08) !important;
+            color: var(--text-primary) !important;
+            box-shadow: none !important;
+            border: 1px solid var(--border-color) !important;
         }
 
         /* ============================================
@@ -2185,6 +2202,16 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                         </div>
                     </div>
 
+                    <!-- Reader Mode Article Navigation -->
+                    <div id="readerArticleNav" style="display: none; align-items: center; gap: 6px;">
+                        <a href="#" class="toolbar-icon-btn previous_content_pre_act" title="Previous Section" style="text-decoration: none;">
+                            <i class="fa-solid fa-chevron-left" style="font-size: 13px;"></i>
+                        </a>
+                        <a href="#" class="toolbar-icon-btn next_content_pre_act" title="Next Section" style="text-decoration: none;">
+                            <i class="fa-solid fa-chevron-right" style="font-size: 13px;"></i>
+                        </a>
+                    </div>
+
                     <!-- Integrated Audio Reader Panel -->
                     <div id="audioPlayerBanner" style="display: none; align-items: center; gap: 8px; background: rgba(17, 24, 39, 0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 3px 8px; height: 36px; flex-shrink: 0;">
                         <!-- Left controls: Play / Pause / Stop -->
@@ -2250,7 +2277,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
 
                 <div class="toolbar-right">
                     <!-- Maximize button -->
-                    <button class="toolbar-icon-btn mr-1" id="btnMaximizeWorkspace" onclick="toggleMaximizeWorkspace()" title="Maximize View (Toggle Header)">
+                    <button class="toolbar-icon-btn mr-1" id="btnMaximizeWorkspace" title="Maximize View (Toggle Header)">
                         <i class="fa-solid fa-expand" id="maximizeIcon" style="font-size: 13px;"></i>
                     </button>
 
@@ -2273,7 +2300,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                             <div id="display_content">
                                 @if($allPre1992Act['preamble'] != null)
                                     <div class="preamble-card">
-                                        <a class="pre_preamble_content_link" href="/pre_1992_legislation/preamble/{{ $allPre1992Act['id'] }}">
+                                        <a class="pre_preamble_content_link" sid="preamble" href="/pre_1992_legislation/preamble/{{ $allPre1992Act['id'] }}">
                                             <i class="fa-solid fa-scroll mr-2 text-warning"></i> Read Act Preamble / Introductory Text
                                         </a>
                                     </div>
@@ -2626,7 +2653,11 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             $('.content-search-box').css('visibility', 'visible');
             $('.font-adjuster').css('visibility', 'visible');
             // Show article navigation arrows
-            $('#toolbarArticleNav').css('display', 'flex');
+            if ($('#v-pills-profile-tab').hasClass('active')) {
+                $('#readerArticleNav').css('display', 'flex');
+            } else {
+                $('#readerArticleNav').hide();
+            }
             // Show audio player banner
             $('#audioPlayerBanner').css('display', 'flex');
         }
@@ -2669,14 +2700,25 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                     $('.content-search-box').css('visibility', 'hidden');
                     $('.font-adjuster').css('visibility', 'hidden');
                     $('#viewModeSelectorWrap').addClass('tab-hidden-initially');
-                    $('#toolbarArticleNav').hide();
+                    $('#readerArticleNav').hide();
                     $('#audioPlayerBanner').hide();
                 } else {
                     $('.content-search-box').css('visibility', 'visible');
                     $('.font-adjuster').css('visibility', 'visible');
                     $('#viewModeSelectorWrap').removeClass('tab-hidden-initially');
-                    $('#toolbarArticleNav').css('display', 'flex');
+                    const isReaderActive = !$('#v-pills-messages').hasClass('active') && !$('#v-pills-split').hasClass('active');
+                    if (isReaderActive) {
+                        $('#readerArticleNav').css('display', 'flex');
+                        $('.toc-sidebar-module').hide();
+                        $('.content-sidebar-module').show();
+                        setSidebarState('right', false);
+                    } else {
+                        $('#readerArticleNav').hide();
+                    }
                     $('#audioPlayerBanner').css('display', 'flex');
+                    if (typeof updateActiveTOCHighlight === 'function') {
+                        updateActiveTOCHighlight();
+                    }
                 }
             }
 
@@ -2737,6 +2779,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             
             // Switch sidebar sub-modules
             if (targetId === '#v-pills-profile') {
+                setSidebarState('left', false);
                 const hasWelcome = $('#display_content').find('.toc-welcome').length > 0;
                 if (hasWelcome) {
                     $('.toc-sidebar-module').show();
@@ -2770,13 +2813,21 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                     }
                 }
             }
+            if (typeof updateActiveTOCHighlight === 'function') {
+                updateActiveTOCHighlight();
+            }
         });
 
         // Toggle modules on left sidebar link clicks
-        $(document).on('click', '.pre_content_link, .pre_preamble_content_link', function() {
+        $(document).on('click', '.pre_content_link, .pre_preamble_content_link, .previous_content_pre_act, .next_content_pre_act', function() {
             $('.toc-sidebar-module').hide();
             $('.content-sidebar-module').show();
             setSidebarState('right', false);
+            
+            const sid = $(this).attr('sid');
+            if (sid) {
+                updateActiveTOCHighlight(sid);
+            }
         });
 
         // Realtime Table of Contents Search Filter
@@ -3209,7 +3260,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
         }
 
         function loadArticleProgrammatically(sid, callback) {
-            const linkEl = $(`.panel-body a.pre_content_link[sid="${sid}"]`);
+            const linkEl = $(`a.pre_content_link[sid="${sid}"]`);
             if (linkEl.length) {
                 const observer = new MutationObserver((mutations, obs) => {
                     obs.disconnect();
@@ -3384,19 +3435,125 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             }
         }
 
+        function updateReaderNavigation(activeSid) {
+            const idsVal = $('#pre_act_contents').val();
+            if (!idsVal) return;
+            const ids = JSON.parse(idsVal);
+            if (!ids || !ids.length) return;
+            
+            const prevBtn = $('.previous_content_pre_act');
+            const nextBtn = $('.next_content_pre_act');
+            
+            // Reset styles
+            prevBtn.css({ opacity: 1, 'pointer-events': 'auto' });
+            nextBtn.css({ opacity: 1, 'pointer-events': 'auto' });
+            
+            if (!activeSid || activeSid === 'preamble') {
+                // We are on the preamble
+                prevBtn.attr('href', 'javascript:;').css({ opacity: 0.5, 'pointer-events': 'none' });
+                nextBtn.attr('href', `/pre_1992_legislation/content/${ids[0]}`);
+            } else {
+                const index = ids.findIndex(id => String(id) === String(activeSid));
+                
+                if (index === -1) {
+                    prevBtn.attr('href', `/pre_1992_legislation/preamble/${pre1992ActId}`);
+                    nextBtn.attr('href', `/pre_1992_legislation/content/${ids[0]}`);
+                } else if (index === 0) {
+                    prevBtn.attr('href', `/pre_1992_legislation/preamble/${pre1992ActId}`);
+                    if (ids.length > 1) {
+                        nextBtn.attr('href', `/pre_1992_legislation/content/${ids[1]}`);
+                    } else {
+                        nextBtn.attr('href', 'javascript:;').css({ opacity: 0.5, 'pointer-events': 'none' });
+                    }
+                } else {
+                    prevBtn.attr('href', `/pre_1992_legislation/content/${ids[index - 1]}`);
+                    if (index === ids.length - 1) {
+                        nextBtn.attr('href', 'javascript:;').css({ opacity: 0.5, 'pointer-events': 'none' });
+                    } else {
+                        nextBtn.attr('href', `/pre_1992_legislation/content/${ids[index + 1]}`);
+                    }
+                }
+            }
+        }
+
+        window.currentActivePreSid = null;
+
+        function updateActiveTOCHighlight(forcedSid) {
+            $('a.pre_content_link').removeClass('active-article-highlight inactive-window pre_content_active');
+            
+            if (forcedSid) {
+                window.currentActivePreSid = forcedSid;
+            }
+            
+            let activeSid = window.currentActivePreSid;
+            
+            if (!activeSid) {
+                if ($('#v-pills-split-tab').hasClass('active')) {
+                    activeSid = typeof activeSplitPanel !== 'undefined' ? $(`#bodyPanel${activeSplitPanel}`).attr('data-loaded-sid') : null;
+                } else {
+                    activeSid = $('#display_content .premium-article-container').attr('data-sid');
+                    if (!activeSid && $('#display_content').find('.nav-links').text().includes('Introductory Text')) {
+                        activeSid = 'preamble';
+                    }
+                }
+                window.currentActivePreSid = activeSid;
+            }
+            
+            // update reader mode nav buttons
+            if (!$('#v-pills-split-tab').hasClass('active')) {
+                updateReaderNavigation(activeSid);
+            }
+            
+            if (activeSid && activeSid !== 'preamble') {
+                const targetLink = $(`a.pre_content_link[sid="${activeSid}"]`);
+                if (targetLink.length) {
+                    targetLink.addClass('active-article-highlight pre_content_active');
+                    if (!document.hasFocus()) {
+                        targetLink.addClass('inactive-window');
+                    }
+                    
+                    // Auto-expand parent panel/chapter if it is collapsed
+                    const collapsePanel = targetLink.closest('.collapse');
+                    if (collapsePanel.length && !collapsePanel.hasClass('show')) {
+                        collapsePanel.addClass('show');
+                    }
+                    
+                    // Scroll target link into view within the sidebar
+                    const sidebarEl = document.querySelector('.workspace-sidebar .accordion-content') || document.querySelector('.workspace-sidebar');
+                    if (sidebarEl) {
+                        targetLink[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                }
+            }
+        }
+
+        // Expose globally so myscript.js can call it
+        window.highlightActiveTOCItem = function(sid) {
+            updateActiveTOCHighlight(sid);
+        };
+
+        // Window focus/blur tracking to sync active highlighting color intensity
+        $(window).on('focus blur', function() {
+            updateActiveTOCHighlight();
+        });
+
         function highlightPlayingArticle(sid) {
-            $('.panel-body a.pre_content_link').removeClass('active-playing-audio');
-            $(`.panel-body a.pre_content_link[sid="${sid}"]`).addClass('active-playing-audio');
+            $('a.pre_content_link').removeClass('active-playing-audio');
+            $(`a.pre_content_link[sid="${sid}"]`).addClass('active-playing-audio');
         }
         
         function clearActiveArticleHighlight() {
-            $('.panel-body a.pre_content_link').removeClass('active-playing-audio');
+            $('a.pre_content_link').removeClass('active-playing-audio');
         }
 
         // Show toolbar article navigation arrows and audio player banner when an article is loaded
         $(document).on('click', '.pre_content_link, .pre_preamble_content_link, .previous_content_pre_act, .next_content_pre_act', function(e) {
             $('.tab-hidden-initially').removeClass('tab-hidden-initially');
-            $('#toolbarArticleNav').css('display', 'flex');
+            if ($('#v-pills-profile-tab').hasClass('active')) {
+                $('#readerArticleNav').css('display', 'flex');
+            } else {
+                $('#readerArticleNav').hide();
+            }
             $('#audioPlayerBanner').css('display', 'flex');
             
             // Stop voice reader if user manually clicks a link (real user click)
@@ -3419,6 +3576,10 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             } else {
                 $('#badgePanelA').text('Panel A');
                 $('#badgePanelB').text('Panel B (Active)');
+            }
+            
+            if (typeof updateActiveTOCHighlight === 'function') {
+                updateActiveTOCHighlight();
             }
         }
         
@@ -3494,6 +3655,11 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             }
         });
 
+        // Robust maximize button click binding
+        $(document).on('click', '#btnMaximizeWorkspace', function() {
+            toggleMaximizeWorkspace();
+        });
+
         // Intercept article TOC link clicks when Split View is active
         $(document).on('click', '.pre_content_link, .pre_preamble_content_link', function(e) {
             if ($('#v-pills-split-tab').hasClass('active')) {
@@ -3512,6 +3678,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                     if (match) sid = match[1];
                 }
                 $(`#bodyPanel${targetPanel}`).attr('data-loaded-sid', sid);
+                updateActiveTOCHighlight(sid);
                 
                 // Sync dropdown selector with this loaded article
                 $(`.split-article-select[data-panel="${targetPanel}"]`).val(link);
@@ -3550,6 +3717,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                 if (match) sid = match[1];
             }
             $(`#bodyPanel${panel}`).attr('data-loaded-sid', sid);
+            updateActiveTOCHighlight(sid);
             
             const titleText = $(this).find('option:selected').text().trim();
             
@@ -3603,7 +3771,8 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                         if (currentIndex === 0) {
                             // First article: go to preamble
                             targetUrl = `/pre_1992_legislation/preamble/${pre1992ActId}`;
-                            $(`#bodyPanel${panel}`).attr('data-loaded-sid', 'preamble');
+                             $(`#bodyPanel${panel}`).attr('data-loaded-sid', 'preamble');
+                             updateActiveTOCHighlight('preamble');
                             $(`.split-article-select[data-panel="${panel}"]`).val(targetUrl);
                             $(`#titlePanel${panel}`).text('Introductory Text');
                             
@@ -3627,6 +3796,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                 
                 if (targetArticle && targetUrl) {
                     $(`#bodyPanel${panel}`).attr('data-loaded-sid', targetArticle.id);
+                    updateActiveTOCHighlight(targetArticle.id);
                     $(`.split-article-select[data-panel="${panel}"]`).val(targetUrl);
                     $(`#titlePanel${panel}`).text(targetArticle.section);
                     

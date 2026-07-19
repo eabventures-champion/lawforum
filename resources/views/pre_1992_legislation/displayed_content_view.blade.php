@@ -404,7 +404,7 @@
 </head>
 
 <body class="standalone-view">
-    <div class="premium-article-container">
+    <div class="premium-article-container" data-sid="{{ $allPre1992Article['id'] }}">
         {{-- For the bookmark --}}
         <div class="nav-links">
             <span>

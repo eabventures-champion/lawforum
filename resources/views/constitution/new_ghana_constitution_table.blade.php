@@ -892,7 +892,8 @@
             padding-left: 14px !important;
         }
 
-        .panel-body a.constitution_content_link.active-article-highlight {
+        .panel-body a.constitution_content_link.active-article-highlight,
+        .panel-body a.constitution_content_link.toc-active {
             background: rgba(59, 130, 246, 0.15) !important;
             color: var(--accent-light) !important;
             border-left: 3px solid var(--accent-light) !important;
@@ -900,7 +901,8 @@
             font-weight: 600 !important;
         }
 
-        .panel-body a.constitution_content_link.active-article-highlight.inactive-window {
+        .panel-body a.constitution_content_link.active-article-highlight.inactive-window,
+        .panel-body a.constitution_content_link.toc-active.inactive-window {
             background: rgba(156, 163, 175, 0.08) !important;
             color: var(--text-secondary) !important;
             border-left: 3px solid var(--text-secondary) !important;
@@ -2789,7 +2791,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
         window.navigatePanelSection = navigatePanelSection;
 
         function updateActiveTOCHighlight(forcedSid) {
-            $('.panel-body a.constitution_content_link').removeClass('active-article-highlight inactive-window');
+            $('.panel-body a.constitution_content_link').removeClass('active-article-highlight inactive-window toc-active toc-link');
             
             let activeSid = forcedSid;
             
@@ -2817,7 +2819,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             if (activeSid && activeSid !== 'preamble') {
                 const targetLink = $(`.panel-body a.constitution_content_link[sid="${activeSid}"]`);
                 if (targetLink.length) {
-                    targetLink.addClass('active-article-highlight');
+                    targetLink.addClass('active-article-highlight toc-active toc-link');
                     if (!document.hasFocus()) {
                         targetLink.addClass('inactive-window');
                     }
