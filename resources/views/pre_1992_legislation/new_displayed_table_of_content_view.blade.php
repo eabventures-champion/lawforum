@@ -2980,9 +2980,25 @@
 
             if (!query || query.length < 2) return;
 
-            // Select all child text nodes under target container
+            // Select all child text nodes under target container, excluding script/style elements
             const nodes = [];
-            const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+            const walker = document.createTreeWalker(
+                container, 
+                NodeFilter.SHOW_TEXT, 
+                {
+                    acceptNode: function(node) {
+                        const parent = node.parentNode;
+                        if (parent) {
+                            const tagName = parent.tagName.toLowerCase();
+                            if (tagName === 'script' || tagName === 'style' || tagName === 'noscript') {
+                                return NodeFilter.FILTER_REJECT;
+                            }
+                        }
+                        return NodeFilter.FILTER_ACCEPT;
+                    }
+                }, 
+                false
+            );
             while (walker.nextNode()) {
                 nodes.push(walker.currentNode);
             }
