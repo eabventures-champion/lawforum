@@ -59,7 +59,7 @@
             color: var(--text-primary) !important;
             max-width: 900px;
             margin: 0 auto;
-            padding: 32px 20px 80px;
+            padding: 0 20px 80px;
             animation: fadeIn 0.4s ease both;
         }
 
@@ -383,7 +383,7 @@
         /* Responsive styling */
         @media (max-width: 768px) {
             .premium-article-container {
-                padding: 16px 12px 40px;
+                padding: 0 12px 40px;
             }
             .article-card {
                 padding: 30px 24px;

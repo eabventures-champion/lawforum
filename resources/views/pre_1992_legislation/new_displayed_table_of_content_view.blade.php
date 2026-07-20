@@ -740,7 +740,7 @@
         .workspace-body {
             flex: 1;
             overflow-y: auto;
-            padding: 32px 40px;
+            padding: 8px 40px 32px;
         }
 
         /* Reading view containers */

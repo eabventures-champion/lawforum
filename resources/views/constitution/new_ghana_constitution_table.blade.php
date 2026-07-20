@@ -740,7 +740,7 @@
         .workspace-body {
             flex: 1;
             overflow-y: auto;
-            padding: 32px 40px;
+            padding: 8px 40px 32px;
         }
 
         /* Reading view containers */
@@ -1010,7 +1010,7 @@
         /* ============================================
            DYNAMICAL INNER ARTICLE OVERRIDES
            ============================================ */
-e        #display_content, #acts_expanded_view, .split-panel-body {
+        #display_content, #acts_expanded_view, .split-panel-body {
             color: var(--text-primary) !important;
             transition: font-size 0.25s ease;
         }
@@ -2135,14 +2135,26 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                     <i class="fa-solid fa-angle-left"></i>
                 </button>
             </div>
+
+            {{-- Active Document Title (Fixed above search box) --}}
+            <div class="current-doc-title" style="padding: 10px 16px; background: rgba(59, 130, 246, 0.04); border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 4px;">
+                <span style="font-size: 9px; font-weight: 800; color: var(--accent-light); text-transform: uppercase; letter-spacing: 0.8px;">Active Document</span>
+                <span style="font-size: 11px; font-weight: 700; color: var(--text-primary); line-height: 1.4; display: flex; align-items: flex-start; gap: 6px;">
+                    <i class="fa-solid fa-book-bookmark" style="margin-top: 2px; color: var(--accent-light); font-size: 12px; flex-shrink: 0;"></i>
+                    <span>{{ strtoupper($ghana_act['title']) }}</span>
+                </span>
+            </div>
+
             <div class="sidebar-search">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" id="tocSearch" placeholder="Filter by chapter or article...">
             </div>
+
             <div class="sidebar-content">
                 <button type="button" class="btn btn-outlined btn-sm mb-3 btn-customised" data-toggle="modal" data-target="#viewActs">
                     <i class="fa-solid fa-globe mr-1"></i> Constitution List
                 </button>
+
                 <div class="accordion-content">
                     @include('constitution.new_chapters_articles')
                 </div>
