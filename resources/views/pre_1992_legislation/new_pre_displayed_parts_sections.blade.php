@@ -17,7 +17,7 @@
             <div class="panel-heading" role="tab" id="heading{{$c}}">
                 <span style="line-height: 0.7cm;"> 
                     <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{ $c }}" aria-expanded="true" aria-controls="collapse_{{$c}}">
-                    <span>{{($allPre1992Article->part == '')? 'Sections':$allPre1992Article->part}}</span>
+                    <span style="color: blue;">{{($allPre1992Article->part == '')? 'Sections':$allPre1992Article->part}}</span>
                     </a>
                 </span>
             </div>

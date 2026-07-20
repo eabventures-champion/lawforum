@@ -1360,6 +1360,8 @@ $(document).ready(function(){
 
         if (typeof window.highlightActiveTOCItem === 'function') {
             window.highlightActiveTOCItem(gsid2);
+        } else if (typeof updateActiveTOCHighlight === 'function') {
+            updateActiveTOCHighlight(gsid2);
         }
     }
     
@@ -1667,6 +1669,11 @@ $(document).ready(function(){
                 }
                 $('.toc-sidebar-module').hide();
                 $('.content-sidebar-module').show();
+                if (typeof window.highlightActiveTOCItem === 'function') {
+                    window.highlightActiveTOCItem(gsid);
+                } else if (typeof updateActiveTOCHighlight === 'function') {
+                    updateActiveTOCHighlight(gsid);
+                }
             }
         }
         xhr.send();

@@ -901,20 +901,36 @@
         }
 
         /* Active section highlighting styles */
+        .panel-body a.pre_content_link.active-article-highlight,
+        .panel-body a.pre_content_link.pre_content_active,
+        .panel-body a.pre_content_link.toc-active,
         a.pre_content_link.active-article-highlight,
-        a.pre_content_link.pre_content_active {
-            background: var(--accent-gradient) !important;
-            color: #fff !important;
-            font-weight: 700 !important;
-            box-shadow: 0 4px 12px var(--accent-glow) !important;
-        }
-        
-        a.pre_content_link.active-article-highlight.inactive-window,
-        a.pre_content_link.pre_content_active.inactive-window {
-            background: rgba(255, 255, 255, 0.08) !important;
-            color: var(--text-primary) !important;
+        a.pre_content_link.pre_content_active,
+        a.pre_content_link.toc-active,
+        a.pre_content_link.active-article-highlight span,
+        a.pre_content_link.pre_content_active span,
+        a.pre_content_link.toc-active span {
+            background: rgba(59, 130, 246, 0.18) !important;
+            color: var(--accent-light, #60a5fa) !important;
+            border-left: 3px solid var(--accent-light, #60a5fa) !important;
+            padding-left: 12px !important;
+            font-weight: 600 !important;
+            border-radius: 6px !important;
             box-shadow: none !important;
-            border: 1px solid var(--border-color) !important;
+        }
+
+        .panel-body a.pre_content_link.active-article-highlight.inactive-window,
+        .panel-body a.pre_content_link.pre_content_active.inactive-window,
+        .panel-body a.pre_content_link.toc-active.inactive-window,
+        a.pre_content_link.active-article-highlight.inactive-window,
+        a.pre_content_link.pre_content_active.inactive-window,
+        a.pre_content_link.toc-active.inactive-window,
+        a.pre_content_link.active-article-highlight.inactive-window span,
+        a.pre_content_link.pre_content_active.inactive-window span,
+        a.pre_content_link.toc-active.inactive-window span {
+            background: rgba(59, 130, 246, 0.15) !important;
+            color: var(--accent-light, #60a5fa) !important;
+            border-left: 3px solid var(--accent-light, #60a5fa) !important;
         }
 
         /* ============================================
@@ -1011,7 +1027,7 @@
         /* ============================================
            DYNAMICAL INNER ARTICLE OVERRIDES
            ============================================ */
-e        #display_content, #acts_expanded_view, .split-panel-body {
+        #display_content, #acts_expanded_view, .split-panel-body {
             color: var(--text-primary) !important;
             transition: font-size 0.25s ease;
         }
@@ -2785,19 +2801,28 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                     $('.toc-sidebar-module').show();
                     $('.content-sidebar-module').hide();
                     setSidebarState('right', true);
+                    $('#readerArticleNav').hide();
                 } else {
                     $('.toc-sidebar-module').hide();
                     $('.content-sidebar-module').show();
                     setSidebarState('right', false);
+                    $('#readerArticleNav').css('display', 'flex');
                 }
+                $('#audioModeSelectorContainer').show();
             } else if (targetId === '#v-pills-messages') {
                 $('.toc-sidebar-module').hide();
                 $('.content-sidebar-module').hide();
                 setSidebarState('right', true); // Collapse right panel automatically
+                $('#audioModeSelectorContainer').hide();
+                $('#readerArticleNav').hide();
+                if (typeof setAudioMode === 'function') setAudioMode('current');
             } else if (targetId === '#v-pills-split') {
                 $('.toc-sidebar-module').hide();
                 $('.content-sidebar-module').hide();
                 setSidebarState('right', true); // Collapse right panel automatically
+                $('#audioModeSelectorContainer').hide();
+                $('#readerArticleNav').hide();
+                if (typeof setAudioMode === 'function') setAudioMode('current');
                 
                 // Trigger auto load of split A/B if empty
                 if (!$('#bodyPanelA').attr('data-loaded-sid')) {
@@ -2825,8 +2850,14 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             setSidebarState('right', false);
             
             const sid = $(this).attr('sid');
+            console.log('[TOC-DEBUG] Inline click handler fired, sid:', sid, 'element:', this);
             if (sid) {
                 updateActiveTOCHighlight(sid);
+                // Robust fallback: re-apply highlight after AJAX content loads
+                setTimeout(function() {
+                    console.log('[TOC-DEBUG] Delayed re-highlight for sid:', sid);
+                    updateActiveTOCHighlight(sid);
+                }, 500);
             }
         });
 
@@ -2944,7 +2975,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
         }
 
         function escapeRegExp(string) {
-            return string.replace(/[.*+?^${}()|[\]\]/g, '\$&');
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
 
         function navigateMatches(direction) {
@@ -3476,28 +3507,25 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             }
         }
 
-        window.currentActivePreSid = null;
-
         function updateActiveTOCHighlight(forcedSid) {
-            $('a.pre_content_link').removeClass('active-article-highlight inactive-window pre_content_active');
+            console.log('[TOC-DEBUG] updateActiveTOCHighlight called with forcedSid:', forcedSid);
+            $('a.pre_content_link').removeClass('active-article-highlight inactive-window pre_content_active toc-active');
             
-            if (forcedSid) {
-                window.currentActivePreSid = forcedSid;
-            }
-            
-            let activeSid = window.currentActivePreSid;
+            let activeSid = forcedSid;
             
             if (!activeSid) {
                 if ($('#v-pills-split-tab').hasClass('active')) {
                     activeSid = typeof activeSplitPanel !== 'undefined' ? $(`#bodyPanel${activeSplitPanel}`).attr('data-loaded-sid') : null;
                 } else {
                     activeSid = $('#display_content .premium-article-container').attr('data-sid');
+                    console.log('[TOC-DEBUG] Read data-sid from DOM:', activeSid, 'element found:', $('#display_content .premium-article-container').length);
                     if (!activeSid && $('#display_content').find('.nav-links').text().includes('Introductory Text')) {
                         activeSid = 'preamble';
                     }
                 }
-                window.currentActivePreSid = activeSid;
             }
+            
+            console.log('[TOC-DEBUG] Final activeSid:', activeSid);
             
             // update reader mode nav buttons
             if (!$('#v-pills-split-tab').hasClass('active')) {
@@ -3506,8 +3534,10 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             
             if (activeSid && activeSid !== 'preamble') {
                 const targetLink = $(`a.pre_content_link[sid="${activeSid}"]`);
+                console.log('[TOC-DEBUG] Target link found:', targetLink.length, 'for sid:', activeSid);
                 if (targetLink.length) {
-                    targetLink.addClass('active-article-highlight pre_content_active');
+                    targetLink.addClass('active-article-highlight pre_content_active toc-active');
+                    console.log('[TOC-DEBUG] Classes added. Has class now:', targetLink.hasClass('active-article-highlight'));
                     if (!document.hasFocus()) {
                         targetLink.addClass('inactive-window');
                     }
@@ -3523,7 +3553,14 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
                     if (sidebarEl) {
                         targetLink[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     }
+                } else {
+                    console.log('[TOC-DEBUG] WARNING: No link found! All pre_content_links:', $('a.pre_content_link').length);
+                    $('a.pre_content_link').each(function(i) {
+                        if (i < 5) console.log('[TOC-DEBUG]   Link', i, 'sid:', $(this).attr('sid'), 'text:', $(this).text().trim().substring(0,30));
+                    });
                 }
+            } else {
+                console.log('[TOC-DEBUG] Skipped: activeSid is', activeSid);
             }
         }
 
@@ -3532,9 +3569,13 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
             updateActiveTOCHighlight(sid);
         };
 
-        // Window focus/blur tracking to sync active highlighting color intensity
-        $(window).on('focus blur', function() {
-            updateActiveTOCHighlight();
+        // Window focus/blur listeners to dynamically toggle the highlight's active/inactive style state
+        window.addEventListener('focus', function() {
+            $('a.pre_content_link.active-article-highlight').removeClass('inactive-window');
+        });
+
+        window.addEventListener('blur', function() {
+            $('a.pre_content_link.active-article-highlight').addClass('inactive-window');
         });
 
         function highlightPlayingArticle(sid) {
@@ -4006,7 +4047,7 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
 
     // Get current article/section being read
     function getCurrentArticleSection() {
-        var activeLink = document.querySelector('.accordion-content .pre_content_link.pre_content_active');
+        var activeLink = document.querySelector('.panel-group .pre_content_link.pre_content_active, a.pre_content_link.pre_content_active, a.pre_content_link.active-article-highlight');
         if (activeLink) return activeLink.textContent.trim();
         return null;
     }
@@ -4236,13 +4277,10 @@ e        #display_content, #acts_expanded_view, .split-panel-body {
         window.getSelection().removeAllRanges();
     }
 
-    // Copy with citation
     function copyWithCitation() {
         if (currentSelection) {
             var section = getCurrentArticleSection() || '';
-            var citation = currentSelection + '
-
-— ' + currentDocumentTitle;
+            var citation = currentSelection + '\n\n— ' + currentDocumentTitle;
             if (section) citation += ', ' + section;
             citation += ' (Legals Forum)';
 
