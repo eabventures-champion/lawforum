@@ -609,7 +609,7 @@
 
         .split-panel-body {
             flex: 1;
-            padding: 20px;
+            padding: 8px 20px 20px;
             overflow-y: auto;
             color: var(--text-primary);
             font-size: 14px;
@@ -1033,17 +1033,29 @@
         }
 
         #display_content .nav-links, #acts_expanded_view .nav-links {
-            background: rgba(59, 130, 246, 0.08) !important;
-            border: 1px solid rgba(59, 130, 246, 0.15) !important;
+            background: var(--bg-secondary) !important;
+            border: 1px solid rgba(59, 130, 246, 0.25) !important;
             color: var(--accent-light) !important;
             border-radius: 8px !important;
-            padding: 12px 18px !important;
+            padding: 8px 16px !important;
             font-weight: 700 !important;
-            font-size: 14px !important;
-            margin-bottom: 20px !important;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.05);
+            font-size: 12px !important;
+            margin-bottom: 8px !important;
+            box-shadow: 0 -100px 0 var(--bg-primary), 0 8px 0 var(--bg-primary), 0 4px 12px rgba(59, 130, 246, 0.05) !important;
             display: block;
-            position: static !important;
+            position: sticky !important;
+            top: -8px !important;
+            z-index: 100 !important;
+        }
+
+        #display_content .nav-links span, #acts_expanded_view .nav-links span {
+            font-size: 12px !important;
+            gap: 8px !important;
+            color: var(--gold) !important;
+        }
+
+        #display_content .nav-links span i, #acts_expanded_view .nav-links span i {
+            font-size: 13px !important;
         }
 
         .split-panel-body .nav-links {
@@ -2173,6 +2185,16 @@
                     <i class="fa-solid fa-angle-left"></i>
                 </button>
             </div>
+
+            {{-- Active Document Title (Fixed above search box) --}}
+            <div class="current-doc-title" style="padding: 10px 16px; background: rgba(59, 130, 246, 0.04); border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 4px;">
+                <span style="font-size: 9px; font-weight: 800; color: var(--accent-light); text-transform: uppercase; letter-spacing: 0.8px;">Active Document</span>
+                <span style="font-size: 11px; font-weight: 700; color: var(--text-primary); line-height: 1.4; display: flex; align-items: flex-start; gap: 6px;">
+                    <i class="fa-solid fa-book-bookmark" style="margin-top: 2px; color: var(--accent-light); font-size: 12px; flex-shrink: 0;"></i>
+                    <span>{{ strtoupper($allPre1992Act['title']) }}</span>
+                </span>
+            </div>
+
             <div class="sidebar-search">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" id="tocSearch" placeholder="Filter by chapter or section...">

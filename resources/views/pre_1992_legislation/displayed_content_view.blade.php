@@ -61,39 +61,38 @@
         #display_content .premium-article-container .nav-links,
         #acts_expanded_view .premium-article-container .nav-links,
         .premium-article-container .nav-links {
-            background: rgba(12, 18, 32, 0.8) !important;
-            backdrop-filter: blur(12px) !important;
-            -webkit-backdrop-filter: blur(12px) !important;
+            background: var(--bg-secondary) !important;
             border: 1px solid var(--border-color) !important;
             border-radius: 16px !important;
             display: flex !important;
             align-items: center !important;
             justify-content: space-between !important;
             gap: 16px !important;
-            padding: 16px 24px !important;
-            position: relative !important;
+            padding: 8px 16px !important;
+            position: sticky !important;
+            top: -8px !important;
             z-index: 1000 !important;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
-            margin-bottom: 32px !important;
+            box-shadow: 0 -100px 0 var(--bg-primary), 0 8px 0 var(--bg-primary), 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+            margin-bottom: 8px !important;
             color: #fff !important;
         }
 
         .premium-article-container .nav-links span {
             font-family: var(--font-ui) !important;
-            font-size: 16px !important;
+            font-size: 12px !important;
             font-weight: 700 !important;
-            color: #fff !important;
+            color: var(--gold) !important;
             display: flex !important;
             align-items: center !important;
-            gap: 10px !important;
+            gap: 8px !important;
             letter-spacing: -0.2px !important;
             flex: 1 !important;
             min-width: 0 !important;
         }
 
         .premium-article-container .nav-links span i {
-            color: var(--accent-light) !important;
-            font-size: 18px !important;
+            color: var(--gold) !important;
+            font-size: 13px !important;
             flex-shrink: 0 !important;
         }
 
