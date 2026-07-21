@@ -132,6 +132,22 @@
                         </div>
                     @endif
 
+                    <!-- Fallback Placeholder Configuration -->
+                    <div class="form-group mb-4">
+                        <label class="text-muted mb-2" style="font-weight: 600; font-size: 13px;">
+                            Fallback Placeholder (When status is hidden / no image uploaded)
+                        </label>
+                        <select name="placeholder_type" class="form-control form-control-premium" required>
+                            <option value="advertise" {{ old('placeholder_type', $ad->placeholder_type) === 'advertise' ? 'selected' : '' }}>
+                                Option 1: "Advertise Product" Call-to-Action Banner
+                            </option>
+                            <option value="news_feed" {{ old('placeholder_type', $ad->placeholder_type) === 'news_feed' ? 'selected' : '' }}>
+                                Option 2: "Daily News & Blogs Feed" Interactive Slider
+                            </option>
+                        </select>
+                        <small class="form-text text-muted mt-1">Select the presentation mode of the placeholder when this ad slot is hidden or has no image.</small>
+                    </div>
+
                     <!-- Toggle Visibility -->
                     <div class="form-group mb-4 d-flex align-items-center">
                         <div class="mr-3">

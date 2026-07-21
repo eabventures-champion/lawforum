@@ -145,6 +145,17 @@
                         </div>
 
                         <div class="ad-meta-item">
+                            <div class="ad-meta-label">Fallback Placeholder Type</div>
+                            <div class="ad-meta-value">
+                                @if($ad->placeholder_type === 'news_feed')
+                                    <span class="text-info" style="font-weight: 600;"><i class="fa-solid fa-square-rss mr-1"></i> Daily News & Blogs Feed Slider</span>
+                                @else
+                                    <span class="text-warning" style="font-weight: 600;"><i class="fa-solid fa-rectangle-ad mr-1"></i> Advertise Product CTA Banner</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="ad-meta-item">
                             <div class="ad-meta-label">Target Destination URL</div>
                             <div class="ad-meta-value">
                                 @if($ad->target_url)

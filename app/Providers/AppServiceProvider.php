@@ -45,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
             }
 
             try {
-                $ads = \App\SidebarAd::where('is_active', true)->get()->keyBy('slot_name');
+                $ads = \App\SidebarAd::get()->keyBy('slot_name');
                 $view->with('sidebarAds', $ads);
             } catch (\Exception $e) {
                 $view->with('sidebarAds', collect());

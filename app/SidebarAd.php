@@ -25,6 +25,7 @@ class SidebarAd extends Model
         'target_url',
         'button_text',
         'is_active',
+        'placeholder_type',
     ];
 
     /**

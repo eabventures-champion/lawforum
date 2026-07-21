@@ -143,6 +143,25 @@ class SidebarAdTest extends TestCase
     }
 
     /**
+     * Admin can update placeholder type for an advertisement slot.
+     */
+    public function testAdminCanUpdatePlaceholderType()
+    {
+        $ad = SidebarAd::where('slot_name', 'slot_1')->first();
+
+        $response = $this->actingAs($this->adminUser)->put("/admin/sidebar-ads/{$ad->id}", [
+            'title' => 'Ad with News Feed Fallback',
+            'placeholder_type' => 'news_feed',
+            'is_active' => '1',
+        ]);
+
+        $response->assertRedirect('/admin/sidebar-ads');
+
+        $ad->refresh();
+        $this->assertEquals('news_feed', $ad->placeholder_type);
+    }
+
+    /**
      * Active sidebar ads are shared globally with view context.
      */
     public function testSidebarAdsSharedGlobally()

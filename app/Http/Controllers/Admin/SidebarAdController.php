@@ -39,6 +39,7 @@ class SidebarAdController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'target_url' => 'nullable|string|max:255',
             'button_text' => 'nullable|string|max:255',
+            'placeholder_type' => 'nullable|string|in:advertise,news_feed',
         ]);
 
         $data = [
@@ -47,6 +48,10 @@ class SidebarAdController extends Controller
             'button_text' => $request->input('button_text'),
             'is_active' => $request->has('is_active') ? true : false,
         ];
+
+        if ($request->has('placeholder_type')) {
+            $data['placeholder_type'] = $request->input('placeholder_type');
+        }
 
         if ($request->hasFile('image')) {
             // Delete old image if it is in uploads directory
