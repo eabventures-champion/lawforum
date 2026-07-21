@@ -405,27 +405,8 @@
 
             <!-- Right Column: Filter & Ads -->
             <div class="col-lg-3 col-md-12 mt-md-4 mt-lg-0">
-                <div class="premium-sidebar-card">
-                    <h5 style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin: 0 0 15px 0; display: flex; align-items: center; gap: 8px;">
-                        <i class="fa-solid fa-filter text-primary"></i> Filter
-                    </h5>
-                    <select class="premium-select all_judgment_filter_category">
-                        <option selected value="">Select Category</option>
-                        @foreach($pndcCategories as $pndcCategory)
-                            <option value="{{ $pndcCategory->name }}">{{ $pndcCategory->name }}</option>
-                        @endforeach 
-                    </select>
-                    <form action="{{ url('pndc_law_index_search') }}" method="GET" style="margin-top: 15px;">
-                        {{ csrf_field() }}
-                        <input class="premium-input" name="search_text" type="text" placeholder="Search word in Acts" aria-label="Search" style="width: 100%;">
-                    </form>
-                </div>
-                <div class="premium-sidebar-card p-2" style="background: transparent !important; border: none !important; box-shadow: none !important;">
-                    @include('ads.small_ads_image_main_page')
-                </div>
-                <div class="premium-sidebar-card p-2" style="background: transparent !important; border: none !important; box-shadow: none !important; margin-top: 15px;">
-                    @include('ads.adsense_vertical')
-                </div>
+                @include('ads.small_ads_image_main_page')
+                @include('ads.adsense_vertical')
             </div>
 
         </div>

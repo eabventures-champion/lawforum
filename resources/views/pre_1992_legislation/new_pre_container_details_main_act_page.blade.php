@@ -86,6 +86,6 @@
 </div>
 
 <div class="premium-ad-card">
-    @include('ads.small_ads_image_content')
+    @include('ads.small_ads_image_main_page')
 </div>
   

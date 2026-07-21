@@ -82,7 +82,7 @@
       </div>
     </div>
     <div class="card mt-3">
-      @include('ads.small_ads_image_content')
+      @include('ads.small_ads_image_main_page')
     </div>
   </div>
         @include('layouts.plain_view_no_subscription')

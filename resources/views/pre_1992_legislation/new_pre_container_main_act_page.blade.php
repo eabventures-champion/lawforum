@@ -131,7 +131,7 @@
 </div>
 
 <div class="premium-ad-card">
-    @include('ads.small_ads_image_table_of_content')
+    @include('ads.small_ads_image_main_page')
 </div>
 
 @include('layouts.plain_create_account')
