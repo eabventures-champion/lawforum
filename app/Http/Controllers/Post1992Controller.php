@@ -1048,5 +1048,86 @@ class Post1992Controller extends Controller
                         return $pdf->download($id.'.legalsforum.pdf');
                     }
     //-----------------------------------------------------------------------------------------------------------------------------------------
+    
+    /**
+     * AJAX endpoint: Return JSON data for a given post-1992 tab group.
+     * Used for client-side tab switching without page refresh.
+     */
+    public function post1992_ajax_data(Request $request)
+    {
+        $group = $request->query('group', 'all');
 
+        $data = collect();
+
+        if ($group === 'all' || $group === 'acts_of_parliament') {
+            $acts = Post1992Act::all();
+            $data = $data->concat($acts->map(function ($act) {
+                return [
+                    'title' => $act->title,
+                    'year'  => $act->year,
+                    'url'   => '/post-1992-legislation/table-of-content/' . $act->post_group . '/' . $act->title . '/' . $act->id,
+                ];
+            }));
+        }
+
+        if ($group === 'all' || $group === 'constitutional_instruments') {
+            $acts = ConstitutionalAct::all();
+            $data = $data->concat($acts->map(function ($act) {
+                return [
+                    'title' => $act->title,
+                    'year'  => $act->year,
+                    'url'   => '/post-1992-legislation/constitutional-acts-table-of-content/' . $act->constitutional_group . '/' . $act->title . '/' . $act->id,
+                ];
+            }));
+        }
+
+        if ($group === 'all' || $group === 'executive_instruments') {
+            $acts = ExecutiveAct::all();
+            $data = $data->concat($acts->map(function ($act) {
+                return [
+                    'title' => $act->title,
+                    'year'  => $act->year,
+                    'url'   => '/post-1992-legislation/table-of-content/' . $act->executive_group . '/' . $act->title . '/' . $act->id,
+                ];
+            }));
+        }
+
+        if ($group === 'all' || $group === 'legislative_instruments') {
+            $acts = RegulationTitle::all();
+            $data = $data->concat($acts->map(function ($act) {
+                return [
+                    'title' => $act->title,
+                    'year'  => $act->year,
+                    'url'   => '/post_1992_legislation/regulation_acts_table_of_content/' . $act->act_category . '/' . $act->title . '/' . $act->id,
+                ];
+            }));
+        }
+
+        if ($group === 'all' || $group === 'amendments') {
+            // Amendments on Acts
+            $acts = AmendedTitle::all();
+            $data = $data->concat($acts->map(function ($act) {
+                return [
+                    'title' => $act->title,
+                    'year'  => $act->year,
+                    'url'   => '/post_1992_legislation/amended_acts_table_of_content/' . $act->post_category . '/' . $act->title . '/' . $act->id,
+                ];
+            }));
+
+            // Amendments on Regulations
+            $acts = AmendRegulationAct::all();
+            $data = $data->concat($acts->map(function ($act) {
+                return [
+                    'title' => $act->title,
+                    'year'  => $act->year,
+                    'url'   => '/post_1992_legislation/amended_regulation_acts_table_of_content/' . $act->act_category . '/' . $act->title . '/' . $act->id,
+                ];
+            }));
+        }
+
+        // Sort by title alphabetically
+        $sortedData = $data->sortBy('title')->values();
+
+        return response()->json(['data' => $sortedData]);
+    }
 }

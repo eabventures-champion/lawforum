@@ -289,6 +289,7 @@ Route::get('/post-1992-legislation/Executive-Intruments','ExecutiveActController
 
 //-----------------------------------------------------------------------------POST_1992_LEGISLATION-------------------------------------------------------------------------------------
 Route::get('/post-1992-legislation','Post1992Controller@index');//display all acts
+    Route::get('/post_1992_legislation/ajax-data','Post1992Controller@post1992_ajax_data'); //AJAX JSON data for tab switching
     Route::get('/post_1992_legislation/filter/{year}/{category}','Post1992Controller@all_post_1992_legislation_filter'); //all post-1992 filtering
     Route::get('/post_1992_legislation/preamble/{id}','Post1992Controller@post_1992_legislation_preamble');//display act preamble
 
