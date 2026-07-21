@@ -169,6 +169,10 @@
             color: var(--accent-color);
         }
 
+        .toggle-password:hover {
+            color: #ffffff !important;
+        }
+
         .form-options {
             display: flex;
             align-items: center;
@@ -286,8 +290,9 @@
                 <div class="form-group">
                     <label class="form-label" for="password">Security Password</label>
                     <div class="input-wrapper">
-                        <input id="password" type="password" class="form-input" name="password" required autocomplete="current-password" placeholder="••••••••">
+                        <input id="password" type="password" class="form-input" name="password" required autocomplete="current-password" placeholder="••••••••" style="padding-right: 48px;">
                         <i class="fa-solid fa-lock input-icon"></i>
+                        <i class="fa-solid fa-eye toggle-password" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); transition: var(--transition-smooth);" onclick="togglePasswordVisibility('password', this)" title="Toggle password visibility"></i>
                     </div>
                 </div>
 
@@ -310,5 +315,19 @@
         </div>
     </div>
 
+    <script>
+        function togglePasswordVisibility(fieldId, icon) {
+            const passwordField = document.getElementById(fieldId);
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </body>
 </html>
