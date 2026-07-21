@@ -3635,6 +3635,7 @@
                     $(`#bodyPanel${panel} a`).css('color', 'var(--gold)');
                     const query = $('#keywordSearch').val();
                     if (query) highlightKeyword(query);
+                    if (typeof resetReaderScroll === 'function') resetReaderScroll(panel);
                 });
                 
                 updateActiveTOCHighlight('preamble');
@@ -3657,6 +3658,7 @@
                     $(`#bodyPanel${panel} a`).css('color', 'var(--gold)');
                     const query = $('#keywordSearch').val();
                     if (query) highlightKeyword(query);
+                    if (typeof resetReaderScroll === 'function') resetReaderScroll(panel);
                 });
                 
                 updateActiveTOCHighlight(targetArticle.id);
@@ -3758,6 +3760,9 @@
             // Stop voice reader if user manually clicks a link (real user click)
             if (e.originalEvent && VoicePlayer.isPlaying) {
                 VoicePlayer.stop();
+            }
+            if (typeof resetReaderScroll === 'function') {
+                resetReaderScroll();
             }
         });
 

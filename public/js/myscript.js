@@ -24,6 +24,43 @@
     }
 })();
 
+window.resetReaderScroll = function(panel) {
+    if (panel) {
+        var pBody = document.getElementById('bodyPanel' + panel);
+        if (pBody) pBody.scrollTop = 0;
+        var sPanel = document.querySelector('#splitPanel' + panel + ' .split-panel-body');
+        if (sPanel) sPanel.scrollTop = 0;
+    }
+    var scrollTargets = [
+        document.querySelector('.workspace-body'),
+        document.getElementById('display_content'),
+        document.querySelector('.reader-container'),
+        document.getElementById('v-pills-profile'),
+        document.querySelector('.expanded-container'),
+        document.querySelector('.main-content-area'),
+        document.querySelector('.split-panel-body')
+    ];
+    scrollTargets.forEach(function(el) {
+        if (el) {
+            el.scrollTop = 0;
+        }
+    });
+    if (window.jQuery) {
+        window.jQuery('.workspace-body, .reader-container, #display_content, .split-panel-body, html, body').scrollTop(0);
+    } else {
+        window.scrollTo(0, 0);
+    }
+    if (typeof updateReadingProgress === 'function') {
+        updateReadingProgress();
+    }
+};
+
+$(document).on('click', '.previous_content_act, .next_content_act, .previous_constitutional_acts, .next_constitutional_acts, .previous_executive_acts, .next_executive_acts, .plain_previous_content_act, .plain_next_content_act, .displayed_previous_next, .previous_content_pre_act, .next_content_pre_act, .previous_content_constitution_act, .next_content_constitution_act, .previous_content_constitution_amended_act, .next_content_constitution_amended_act, .previous_content_regulation, .next_content_regulation, .previous_content_amendments, .next_content_amendments, .constitution_content_link, .pre_content_link, .content_link, .amendments_content_link, .regulation_content_link, .constitution_amended_content_link, .amended_regulation_content_link, .constitution_preamble_link, .pre_preamble_content_link, .post_preamble_content_link, .amendments_preamble_link, .regulation_preamble_link', function() {
+    if (typeof resetReaderScroll === 'function') {
+        resetReaderScroll();
+    }
+});
+
 // TOGGLE DISPLAY BETWEEN REGULATION PREAMBLE AND REGULATION CONTENT
 $(document).ready(function(){
         
