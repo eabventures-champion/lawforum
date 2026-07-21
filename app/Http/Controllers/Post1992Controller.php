@@ -110,8 +110,7 @@ class Post1992Controller extends Controller
         $amendedcount             = AmendedTitle::where(['act_title' => "$title"])->count();
         $regulationcount          = RegulationTitle::where(['act_title' => "$title"])->count();
         $footer_notes           = FooterNote::all();
-        return view('post_1992_legislation.new_act_table_of_content', compact('footer_notes','actsOfParliaments','allPost1992Act', 'allPost1992Articles', 'amendedcount', 'regulationcount'));
-        // return view('post_1992_legislation.displayed_act_table_of_content_view', compact('footer_notes','allPost1992Act', 'allPost1992Articles', 'amendedcount', 'regulationcount'));
+        return view('post_1992_legislation.new_displayed_table_of_content_view', compact('footer_notes','actsOfParliaments','allPost1992Act', 'allPost1992Articles', 'amendedcount', 'regulationcount'));
     }
 
     //Display Preamble
@@ -271,11 +270,16 @@ class Post1992Controller extends Controller
 
     //Display Acts of Parliament
     public function acts_of_parliament_tab($group){
-        $actsOfParliaments         = Post1992Act::where(['post_group' => $group])->get();
-        $actsOfParliamentCategories   = Post1992Category::all();
-        $footer_notes           = FooterNote::all();
-        // return view('post_1992_legislation.displayed_acts_of_parliament_view', compact('footer_notes','actsOfParliaments', 'actsOfParliamentCategories'));
-        return view('post_1992_legislation.new_only_acts_of_parliament', compact('footer_notes','actsOfParliaments', 'actsOfParliamentCategories'));
+        $allPost1992Acts                = Post1992Act::all();
+        $allConstitutionalActs          = ConstitutionalAct::all();
+        $allExecutiveActs               = ExecutiveAct::all();
+        $allPostsAmends                 = AmendedTitle::all();
+        $allPostsAmendsOnRegulations    = AmendRegulationAct::all();
+        $allPostRegulations             = RegulationTitle::all();
+        $allPost1992ategories           = Post1992Category::all();
+        $footer_notes                   = FooterNote::all();
+        $activeTab                      = 'acts_of_parliament';
+        return view('post_1992_legislation.new_displayed_all_acts_view', compact('footer_notes','allPost1992Acts', 'allConstitutionalActs', 'allExecutiveActs', 'allPost1992ategories','allPostsAmends', 'allPostRegulations', 'allPostsAmendsOnRegulations', 'activeTab'));
     }
 
                         //ALL AMENDMENTS FOR A SPECIFIC ACT
@@ -561,8 +565,7 @@ class Post1992Controller extends Controller
         $allAmendments     = AmendedTitle::all();
 
         
-        return view('post_1992_legislation.new_amended_table_of_content_view', compact('footer_notes','amendedAct', 'allAmendedArticles','allAmendments'));
-        // return view('post_1992_legislation.displayed_amended_table_of_content_view', compact('footer_notes','amendedAct', 'allAmendedArticles'));
+        return view('post_1992_legislation.new_displayed_table_of_content_view', compact('footer_notes','amendedAct', 'allAmendedArticles','allAmendments'));
     }
 
     //Amendment Act Preamble
@@ -596,12 +599,16 @@ class Post1992Controller extends Controller
     //Display all Amended Acts only 
 
     public function only_amendments_acts_tab(){
-        $allAmendments         = AmendedTitle::all();
-        $allAmendmentsForRegulations = AmendRegulationAct::all();
-        $footer_notes           = FooterNote::all();
-        // $allPost1992ategories   = Post1992Category::all();
-        return view('post_1992_legislation.new_all_amendments_only', compact('footer_notes','allAmendments', 'allAmendmentsForRegulations'));
-        // return view('post_1992_legislation.displayed_all_amendments_only', compact('footer_notes','allAmendments', 'allAmendmentsForRegulations'));
+        $allPost1992Acts                = Post1992Act::all();
+        $allConstitutionalActs          = ConstitutionalAct::all();
+        $allExecutiveActs               = ExecutiveAct::all();
+        $allPostsAmends                 = AmendedTitle::all();
+        $allPostsAmendsOnRegulations    = AmendRegulationAct::all();
+        $allPostRegulations             = RegulationTitle::all();
+        $allPost1992ategories           = Post1992Category::all();
+        $footer_notes                   = FooterNote::all();
+        $activeTab                      = 'amendments';
+        return view('post_1992_legislation.new_displayed_all_acts_view', compact('footer_notes','allPost1992Acts', 'allConstitutionalActs', 'allExecutiveActs', 'allPost1992ategories','allPostsAmends', 'allPostRegulations', 'allPostsAmendsOnRegulations', 'activeTab'));
     }
 
     //-------------------------REGULATION AMENDMENTS--------------------------------------------
@@ -808,7 +815,7 @@ class Post1992Controller extends Controller
         $allAmendedRegulationArticles   = $unique;
         $footer_notes           = FooterNote::all();
 
-        return view('post_1992_legislation.displayed_amended_regulation_table_of_content_view', compact('footer_notes','amendedRegulationAct', 'allAmendedRegulationArticles'));
+        return view('post_1992_legislation.new_displayed_table_of_content_view', compact('footer_notes','amendedRegulationAct', 'allAmendedRegulationArticles'));
     }
 
      //Amendment Act Preamble
@@ -862,8 +869,7 @@ class Post1992Controller extends Controller
         $amendedregulationcount             = AmendRegulationAct::where(['regulation_title' => "$title"])->count();
         $footer_notes           = FooterNote::all();
         
-        return view('post_1992_legislation.new_regulation_table_of_content', compact('footer_notes','allRegulations','regulationAct', 'allRegulationArticles', 'amendedregulationcount'));
-        // return view('post_1992_legislation.displayed_regulation_table_of_content_view', compact('footer_notes','regulationAct', 'allRegulationArticles', 'amendedregulationcount'));
+        return view('post_1992_legislation.new_displayed_table_of_content_view', compact('footer_notes','allRegulations','regulationAct', 'allRegulationArticles', 'amendedregulationcount'));
     }
 
     //Display print section Content for preamble print
@@ -944,11 +950,16 @@ class Post1992Controller extends Controller
     //Display all Regulation Acts only 
 
     public function only_regulations_acts_tab(){
-        $allRegulations         = RegulationTitle::all();
-        $footer_notes           = FooterNote::all();
-        // $allPost1992ategories   = Post1992Category::all();
-        // return view('post_1992_legislation.displayed_all_regulations_only', compact('footer_notes','allRegulations'));
-        return view('post_1992_legislation.new_all_regulations_only', compact('footer_notes','allRegulations'));
+        $allPost1992Acts                = Post1992Act::all();
+        $allConstitutionalActs          = ConstitutionalAct::all();
+        $allExecutiveActs               = ExecutiveAct::all();
+        $allPostsAmends                 = AmendedTitle::all();
+        $allPostsAmendsOnRegulations    = AmendRegulationAct::all();
+        $allPostRegulations             = RegulationTitle::all();
+        $allPost1992ategories           = Post1992Category::all();
+        $footer_notes                   = FooterNote::all();
+        $activeTab                      = 'legislative_instruments';
+        return view('post_1992_legislation.new_displayed_all_acts_view', compact('footer_notes','allPost1992Acts', 'allConstitutionalActs', 'allExecutiveActs', 'allPost1992ategories','allPostsAmends', 'allPostRegulations', 'allPostsAmendsOnRegulations', 'activeTab'));
     }
 
                     //-----------------------------------------------DISPLAY AMENDMENTS UNDER A REGULATIOIN---------------------------------

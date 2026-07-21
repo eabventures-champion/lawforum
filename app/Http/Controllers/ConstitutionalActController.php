@@ -13,10 +13,16 @@ class ConstitutionalActController extends Controller
 {
     //All Constitutional Acts
     public function only_constitutional_acts(){
-        $allConstitutionalActs       = ConstitutionalAct::all();
-        $footer_notes                = FooterNote::all();
-            return view('post_1992_legislation.new_all_constitutional_acts', compact('footer_notes', 'allConstitutionalActs'));
-        // return view('post_1992_legislation.displayed_all_constitutional_acts', compact('footer_notes', 'allConstitutionalActs'));
+        $allPost1992Acts                = \App\Post1992Act::all();
+        $allConstitutionalActs          = ConstitutionalAct::all();
+        $allExecutiveActs               = \App\ExecutiveAct::all();
+        $allPostsAmends                 = \App\AmendedTitle::all();
+        $allPostsAmendsOnRegulations    = \App\AmendRegulationAct::all();
+        $allPostRegulations             = \App\RegulationTitle::all();
+        $allPost1992ategories           = \App\Post1992Category::all();
+        $footer_notes                   = \App\FooterNote::all();
+        $activeTab                      = 'constitutional_instruments';
+        return view('post_1992_legislation.new_displayed_all_acts_view', compact('footer_notes','allPost1992Acts', 'allConstitutionalActs', 'allExecutiveActs', 'allPost1992ategories','allPostsAmends', 'allPostRegulations', 'allPostsAmendsOnRegulations', 'activeTab'));
     }
     
     //Display Table of Content for Constitutional Acts
@@ -34,7 +40,7 @@ class ConstitutionalActController extends Controller
         $allConstitutionalArticles       = $unique;
         
         $footer_notes                = FooterNote::all();
-        return view('post_1992_legislation.constitutional_act_table_of_content', compact('footer_notes', 'allConstitutionalAct', 'allConstitutionalArticles'));
+        return view('post_1992_legislation.new_displayed_table_of_content_view', compact('footer_notes', 'allConstitutionalAct', 'allConstitutionalArticles'));
     }
 
     //Display preamble content

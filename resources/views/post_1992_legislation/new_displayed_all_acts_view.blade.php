@@ -348,12 +348,12 @@
                         </h5>
                     </div>
                     <div class="vertical-nav-group" id="sidebarNav">
-                        <a class="vertical-nav-link active" data-group="all" data-label="All Post-1992 Legislation" href="javascript:void(0)"><i class="fa-solid fa-landmark mr-3" style="width: 16px; text-align: center;"></i> All Laws</a>
-                        <a class="vertical-nav-link " data-group="acts_of_parliament" data-label="Acts of Parliament" href="javascript:void(0)"><i class="fa-solid fa-gavel mr-3" style="width: 16px; text-align: center;"></i> Acts of Parliament</a>
-                        <a class="vertical-nav-link " data-group="legislative_instruments" data-label="Legislative Instruments" href="javascript:void(0)"><i class="fa-solid fa-file-contract mr-3" style="width: 16px; text-align: center;"></i> Legislative Instruments</a>
-                        <a class="vertical-nav-link " data-group="constitutional_instruments" data-label="Constitutional Instruments" href="javascript:void(0)"><i class="fa-solid fa-building-columns mr-3" style="width: 16px; text-align: center;"></i> Constitutional Instruments</a>
-                        <a class="vertical-nav-link " data-group="executive_instruments" data-label="Executive Instruments" href="javascript:void(0)"><i class="fa-solid fa-scroll mr-3" style="width: 16px; text-align: center;"></i> Executive Instruments</a>
-                        <a class="vertical-nav-link " data-group="amendments" data-label="Amendments" href="javascript:void(0)"><i class="fa-solid fa-signature mr-3" style="width: 16px; text-align: center;"></i> Amendments</a>
+                        <a class="vertical-nav-link {{ (!isset($activeTab) || $activeTab === 'all') ? 'active' : '' }}" data-group="all" data-label="All Post-1992 Legislation" href="javascript:void(0)"><i class="fa-solid fa-landmark mr-3" style="width: 16px; text-align: center;"></i> All Laws</a>
+                        <a class="vertical-nav-link {{ (isset($activeTab) && $activeTab === 'acts_of_parliament') ? 'active' : '' }}" data-group="acts_of_parliament" data-label="Acts of Parliament" href="javascript:void(0)"><i class="fa-solid fa-gavel mr-3" style="width: 16px; text-align: center;"></i> Acts of Parliament</a>
+                        <a class="vertical-nav-link {{ (isset($activeTab) && $activeTab === 'legislative_instruments') ? 'active' : '' }}" data-group="legislative_instruments" data-label="Legislative Instruments" href="javascript:void(0)"><i class="fa-solid fa-file-contract mr-3" style="width: 16px; text-align: center;"></i> Legislative Instruments</a>
+                        <a class="vertical-nav-link {{ (isset($activeTab) && $activeTab === 'constitutional_instruments') ? 'active' : '' }}" data-group="constitutional_instruments" data-label="Constitutional Instruments" href="javascript:void(0)"><i class="fa-solid fa-building-columns mr-3" style="width: 16px; text-align: center;"></i> Constitutional Instruments</a>
+                        <a class="vertical-nav-link {{ (isset($activeTab) && $activeTab === 'executive_instruments') ? 'active' : '' }}" data-group="executive_instruments" data-label="Executive Instruments" href="javascript:void(0)"><i class="fa-solid fa-scroll mr-3" style="width: 16px; text-align: center;"></i> Executive Instruments</a>
+                        <a class="vertical-nav-link {{ (isset($activeTab) && $activeTab === 'amendments') ? 'active' : '' }}" data-group="amendments" data-label="Amendments" href="javascript:void(0)"><i class="fa-solid fa-signature mr-3" style="width: 16px; text-align: center;"></i> Amendments</a>
                     </div>
                 </div>
             </div>
@@ -467,6 +467,20 @@
                 "ordering": true,
                 "responsive": true
             });
+
+            // If activeTab is defined and is not 'all', trigger click to load via AJAX
+            @if(isset($activeTab) && $activeTab !== 'all')
+                var initialTab = '{{ $activeTab }}';
+                var targetLink = $('#sidebarNav .vertical-nav-link[data-group="' + initialTab + '"]');
+                if (targetLink.length) {
+                    $('#sidebarNav .vertical-nav-link').removeClass('active');
+                    targetLink.addClass('active');
+                    // Wait a tiny bit for table initialization to complete
+                    setTimeout(function() {
+                        targetLink.trigger('click');
+                    }, 100);
+                }
+            @endif
 
             // AJAX tab switching
             $('#sidebarNav').on('click', '.vertical-nav-link', function(e) {

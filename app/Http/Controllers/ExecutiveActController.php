@@ -12,10 +12,16 @@ class ExecutiveActController extends Controller
 {
     //
     public function only_executive_acts(){
-        $allExecutiveActs         = ExecutiveAct::all();
-        $footer_notes             = FooterNote::all();
-            return view('post_1992_legislation.new_all_executive_acts', compact('footer_notes', 'allExecutiveActs'));
-        // return view('post_1992_legislation.displayed_all_executive_acts', compact('footer_notes', 'allExecutiveActs'));
+        $allPost1992Acts                = \App\Post1992Act::all();
+        $allConstitutionalActs          = \App\ConstitutionalAct::all();
+        $allExecutiveActs               = ExecutiveAct::all();
+        $allPostsAmends                 = \App\AmendedTitle::all();
+        $allPostsAmendsOnRegulations    = \App\AmendRegulationAct::all();
+        $allPostRegulations             = \App\RegulationTitle::all();
+        $allPost1992ategories           = \App\Post1992Category::all();
+        $footer_notes                   = \App\FooterNote::all();
+        $activeTab                      = 'executive_instruments';
+        return view('post_1992_legislation.new_displayed_all_acts_view', compact('footer_notes','allPost1992Acts', 'allConstitutionalActs', 'allExecutiveActs', 'allPost1992ategories','allPostsAmends', 'allPostRegulations', 'allPostsAmendsOnRegulations', 'activeTab'));
     }
 
      //Display Table of Content for Executive Acts
@@ -34,7 +40,7 @@ class ExecutiveActController extends Controller
         $allExecutiveArticles       = $unique;
         
         $footer_notes                = FooterNote::all();
-        return view('post_1992_legislation.executive_act_table_of_content', compact('footer_notes', 'allExecutiveAct', 'allExecutiveArticles'));
+        return view('post_1992_legislation.new_displayed_table_of_content_view', compact('footer_notes', 'allExecutiveAct', 'allExecutiveArticles'));
     }
 
     //Display preamble content

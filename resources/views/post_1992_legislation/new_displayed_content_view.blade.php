@@ -422,57 +422,7 @@
                 @endif
             </span>
             
-            <!-- Actions Section -->
-            <div class="actions-container">
-                <a id="print_options" href="#">
-                    <i class="fa-solid fa-square-share-nodes"></i> Export Options <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 2px;"></i>
-                </a>
-                
-                <div class="menu_options" style="display: none;">
-                    @if (Route::has('login'))
-                        @auth
-                            <a class="download_link" href="javascript:;" rel="/post-1992-legislation/pdf-content/{{$allPost1992Article['post_act']}}/{{ $allPost1992Article['id'] }}">
-                                <i class="fa-solid fa-file-pdf text-red"></i> PDF Download
-                            </a>
-                            <a class="d-none section_id" href="javascript:;" rel="/section_downloads/{{$allPost1992Article['post_act']}}/{{$allPost1992Article['section']}}/{{$allPost1992Article['id']}}/{{ Auth::user()->name }}/{{ Auth::user()->id }}/{{ Auth::user()->id }}{{$allPost1992Article['section']}}/{{$allPost1992Article['act_group']}}/{{$allPost1992Article['act_id']}}">Testing</a>
-                            <a href="/post_1992_legislation/print_section_content/{{ $allPost1992Article['id'] }}" target="_blank">
-                                <i class="fa-solid fa-print text-blue"></i> Print Preview
-                            </a>
-                        @else
-                            <a href="" data-toggle="modal" data-target="#myModals">
-                                <i class="fa-solid fa-file-pdf text-red"></i> PDF Download
-                            </a>
-                            <a href="" data-toggle="modal" data-target="#myModals">
-                                <i class="fa-solid fa-print text-blue"></i> Print Article
-                            </a>
-                            
-                            <!-- Modal -->
-                            <div class="modal fade" id="myModals" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content premium-modal">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">
-                                                <i class="fa-solid fa-circle-user"></i>
-                                                <b>Authentication Required</b>
-                                            </h5>
-                                            <button type="button" class="close-btn" data-dismiss="modal" aria-label="Close">
-                                                <i class="fa-solid fa-xmark"></i>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p class="modal-desc">Kindly Log In or Sign Up to create an account and unlock PDF and Print functionality.</p>
-                                            <div class="modal-actions">
-                                                <a class="btn-auth btn-login" href="{{ route('login') }}">Login</a>
-                                                <a class="btn-auth btn-signup" href="{{ route('register') }}">Sign Up</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> 
-                        @endauth
-                    @endif
-                </div>
-            </div>
+            <!-- Export options removed for Post-1992 -->
         </div>
 
         <!-- Article Content -->
