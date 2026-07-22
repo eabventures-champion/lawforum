@@ -1951,10 +1951,10 @@
            FLOATING TEXT SELECTION TOOLTIP
            ============================================ */
         .text-select-tooltip {
-            position: fixed; z-index: 9999; display: none;
-            background: #1e293b; border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 10px; padding: 6px 8px; box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-            animation: tooltipPop 0.15s ease;
+            position: fixed !important; z-index: 10000 !important; display: none;
+            background: #1e293b !important; border: 1px solid rgba(255,255,255,0.15) !important;
+            border-radius: 10px !important; padding: 6px 8px !important; box-shadow: 0 8px 30px rgba(0,0,0,0.6) !important;
+            animation: tooltipPop 0.15s ease !important;
         }
         @keyframes tooltipPop {
             from { opacity: 0; transform: scale(0.92); }
@@ -4401,28 +4401,50 @@
 
     document.addEventListener('mouseup', function(e) {
         var tooltip = document.getElementById('textSelectTooltip');
-        var readingPane = document.querySelector('.workspace-main');
+        if (!tooltip) return;
+
+        var targetEl = (e.target && e.target.nodeType === 3) ? e.target.parentElement : e.target;
+        if (!targetEl) return;
+
+        if (tooltip.contains(targetEl)) {
+            return;
+        }
+
+        var readingPane = document.querySelector('.workspace-main') || document.getElementById('display_content') || document.getElementById('acts_expanded_view');
         var toolbar = document.querySelector('.reading-toolbar');
 
-        if (!readingPane || !readingPane.contains(e.target) || (toolbar && toolbar.contains(e.target))) {
-            if (!tooltip.contains(e.target)) {
-                tooltip.style.display = 'none';
-            }
+        if (!readingPane || !readingPane.contains(targetEl) || (toolbar && toolbar.contains(targetEl))) {
+            tooltip.style.display = 'none';
             return;
         }
 
         setTimeout(function() {
             var sel = window.getSelection();
-            var text = sel.toString().trim();
+            if (!sel || sel.rangeCount === 0) {
+                tooltip.style.display = 'none';
+                return;
+            }
 
+            var text = sel.toString().trim();
             if (text.length > 3) {
                 currentSelection = text;
-                var range = sel.getRangeAt(0);
-                var rect = range.getBoundingClientRect();
+                try {
+                    var range = sel.getRangeAt(0);
+                    var rect = range.getBoundingClientRect();
 
-                tooltip.style.top = (rect.top - 50) + 'px';
-                tooltip.style.left = Math.min(rect.left + (rect.width / 2) - 100, window.innerWidth - 250) + 'px';
-                tooltip.style.display = 'block';
+                    if (rect && (rect.width > 0 || rect.height > 0)) {
+                        var topPos = Math.max(10, Math.round(rect.top - 48));
+                        var leftPos = Math.max(10, Math.min(Math.round(rect.left + (rect.width / 2) - 100), window.innerWidth - 220));
+
+                        tooltip.style.top = topPos + 'px';
+                        tooltip.style.left = leftPos + 'px';
+                        tooltip.style.display = 'block';
+                    } else {
+                        tooltip.style.display = 'none';
+                    }
+                } catch (err) {
+                    tooltip.style.display = 'none';
+                }
             } else {
                 tooltip.style.display = 'none';
             }

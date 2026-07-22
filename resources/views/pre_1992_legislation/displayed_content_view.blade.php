@@ -250,7 +250,16 @@
             font-family: var(--font-legal);
             font-size: 17px;
             line-height: 1.85;
-            color: #e2e8f0;
+            color: #e2e8f0 !important;
+        }
+
+        /* Force light text on all children to override inline styles from stored HTML */
+        .content *:not(a) {
+            color: #e2e8f0 !important;
+        }
+
+        .content a {
+            color: var(--accent-light) !important;
         }
 
         /* Indentation and alignment of Legal clauses */
