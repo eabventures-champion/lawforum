@@ -2163,10 +2163,25 @@
            FLOATING TEXT SELECTION TOOLTIP
            ============================================ */
         .text-select-tooltip {
-            position: fixed !important; z-index: 10000 !important; display: none;
+            position: fixed !important; z-index: 999999 !important; display: none;
             background: #1e293b !important; border: 1px solid rgba(255,255,255,0.15) !important;
             border-radius: 10px !important; padding: 6px 8px !important; box-shadow: 0 8px 30px rgba(0,0,0,0.6) !important;
             animation: tooltipPop 0.15s ease !important;
+        }
+
+        /* Ensure View Options dropdown overshadows ad card */
+        .premium-filter-card, .toc-sidebar-module {
+            position: relative !important;
+            z-index: 100 !important;
+            overflow: visible !important;
+        }
+        .dropdown-menu-premium {
+            z-index: 999999 !important;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.85) !important;
+        }
+        .premium-ad-card {
+            position: relative !important;
+            z-index: 1 !important;
         }
         @keyframes tooltipPop {
             from { opacity: 0; transform: scale(0.92); }
@@ -2826,7 +2841,10 @@
                             <!-- Scroll viewport container -->
                             <div class="notes-container-scroll">
                                 <div id="notesContainer">
-                                    <!-- Notes loaded via AJAX -->
+                                    <div style="text-align:center; padding:24px 16px; color: var(--text-muted); font-size:12px;">
+                                        <i class="fa-regular fa-note-sticky" style="font-size:28px; margin-bottom:10px; display:block; opacity:0.35;"></i>
+                                        No notes yet for this document
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -3432,26 +3450,25 @@
         const pre1992ActId = @json($activeAct['id']);
         const pre1992Group = @json($actGroup);
         const pre1992Title = @json($activeAct['title']);
-        const currentDocumentType = @json($documentType);
+        const activeDocumentType = @json($documentType);
 
         let contentBaseUrl = '/post_1992_legislation/content';
         let preambleBaseUrl = '/post_1992_legislation/preamble';
-        if (currentDocumentType === 'regulation') {
-            contentBaseUrl = '/post_19_post_1992_legislation/regulation_act/content'; // wait, let's look at the exact path
+        if (activeDocumentType === 'regulation') {
             contentBaseUrl = '/post_1992_legislation/regulation_act/content';
             preambleBaseUrl = '/post_1992_legislation/regulation/preamble';
-        } else if (currentDocumentType === 'constitutional') {
+        } else if (activeDocumentType === 'constitutional') {
             contentBaseUrl = '/post-1992-legislation/constitutional-acts/content';
             preambleBaseUrl = '/post-1992-legislation/constitutional-acts/preamble';
-        } else if (currentDocumentType === 'executive') {
+        } else if (activeDocumentType === 'executive') {
             contentBaseUrl = '/post-1992-legislation/executive-acts/content';
             preambleBaseUrl = '/post-1992-legislation/executive-acts/preamble';
-        } else if (currentDocumentType === 'amendment_act') {
-            contentBaseUrl = '/post_1992_legislation/amended_act_content';
-            preambleBaseUrl = '/post_1992_legislation/amended_preamble';
-        } else if (currentDocumentType === 'amendment_regulation') {
-            contentBaseUrl = '/post_1992_legislation/amended_regulation_acts/content';
-            preambleBaseUrl = '/post_1992_legislation/amended_regulation_acts/preamble';
+        } else if (activeDocumentType === 'amendment_act') {
+            contentBaseUrl = '/post_1992_legislation/amended_acts/content';
+            preambleBaseUrl = '/post_1992_legislation/amended_acts/preamble';
+        } else if (activeDocumentType === 'amendment_regulation') {
+            contentBaseUrl = '/post_1992_legislation/amended_regulation_act/content';
+            preambleBaseUrl = '/post_1992_legislation/amended_regulation_act/preamble';
         }
 
         let voices = [];
@@ -4419,17 +4436,17 @@
                     const encodedGroup = encodeURIComponent(pre1992Group);
                     const encodedTitle = encodeURIComponent(pre1992Title);
                     
-                    if (currentDocumentType === 'post_1992_legislation') {
+                    if (activeDocumentType === 'post_1992_legislation') {
                         expandedUrl = `/post_1992_legislation/1/${encodedGroup}/${encodedTitle}/expanded-view/${pre1992ActId}`;
-                    } else if (currentDocumentType === 'regulation') {
+                    } else if (activeDocumentType === 'regulation') {
                         expandedUrl = `/post_1992_legislation/regulation/expanded_view/${encodedGroup}/${encodedTitle}/${pre1992ActId}`;
-                    } else if (currentDocumentType === 'constitutional') {
+                    } else if (activeDocumentType === 'constitutional') {
                         expandedUrl = `/post-1992-legislation/constitutional-acts/expanded-view/${encodedGroup}/${encodedTitle}/${pre1992ActId}`;
-                    } else if (currentDocumentType === 'executive') {
+                    } else if (activeDocumentType === 'executive') {
                         expandedUrl = `/post-1992-legislation/executive-acts/expanded-view/${encodedGroup}/${encodedTitle}/${pre1992ActId}`;
-                    } else if (currentDocumentType === 'amendment_act') {
+                    } else if (activeDocumentType === 'amendment_act') {
                         expandedUrl = `/post_1992_legislation/amended_acts/expanded_view/${encodedGroup}/${encodedTitle}/${pre1992ActId}`;
-                    } else if (currentDocumentType === 'amendment_regulation') {
+                    } else if (activeDocumentType === 'amendment_regulation') {
                         expandedUrl = `/post_1992_legislation/amended_regulation_acts/expanded_view/${encodedGroup}/${encodedTitle}/${pre1992ActId}`;
                     }
                     
@@ -4504,9 +4521,9 @@
     // ============================================
     var selectedNoteColor = 'yellow';
     var selectedHighlightText = '';
-    var currentDocumentId = {{ $activeAct['id'] }};
-    var currentDocumentTitle = @json($activeAct['title']);
-    var currentDocumentType = @json($documentType);
+    var currentDocumentId = {{ isset($activeAct) ? (is_array($activeAct) ? ($activeAct['id'] ?? 0) : ($activeAct->id ?? 0)) : 0 }};
+    var currentDocumentTitle = @json(isset($activeAct) ? (is_array($activeAct) ? ($activeAct['title'] ?? '') : ($activeAct->title ?? '')) : '');
+    var currentDocumentType = @json($documentType ?? 'post_1992_legislation');
 
     // Color picker
     function selectNoteColor(el) {
@@ -4760,102 +4777,174 @@
     // ============================================
     var currentSelection = '';
 
-    document.addEventListener('mouseup', function(e) {
+    function checkTextSelection(e) {
         var tooltip = document.getElementById('textSelectTooltip');
         if (!tooltip) return;
 
-        var targetEl = (e.target && e.target.nodeType === 3) ? e.target.parentElement : e.target;
-        if (!targetEl) return;
-
-        if (tooltip.contains(targetEl)) {
-            return;
-        }
-
-        var readingPane = document.querySelector('.workspace-main') || document.getElementById('display_content') || document.getElementById('acts_expanded_view');
-        var toolbar = document.querySelector('.reading-toolbar');
-
-        if (!readingPane || !readingPane.contains(targetEl) || (toolbar && toolbar.contains(targetEl))) {
-            tooltip.style.display = 'none';
-            return;
+        // If clicking inside tooltip buttons, do not process hide logic
+        if (e && e.target) {
+            var targetEl = (e.target.nodeType === 3) ? e.target.parentElement : e.target;
+            if (targetEl && tooltip.contains(targetEl)) {
+                return;
+            }
         }
 
         setTimeout(function() {
             var sel = window.getSelection();
-            if (!sel || sel.rangeCount === 0) {
+            if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
                 tooltip.style.display = 'none';
                 return;
             }
 
             var text = sel.toString().trim();
-            if (text.length > 3) {
-                currentSelection = text;
-                try {
-                    var range = sel.getRangeAt(0);
-                    var rect = range.getBoundingClientRect();
+            if (text.length < 2) {
+                tooltip.style.display = 'none';
+                return;
+            }
 
-                    if (rect && (rect.width > 0 || rect.height > 0)) {
-                        var topPos = Math.max(10, Math.round(rect.top - 48));
-                        var leftPos = Math.max(10, Math.min(Math.round(rect.left + (rect.width / 2) - 100), window.innerWidth - 220));
+            var targetNode = sel.anchorNode || sel.focusNode;
+            if (!targetNode) {
+                tooltip.style.display = 'none';
+                return;
+            }
 
-                        tooltip.style.top = topPos + 'px';
-                        tooltip.style.left = leftPos + 'px';
-                        tooltip.style.display = 'block';
-                    } else {
-                        tooltip.style.display = 'none';
-                    }
-                } catch (err) {
+            var anchorEl = (targetNode.nodeType === 3) ? targetNode.parentElement : targetNode;
+            if (!anchorEl) {
+                tooltip.style.display = 'none';
+                return;
+            }
+
+            // Container matching - match any reader pane or article element
+            var container = anchorEl.closest('#display_content, #acts_expanded_view, .split-panel, .workspace-main, .article-card, .content, .reader-container, .premium-article-container, .preamble-card, .split-panel-body, .main-content-area');
+            var isIgnored = anchorEl.closest('input, textarea, select, .toc-sidebar, .notes-sidebar-container, .right-sidebar, #rightSidebar');
+
+            if (!container || isIgnored) {
+                tooltip.style.display = 'none';
+                return;
+            }
+
+            currentSelection = text;
+            try {
+                var range = sel.getRangeAt(0);
+                var clientRects = range.getClientRects();
+                var rect = (clientRects && clientRects.length > 0) ? clientRects[0] : range.getBoundingClientRect();
+
+                if (rect && (rect.width > 0 || rect.height > 0)) {
+                    var topPos = Math.round(rect.top - 48);
+                    if (topPos < 10) topPos = Math.round(rect.bottom + 8);
+                    
+                    var leftPos = Math.max(10, Math.min(Math.round(rect.left + (rect.width / 2) - 100), window.innerWidth - 230));
+
+                    tooltip.style.position = 'fixed';
+                    tooltip.style.top = topPos + 'px';
+                    tooltip.style.left = leftPos + 'px';
+                    tooltip.style.display = 'block';
+                    tooltip.style.zIndex = '999999';
+                } else {
                     tooltip.style.display = 'none';
                 }
-            } else {
+            } catch (err) {
                 tooltip.style.display = 'none';
             }
         }, 10);
-    });
+    }
 
-    // Hide tooltip on scroll
+    document.addEventListener('mouseup', checkTextSelection);
+    document.addEventListener('keyup', checkTextSelection);
+    document.addEventListener('touchend', checkTextSelection);
+
+    // Hide tooltip when scroll begins, re-evaluate selection when scroll stops
+    var scrollHideTimer = null;
     document.addEventListener('scroll', function() {
-        document.getElementById('textSelectTooltip').style.display = 'none';
+        var tooltip = document.getElementById('textSelectTooltip');
+        if (tooltip && tooltip.style.display !== 'none') {
+            tooltip.style.display = 'none';
+            clearTimeout(scrollHideTimer);
+            scrollHideTimer = setTimeout(function() {
+                checkTextSelection();
+            }, 150);
+        }
     }, true);
+
+    // Universal Clipboard Copy helper (bypasses copy-protection listeners via stopPropagation)
+    function copyToClipboard(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            return navigator.clipboard.writeText(text).catch(function() {
+                return fallbackCopy(text);
+            });
+        } else {
+            return Promise.resolve(fallbackCopy(text));
+        }
+    }
+
+    function fallbackCopy(text) {
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.top = "-9999px";
+        textArea.style.left = "-9999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        var allowCopy = function(e) { e.stopPropagation(); };
+        textArea.addEventListener('copy', allowCopy, true);
+
+        try {
+            document.execCommand('copy');
+        } catch (err) {
+            console.error('Fallback copy failed', err);
+        }
+        textArea.removeEventListener('copy', allowCopy, true);
+        document.body.removeChild(textArea);
+    }
 
     // Add Note from text selection
     function addNoteFromSelection() {
         if (currentSelection) {
             setHighlightedText(currentSelection);
-            document.getElementById('noteTextarea').focus();
+            
+            var noteArea = document.getElementById('noteTextarea');
+            if (noteArea) noteArea.focus();
 
             // Ensure right sidebar is open
             var rightSidebar = document.getElementById('rightSidebar');
-            if (rightSidebar.classList.contains('collapsed')) {
+            if (rightSidebar && rightSidebar.classList.contains('collapsed')) {
                 toggleSidebar('right');
             }
         }
-        document.getElementById('textSelectTooltip').style.display = 'none';
+        var tooltip = document.getElementById('textSelectTooltip');
+        if (tooltip) tooltip.style.display = 'none';
         window.getSelection().removeAllRanges();
     }
 
     // Copy selected text
     function copySelectedText() {
         if (currentSelection) {
-            navigator.clipboard.writeText(currentSelection).then(function() {
+            copyToClipboard(currentSelection).then(function() {
                 showToast('Text copied to clipboard!', 'success');
             });
         }
-        document.getElementById('textSelectTooltip').style.display = 'none';
+        var tooltip = document.getElementById('textSelectTooltip');
+        if (tooltip) tooltip.style.display = 'none';
         window.getSelection().removeAllRanges();
     }
 
+    // Copy with citation
     function copyWithCitation() {
         if (currentSelection) {
             var section = getCurrentArticleSection() || '';
-            var citation = currentSelection + '\n\n— ' + currentDocumentTitle;
+            var docTitle = (typeof currentDocumentTitle !== 'undefined' && currentDocumentTitle) ? currentDocumentTitle : 'Legals Forum';
+            var citation = currentSelection + '\n\n— ' + docTitle;
             if (section) citation += ', ' + section;
             citation += ' (Legals Forum)';
 
-            navigator.clipboard.writeText(citation).then(function() {
+            copyToClipboard(citation).then(function() {
                 showToast('Copied with citation!', 'success');
             });
         }
-        document.getElementById('textSelectTooltip').style.display = 'none';
+        var tooltip = document.getElementById('textSelectTooltip');
+        if (tooltip) tooltip.style.display = 'none';
         window.getSelection().removeAllRanges();
     }
 
@@ -4863,12 +4952,30 @@
     // READING PROGRESS TRACKER & BACK TO TOP
     // ============================================
     function updateReadingProgress() {
-        var scrollContainer = document.querySelector('.workspace-body');
-        if (!scrollContainer) return;
+        var containers = document.querySelectorAll('.workspace-body, .split-panel-body, #display_content, .reader-container');
+        var scrollTop = 0;
+        var scrollHeight = 0;
+        var clientHeight = 0;
 
-        var scrollTop = scrollContainer.scrollTop;
-        var scrollHeight = scrollContainer.scrollHeight - scrollContainer.clientHeight;
-        var progress = scrollHeight > 0 ? Math.round((scrollTop / scrollHeight) * 100) : 0;
+        containers.forEach(function(el) {
+            if (el.scrollHeight > el.clientHeight && el.clientHeight > 0) {
+                if (el.scrollTop > scrollTop || scrollTop === 0) {
+                    scrollTop = el.scrollTop;
+                    scrollHeight = el.scrollHeight;
+                    clientHeight = el.clientHeight;
+                }
+            }
+        });
+
+        // Fallback to window/document scroll
+        if (scrollHeight === 0 || clientHeight === 0) {
+            scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+            clientHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+            scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight || 0;
+        }
+
+        var maxScroll = scrollHeight - clientHeight;
+        var progress = maxScroll > 0 ? Math.round((scrollTop / maxScroll) * 100) : 0;
         progress = Math.min(100, Math.max(0, progress));
 
         var progressFill = document.getElementById('progressFill');
@@ -4879,33 +4986,32 @@
         // Show/hide back to top button when scrolled down
         var backToTopBtn = document.getElementById('workspace-back-to-top');
         if (backToTopBtn) {
-            if (scrollTop > 300) {
-                backToTopBtn.style.display = 'flex';
-            } else {
-                backToTopBtn.style.display = 'none';
-            }
+            backToTopBtn.style.display = (scrollTop > 200) ? 'flex' : 'none';
         }
     }
 
-    // Attach scroll listener to reading pane
+    // Attach scroll listener to reading pane and window
     $(document).ready(function() {
-        var scrollContainer = document.querySelector('.workspace-body');
-        if (scrollContainer) {
-            scrollContainer.addEventListener('scroll', updateReadingProgress);
-        }
+        window.addEventListener('scroll', updateReadingProgress, true);
+
+        // Re-evaluate on AJAX content load and section selection
+        $(document).ajaxComplete(function() {
+            setTimeout(updateReadingProgress, 100);
+        });
 
         // Click handler for Back to Top button
         $('#workspace-back-to-top').click(function() {
-            var scrollContainer = $('.workspace-body');
-            if (scrollContainer.length) {
-                scrollContainer.animate({ scrollTop: 0 }, 400);
-            }
+            var scrollContainers = $('.workspace-body, .split-panel-body, #display_content, html, body');
+            scrollContainers.animate({ scrollTop: 0 }, 400);
         });
 
-        // Also update progress on tab switch to reset/recalculate for new tab heights
-        $('#tabs a[data-toggle="pill"]').on('shown.bs.tab', function () {
-            updateReadingProgress();
+        // Also update progress on tab switch
+        $('#tabs a[data-toggle="pill"], .workspace-view-tabs button').on('shown.bs.tab click', function () {
+            setTimeout(updateReadingProgress, 100);
         });
+
+        // Initial progress calculation
+        setTimeout(updateReadingProgress, 200);
 
         // Load saved notes on page load
         loadDocumentNotes();

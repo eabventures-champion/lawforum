@@ -10,6 +10,9 @@
        margin-bottom: 20px;
        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
        transition: border-color 0.3s ease;
+       position: relative !important;
+       z-index: 100 !important;
+       overflow: visible !important;
    }
    
    .premium-filter-card:hover {
@@ -61,8 +64,9 @@
        background: #0f172a !important;
        border: 1px solid var(--border-color) !important;
        border-radius: 8px !important;
-       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+       box-shadow: 0 10px 35px rgba(0, 0, 0, 0.85) !important;
        padding: 6px !important;
+       z-index: 999999 !important;
    }
    
    .dropdown-item-premium {
@@ -97,6 +101,8 @@
        background: rgba(255, 255, 255, 0.01);
        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+       position: relative !important;
+       z-index: 1 !important;
    }
    
    .premium-ad-card:hover {
@@ -152,36 +158,6 @@
             <a class="dropdown-item dropdown-item-premium" href="#" onclick="triggerSplitView('vertical')">
                 <i class="fa-solid fa-window-maximize" style="transform: rotate(90deg); font-size: 10px;"></i> Vertical Split
             </a>
-            @if (Route::has('login'))
-            @auth
-            {{-- No Subscription --}}
-            @if(auth()->user()->check_subscription == 0)
-            <a class="dropdown-item dropdown-item-premium" href="" data-toggle="modal" data-target="#myModalplainSubscribe">
-                <i class="fa-solid fa-file-lines"></i> Plain View
-            </a>
-            {{-- Subscription has expired --}}
-            @elseif(auth()->user()->subscription_expiry < today())
-            <a class="dropdown-item dropdown-item-premium" href="" data-toggle="modal" data-target="#myModalplainExpiry">
-                <i class="fa-solid fa-file-lines"></i> Plain View
-            </a>
-            {{-- Subscription download limit reached --}}
-            @elseif(auth()->user()->subscription_downloads <= auth()->user()->downloads_counts)
-            <a class="dropdown-item dropdown-item-premium" href="" data-toggle="modal" data-target="#maximumDownloadReachedplain">
-                <i class="fa-solid fa-file-lines"></i> Plain View
-            </a>
-            @else
-            {{-- View Plain View --}}
-            <a class="dropdown-item dropdown-item-premium" href="/post_1992_legislation/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/plain_view/{{ $allPost1992Act['id'] }}" target="_blank">
-                <i class="fa-solid fa-file-lines"></i> Plain View
-            </a>
-            @endif
-            @else
-            {{-- Create Account --}}
-            <a class="dropdown-item dropdown-item-premium" href="" data-toggle="modal" data-target="#myModalplainAccount">
-                <i class="fa-solid fa-file-lines"></i> Plain View
-            </a>
-            @endauth
-            @endif
         </div>
     </div>
 </div>

@@ -10,6 +10,8 @@
         margin-bottom: 20px;
         box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
         transition: border-color 0.3s ease;
+        position: relative !important;
+        z-index: 100 !important;
     }
     
     .premium-details-card:hover {
@@ -57,6 +59,20 @@
         border-color: rgba(255, 255, 255, 0.15) !important;
         color: #fff !important;
     }
+
+    .dropdown-menu-premium {
+        background: #0f172a !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: 8px !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+        padding: 6px !important;
+        z-index: 1050 !important;
+    }
+
+    .premium-ad-card {
+        position: relative !important;
+        z-index: 1 !important;
+    }
 </style>
 
 <div class="premium-details-card">
@@ -88,4 +104,3 @@
 <div class="premium-ad-card">
     @include('ads.small_ads_image_main_page')
 </div>
-  
