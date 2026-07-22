@@ -1,148 +1,196 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-   <head>
-      <link rel="stylesheet" href="{{ asset('css/tooltipster.bundle.min.css') }}" type="text/css">
-      <link rel="stylesheet" href="{{ asset('css/tooltipster-sideTip-borderless.min.css') }}" type="text/css">
-      <style>
-         .btn-customised{
-         font-weight: 550;
-         padding: .175rem .75rem;
-         line-height: 1.3;
-         font-size: .8rem;
-         }
-      </style>
-   </head>
-   <body>
-      <div class="col-md-3 mobile-filter-hide">
-         <div class="sidebar">
-            <div class="card border-secondary" style="max-width: 18rem;">
-               <div class="card-header" style="padding: .25rem 1.25rem;">Filter</div>
-               <div class="card-body text-dark">
-                  <center>
-                     {{-- For both amendments and regulations --}}
-                     @if($amendedcount > 0 && $regulationcount > 0)
-                     <div class="dropdown mb-3">
-                        <a class="btn btn-outline-dark dropdown-toggle btn-customised" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span>Related Acts</span>
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                           <li>
-                              <a class="all_amendments_link dropdown-item" id="all_amendments_link_toggle"  href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
-                                 <center>Amendments</center>
-                              </a>
-                           </li>
-                           {{-- 
-                           <li>
-                              <a class="all_regulations_link dropdown-item" id="all_regulations_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_regulations_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
-                                 <center>Regulations</center>
-                              </a>
-                           </li>
-                           --}}
-                        </div>
-                     </div>
-                     {{-- For Amendments --}}
-                     @elseif($amendedcount > 0)
-                     <div class="dropdown mb-3">
-                        <a class="btn btn-outline-dark dropdown-toggle btn-customised" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span>View Related Acts</span>
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                           <li>
-                              <a class="all_amendments_link dropdown-item" id="all_amendments_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
-                                 <center>Amendments</center>
-                              </a>
-                           </li>
-                        </div>
-                     </div>
-                     {{-- For Regulations --}}
-                     {{-- @elseif($regulationcount > 0)
-                     <div class="dropdown mb-3">
-                        <a class="btn btn-outline-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span>View Related Acts</span>
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                           <li>
-                              <a class="all_regulations_link dropdown-item" id="all_regulations_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_regulations_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
-                                 <center>Regulations</center>
-                              </a>
-                           </li>
-                        </div>
-                     </div>
-                     --}}
-                     @else
-                     <div class="d-none"></div>
-                     @endif
-                  </center>
-                  <center>
-                     <div class="dropdown mb-2">
-                        <a class="btn btn-outline-dark dropdown-toggle btn-customised" href="#" role="button" id="dropdownMenuLink-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span>View Options</span>
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink-2">
-                           <li>
-                              <a class="expanded_link dropdown-item toggle_expanded_view" href="/post_1992_legislation/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/expanded-view/{{ $allPost1992Act['id'] }}">
-                                 <center>Expanded View</center>
-                              </a>
-                           </li>
-                           @if (Route::has('login'))
-                           @auth
-                           {{-- No Subscription --}}
-                           @if(auth()->user()->check_subscription == 0)
-                           <li>
-                              <a class="dropdown-item" href="" data-toggle="modal" data-target="#myModalplainSubscribe">
-                                 <center>Plain View</center>
-                              </a>
-                           </li>
-                           {{-- Subscription has expired --}}
-                           @elseif(auth()->user()->subscription_expiry < today())
-                           <li>
-                              <a class="dropdown-item" href="" data-toggle="modal" data-target="#myModalplainExpiry">
-                                 <center>Plain View</center>
-                              </a>
-                           </li>
-                           {{-- Subscription download limit reached --}}
-                           @elseif(auth()->user()->subscription_downloads <= auth()->user()->downloads_counts)
-                           <li>
-                              <a class="dropdown-item" href="" data-toggle="modal" data-target="#maximumDownloadReachedplain">
-                                 <center>Plain View</center>
-                              </a>
-                           </li>
-                           @else
-                           {{-- View Plain View --}}
-                           <li>
-                              <a class="dropdown-item" href="/post_1992_legislation/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/plain_view/{{ $allPost1992Act['id'] }}" target="_blank">
-                                 <center>Plain View</center>
-                              </a>
-                           </li>
-                           @endif
-                           @else
-                           {{-- Create Account --}}
-                           <li>
-                              <a class="dropdown-item" href="" data-toggle="modal" data-target="#myModalplainAccount">
-                                 <center>Plain View</center>
-                              </a>
-                           </li>
-                           @endauth
-                           @endif
-                        </div>
-                     </div>
-                  </center>
-                  <hr>
-                  <form action="/acts-of-parliament-act-search/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}" method="GET" class="mt-4">
-                     {{ csrf_field() }}
-                     <input style="padding: 13px;" class="form-control" name="search_text" type="text" placeholder="Word-search" aria-label="Search">
-                  </form>
-               </div>
-            </div>
-            <div class="card mt-3">
-               @include('ads.small_ads_image_main_page')
-            </div>
-         </div>
-         
-         @include('layouts.plain_view_no_subscription')
-         @include('layouts.plain_view_subscription_expiry')
-         @include('layouts.plain_view_downloaded_exceeded')
-         @include('layouts.plain_create_account')
-      </div>
-   </body>
-</html>
+<style>
+   /* Premium Sidebar Cards */
+   .premium-filter-card {
+       background: rgba(30, 41, 59, 0.45);
+       backdrop-filter: blur(16px);
+       -webkit-backdrop-filter: blur(16px);
+       border: 1px solid var(--border-color);
+       border-radius: 12px;
+       padding: 20px;
+       margin-bottom: 20px;
+       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+       transition: border-color 0.3s ease;
+   }
+   
+   .premium-filter-card:hover {
+       border-color: rgba(255, 255, 255, 0.12);
+   }
+   
+   .filter-header-title {
+       font-size: 11px;
+       font-weight: 700;
+       letter-spacing: 1.5px;
+       text-transform: uppercase;
+       color: var(--text-secondary);
+       margin-bottom: 16px;
+       display: flex;
+       align-items: center;
+       gap: 8px;
+   }
+   
+   .filter-header-title i {
+       color: var(--gold);
+       font-size: 12px;
+   }
+   
+   /* View Options Button Dropdown */
+   .dropdown-btn-premium {
+       width: 100%;
+       background: rgba(255, 255, 255, 0.02) !important;
+       border: 1px solid var(--border-color) !important;
+       color: var(--text-primary) !important;
+       padding: 10px 16px !important;
+       border-radius: 8px !important;
+       font-size: 13px !important;
+       font-weight: 600 !important;
+       display: flex !important;
+       align-items: center !important;
+       justify-content: space-between !important;
+       transition: all 0.2s ease !important;
+       text-decoration: none !important;
+   }
+   
+   .dropdown-btn-premium:hover, .dropdown-btn-premium:focus {
+       background: rgba(255, 255, 255, 0.06) !important;
+       border-color: rgba(255, 255, 255, 0.15) !important;
+       color: #fff !important;
+   }
+   
+   .dropdown-menu-premium {
+       width: 100%;
+       background: #0f172a !important;
+       border: 1px solid var(--border-color) !important;
+       border-radius: 8px !important;
+       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+       padding: 6px !important;
+   }
+   
+   .dropdown-item-premium {
+       color: var(--text-secondary) !important;
+       font-size: 13px !important;
+       font-weight: 500 !important;
+       padding: 8px 12px !important;
+       border-radius: 6px !important;
+       transition: all 0.2s ease !important;
+       text-align: left !important;
+       display: flex !important;
+       align-items: center;
+       gap: 8px;
+   }
+   
+   .dropdown-item-premium:hover {
+       background: rgba(255, 255, 255, 0.05) !important;
+       color: #fff !important;
+   }
+   
+   .dropdown-item-premium i {
+       font-size: 12px;
+       width: 14px;
+       text-align: center;
+   }
+   
+   /* Ad Banner Slot Premium */
+   .premium-ad-card {
+       border-radius: 12px;
+       overflow: hidden;
+       border: 1px solid var(--border-color);
+       background: rgba(255, 255, 255, 0.01);
+       transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+   }
+   
+   .premium-ad-card:hover {
+       transform: translateY(-2px) scale(1.01);
+       border-color: rgba(255, 255, 255, 0.15);
+       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+   }
+</style>
+
+<div class="premium-filter-card">
+    <div class="filter-header-title">
+        <i class="fa-solid fa-filter"></i> Filter
+    </div>
+    
+    {{-- Related Acts Dropdown --}}
+    @if($amendedcount > 0 && $regulationcount > 0)
+    <div class="dropdown mb-3">
+        <a class="dropdown-btn-premium dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span>Related Acts</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-premium" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item dropdown-item-premium all_amendments_link" id="all_amendments_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
+                <i class="fa-solid fa-file-pen"></i> Amendments
+            </a>
+        </div>
+    </div>
+    @elseif($amendedcount > 0)
+    <div class="dropdown mb-3">
+        <a class="dropdown-btn-premium dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span>View Related Acts</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-premium" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item dropdown-item-premium all_amendments_link" id="all_amendments_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
+                <i class="fa-solid fa-file-pen"></i> Amendments
+            </a>
+        </div>
+    </div>
+    @endif
+
+    {{-- View Options Dropdown --}}
+    <div class="dropdown">
+        <a class="dropdown-btn-premium dropdown-toggle" href="#" role="button" id="dropdownMenuLink-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span>View Options</span>
+        </a>
+        
+        <div class="dropdown-menu dropdown-menu-premium" aria-labelledby="dropdownMenuLink-2">
+            <a class="dropdown-item dropdown-item-premium expanded_link toggle_expanded_view" href="/post_1992_legislation/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/expanded-view/{{ $allPost1992Act['id'] }}" onclick="selectViewMode('expanded'); event.stopImmediatePropagation(); return false;">
+                <i class="fa-solid fa-expand"></i> Expanded View
+            </a>
+            <a class="dropdown-item dropdown-item-premium" href="#" onclick="triggerSplitView('horizontal')">
+                <i class="fa-solid fa-columns"></i> Horizontal Split
+            </a>
+            <a class="dropdown-item dropdown-item-premium" href="#" onclick="triggerSplitView('vertical')">
+                <i class="fa-solid fa-window-maximize" style="transform: rotate(90deg); font-size: 10px;"></i> Vertical Split
+            </a>
+            @if (Route::has('login'))
+            @auth
+            {{-- No Subscription --}}
+            @if(auth()->user()->check_subscription == 0)
+            <a class="dropdown-item dropdown-item-premium" href="" data-toggle="modal" data-target="#myModalplainSubscribe">
+                <i class="fa-solid fa-file-lines"></i> Plain View
+            </a>
+            {{-- Subscription has expired --}}
+            @elseif(auth()->user()->subscription_expiry < today())
+            <a class="dropdown-item dropdown-item-premium" href="" data-toggle="modal" data-target="#myModalplainExpiry">
+                <i class="fa-solid fa-file-lines"></i> Plain View
+            </a>
+            {{-- Subscription download limit reached --}}
+            @elseif(auth()->user()->subscription_downloads <= auth()->user()->downloads_counts)
+            <a class="dropdown-item dropdown-item-premium" href="" data-toggle="modal" data-target="#maximumDownloadReachedplain">
+                <i class="fa-solid fa-file-lines"></i> Plain View
+            </a>
+            @else
+            {{-- View Plain View --}}
+            <a class="dropdown-item dropdown-item-premium" href="/post_1992_legislation/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/plain_view/{{ $allPost1992Act['id'] }}" target="_blank">
+                <i class="fa-solid fa-file-lines"></i> Plain View
+            </a>
+            @endif
+            @else
+            {{-- Create Account --}}
+            <a class="dropdown-item dropdown-item-premium" href="" data-toggle="modal" data-target="#myModalplainAccount">
+                <i class="fa-solid fa-file-lines"></i> Plain View
+            </a>
+            @endauth
+            @endif
+        </div>
+    </div>
+</div>
+
+<div class="premium-ad-card">
+    @include('ads.small_ads_image_main_page')
+</div>
+
+@include('layouts.plain_view_no_subscription')
+@include('layouts.plain_view_subscription_expiry')
+@include('layouts.plain_view_downloaded_exceeded')
+@include('layouts.plain_create_account')

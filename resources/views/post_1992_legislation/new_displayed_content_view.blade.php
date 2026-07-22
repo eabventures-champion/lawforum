@@ -9,9 +9,6 @@
     
     <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Bootstrap 4 (for standalone view support) -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <link rel="stylesheet" href="{{ asset('css/tooltipster.bundle.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('css/tooltipster-sideTip-borderless.min.css') }}" type="text/css">
@@ -406,7 +403,7 @@
 </head>
 
 <body class="standalone-view">
-    <div class="premium-article-container">
+    <div class="premium-article-container" data-sid="{{ $allPost1992Article['id'] }}">
         {{-- For the bookmark --}}
         <div class="nav-links">
             <span>
