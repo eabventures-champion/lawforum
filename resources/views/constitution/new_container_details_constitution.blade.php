@@ -10,6 +10,9 @@
         margin-bottom: 20px;
         box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
         transition: border-color 0.3s ease;
+        position: relative !important;
+        z-index: 100 !important;
+        overflow: visible !important;
     }
     
     .premium-details-card:hover {
@@ -85,6 +88,21 @@
         background: rgba(255, 255, 255, 0.04) !important;
         border-color: rgba(255, 255, 255, 0.10) !important;
         color: var(--text-primary) !important;
+    }
+
+    .dropdown-menu-premium {
+        width: 100%;
+        background: #0f172a !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.85) !important;
+        padding: 6px !important;
+        z-index: 999999 !important;
+    }
+
+    .premium-ad-card {
+        position: relative !important;
+        z-index: 1 !important;
     }
 </style>
 

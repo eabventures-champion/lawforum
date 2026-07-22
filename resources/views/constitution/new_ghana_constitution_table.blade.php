@@ -1956,6 +1956,21 @@
             border-radius: 10px !important; padding: 6px 8px !important; box-shadow: 0 8px 30px rgba(0,0,0,0.6) !important;
             animation: tooltipPop 0.15s ease !important;
         }
+
+        /* Ensure View Options dropdown overshadows ad card */
+        .premium-filter-card, .premium-details-card, .toc-sidebar-module {
+            position: relative !important;
+            z-index: 100 !important;
+            overflow: visible !important;
+        }
+        .dropdown-menu-premium {
+            z-index: 999999 !important;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.85) !important;
+        }
+        .premium-ad-card {
+            position: relative !important;
+            z-index: 1 !important;
+        }
         @keyframes tooltipPop {
             from { opacity: 0; transform: scale(0.92); }
             to { opacity: 1; transform: scale(1); }
