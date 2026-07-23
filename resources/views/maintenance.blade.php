@@ -274,6 +274,34 @@
         .passcode-input-group {
             display: flex; gap: 8px;
         }
+        .passcode-input-wrapper {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+        .passcode-input-wrapper .passcode-input {
+            width: 100%;
+            padding-right: 42px;
+        }
+        .toggle-password-btn {
+            position: absolute;
+            right: 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s ease;
+            outline: none !important;
+        }
+        .toggle-password-btn:hover {
+            color: var(--text-primary);
+        }
         .passcode-input {
             flex: 1; padding: 12px 16px;
             background: rgba(255, 255, 255, 0.03);
@@ -466,6 +494,9 @@
                 flex-direction: column;
                 gap: 10px;
             }
+            .passcode-input-wrapper {
+                width: 100%;
+            }
             .passcode-input {
                 width: 100%;
                 padding: 12px 14px;
@@ -624,7 +655,12 @@
                 <form method="POST" action="{{ route('maintenance.verify') }}" id="passcodeForm">
                     @csrf
                     <div class="passcode-input-group">
-                        <input type="password" name="passcode" class="passcode-input" placeholder="Enter passcode..." autocomplete="off" autofocus required>
+                        <div class="passcode-input-wrapper">
+                            <input type="password" name="passcode" id="passcodeInput" class="passcode-input" placeholder="Enter passcode..." autocomplete="off" autofocus required>
+                            <button type="button" class="toggle-password-btn" id="togglePasswordBtn" onclick="togglePasswordVisibility()" title="Toggle passcode visibility">
+                                <i class="fa-solid fa-eye" id="togglePasswordIcon"></i>
+                            </button>
+                        </div>
                         <button type="submit" class="unlock-btn">
                             <i class="fa-solid fa-lock-open"></i> Unlock
                         </button>
@@ -730,6 +766,21 @@
             btn.style.opacity = '0.7';
             btn.style.pointerEvents = 'none';
         });
+
+        // ---- Toggle Password Visibility ----
+        function togglePasswordVisibility() {
+            const input = document.getElementById('passcodeInput');
+            const icon = document.getElementById('togglePasswordIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
     </script>
 </body>
 </html>
