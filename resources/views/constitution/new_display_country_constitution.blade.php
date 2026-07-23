@@ -1611,6 +1611,22 @@
                     });
                 }
             }
+
+            // Auto-fill Word Finder and scroll to matching term from URL parameter (e.g. ?search_text=criminal)
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialSearchTerm = urlParams.get('search_text') || urlParams.get('search') || urlParams.get('query') || urlParams.get('highlight');
+            if (initialSearchTerm && searchInput) {
+                const cleanTerm = initialSearchTerm.trim();
+                if (cleanTerm.length > 0) {
+                    searchInput.value = cleanTerm;
+                    if (clearBtn) {
+                        clearBtn.style.display = 'flex';
+                    }
+                    setTimeout(function() {
+                        performSearch(cleanTerm);
+                    }, 300);
+                }
+            }
         });
     </script>
 
