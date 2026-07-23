@@ -473,6 +473,7 @@ Route::get('/post-1992-legislation','Post1992Controller@index');//display all ac
 //------------------------------------------------------------------------------------LAW JUDGMENTS--------------------------------------------------------------------------------------------
 //Ghana Law Judgement routes
 Route::get('/judgement/Ghana','JudgementController@index');
+    Route::get('/judgement/ajax-data','JudgementController@judgement_ajax_data'); //AJAX JSON data for tab switching
     Route::get('/judgement/Ghana/filter/{year}/{category}','JudgementController@all_judgment_filter'); //all judgment filtering
     Route::get('/judgement/Ghana/{name}/{id}','JudgementController@all_ghana_court_cases');
     // Route::get('/judgement/Ghana/Case-view/{name}/{id}','JudgementController@all_ghana_court_cases_view');

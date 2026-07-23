@@ -556,6 +556,16 @@
             border-color: rgba(255, 255, 255, 0.15) !important;
         }
 
+        body.workspace-maximized .nav-wrap {
+            display: none !important;
+        }
+        body.workspace-maximized .nav-underline-premium {
+            top: 10px !important;
+        }
+        body.workspace-maximized .sidebar-sticky-wrap {
+            top: 15px !important;
+        }
+
         .back-to-top {
             position: fixed;
             bottom: 40px;
@@ -1272,9 +1282,12 @@
                             <span class="year-badge">{{ $allCountriesConstitution['year'] }} Edition</span>
                         </div>
 
-                        <div class="d-flex align-items-center gap-2">
+                        <div class="d-flex align-items-center">
                             <button type="button" class="btn btn-custom-outline" data-toggle="modal" data-target="#viewCases">
                                 <i class="fa-solid fa-globe mr-1"></i> Select Country
+                            </button>
+                            <button type="button" class="btn btn-custom-outline ml-2" id="btnMaximizeWorkspace" onclick="toggleMaximizeWorkspace()" title="Maximize View (Toggle Header)" style="margin-left: 10px;">
+                                <i class="fa-solid fa-expand" id="maximizeIcon"></i>
                             </button>
                         </div>
                     </div>
@@ -1946,6 +1959,44 @@
         
         middleCol.classList.add('col-lg-' + middleWidth);
     }
+
+    function toggleMaximizeWorkspace() {
+        const body = document.body;
+        body.classList.toggle('workspace-maximized');
+        
+        const btn = document.getElementById('btnMaximizeWorkspace');
+        if (btn) {
+            if (body.classList.contains('workspace-maximized')) {
+                btn.innerHTML = `<i class="fa-solid fa-compress" id="maximizeIcon"></i>`;
+                btn.classList.add('active');
+            } else {
+                btn.innerHTML = `<i class="fa-solid fa-expand" id="maximizeIcon"></i>`;
+                btn.classList.remove('active');
+            }
+        }
+
+        if (body.classList.contains('workspace-maximized')) {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            }
+        } else {
+            if (document.exitFullscreen && document.fullscreenElement) {
+                document.exitFullscreen().catch(() => {});
+            }
+        }
+    }
+
+    document.addEventListener('fullscreenchange', () => {
+        const body = document.body;
+        const btn = document.getElementById('btnMaximizeWorkspace');
+        if (!document.fullscreenElement) {
+            body.classList.remove('workspace-maximized');
+            if (btn) {
+                btn.innerHTML = `<i class="fa-solid fa-expand" id="maximizeIcon"></i>`;
+                btn.classList.remove('active');
+            }
+        }
+    });
     </script>
 
     <!-- Floating Text Selection Tooltip (outside sidebars to prevent d-none conflicts) -->

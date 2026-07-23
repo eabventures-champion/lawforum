@@ -642,4 +642,28 @@ class JudgementController extends Controller
         $southAmericaJudgements = ForeignLawJudgment::where(['country_name' => $id])->get();
         return view('law_judgment_foreign.south_america_court_view', compact('southAmericaJudgements', 'southAmericaJudgement'));
     }
+
+    // AJAX JSON endpoint for tab switching on /judgement/Ghana
+    public function judgement_ajax_data(Request $request)
+    {
+        $court = $request->query('court', 'all');
+
+        if ($court === 'all') {
+            $judgments = GhLawJudgment::all();
+        } else {
+            $judgments = GhLawJudgment::where(['gh_law_judgment_group_name' => $court])->get();
+        }
+
+        $data = $judgments->map(function ($j) {
+            return [
+                'case_title'       => $j->case_title,
+                'reference_number' => $j->reference_number,
+                'year'             => $j->year,
+                'group_name'       => $j->gh_law_judgment_group_name,
+                'url'              => '/judgement/Ghana/' . $j->gh_law_judgment_group_name . '/' . $j->id,
+            ];
+        });
+
+        return response()->json(['data' => $data]);
+    }
 }
