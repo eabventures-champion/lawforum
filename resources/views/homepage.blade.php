@@ -1546,7 +1546,7 @@
             background: rgba(6, 10, 19, 0.98);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
-            z-index: 9999;
+            z-index: 999999;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1568,6 +1568,7 @@
             color: var(--text-secondary);
             padding: 12px 24px;
             border-radius: 12px;
+            line-height: 1.5;
             transform: translateY(24px);
             opacity: 0;
             transition: all 0.3s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;

@@ -86,21 +86,34 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 70px;
             z-index: 1000;
             background: rgba(6, 10, 19, 0.88);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .nav-inner {
-            max-width: 1440px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 16px 24px;
+            padding: 18px 40px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            line-height: 1;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            transform: scale(1.03);
         }
 
         .nav-logo img {
@@ -2087,6 +2100,228 @@
             color: #fff !important;
             box-shadow: 0 0 10px rgba(59, 130, 246, 0.3) !important;
         }
+
+        /* ============================================
+           PREMIUM MOBILE WORKSPACE OPTIMIZATIONS
+           ============================================ */
+        .mobile-menu-btn {
+            display: none;
+        }
+
+        .mobile-workspace-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 99;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Full screen mobile nav panel (Image 1 style) */
+        .mobile-nav-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(6, 10, 19, 0.98);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s;
+        }
+
+        .mobile-nav-panel.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-nav-panel a {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding: 12px 24px;
+            border-radius: 12px;
+            line-height: 1.5;
+            transform: translateY(24px);
+            opacity: 0;
+            transition: all 0.3s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
+            text-decoration: none !important;
+        }
+
+        .mobile-nav-panel.open a {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .mobile-nav-panel.open a:nth-of-type(1) { transition-delay: 0.05s; }
+        .mobile-nav-panel.open a:nth-of-type(2) { transition-delay: 0.1s; }
+        .mobile-nav-panel.open a:nth-of-type(3) { transition-delay: 0.15s; }
+        .mobile-nav-panel.open a:nth-of-type(4) { transition-delay: 0.2s; }
+        .mobile-nav-panel.open a:nth-of-type(5) { transition-delay: 0.25s; }
+        .mobile-nav-panel.open a:nth-of-type(6) { transition-delay: 0.3s; }
+        .mobile-nav-panel.open a:nth-of-type(7) { transition-delay: 0.35s; }
+        .mobile-nav-panel.open a:nth-of-type(8) { transition-delay: 0.4s; }
+        .mobile-nav-panel.open a:nth-of-type(9) { transition-delay: 0.45s; }
+        .mobile-nav-panel.open a:nth-of-type(10) { transition-delay: 0.5s; }
+
+        .mobile-nav-panel a:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        .mobile-nav-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: none;
+            border: none;
+            padding: 0;
+            line-height: 1;
+            color: var(--text-primary);
+            font-size: 28px;
+            cursor: pointer;
+            opacity: 0;
+            transform: rotate(-90deg) scale(0.5);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s;
+        }
+
+        .mobile-nav-panel.open .mobile-nav-close {
+            opacity: 1;
+            transform: rotate(0) scale(1);
+        }
+
+        .nav-logo-text {
+            display: inline-block;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(to right, #3b82f6, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .nav-mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 22px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        @media (max-width: 991px) {
+            .nav-inner { padding: 14px 20px !important; }
+            .nav-menu-links-premium { display: none !important; }
+            .nav-mobile-toggle { display: block !important; }
+            .nav-auth { display: none !important; }
+
+            .workspace-wrapper {
+                top: 70px !important;
+                height: calc(100vh - 70px) !important;
+                position: relative !important;
+                overflow: hidden !important;
+            }
+
+            /* Off-canvas mobile sidebars */
+            .workspace-sidebar {
+                position: absolute !important;
+                top: 0 !important;
+                bottom: 0 !important;
+                z-index: 100 !important;
+                width: 85vw !important;
+                max-width: 320px !important;
+                min-width: 0 !important;
+                box-shadow: 0 0 40px rgba(0, 0, 0, 0.8) !important;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            }
+
+            .left-sidebar {
+                left: 0 !important;
+                transform: translateX(-100%) !important;
+            }
+
+            .left-sidebar:not(.collapsed) {
+                transform: translateX(0) !important;
+            }
+
+            .left-sidebar.collapsed {
+                transform: translateX(-100%) !important;
+            }
+
+            .right-sidebar {
+                right: 0 !important;
+                transform: translateX(100%) !important;
+            }
+
+            .right-sidebar:not(.collapsed) {
+                transform: translateX(0) !important;
+            }
+
+            .right-sidebar.collapsed {
+                transform: translateX(100%) !important;
+            }
+
+            /* Main Reader pane occupies full mobile width */
+            .workspace-main {
+                width: 100vw !important;
+                min-width: 100vw !important;
+                flex: 1 0 100% !important;
+            }
+
+            .reading-toolbar {
+                padding: 0 10px !important;
+                height: 52px !important;
+                min-height: 52px !important;
+            }
+
+            .toolbar-center {
+                max-width: 100% !important;
+            }
+
+            .sidebar-restore-btn.left-restore {
+                left: 0 !important;
+                top: 80px !important;
+                height: 44px !important;
+                width: 24px !important;
+                z-index: 95 !important;
+                display: flex !important;
+            }
+
+            .sidebar-restore-btn.right-restore {
+                right: 0 !important;
+                top: 80px !important;
+                height: 70px !important;
+                width: 24px !important;
+                z-index: 95 !important;
+                display: flex !important;
+            }
+
+            .mobile-workspace-backdrop.active {
+                display: block !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-logo-text {
+                font-size: 18px !important;
+                letter-spacing: 0.2px !important;
+            }
+        }
     </style>
   </head>
   <body class="bg-light">
@@ -2094,12 +2329,16 @@
     <!-- ====== PREMIUM NAVIGATION ====== -->
     <nav class="nav-wrap" id="mainNav">
         <div class="nav-inner">
-            <a href="/" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; padding-left: 0px; padding-top: 5px; padding-bottom: 5px; transition: transform 0.2s ease; vertical-align: middle;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
-                <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; font-size: 22px; margin: 0; line-height: 1;"></i>
-                <span style="font-size: 22px; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(to right, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.3;">Legals Forum</span>
+            <a href="/" class="nav-logo">
+                <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; margin: 0; line-height: 1;"></i>
+                <span class="nav-logo-text">Legals Forum</span>
             </a>
 
-                        <div class="nav-menu-links-premium">
+            <button class="nav-mobile-toggle" onclick="document.getElementById('mobileNav').classList.add('open')">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="nav-menu-links-premium">
                 @foreach($headerMenus as $menu)
                     @if($menu->is_dropdown)
                         <div class="nav-link-dropdown">
@@ -2152,8 +2391,40 @@
         </div>
     </nav>
 
+    <!-- Mobile Nav Panel (Image 1 Standard) -->
+    <div class="mobile-nav-panel" id="mobileNav">
+        <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        @foreach($headerMenus as $menu)
+            @if($menu->is_dropdown)
+                @php
+                    $url = '#';
+                    if ($menu->children && count($menu->children) > 0) {
+                        $firstChild = $menu->children->first();
+                        $url = $firstChild->custom_content ? route('dynamic.page', $firstChild->slug) : $firstChild->url;
+                    }
+                @endphp
+                <a href="{{ $url }}">{{ $menu->title }}</a>
+            @else
+                <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}">{{ $menu->title }}</a>
+            @endif
+        @endforeach
+        <div style="height: 16px;"></div>
+        @guest
+            <a href="{{ route('login') }}">Log In</a>
+            @if (Route::has('register'))
+                <a href="{{ route('register') }}" style="color: var(--accent-light);">Sign Up Free</a>
+            @endif
+        @else
+            <a href="/home">Dashboard</a>
+            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="color: #f43f5e;">Sign Out</a>
+        @endguest
+    </div>
+
     <!-- ====== THREE PANEL SPLIT WORKSPACE ====== -->
     <div class="workspace-wrapper">
+        <div class="mobile-workspace-backdrop" id="mobileWorkspaceBackdrop" onclick="closeMobileSidebars()"></div>
         <!-- Left Panel: Table of Contents -->
         <aside class="workspace-sidebar left-sidebar" id="leftSidebar">
             <div class="sidebar-header">
@@ -2903,20 +3174,41 @@
         function toggleSidebar(side) {
             const sidebar = document.getElementById(side + 'Sidebar');
             const restoreBtn = document.getElementById(side + 'RestoreBtn');
+            const backdrop = document.getElementById('mobileWorkspaceBackdrop');
             if (!sidebar) return;
             
             if (sidebar.classList.contains('collapsed')) {
                 sidebar.classList.remove('collapsed');
                 if (restoreBtn) restoreBtn.style.display = 'none';
+                if (window.innerWidth <= 991 && backdrop) {
+                    backdrop.classList.add('active');
+                }
             } else {
                 sidebar.classList.add('collapsed');
                 if (restoreBtn) restoreBtn.style.display = 'flex';
+                if (window.innerWidth <= 991 && backdrop) {
+                    backdrop.classList.remove('active');
+                }
             }
             
             if (side === 'right') {
                 syncAudioPlayerLayout();
             }
         }
+
+        function closeMobileSidebars() {
+            setSidebarState('left', true);
+            setSidebarState('right', true);
+            const backdrop = document.getElementById('mobileWorkspaceBackdrop');
+            if (backdrop) backdrop.classList.remove('active');
+        }
+
+        $(document).ready(function() {
+            if (window.innerWidth <= 991) {
+                setSidebarState('left', true);
+                setSidebarState('right', true);
+            }
+        });
 
         // Font Size adjusters
         let currentSizeLevel = 1.0; 

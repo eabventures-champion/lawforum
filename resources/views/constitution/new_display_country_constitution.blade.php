@@ -65,33 +65,44 @@
 
         /* ====== PREMIUM NAVIGATION ====== */
         .nav-wrap {
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            width: 100%;
             z-index: 1000;
-            background: rgba(7, 10, 19, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(6, 10, 19, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-color);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .nav-inner {
-            max-width: 1400px;
+            max-width: 1280px;
             margin: 0 auto;
+            padding: 18px 40px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 24px;
+            line-height: 1;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            transform: scale(1.03);
         }
 
         .nav-logo img {
             height: 38px;
             width: auto;
             transition: transform 0.3s ease;
-        }
-
-        .nav-logo:hover img {
-            transform: scale(1.03);
         }
 
         .nav-menu-links-premium {
@@ -1039,7 +1050,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 9999;
+            z-index: 999999;
             transition: all 0.2s ease;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(8px);
@@ -1063,6 +1074,124 @@
         .collapsed-sidebar {
             display: none !important;
         }
+
+        /* Full screen mobile nav panel (Image 1 style) */
+        .mobile-nav-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(6, 10, 19, 0.98);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s;
+        }
+
+        .mobile-nav-panel.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-nav-panel a {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding: 12px 24px;
+            border-radius: 12px;
+            line-height: 1.5;
+            transform: translateY(24px);
+            opacity: 0;
+            transition: all 0.3s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
+            text-decoration: none !important;
+        }
+
+        .mobile-nav-panel.open a {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .mobile-nav-panel.open a:nth-of-type(1) { transition-delay: 0.05s; }
+        .mobile-nav-panel.open a:nth-of-type(2) { transition-delay: 0.1s; }
+        .mobile-nav-panel.open a:nth-of-type(3) { transition-delay: 0.15s; }
+        .mobile-nav-panel.open a:nth-of-type(4) { transition-delay: 0.2s; }
+        .mobile-nav-panel.open a:nth-of-type(5) { transition-delay: 0.25s; }
+        .mobile-nav-panel.open a:nth-of-type(6) { transition-delay: 0.3s; }
+        .mobile-nav-panel.open a:nth-of-type(7) { transition-delay: 0.35s; }
+        .mobile-nav-panel.open a:nth-of-type(8) { transition-delay: 0.4s; }
+        .mobile-nav-panel.open a:nth-of-type(9) { transition-delay: 0.45s; }
+        .mobile-nav-panel.open a:nth-of-type(10) { transition-delay: 0.5s; }
+
+        .mobile-nav-panel a:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        .mobile-nav-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: none;
+            border: none;
+            padding: 0;
+            line-height: 1;
+            color: var(--text-primary);
+            font-size: 28px;
+            cursor: pointer;
+            opacity: 0;
+            transform: rotate(-90deg) scale(0.5);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s;
+        }
+
+        .mobile-nav-panel.open .mobile-nav-close {
+            opacity: 1;
+            transform: rotate(0) scale(1);
+        }
+
+        .nav-logo-text {
+            display: inline-block;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(to right, #3b82f6, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .nav-mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 22px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        @media (max-width: 991px) {
+            .nav-inner { padding: 14px 20px !important; }
+            .nav-menu-links-premium { display: none !important; }
+            .nav-mobile-toggle { display: block !important; }
+            .nav-auth { display: none !important; }
+        }
+        @media (max-width: 768px) {
+            .nav-logo-text {
+                font-size: 18px !important;
+                letter-spacing: 0.2px !important;
+            }
+        }
     </style>
   </head>
   <body>
@@ -1070,12 +1199,16 @@
     <!-- ====== PREMIUM NAVIGATION ====== -->
     <nav class="nav-wrap" id="mainNav">
         <div class="nav-inner">
-            <a href="/" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; padding-left: 0px; padding-top: 5px; padding-bottom: 5px; transition: transform 0.2s ease; vertical-align: middle;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
-                <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; font-size: 22px; margin: 0; line-height: 1;"></i>
-                <span style="font-size: 22px; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(to right, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.3;">Legals Forum</span>
+            <a href="/" class="nav-logo">
+                <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; margin: 0; line-height: 1;"></i>
+                <span class="nav-logo-text">Legals Forum</span>
             </a>
 
-                        <div class="nav-menu-links-premium">
+            <button class="nav-mobile-toggle" onclick="document.getElementById('mobileNav').classList.add('open')">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="nav-menu-links-premium">
                 @foreach($headerMenus as $menu)
                     @if($menu->is_dropdown)
                         <div class="nav-link-dropdown">
@@ -1127,6 +1260,37 @@
             </div>
         </div>
     </nav>
+
+    <!-- Mobile Nav Panel (Image 1 Standard) -->
+    <div class="mobile-nav-panel" id="mobileNav">
+        <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        @foreach($headerMenus as $menu)
+            @if($menu->is_dropdown)
+                @php
+                    $url = '#';
+                    if ($menu->children && count($menu->children) > 0) {
+                        $firstChild = $menu->children->first();
+                        $url = $firstChild->custom_content ? route('dynamic.page', $firstChild->slug) : $firstChild->url;
+                    }
+                @endphp
+                <a href="{{ $url }}">{{ $menu->title }}</a>
+            @else
+                <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}">{{ $menu->title }}</a>
+            @endif
+        @endforeach
+        <div style="height: 16px;"></div>
+        @guest
+            <a href="{{ route('login') }}">Log In</a>
+            @if (Route::has('register'))
+                <a href="{{ route('register') }}" style="color: var(--accent-light);">Sign Up Free</a>
+            @endif
+        @else
+            <a href="/home">Dashboard</a>
+            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="color: #f43f5e;">Sign Out</a>
+        @endguest
+    </div>
 
     <!-- ====== MAIN CONTAINER ====== -->
     <div class="main-container">
