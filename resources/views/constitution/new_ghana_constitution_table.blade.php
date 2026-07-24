@@ -337,8 +337,20 @@
         .workspace-sidebar.collapsed {
             width: 0 !important;
             min-width: 0 !important;
-            overflow: hidden;
+            max-width: 0 !important;
+            flex: 0 0 0px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: hidden !important;
             border: none !important;
+            border-left: none !important;
+            border-right: none !important;
+        }
+
+        @media (min-width: 992px) {
+            .workspace-sidebar.collapsed {
+                display: none !important;
+            }
         }
 
         .sidebar-header {
@@ -1074,7 +1086,7 @@
             display: block;
             position: sticky !important;
             top: -8px !important;
-            z-index: 100 !important;
+            z-index: 10 !important;
         }
 
         #display_content .nav-links span, #acts_expanded_view .nav-links span {
@@ -2364,6 +2376,19 @@
             #viewModeSelectorWrap {
                 display: none !important;
             }
+            /* Hide Split View option in mobile view */
+            #btnViewSplit,
+            a[onclick*="'split'"] {
+                display: none !important;
+            }
+            /* Move Back to Top button higher in mobile view above audio bar */
+            .workspace-back-to-top {
+                bottom: 64px !important;
+                right: 16px !important;
+                width: 38px !important;
+                height: 38px !important;
+                z-index: 150 !important;
+            }
             /* Show audio player as bottom bar on mobile (Full width in all states) */
             #audioPlayerBanner,
             #audioPlayerBanner.audio-floating-pane {
@@ -3286,15 +3311,7 @@
                 $('#audioPlayerBanner').removeClass('audio-floating-pane');
                 return;
             }
-            const rightSidebar = document.getElementById('rightSidebar');
-            const audioBanner = $('#audioPlayerBanner');
-            if (rightSidebar && audioBanner.length) {
-                if (!rightSidebar.classList.contains('collapsed')) {
-                    audioBanner.addClass('audio-floating-pane');
-                } else {
-                    audioBanner.removeClass('audio-floating-pane');
-                }
-            }
+            $('#audioPlayerBanner').addClass('audio-floating-pane');
         }
 
         function updateMobileAudioBannerClasses() {
@@ -3446,16 +3463,17 @@
             $('#audioPlayerBanner').css('display', 'flex');
 
             if (targetId === '#v-pills-profile') {
-                // Restore sidebars to normal view
-                setSidebarState('left', false);
+                // Minimize sidebars for Reader View
+                setSidebarState('left', true);
+                setSidebarState('right', true);
+                closeMobileSidebars();
+                
                 const hasWelcome = $('#display_content').find('.toc-welcome').length > 0;
                 if (hasWelcome) {
-                    setSidebarState('right', true);
                     $('.toc-sidebar-module').show();
                     $('.content-sidebar-module').hide();
                     $('#readerArticleNav').hide();
                 } else {
-                    setSidebarState('right', false);
                     $('.toc-sidebar-module').hide();
                     $('.content-sidebar-module').show();
                     $('#readerArticleNav').css('display', 'flex');
@@ -3466,6 +3484,7 @@
                 // Split View Tab: collapse both sidebars for widescreen presentation
                 setSidebarState('left', true);
                 setSidebarState('right', true);
+                closeMobileSidebars();
                 $('#splitLayoutControls').css('display', 'flex');
                 $('#audioModeSelectorContainer').hide();
                 setAudioMode('current');
@@ -3477,6 +3496,7 @@
                 // Expanded View Tab: collapse both sidebars for widescreen presentation
                 setSidebarState('left', true);
                 setSidebarState('right', true);
+                closeMobileSidebars();
                 $('#splitLayoutControls').hide();
                 $('#audioModeSelectorContainer').hide();
                 setAudioMode('current');
@@ -3504,6 +3524,7 @@
             if (window.innerWidth <= 991) {
                 closeMobileSidebars();
             } else {
+                setSidebarState('left', false);
                 setSidebarState('right', false);
             }
         });
@@ -4586,13 +4607,11 @@
                     'color': '#fff'
                 }).append('<i class="fa-solid fa-circle-check text-primary"></i>');
 
-                // Restores sidebars for Reader View
-                if (window.innerWidth <= 991) {
-                    closeMobileSidebars();
-                } else {
-                    setSidebarState('left', false);
-                    setSidebarState('right', false);
-                }
+                // Minimizes both sidebars for Reader View
+                setSidebarState('left', true);
+                setSidebarState('right', true);
+                const backdrop = document.getElementById('mobileWorkspaceBackdrop');
+                if (backdrop) backdrop.classList.remove('active');
                 $('.toc-sidebar-module').hide();
                 if ($('#display_content').find('.toc-welcome').length > 0) {
                     $('.toc-sidebar-module').show();

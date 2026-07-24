@@ -106,31 +106,7 @@
     }
 </style>
 
-<div class="premium-details-card">
-    <div class="details-header-title">
-        <i class="fa-solid fa-sliders"></i> Reader Actions
-    </div>
-    
-    <div style="display: flex; flex-direction: column; gap: 12px; align-items: center;">
-        <!-- Unified View Options Dropdown Trigger -->
-        <div class="dropdown" style="width: 100%;">
-            <button class="btn-action-premium dropdown-toggle" type="button" id="sidebarViewOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%;">
-                <i class="fa-solid fa-images"></i> View Options
-            </button>
-            <div class="dropdown-menu dropdown-menu-premium" aria-labelledby="sidebarViewOptions" style="width: 100%;">
-                <a class="dropdown-item dropdown-item-premium expanded_link toggle_expanded_view" href="/constitution/Republic/expanded_view/{{ $ghana_act['id'] }}" onclick="selectViewMode('expanded'); event.stopImmediatePropagation(); return false;">
-                    <i class="fa-solid fa-expand"></i> Expanded View
-                </a>
-                <a class="dropdown-item dropdown-item-premium" href="#" onclick="triggerSplitView('horizontal')">
-                    <i class="fa-solid fa-columns"></i> Horizontal Split
-                </a>
-                <a class="dropdown-item dropdown-item-premium" href="#" onclick="triggerSplitView('vertical')">
-                    <i class="fa-solid fa-window-maximize" style="transform: rotate(90deg); font-size: 10px;"></i> Vertical Split
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <div class="premium-ad-card">
     @include('ads.small_ads_image_main_page')
