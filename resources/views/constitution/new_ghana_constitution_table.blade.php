@@ -779,6 +779,38 @@
             color: var(--text-secondary);
         }
 
+        .toc-welcome-arrow {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: var(--accent-light);
+            font-size: 18px;
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: bounceLeft 1.8s infinite ease-in-out;
+            outline: none !important;
+        }
+
+        .toc-welcome-arrow:hover {
+            background: var(--accent-gradient);
+            color: #ffffff;
+            border-color: var(--accent);
+            transform: scale(1.12);
+            box-shadow: 0 0 20px var(--accent-glow);
+            animation-play-state: paused;
+        }
+
+        @keyframes bounceLeft {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-8px); }
+        }
+
         .toc-welcome h5 {
             font-weight: 700;
             color: var(--text-primary);
@@ -1286,7 +1318,6 @@
         .content-search-box:focus-within {
             border-color: var(--accent);
             box-shadow: 0 0 0 2px var(--accent-glow);
-            width: 320px;
         }
 
         .content-search-box i {
@@ -2569,6 +2600,9 @@
                     <div class="content-search-box" style="flex-shrink: 0; visibility: hidden;">
                         <i class="fa-solid fa-magnifying-glass"></i>
                         <input type="text" id="keywordSearch" placeholder="Find in document...">
+                        <button id="searchClearBtn" onclick="clearKeywordSearch()" title="Clear search" style="display:none; background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 0 4px; font-size: 13px; line-height: 1; align-items: center; justify-content: center; outline: none !important;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-muted)'">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
                         <span class="search-matches-count" id="searchMatchCount" style="display:none;"></span>
                         <div class="search-navigation-arrows" id="searchNavArrows" style="display:none;">
                             <button id="searchPrevBtn" onclick="navigateMatches('prev')" title="Previous match"><i class="fa-solid fa-chevron-up"></i></button>
@@ -2617,7 +2651,9 @@
                                     </a>
                                 </div>
                                 <div class="toc-welcome">
-                                    <i class="fa-solid fa-arrow-left mb-3 text-muted" style="display:block; font-size: 20px;"></i>
+                                    <button class="toc-welcome-arrow" onclick="openLeftSidebar()" title="Click to open Table of Contents" type="button">
+                                        <i class="fa-solid fa-arrow-left"></i>
+                                    </button>
                                     <h5>{{ $ghana_act['title'] }}</h5>
                                     <p>Select a chapter from the collapsible tree on the left panel to browse articles and read the content.</p>
                                 </div>
@@ -3274,6 +3310,14 @@
             wrapper.classList.toggle('sidebar-open-right', rightOpen);
         }
 
+        function openLeftSidebar() {
+            setSidebarState('left', false);
+            const backdrop = document.getElementById('mobileWorkspaceBackdrop');
+            if (window.innerWidth <= 991 && backdrop) {
+                backdrop.classList.add('active');
+            }
+        }
+
         // Sidebar Toggle Handler
         function toggleSidebar(side) {
             const sidebar = document.getElementById(side + 'Sidebar');
@@ -3632,9 +3676,21 @@
             updateSearchUI();
         }
 
+        function clearKeywordSearch() {
+            $('#keywordSearch').val('').focus();
+            highlightKeyword('');
+            updateSearchUI();
+        }
+
         function updateSearchUI() {
             const countEl = document.getElementById('searchMatchCount');
             const navEl = document.getElementById('searchNavArrows');
+            const clearBtn = document.getElementById('searchClearBtn');
+            const query = $('#keywordSearch').val();
+
+            if (clearBtn) {
+                clearBtn.style.display = (query && query.length > 0) ? 'flex' : 'none';
+            }
 
             if (searchMatches.length > 0) {
                 countEl.textContent = (currentMatchIndex + 1) + ' / ' + searchMatches.length;
@@ -3646,9 +3702,8 @@
             }
         }
 
-        // Reset search states when a new article is loaded via AJAX
-        $(document).on('click', '.constitution_content_link, .constitution_preamble_link', function() {
-            $('#keywordSearch').val('');
+        // Reset cached article HTML & search matches when a new article link is clicked so old counts don't linger
+        $(document).on('click', '.constitution_content_link, .constitution_preamble_link, .previous_content_constitution_act, .next_content_constitution_act', function() {
             originalArticleHTML = '';
             originalExpandedHTML = '';
             originalPanelHTML = { A: '', B: '' };
@@ -5120,9 +5175,44 @@
     $(document).ready(function() {
         window.addEventListener('scroll', updateReadingProgress, true);
 
+        // Setup MutationObserver on #display_content for instant re-search when article content is loaded/changed
+        let isSearchHighlightingActive = false;
+        const readerContentObserver = new MutationObserver(function() {
+            if (isSearchHighlightingActive) return;
+            originalArticleHTML = '';
+            const query = $('#keywordSearch').val() ? $('#keywordSearch').val().trim() : '';
+            if (query && query.length >= 2) {
+                isSearchHighlightingActive = true;
+                highlightKeyword(query);
+                setTimeout(function() { isSearchHighlightingActive = false; }, 50);
+            } else {
+                searchMatches = [];
+                currentMatchIndex = -1;
+                updateSearchUI();
+            }
+        });
+
+        const displayEl = document.getElementById('display_content');
+        if (displayEl) {
+            readerContentObserver.observe(displayEl, { childList: true });
+        }
+
         // Re-evaluate on AJAX content load and section selection
         $(document).ajaxComplete(function() {
             setTimeout(updateReadingProgress, 100);
+            originalArticleHTML = '';
+            const query = $('#keywordSearch').val() ? $('#keywordSearch').val().trim() : '';
+            if (query && query.length >= 2) {
+                if (!isSearchHighlightingActive) {
+                    isSearchHighlightingActive = true;
+                    highlightKeyword(query);
+                    setTimeout(function() { isSearchHighlightingActive = false; }, 50);
+                }
+            } else {
+                searchMatches = [];
+                currentMatchIndex = -1;
+                updateSearchUI();
+            }
         });
 
         // Click handler for Back to Top button
