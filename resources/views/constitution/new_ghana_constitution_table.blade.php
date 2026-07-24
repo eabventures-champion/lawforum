@@ -2413,6 +2413,57 @@
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
                 animation: none !important;
             }
+            /* Minimize button and floating circular minimized state */
+            .audio-minimize-pill-btn {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                color: var(--text-secondary);
+                font-size: 10px;
+                margin-left: 4px;
+                cursor: pointer;
+                outline: none !important;
+                flex-shrink: 0;
+            }
+            .audio-minimize-pill-btn:hover {
+                background: rgba(255, 255, 255, 0.2);
+                color: #fff;
+            }
+            #audioPlayerBanner.pill-minimized {
+                width: 42px !important;
+                max-width: 42px !important;
+                height: 42px !important;
+                padding: 0 !important;
+                border-radius: 50% !important;
+                left: 16px !important;
+                right: auto !important;
+                justify-content: center !important;
+                align-items: center !important;
+                cursor: pointer !important;
+                box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5) !important;
+                background: rgba(15, 23, 42, 0.98) !important;
+                border: 1px solid var(--accent-light) !important;
+            }
+            #audioPlayerBanner.pill-minimized > *:not(.audio-pill-restore-icon) {
+                display: none !important;
+            }
+            #audioPlayerBanner.pill-minimized .audio-pill-restore-icon {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+                font-size: 16px;
+                color: var(--accent-light);
+            }
+            #audioPlayerBanner:not(.pill-minimized) .audio-pill-restore-icon {
+                display: none !important;
+            }
             /* Add bottom padding so content isn't hidden behind the floating audio pill */
             .workspace-body {
                 padding-bottom: 106px !important;
@@ -2998,6 +3049,16 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Restore Icon (Visible when minimized on mobile) -->
+            <div class="audio-pill-restore-icon" onclick="toggleAudioPillMinimize(event)" title="Restore Audio Panel">
+                <i class="fa-solid fa-headphones"></i>
+            </div>
+
+            <!-- Minimize Button (Visible on mobile) -->
+            <button class="audio-minimize-pill-btn" onclick="toggleAudioPillMinimize(event)" title="Minimize Audio Panel" type="button">
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
         </div>
     </div>
 
@@ -3323,6 +3384,15 @@
            ============================================ */
         
         // Audio Player layout responsive docking / floating helper
+        function toggleAudioPillMinimize(e) {
+            if (e) e.stopPropagation();
+            const banner = document.getElementById('audioPlayerBanner');
+            if (banner) {
+                banner.classList.toggle('pill-minimized');
+            }
+        }
+        window.toggleAudioPillMinimize = toggleAudioPillMinimize;
+
         function syncAudioPlayerLayout() {
             if (window.innerWidth <= 991) {
                 $('#audioPlayerBanner').removeClass('audio-floating-pane');
