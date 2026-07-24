@@ -2429,6 +2429,24 @@
             }
             .reader-container, .expanded-container {
                 max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            /* Lock horizontal drifting in mobile view for Expanded View & Reader View */
+            .workspace-body,
+            #acts_expanded_view,
+            #display_content,
+            .expanded-container,
+            .reader-container {
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+                box-sizing: border-box !important;
+            }
+            #acts_expanded_view *,
+            #display_content * {
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
             }
             .premium-article-container {
                 padding-left: 8px !important;
@@ -3328,10 +3346,27 @@
         }
 
         function openLeftSidebar() {
-            setSidebarState('left', false);
-            const backdrop = document.getElementById('mobileWorkspaceBackdrop');
-            if (window.innerWidth <= 991 && backdrop) {
-                backdrop.classList.add('active');
+            if (window.innerWidth > 991) {
+                // Desktop (Image 3 -> Image 4): Open both sidebars & load first article
+                setSidebarState('left', false);
+                setSidebarState('right', false);
+                const firstArticle = $('.panel-body a.constitution_content_link').first();
+                if (firstArticle.length) {
+                    firstArticle[0].click();
+                }
+            } else {
+                // Mobile (Image 1 -> Image 2): Open left sidebar overlay
+                setSidebarState('left', false);
+                $('#leftSidebar .collapse').addClass('show');
+                $('#leftSidebar .panel-heading a').removeClass('collapsed').attr('aria-expanded', 'true');
+                const sidebarContent = $('#leftSidebar .sidebar-content');
+                if (sidebarContent.length) {
+                    sidebarContent.animate({ scrollTop: 0 }, 300);
+                }
+                const backdrop = document.getElementById('mobileWorkspaceBackdrop');
+                if (backdrop) {
+                    backdrop.classList.add('active');
+                }
             }
         }
 
