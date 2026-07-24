@@ -2381,42 +2381,41 @@
             a[onclick*="'split'"] {
                 display: none !important;
             }
-            /* Move Back to Top button higher in mobile view above audio bar */
+            /* Move Back to Top button higher in mobile view above floating audio pill */
             .workspace-back-to-top {
-                bottom: 64px !important;
+                bottom: 104px !important;
                 right: 16px !important;
                 width: 38px !important;
                 height: 38px !important;
                 z-index: 150 !important;
             }
-            /* Show audio player as bottom bar on mobile (Full width in all states) */
+            /* Show audio player as floating pill elevated above mobile browser address/search bar */
             #audioPlayerBanner,
             #audioPlayerBanner.audio-floating-pane {
                 display: flex !important;
-                position: absolute !important;
-                bottom: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                width: 100% !important;
-                max-width: 100% !important;
+                position: fixed !important;
+                bottom: 48px !important;
+                bottom: calc(48px + env(safe-area-inset-bottom, 0px)) !important;
+                left: 12px !important;
+                right: 12px !important;
+                width: calc(100% - 24px) !important;
+                max-width: calc(100% - 24px) !important;
                 transform: none !important;
                 z-index: 200 !important;
-                height: 44px !important;
-                border-radius: 0 !important;
-                border-left: none !important;
-                border-right: none !important;
-                border-bottom: none !important;
-                background: rgba(6, 10, 19, 0.98) !important;
+                height: 42px !important;
+                border-radius: 30px !important;
+                border: 1px solid rgba(255, 255, 255, 0.15) !important;
+                background: rgba(10, 16, 28, 0.95) !important;
                 backdrop-filter: blur(20px) !important;
                 -webkit-backdrop-filter: blur(20px) !important;
                 justify-content: center !important;
                 padding: 4px 12px !important;
-                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4) !important;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
                 animation: none !important;
             }
-            /* Add bottom padding so content isn't hidden behind the fixed audio bar */
+            /* Add bottom padding so content isn't hidden behind the floating audio pill */
             .workspace-body {
-                padding-bottom: 56px !important;
+                padding-bottom: 106px !important;
             }
             /* Increase content card width on mobile by reducing padding */
             .workspace-body {
