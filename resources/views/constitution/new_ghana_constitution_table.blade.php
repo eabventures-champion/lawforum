@@ -2990,7 +2990,7 @@
             <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; writing-mode: vertical-rl; transform: rotate(180deg); margin-top: 6px; letter-spacing: 1px; color: var(--text-secondary);">Notes</span>
         </button>
         <!-- Integrated Audio Reader Panel (direct child of workspace-wrapper for proper z-index on mobile) -->
-        <div id="audioPlayerBanner" style="display: none; align-items: center; gap: 8px; background: rgba(17, 24, 39, 0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 3px 8px; height: 36px; flex-shrink: 0;">
+        <div id="audioPlayerBanner" class="pill-minimized" style="display: none; align-items: center; gap: 8px; background: rgba(17, 24, 39, 0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 3px 8px; height: 36px; flex-shrink: 0;">
             <!-- Left controls: Play / Pause / Stop -->
             <div class="d-flex align-items-center" style="gap: 4px;">
                 <button id="audioPlayBtn" class="audio-player-btn play-btn" onclick="handleAudioPlay()" title="Play Speech" style="width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border: none; color: #fff; cursor: pointer;">
