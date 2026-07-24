@@ -55,7 +55,7 @@
             height: 100vh;
             min-height: 100vh;
             overflow: hidden;
-            padding-top: 62px; /* offset for fixed navbar */
+            padding-top: 0;
         }
 
         /* ============================================
@@ -752,8 +752,8 @@
         .preamble-card {
             background: rgba(245, 158, 11, 0.05);
             border: 1px solid rgba(245, 158, 11, 0.15);
-            border-radius: 12px;
-            padding: 16px 24px;
+            border-radius: 10px;
+            padding: 8px 14px !important;
             text-align: center;
             margin-bottom: 24px;
         }
@@ -2103,6 +2103,14 @@
             color: #fff !important;
             box-shadow: 0 0 10px rgba(59, 130, 246, 0.3) !important;
         }
+        @media (max-width: 991px) {
+            #btnMaximizeWorkspace {
+                display: none !important;
+            }
+            .font-adjuster {
+                display: none !important;
+            }
+        }
     </style>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-174662621-1"></script>
@@ -2374,7 +2382,7 @@
                                     </div>
                                 @endif
                                 <div class="toc-welcome">
-                                    <i class="fa-solid fa-arrow-left fa-3x mb-3 text-muted" style="display:block;"></i>
+                                    <i class="fa-solid fa-arrow-left mb-3 text-muted" style="display:block; font-size: 20px;"></i>
                                     <h5>{{ $allPre1992Act['title'] }}</h5>
                                     <p>Select a section from the collapsible tree on the left panel to browse articles and read the content.</p>
                                 </div>
@@ -2905,7 +2913,11 @@
         $(document).on('click', '.pre_content_link, .pre_preamble_content_link, .previous_content_pre_act, .next_content_pre_act', function() {
             $('.toc-sidebar-module').hide();
             $('.content-sidebar-module').show();
-            setSidebarState('right', false);
+            if (window.innerWidth <= 991) {
+                closeMobileSidebars();
+            } else {
+                setSidebarState('right', false);
+            }
             
             const sid = $(this).attr('sid');
             console.log('[TOC-DEBUG] Inline click handler fired, sid:', sid, 'element:', this);

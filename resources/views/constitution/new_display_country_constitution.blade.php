@@ -1140,16 +1140,24 @@
             position: absolute;
             top: 24px;
             right: 24px;
-            background: none;
-            border: none;
-            padding: 0;
-            line-height: 1;
+            background: none !important;
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            line-height: 1 !important;
             color: var(--text-primary);
             font-size: 28px;
             cursor: pointer;
             opacity: 0;
             transform: rotate(-90deg) scale(0.5);
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s;
+            box-shadow: none !important;
+            outline: none !important;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .mobile-nav-panel.open .mobile-nav-close {
@@ -1165,7 +1173,7 @@
             background: linear-gradient(to right, #3b82f6, #60a5fa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif !important;
             margin: 0;
             line-height: 1.3;
         }
@@ -1187,9 +1195,26 @@
             .nav-auth { display: none !important; }
         }
         @media (max-width: 768px) {
+            .nav-logo i {
+                font-size: 18px !important;
+            }
             .nav-logo-text {
                 font-size: 18px !important;
                 letter-spacing: 0.2px !important;
+            }
+            .main-container {
+                margin-top: 12px !important;
+                padding: 0 12px !important;
+            }
+            .premium-card {
+                padding: 16px !important;
+                margin-top: 0 !important;
+            }
+            #btnMaximizeWorkspace {
+                display: none !important;
+            }
+            .font-adjuster {
+                display: none !important;
             }
         }
     </style>
@@ -1200,7 +1225,7 @@
     <nav class="nav-wrap" id="mainNav">
         <div class="nav-inner">
             <a href="/" class="nav-logo">
-                <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; margin: 0; line-height: 1;"></i>
+                <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; font-size: 22px; margin: 0; line-height: 1;"></i>
                 <span class="nav-logo-text">Legals Forum</span>
             </a>
 

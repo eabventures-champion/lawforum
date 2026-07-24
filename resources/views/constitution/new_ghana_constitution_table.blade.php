@@ -55,7 +55,7 @@
             height: 100vh;
             min-height: 100vh;
             overflow: hidden;
-            padding-top: 62px; /* offset for fixed navbar */
+            padding-top: 0;
         }
 
         /* ============================================
@@ -114,6 +114,7 @@
 
         .nav-logo:hover {
             transform: scale(1.03);
+            text-decoration: none;
         }
 
         .nav-logo img {
@@ -765,8 +766,8 @@
         .preamble-card {
             background: rgba(245, 158, 11, 0.05);
             border: 1px solid rgba(245, 158, 11, 0.15);
-            border-radius: 12px;
-            padding: 16px 24px;
+            border-radius: 10px;
+            padding: 8px 14px !important;
             text-align: center;
             margin-bottom: 24px;
         }
@@ -2241,7 +2242,7 @@
             .workspace-sidebar {
                 position: absolute !important;
                 top: 0 !important;
-                bottom: 0 !important;
+                bottom: 44px !important;
                 z-index: 100 !important;
                 width: 85vw !important;
                 max-width: 320px !important;
@@ -2313,6 +2314,75 @@
 
             .mobile-workspace-backdrop.active {
                 display: block !important;
+            }
+        /* Sidebar View Mode & Audio Module: Only visible in mobile view */
+        .sidebar-view-modes,
+        .sidebar-audio-controls,
+        .sidebar-view-modes-divider,
+        .sidebar-audio-controls-divider {
+            display: none !important;
+        }
+
+        @media (max-width: 991px) {
+            .sidebar-view-modes,
+            .sidebar-audio-controls,
+            .sidebar-view-modes-divider,
+            .sidebar-audio-controls-divider {
+                display: block !important;
+            }
+            #viewModeSelectorWrap {
+                display: none !important;
+            }
+            /* Show audio player as bottom bar on mobile (Full width in all states) */
+            #audioPlayerBanner,
+            #audioPlayerBanner.audio-floating-pane {
+                display: flex !important;
+                position: absolute !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                transform: none !important;
+                z-index: 200 !important;
+                height: 44px !important;
+                border-radius: 0 !important;
+                border-left: none !important;
+                border-right: none !important;
+                border-bottom: none !important;
+                background: rgba(6, 10, 19, 0.98) !important;
+                backdrop-filter: blur(20px) !important;
+                -webkit-backdrop-filter: blur(20px) !important;
+                justify-content: center !important;
+                padding: 4px 12px !important;
+                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4) !important;
+                animation: none !important;
+            }
+            /* Add bottom padding so content isn't hidden behind the fixed audio bar */
+            .workspace-body {
+                padding-bottom: 56px !important;
+            }
+            /* Increase content card width on mobile by reducing padding */
+            .workspace-body {
+                padding-left: 32px !important;
+                padding-right: 32px !important;
+            }
+            .article-card {
+                padding: 24px 16px !important;
+                border-radius: 16px !important;
+            }
+            .reader-container, .expanded-container {
+                max-width: 100% !important;
+            }
+            .premium-article-container {
+                padding-left: 8px !important;
+                padding-right: 8px !important;
+            }
+            #btnMaximizeWorkspace {
+                display: none !important;
+            }
+            .font-adjuster {
+                display: none !important;
             }
         }
 
@@ -2516,67 +2586,6 @@
                         </a>
                     </div>
 
-                    <!-- Integrated Audio Reader Panel -->
-                    <div id="audioPlayerBanner" style="display: none; align-items: center; gap: 8px; background: rgba(17, 24, 39, 0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 3px 8px; height: 36px; flex-shrink: 0;">
-                        <!-- Left controls: Play / Pause / Stop -->
-                        <div class="d-flex align-items-center" style="gap: 4px;">
-                            <button id="audioPlayBtn" class="audio-player-btn play-btn" onclick="handleAudioPlay()" title="Play Speech" style="width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border: none; color: #fff; cursor: pointer;">
-                                <i class="fa-solid fa-play"></i>
-                            </button>
-                            <button id="audioPauseBtn" class="audio-player-btn play-btn" onclick="handleAudioPause()" title="Pause Speech" style="display:none; background: var(--accent-gradient); width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; border: none; color: #fff; cursor: pointer;">
-                                <i class="fa-solid fa-pause"></i>
-                            </button>
-                            <button id="audioStopBtn" class="audio-player-btn stop-btn" onclick="handleAudioStop()" title="Stop Speech" style="width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border: none; color: #fff; cursor: pointer;">
-                                <i class="fa-solid fa-stop"></i>
-                            </button>
-                        </div>
-                        
-                        <!-- Status text -->
-                        <div class="audio-status-wrap" style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--text-secondary); display: flex; flex-direction: column; justify-content: center; line-height: 1.2;">
-                            <span class="audio-status-label" id="audioStatusLabel" style="font-size: 10px; font-weight: 600;">Audio Off</span>
-                            <span class="audio-playing-title" id="audioPlayingTitle" style="display:none; font-size: 9px; color: var(--text-muted);"></span>
-                        </div>
-                        
-                        <!-- Mode selector dropdown -->
-                        <div id="audioModeSelectorContainer" style="display: flex; align-items: center;">
-                            <select class="form-control text-white bg-dark border-secondary" id="audioModeSelectDropdown" onchange="setAudioMode(this.value)" style="height: 26px; font-size: 11px; padding: 2px 5px; border-radius: 5px; width: 110px; background-color: rgba(17, 24, 39, 0.8) !important; color: #fff; border: 1px solid var(--border-color); outline: none;">
-                                <option value="current">Current Article</option>
-                                <option value="all">Read All</option>
-                            </select>
-                        </div>
-
-                        <!-- Split Layout controls -->
-                        <div id="splitLayoutControls" style="display: none; align-items: center; gap: 3px;">
-                            <button class="mode-btn active split-layout-btn" id="btnSplitHorizontal" onclick="setSplitDirection('horizontal')" title="Side-by-Side" style="height: 26px; font-size: 10px; padding: 2px 8px; border-radius: 5px; margin: 0; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; cursor: pointer;">
-                                <i class="fa-solid fa-columns"></i> Side
-                            </button>
-                            <button class="mode-btn split-layout-btn" id="btnSplitVertical" onclick="setSplitDirection('vertical')" title="Stacked" style="height: 26px; font-size: 10px; padding: 2px 8px; border-radius: 5px; margin: 0; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; cursor: pointer;">
-                                <i class="fa-solid fa-window-maximize" style="transform: rotate(90deg); font-size: 9px;"></i> Stack
-                            </button>
-                        </div>
-                        
-                        <!-- Settings Popover/Dropdown (Volume / Rate) -->
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-dark text-muted border-0 p-0" type="button" id="audioSettingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: transparent; cursor: pointer;">
-                                <i class="fa-solid fa-sliders" style="font-size: 11px; color: var(--text-muted);"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right bg-dark border-secondary p-3" aria-labelledby="audioSettingsDropdown" style="width: 250px; border-radius: 8px; margin-top: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid var(--border-color); background-color: rgb(17, 24, 39) !important; z-index: 1050;">
-                                <h6 class="dropdown-header text-white px-0 pb-2 mb-2 border-bottom border-secondary" style="font-size: 12px; font-weight: 700; color: #fff !important; border-bottom: 1px solid rgba(255,255,255,0.1) !important;">Audio Settings</h6>
-                                
-                                <div class="form-group mb-2">
-                                    <label class="text-muted mb-1" style="font-size: 10px; font-weight: 600; color: var(--text-secondary) !important;">Voice Engine</label>
-                                    <select id="audioVoiceSelect" class="form-control text-white bg-dark border-secondary" onchange="VoicePlayer.stop()" style="font-size: 11px; height: 28px; padding: 2px; background-color: rgba(0,0,0,0.5) !important; color: #fff;"></select>
-                                </div>
-                                <div class="form-group mb-0">
-                                    <label class="text-muted mb-1 d-flex justify-content-between" style="font-size: 10px; font-weight: 600; color: var(--text-secondary) !important;">
-                                        <span>Reading Speed</span>
-                                        <span class="text-warning" id="audioRateLabel">1.0x</span>
-                                    </label>
-                                    <input type="range" id="audioRateRange" class="w-100" min="0.5" max="2.0" step="0.1" value="1.0" onchange="updateRateLabel(this.value)" style="accent-color: var(--accent-light);">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="toolbar-right">
@@ -2608,7 +2617,7 @@
                                     </a>
                                 </div>
                                 <div class="toc-welcome">
-                                    <i class="fa-solid fa-arrow-left fa-3x mb-3 text-muted" style="display:block;"></i>
+                                    <i class="fa-solid fa-arrow-left mb-3 text-muted" style="display:block; font-size: 20px;"></i>
                                     <h5>{{ $ghana_act['title'] }}</h5>
                                     <p>Select a chapter from the collapsible tree on the left panel to browse articles and read the content.</p>
                                 </div>
@@ -2728,6 +2737,27 @@
             <div class="sidebar-content">
                 <div id="rightSidebarContent">
 
+                    <!-- View Mode Selection Module -->
+                    <div class="sidebar-view-modes mb-3" style="padding: 12px; background: rgba(255, 255, 255, 0.03); border-radius: 10px; border: 1px solid var(--border-color);">
+                        <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; margin-bottom: 10px;">
+                            <i class="fa-solid fa-layer-group text-primary"></i> View Mode
+                        </label>
+                        <div class="d-flex flex-column" style="gap: 6px;">
+                            <button class="btn btn-sm text-left d-flex align-items-center justify-content-between sidebar-view-btn active" id="btnViewReader" onclick="selectViewMode('reader')" style="font-size: 12px; font-weight: 600; padding: 8px 12px; border-radius: 6px; background: rgba(59, 130, 246, 0.15); border: 1px solid var(--accent); color: #fff;">
+                                <span><i class="fa-solid fa-book-open mr-2" style="width: 16px;"></i> Reader View</span>
+                                <i class="fa-solid fa-circle-check text-primary"></i>
+                            </button>
+                            <button class="btn btn-sm text-left d-flex align-items-center justify-content-between sidebar-view-btn" id="btnViewExpanded" onclick="selectViewMode('expanded')" style="font-size: 12px; font-weight: 600; padding: 8px 12px; border-radius: 6px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); color: var(--text-secondary); margin-top: 6px;">
+                                <span><i class="fa-solid fa-expand mr-2" style="width: 16px;"></i> Expanded View</span>
+                            </button>
+                            <button class="btn btn-sm text-left d-flex align-items-center justify-content-between sidebar-view-btn" id="btnViewSplit" onclick="selectViewMode('split')" style="font-size: 12px; font-weight: 600; padding: 8px 12px; border-radius: 6px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); color: var(--text-secondary); margin-top: 6px;">
+                                <span><i class="fa-solid fa-columns mr-2" style="width: 16px;"></i> Split View</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-divider sidebar-view-modes-divider"></div>
+
                     <!-- Reading Progress -->
                     <div class="reading-progress-wrap">
                         <div class="reading-progress-label">
@@ -2816,12 +2846,8 @@
                         </div>
                     </div>
 
-                    <div class="sidebar-divider"></div>
 
-                    <!-- Existing View Options -->
-                    <div class="toc-sidebar-module">
-                        @include('constitution.new_container_plain')
-                    </div>
+
                     <div class="content-sidebar-module" style="display:none;">
                         @include('constitution.new_container_details_constitution')
                     </div>
@@ -2834,6 +2860,67 @@
             <i class="fa-solid fa-angle-left" style="margin-top: 10px;"></i>
             <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; writing-mode: vertical-rl; transform: rotate(180deg); margin-top: 6px; letter-spacing: 1px; color: var(--text-secondary);">Notes</span>
         </button>
+        <!-- Integrated Audio Reader Panel (direct child of workspace-wrapper for proper z-index on mobile) -->
+        <div id="audioPlayerBanner" style="display: none; align-items: center; gap: 8px; background: rgba(17, 24, 39, 0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 3px 8px; height: 36px; flex-shrink: 0;">
+            <!-- Left controls: Play / Pause / Stop -->
+            <div class="d-flex align-items-center" style="gap: 4px;">
+                <button id="audioPlayBtn" class="audio-player-btn play-btn" onclick="handleAudioPlay()" title="Play Speech" style="width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border: none; color: #fff; cursor: pointer;">
+                    <i class="fa-solid fa-play"></i>
+                </button>
+                <button id="audioPauseBtn" class="audio-player-btn play-btn" onclick="handleAudioPause()" title="Pause Speech" style="display:none; background: var(--accent-gradient); width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; border: none; color: #fff; cursor: pointer;">
+                    <i class="fa-solid fa-pause"></i>
+                </button>
+                <button id="audioStopBtn" class="audio-player-btn stop-btn" onclick="handleAudioStop()" title="Stop Speech" style="width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border: none; color: #fff; cursor: pointer;">
+                    <i class="fa-solid fa-stop"></i>
+                </button>
+            </div>
+            
+            <!-- Status text -->
+            <div class="audio-status-wrap" style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--text-secondary); display: flex; flex-direction: column; justify-content: center; line-height: 1.2;">
+                <span class="audio-status-label" id="audioStatusLabel" style="font-size: 10px; font-weight: 600;">Audio Off</span>
+                <span class="audio-playing-title" id="audioPlayingTitle" style="display:none; font-size: 9px; color: var(--text-muted);"></span>
+            </div>
+            
+            <!-- Mode selector dropdown -->
+            <div id="audioModeSelectorContainer" style="display: flex; align-items: center;">
+                <select class="form-control text-white bg-dark border-secondary" id="audioModeSelectDropdown" onchange="setAudioMode(this.value)" style="height: 26px; font-size: 11px; padding: 2px 5px; border-radius: 5px; width: 110px; background-color: rgba(17, 24, 39, 0.8) !important; color: #fff; border: 1px solid var(--border-color); outline: none;">
+                    <option value="current">Current Article</option>
+                    <option value="all">Read All</option>
+                </select>
+            </div>
+
+            <!-- Split Layout controls -->
+            <div id="splitLayoutControls" style="display: none; align-items: center; gap: 3px;">
+                <button class="mode-btn active split-layout-btn" id="btnSplitHorizontal" onclick="setSplitDirection('horizontal')" title="Side-by-Side" style="height: 26px; font-size: 10px; padding: 2px 8px; border-radius: 5px; margin: 0; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; cursor: pointer;">
+                    <i class="fa-solid fa-columns"></i> Side
+                </button>
+                <button class="mode-btn split-layout-btn" id="btnSplitVertical" onclick="setSplitDirection('vertical')" title="Stacked" style="height: 26px; font-size: 10px; padding: 2px 8px; border-radius: 5px; margin: 0; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; cursor: pointer;">
+                    <i class="fa-solid fa-window-maximize" style="transform: rotate(90deg); font-size: 9px;"></i> Stack
+                </button>
+            </div>
+            
+            <!-- Settings Popover/Dropdown (Volume / Rate) -->
+            <div class="dropdown">
+                <button class="btn btn-sm btn-dark text-muted border-0 p-0" type="button" id="audioSettingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: transparent; cursor: pointer;">
+                    <i class="fa-solid fa-sliders" style="font-size: 11px; color: var(--text-muted);"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right bg-dark border-secondary p-3" aria-labelledby="audioSettingsDropdown" style="width: 250px; border-radius: 8px; margin-top: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid var(--border-color); background-color: rgb(17, 24, 39) !important; z-index: 1050;">
+                    <h6 class="dropdown-header text-white px-0 pb-2 mb-2 border-bottom border-secondary" style="font-size: 12px; font-weight: 700; color: #fff !important; border-bottom: 1px solid rgba(255,255,255,0.1) !important;">Audio Settings</h6>
+                    
+                    <div class="form-group mb-2">
+                        <label class="text-muted mb-1" style="font-size: 10px; font-weight: 600; color: var(--text-secondary) !important;">Voice Engine</label>
+                        <select id="audioVoiceSelect" class="form-control text-white bg-dark border-secondary" onchange="VoicePlayer.stop()" style="font-size: 11px; height: 28px; padding: 2px; background-color: rgba(0,0,0,0.5) !important; color: #fff;"></select>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="text-muted mb-1 d-flex justify-content-between" style="font-size: 10px; font-weight: 600; color: var(--text-secondary) !important;">
+                            <span>Reading Speed</span>
+                            <span class="text-warning" id="audioRateLabel">1.0x</span>
+                        </label>
+                        <input type="range" id="audioRateRange" class="w-100" min="0.5" max="2.0" step="0.1" value="1.0" onchange="updateRateLabel(this.value)" style="accent-color: var(--accent-light);">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Country Selector Modal -->
@@ -3159,6 +3246,10 @@
         
         // Audio Player layout responsive docking / floating helper
         function syncAudioPlayerLayout() {
+            if (window.innerWidth <= 991) {
+                $('#audioPlayerBanner').removeClass('audio-floating-pane');
+                return;
+            }
             const rightSidebar = document.getElementById('rightSidebar');
             const audioBanner = $('#audioPlayerBanner');
             if (rightSidebar && audioBanner.length) {
@@ -3168,6 +3259,19 @@
                     audioBanner.removeClass('audio-floating-pane');
                 }
             }
+        }
+
+        function updateMobileAudioBannerClasses() {
+            const wrapper = document.querySelector('.workspace-wrapper');
+            if (!wrapper) return;
+            const leftSidebar = document.getElementById('leftSidebar');
+            const rightSidebar = document.getElementById('rightSidebar');
+            
+            const leftOpen = leftSidebar && !leftSidebar.classList.contains('collapsed');
+            const rightOpen = rightSidebar && !rightSidebar.classList.contains('collapsed');
+            
+            wrapper.classList.toggle('sidebar-open-left', leftOpen);
+            wrapper.classList.toggle('sidebar-open-right', rightOpen);
         }
 
         // Sidebar Toggle Handler
@@ -3191,6 +3295,8 @@
                 }
             }
             
+            updateMobileAudioBannerClasses();
+            
             if (side === 'right') {
                 syncAudioPlayerLayout();
             }
@@ -3201,6 +3307,7 @@
             setSidebarState('right', true);
             const backdrop = document.getElementById('mobileWorkspaceBackdrop');
             if (backdrop) backdrop.classList.remove('active');
+            updateMobileAudioBannerClasses();
         }
 
         $(document).ready(function() {
@@ -3208,6 +3315,7 @@
                 setSidebarState('left', true);
                 setSidebarState('right', true);
             }
+            updateMobileAudioBannerClasses();
         });
 
         // Font Size adjusters
@@ -3238,6 +3346,8 @@
                 sidebar.classList.remove('collapsed');
                 if (restoreBtn) restoreBtn.style.display = 'none';
             }
+            
+            updateMobileAudioBannerClasses();
             
             if (side === 'right') {
                 syncAudioPlayerLayout();
@@ -3347,7 +3457,11 @@
         $(document).on('click', '.constitution_content_link, .constitution_preamble_link', function() {
             $('.toc-sidebar-module').hide();
             $('.content-sidebar-module').show();
-            setSidebarState('right', false);
+            if (window.innerWidth <= 991) {
+                closeMobileSidebars();
+            } else {
+                setSidebarState('right', false);
+            }
         });
 
         // Realtime Table of Contents Search Filter
@@ -3592,6 +3706,10 @@
             const currentSelection = voiceSelect.value;
             voiceSelect.innerHTML = '';
             
+            // Also populate sidebar voice select
+            const sidebarVoiceSelect = document.getElementById('sidebarVoiceSelect');
+            if (sidebarVoiceSelect) sidebarVoiceSelect.innerHTML = '';
+            
             voices.forEach((voice, i) => {
                 const option = document.createElement('option');
                 option.textContent = `${voice.name} (${voice.lang})`;
@@ -3600,10 +3718,16 @@
                     option.selected = true;
                 }
                 voiceSelect.appendChild(option);
+                
+                // Clone to sidebar
+                if (sidebarVoiceSelect) {
+                    sidebarVoiceSelect.appendChild(option.cloneNode(true));
+                }
             });
             
             if (currentSelection && voiceSelect.querySelector(`option[value="${currentSelection}"]`)) {
                 voiceSelect.value = currentSelection;
+                if (sidebarVoiceSelect) sidebarVoiceSelect.value = currentSelection;
             }
         }
 
@@ -3870,6 +3994,12 @@
                 selectDropdown.value = mode;
             }
             
+            // Sync sidebar dropdown
+            const sidebarModeSelect = document.getElementById('sidebarAudioModeSelect');
+            if (sidebarModeSelect) {
+                sidebarModeSelect.value = mode;
+            }
+            
             // Update checkbox count visibility
             if (mode === 'selected') {
                 $('#audioSelectionCount').show();
@@ -3985,8 +4115,16 @@
 
         function updateRateLabel(value) {
             const label = document.getElementById('audioRateLabel');
-            if (label) label.textContent = parseFloat(value).toFixed(1) + 'x';
+            const sbLabel = document.getElementById('sidebarAudioRateLabel');
+            const rateStr = parseFloat(value).toFixed(1) + 'x';
+            if (label) label.textContent = rateStr;
+            if (sbLabel) sbLabel.textContent = rateStr;
             
+            const rangeInput = document.getElementById('audioRateRange');
+            const sbRangeInput = document.getElementById('sidebarAudioRateRange');
+            if (rangeInput && rangeInput.value !== value) rangeInput.value = value;
+            if (sbRangeInput && sbRangeInput.value !== value) sbRangeInput.value = value;
+
             if (VoicePlayer.isPlaying && !VoicePlayer.isPaused) {
                 const currIdx = VoicePlayer.currentIndex;
                 const queue = VoicePlayer.queue;
@@ -3999,15 +4137,23 @@
         }
 
         function updatePlayerUI(state, activeTitle = '') {
+            // Top toolbar controls
             const playBtn = document.getElementById('audioPlayBtn');
             const pauseBtn = document.getElementById('audioPauseBtn');
             const statusLabel = document.getElementById('audioStatusLabel');
             const titleEl = document.getElementById('audioPlayingTitle');
+            // Sidebar controls
+            const sbPlayBtn = document.getElementById('sidebarAudioPlayBtn');
+            const sbPauseBtn = document.getElementById('sidebarAudioPauseBtn');
+            const sbStatusLabel = document.getElementById('sidebarAudioStatusLabel');
             
             if (state === 'playing') {
                 if (playBtn) playBtn.style.display = 'none';
                 if (pauseBtn) pauseBtn.style.display = 'flex';
                 if (statusLabel) statusLabel.textContent = 'Now Reading';
+                if (sbPlayBtn) sbPlayBtn.style.display = 'none';
+                if (sbPauseBtn) sbPauseBtn.style.display = 'flex';
+                if (sbStatusLabel) sbStatusLabel.textContent = 'PLAYING';
                 if (titleEl) {
                     if (activeTitle) {
                         titleEl.textContent = activeTitle;
@@ -4018,15 +4164,30 @@
                 if (playBtn) playBtn.style.display = 'flex';
                 if (pauseBtn) pauseBtn.style.display = 'none';
                 if (statusLabel) statusLabel.textContent = 'Paused';
+                if (sbPlayBtn) sbPlayBtn.style.display = 'flex';
+                if (sbPauseBtn) sbPauseBtn.style.display = 'none';
+                if (sbStatusLabel) sbStatusLabel.textContent = 'PAUSED';
             } else {
                 if (playBtn) playBtn.style.display = 'flex';
                 if (pauseBtn) pauseBtn.style.display = 'none';
                 if (statusLabel) statusLabel.textContent = 'Audio Reader Off';
+                if (sbPlayBtn) sbPlayBtn.style.display = 'flex';
+                if (sbPauseBtn) sbPauseBtn.style.display = 'none';
+                if (sbStatusLabel) sbStatusLabel.textContent = 'AUDIO OFF';
                 if (titleEl) {
                     titleEl.style.display = 'none';
                     titleEl.textContent = '';
                 }
             }
+        }
+
+        // Sync voice select between top toolbar and sidebar
+        function syncVoiceSelect(value) {
+            const mainSelect = document.getElementById('audioVoiceSelect');
+            const sidebarSelect = document.getElementById('sidebarVoiceSelect');
+            if (mainSelect) mainSelect.value = value;
+            if (sidebarSelect) sidebarSelect.value = value;
+            VoicePlayer.stop();
         }
 
         function highlightPlayingArticle(sid) {
@@ -4353,13 +4514,30 @@
         function selectViewMode(mode) {
             $('.tab-hidden-initially').removeClass('tab-hidden-initially');
             $('#viewModeSelectorWrap .dropdown-item').removeClass('active');
+
+            // Sync Right Sidebar View Mode buttons
+            $('.sidebar-view-btn').css({
+                'background': 'rgba(255, 255, 255, 0.04)',
+                'border-color': 'var(--border-color)',
+                'color': 'var(--text-secondary)'
+            }).find('.fa-circle-check').remove();
             let tabId = '';
             
             if (mode === 'reader') {
                 tabId = '#v-pills-profile-tab';
+                $('#btnViewReader').css({
+                    'background': 'rgba(59, 130, 246, 0.15)',
+                    'border-color': 'var(--accent)',
+                    'color': '#fff'
+                }).append('<i class="fa-solid fa-circle-check text-primary"></i>');
+
                 // Restores sidebars for Reader View
-                setSidebarState('left', false);
-                setSidebarState('right', false);
+                if (window.innerWidth <= 991) {
+                    closeMobileSidebars();
+                } else {
+                    setSidebarState('left', false);
+                    setSidebarState('right', false);
+                }
                 $('.toc-sidebar-module').hide();
                 if ($('#display_content').find('.toc-welcome').length > 0) {
                     $('.toc-sidebar-module').show();
@@ -4370,9 +4548,17 @@
                 }
             } else if (mode === 'expanded') {
                 tabId = '#v-pills-messages-tab';
+                $('#btnViewExpanded').css({
+                    'background': 'rgba(59, 130, 246, 0.15)',
+                    'border-color': 'var(--accent)',
+                    'color': '#fff'
+                }).append('<i class="fa-solid fa-circle-check text-primary"></i>');
+
                 // Collapses sidebars for Expanded View
                 setSidebarState('left', true);
                 setSidebarState('right', true);
+                const backdrop = document.getElementById('mobileWorkspaceBackdrop');
+                if (backdrop) backdrop.classList.remove('active');
                 $('.toc-sidebar-module').hide();
                 $('.content-sidebar-module').hide();
                 
@@ -4395,9 +4581,17 @@
                 }
             } else if (mode === 'split') {
                 tabId = '#v-pills-split-tab';
+                $('#btnViewSplit').css({
+                    'background': 'rgba(59, 130, 246, 0.15)',
+                    'border-color': 'var(--accent)',
+                    'color': '#fff'
+                }).append('<i class="fa-solid fa-circle-check text-primary"></i>');
+
                 // Collapses sidebars for Split View
                 setSidebarState('left', true);
                 setSidebarState('right', true);
+                const backdrop = document.getElementById('mobileWorkspaceBackdrop');
+                if (backdrop) backdrop.classList.remove('active');
                 $('.toc-sidebar-module').hide();
                 $('.content-sidebar-module').hide();
             }

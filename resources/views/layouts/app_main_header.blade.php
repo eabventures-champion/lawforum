@@ -563,16 +563,24 @@
             position: absolute;
             top: 24px;
             right: 24px;
-            background: none;
-            border: none;
-            padding: 0;
-            line-height: 1;
+            background: none !important;
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            line-height: 1 !important;
             color: var(--text-primary);
             font-size: 28px;
             cursor: pointer;
             opacity: 0;
             transform: rotate(-90deg) scale(0.5);
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s;
+            box-shadow: none !important;
+            outline: none !important;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .mobile-nav-panel.open .mobile-nav-close {
@@ -588,6 +596,9 @@
         }
 
         @media (max-width: 768px) {
+            .nav-logo i {
+                font-size: 18px !important;
+            }
             .nav-logo-text {
                 font-size: 18px !important;
                 letter-spacing: 0.2px !important;
