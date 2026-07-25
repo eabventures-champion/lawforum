@@ -73,9 +73,9 @@
             gap: 16px !important;
             padding: 8px 16px !important;
             position: sticky !important;
-            top: -8px !important;
-            z-index: 1000 !important;
-            box-shadow: 0 -100px 0 var(--bg-primary), 0 8px 0 var(--bg-primary), 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+            top: 0 !important;
+            z-index: 50 !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
             margin-bottom: 8px !important;
             color: #fff !important;
         }

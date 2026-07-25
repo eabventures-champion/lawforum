@@ -1226,11 +1226,11 @@
             font-weight: 700 !important;
             font-size: 12px !important;
             margin-bottom: 8px !important;
-            box-shadow: 0 -100px 0 var(--bg-primary), 0 8px 0 var(--bg-primary), 0 4px 12px rgba(59, 130, 246, 0.05) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
             display: block;
             position: sticky !important;
-            top: -8px !important;
-            z-index: 100 !important;
+            top: 0 !important;
+            z-index: 50 !important;
         }
 
         #display_content .nav-links span, #acts_expanded_view .nav-links span {
