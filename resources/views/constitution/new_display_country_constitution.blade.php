@@ -255,11 +255,20 @@
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(148, 163, 184, 0.25) !important;
             border-radius: 12px;
+            margin-top: 0 !important;
             margin-bottom: 24px;
             flex-wrap: nowrap !important;
             position: sticky;
             top: 62px;
             z-index: 99;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
+
+        .nav-underline-premium::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
         }
 
         .nav-link-premium {
@@ -291,7 +300,7 @@
         /* ====== MAIN CONTENT & LAYOUT ====== */
         .main-container {
             max-width: 1400px;
-            margin: 40px auto 80px;
+            margin: 24px auto 80px;
             padding: 0 24px;
         }
 
@@ -578,26 +587,69 @@
         }
 
         .back-to-top {
-            position: fixed;
-            bottom: 40px;
-            right: calc(25% + 20px);
-            background: var(--accent-gradient);
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
+            position: fixed !important;
+            bottom: 24px !important;
+            right: 24px !important;
+            background: var(--accent-gradient) !important;
+            border-radius: 50% !important;
+            width: 44px !important;
+            height: 44px !important;
             display: none;
-            align-items: center;
-            justify-content: center;
+            align-items: center !important;
+            justify-content: center !important;
             color: #fff !important;
-            box-shadow: 0 4px 16px var(--accent-glow);
-            transition: all 0.2s ease;
-            z-index: 99;
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5) !important;
+            transition: all 0.2s ease !important;
+            z-index: 1015 !important;
             text-decoration: none !important;
         }
 
         .back-to-top:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+            transform: scale(1.1) translateY(-2px) !important;
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.75) !important;
+        }
+
+        /* Desktop: Align Back-to-Top inside Column 2 reading content */
+        @media (min-width: 992px) {
+            .back-to-top {
+                right: calc(25% + 30px) !important;
+                bottom: 30px !important;
+            }
+        }
+
+        .floating-word-finder-pill {
+            position: fixed !important;
+            bottom: 24px !important;
+            left: 24px !important;
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 50% !important;
+            background: rgba(15, 23, 42, 0.98) !important;
+            border: 1px solid var(--accent-light) !important;
+            color: var(--accent-light) !important;
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 16px !important;
+            cursor: pointer !important;
+            z-index: 1015 !important;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+            outline: none !important;
+        }
+
+        .floating-word-finder-pill:hover {
+            transform: scale(1.1) translateY(-2px) !important;
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.75) !important;
+            color: #fff !important;
+        }
+
+        /* Hide floating action buttons when right sidebar is open/active on mobile */
+        @media (max-width: 991px) {
+            #right-sidebar-col:not(.collapsed-sidebar) ~ #word-search-trigger,
+            #right-sidebar-col:not(.collapsed-sidebar) ~ #back-to-top {
+                display: none !important;
+            }
         }
 
         /* ====== DATATABLES PREMIUM OVERRIDES ====== */
@@ -1065,11 +1117,31 @@
             left: 0;
             border-radius: 0 8px 8px 0;
             border-left: none;
+            display: none;
         }
-        #expand-right-btn {
-            right: 0;
-            border-radius: 8px 0 0 8px;
-            border-right: none;
+        @media (min-width: 992px) {
+            #expand-right-btn {
+                position: fixed;
+                top: 50%;
+                right: 0;
+                transform: translateY(-50%);
+                width: 32px;
+                height: 48px;
+                background: rgba(15, 23, 42, 0.9);
+                border: 1px solid var(--border-color);
+                border-right: none;
+                border-radius: 8px 0 0 8px;
+                color: var(--text-primary);
+                display: none;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                z-index: 9999;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            }
+            #expand-right-btn span {
+                display: none !important;
+            }
         }
         .collapsed-sidebar {
             display: none !important;
@@ -1193,6 +1265,61 @@
             .nav-menu-links-premium { display: none !important; }
             .nav-mobile-toggle { display: block !important; }
             .nav-auth { display: none !important; }
+
+            #left-sidebar-col { display: none !important; }
+            #middle-content-col { width: 100% !important; flex: 0 0 100% !important; max-width: 100% !important; }
+
+            .premium-card {
+                padding-top: 32px !important;
+            }
+
+            .reading-header-premium {
+                padding-top: 8px !important;
+            }
+
+            /* Right sidebar off-canvas collapse on mobile (Image 2 style) */
+            #right-sidebar-col {
+                position: fixed !important;
+                top: 70px !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 85vw !important;
+                max-width: 340px !important;
+                z-index: 1000 !important;
+                background: #0b0f17 !important;
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8) !important;
+                overflow-y: auto !important;
+                padding: 16px !important;
+                transition: transform 0.3s ease !important;
+                transform: translateX(calc(100% + 30px)) !important;
+            }
+
+            #right-sidebar-col.open,
+            #right-sidebar-col:not(.collapsed-sidebar) {
+                transform: translateX(0) !important;
+            }
+
+            #expand-right-btn {
+                position: fixed !important;
+                right: 0 !important;
+                top: 150px !important;
+                height: 70px !important;
+                width: 24px !important;
+                z-index: 95 !important;
+                display: flex !important;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                padding: 8px 0;
+                background: rgba(12, 18, 32, 0.9);
+                border: 1px solid var(--border-color);
+                border-right: none;
+                border-radius: 8px 0 0 8px;
+                color: var(--accent-light);
+                cursor: pointer;
+                box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+            }
         }
         @media (max-width: 768px) {
             .nav-logo i {
@@ -1207,7 +1334,7 @@
                 padding: 0 12px !important;
             }
             .premium-card {
-                padding: 16px !important;
+                padding: 32px 16px 16px 16px !important;
                 margin-top: 0 !important;
             }
             #btnMaximizeWorkspace {
@@ -1320,7 +1447,7 @@
     <!-- ====== MAIN CONTAINER ====== -->
     <div class="main-container">
         <div class="row">
-            <!-- Left Sidebar: Notes & Reading Progress -->
+            <!-- Left Sidebar: Notes & Reading Progress (Desktop) -->
             <div class="col-lg-3 transition-width" id="left-sidebar-col">
                 <div class="sidebar-sticky-wrap">
                     <!-- My Notes Panel -->
@@ -1460,53 +1587,20 @@
                     @endforeach
                 </div>
 
-
-
-                <div class="premium-card">
-                    <!-- Action Headers -->
-                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-                        <div class="reading-header-premium">
-                            <span class="continent-badge">{{ $allCountriesConstitution['continent'] }}</span>
-                            <h2>{{ $allCountriesConstitution['country'] }} Constitution</h2>
-                            <span class="year-badge">{{ $allCountriesConstitution['year'] }} Edition</span>
-                        </div>
-
-                        <div class="d-flex align-items-center">
-                            <button type="button" class="btn btn-custom-outline" data-toggle="modal" data-target="#viewCases">
-                                <i class="fa-solid fa-globe mr-1"></i> Select Country
-                            </button>
-                            <button type="button" class="btn btn-custom-outline ml-2" id="btnMaximizeWorkspace" onclick="toggleMaximizeWorkspace()" title="Maximize View (Toggle Header)" style="margin-left: 10px;">
-                                <i class="fa-solid fa-expand" id="maximizeIcon"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Preamble & Document Text Body -->
-                    <div class="judgement_display">
-                        <div class="content" id="constitution-reading-content">  
-                            <div class="mb-4">{!! $allCountriesConstitution['preamble'] !!}</div>
-                            <div>{!! $allCountriesConstitution['content'] !!}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Sidebar: Search & Advertisements -->
-            <div class="col-lg-3 transition-width" id="right-sidebar-col">
-                <div class="sidebar-sticky-wrap">
-                    <!-- Premium Word Finder Card -->
-                    <div class="premium-card mb-4" id="word-search-card" style="padding: 20px;">
-                        <div class="card-header-styled" style="margin-bottom: 15px; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
-                            <h5 style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px;">
+                <!-- Floating Word Finder Panel (Hidden by default) -->
+                <div class="floating-word-finder-wrap mb-3" id="word-search-card" style="display: none; position: sticky; top: 125px; z-index: 1010;">
+                    <div class="premium-card p-3" style="margin-bottom: 0; background: rgba(11, 15, 23, 0.95); backdrop-filter: blur(16px); border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                        <div class="card-header-styled mb-2 pb-2" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
+                            <h5 style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px;">
                                 <i class="fa-solid fa-magnifying-glass text-primary"></i> Word Finder
                             </h5>
-                            <button type="button" class="sidebar-collapse-btn" onclick="toggleRightSidebar()" title="Collapse Right Sidebar">
-                                <i class="fa-solid fa-chevron-right"></i>
+                            <button type="button" onclick="toggleWordSearchCard()" title="Close Word Finder" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 14px; padding: 2px 6px; outline: none;">
+                                <i class="fa-solid fa-xmark"></i>
                             </button>
                         </div>
                         <div class="search-box-premium-wrap">
                             <div class="input-group" style="display: flex; width: 100%;">
-                                <input type="text" id="document-search-input" class="form-control" placeholder="Find word..." style="
+                                <input type="text" id="document-search-input" class="form-control" placeholder="Find word in document..." style="
                                     background: rgba(11, 15, 23, 0.6);
                                     border: 1px solid var(--border-color);
                                     color: var(--text-primary);
@@ -1580,6 +1674,141 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="premium-card">
+                    <!-- Action Headers -->
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                        <div class="reading-header-premium">
+                            <span class="continent-badge">{{ $allCountriesConstitution['continent'] }}</span>
+                            <h2>{{ $allCountriesConstitution['country'] }} Constitution</h2>
+                            <span class="year-badge">{{ $allCountriesConstitution['year'] }} Edition</span>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <button type="button" class="btn btn-custom-outline" data-toggle="modal" data-target="#viewCases">
+                                <i class="fa-solid fa-globe mr-1"></i> Select Country
+                            </button>
+                            <button type="button" class="btn btn-custom-outline ml-2" id="btnMaximizeWorkspace" onclick="toggleMaximizeWorkspace()" title="Maximize View (Toggle Header)" style="margin-left: 10px;">
+                                <i class="fa-solid fa-expand" id="maximizeIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Preamble & Document Text Body -->
+                    <div class="judgement_display">
+                        <div class="content" id="constitution-reading-content">  
+                            <div class="mb-4">{!! $allCountriesConstitution['preamble'] !!}</div>
+                            <div>{!! $allCountriesConstitution['content'] !!}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar: Search, Mobile Notes & Advertisements -->
+            <div class="col-lg-3 transition-width collapsed-sidebar" id="right-sidebar-col">
+                <div class="sidebar-sticky-wrap">
+                    <!-- Mobile Drawer Close Header -->
+                    <div class="mobile-drawer-header d-flex justify-content-between align-items-center mb-3 pb-2 d-lg-none" style="border-bottom: 1px solid var(--border-color);">
+                        <span style="font-size: 14px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-sliders text-primary"></i> Reader Tools & Notes
+                        </span>
+                        <button type="button" onclick="toggleRightSidebar()" title="Collapse Panel" style="background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border-color); color: var(--text-primary); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; outline: none;">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- My Notes Panel & Reading Progress (SECOND - Mobile Only) -->
+                    <div class="notes-card-sidebar mb-4 d-block d-lg-none" style="margin-top: 0;">
+                        <!-- Reading Progress -->
+                        <div class="reading-progress-wrap">
+                            <div class="reading-progress-label">
+                                Reading Progress <span id="progressPercent">0%</span>
+                            </div>
+                            <div class="reading-progress-track">
+                                <div class="reading-progress-fill" id="progressFill"></div>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-divider"></div>
+
+                        <!-- Notes Section Header -->
+                        <div class="notes-section-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <i class="fa-solid fa-pen-to-square"></i> MY NOTES
+                                <span class="notes-count-badge" id="notesCountBadge">0</span>
+                            </div>
+                            <button type="button" class="sidebar-collapse-btn" onclick="toggleRightSidebar()" title="Collapse Right Sidebar">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Highlighted text preview -->
+                        <div class="highlighted-text-preview" id="highlightedTextPreview" style="display: none;">
+                            <span class="close-highlight" onclick="clearHighlightPreview()">&times;</span>
+                            <span id="highlightedTextContent"></span>
+                        </div>
+
+                        <!-- Note textarea -->
+                        <textarea class="note-textarea" id="noteTextarea" placeholder="Write your note here... Select text in the document and click 'Add Note' to attach it."></textarea>
+
+                        <!-- Color picker -->
+                        <div class="note-color-picker">
+                            <label>Label</label>
+                            <div class="color-dot active" data-color="yellow" onclick="selectNoteColor(this)"></div>
+                            <div class="color-dot" data-color="blue" onclick="selectNoteColor(this)"></div>
+                            <div class="color-dot" data-color="green" onclick="selectNoteColor(this)"></div>
+                            <div class="color-dot" data-color="pink" onclick="selectNoteColor(this)"></div>
+                            <div class="color-dot" data-color="purple" onclick="selectNoteColor(this)"></div>
+                        </div>
+
+                        <!-- Action buttons -->
+                        <div class="note-actions">
+                            <button class="btn-save-note" id="btnSaveNote" onclick="saveNote()">
+                                <i class="fa-solid fa-check mr-1"></i> Save Note
+                            </button>
+                            <button class="btn-clear-note" onclick="clearNoteForm()">Clear</button>
+                        </div>
+
+                        <!-- Login prompt (shown for guests on save attempt) -->
+                        <div class="notes-login-prompt" id="notesLoginPrompt">
+                            <p><i class="fa-solid fa-lock" style="margin-right:4px;"></i> Create an account to save your notes to your dashboard</p>
+                            <a href="{{ route('login') }}" class="btn-login-prompt">Log In</a>
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="btn-signup-prompt">Sign Up</a>
+                            @endif
+                        </div>
+
+                        <div class="sidebar-divider"></div>
+
+                        <!-- Saved notes list -->
+                        <div class="notes-list" id="notesList">
+                            <div class="notes-list-header">Saved Notes</div>
+
+                            <!-- Search notes -->
+                            <div class="notes-search-wrap">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" class="notes-search-sidebar" id="sidebarNotesSearch" placeholder="Search saved notes..." oninput="filterSidebarNotes()">
+                            </div>
+
+                            <!-- Filter by color -->
+                            <div class="notes-filter-tabs">
+                                <div class="notes-filter-tag active" data-filter="all" onclick="filterSidebarColor('all', this)">All</div>
+                                <div class="notes-filter-tag" data-filter="yellow" onclick="filterSidebarColor('yellow', this)">Yellow</div>
+                                <div class="notes-filter-tag" data-filter="blue" onclick="filterSidebarColor('blue', this)">Blue</div>
+                                <div class="notes-filter-tag" data-filter="green" onclick="filterSidebarColor('green', this)">Green</div>
+                                <div class="notes-filter-tag" data-filter="pink" onclick="filterSidebarColor('pink', this)">Pink</div>
+                                <div class="notes-filter-tag" data-filter="purple" onclick="filterSidebarColor('purple', this)">Purple</div>
+                            </div>
+
+                            <!-- Scroll viewport -->
+                            <div class="notes-container-scroll">
+                                <div id="notesContainer">
+                                    <!-- Notes loaded via AJAX -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Advertisement Module -->
                     <div class="premium-card p-0" style="overflow: hidden;">
                         @include('ads.small_ads_image_main_page')
@@ -1588,12 +1817,21 @@
             </div>
         </div>
 
+        <!-- Mobile Right Sidebar Backdrop -->
+        <div id="right-sidebar-backdrop" onclick="toggleRightSidebar()" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 999;"></div>
+
+        <!-- Floating Word Finder Pill Button (Image 2 Audio Pill Style) -->
+        <button type="button" class="floating-word-finder-pill" id="word-search-trigger" onclick="toggleWordSearchCard()" title="Word Finder (Click to open)">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+
         <!-- Floating Expand Buttons -->
         <button class="floating-expand-btn" id="expand-left-btn" onclick="toggleLeftSidebar()" title="Expand Left Sidebar">
             <i class="fa-solid fa-chevron-right"></i>
         </button>
-        <button class="floating-expand-btn" id="expand-right-btn" onclick="toggleRightSidebar()" title="Expand Right Sidebar">
-            <i class="fa-solid fa-chevron-left"></i>
+        <button class="sidebar-restore-btn right-restore" id="expand-right-btn" onclick="toggleRightSidebar()" title="Reader Tools & Notes (Click to open)">
+            <i class="fa-solid fa-feather-pointed" style="font-size: 11px;"></i>
+            <span style="font-size: 9px; font-weight: 800; letter-spacing: 1px; writing-mode: vertical-rl; transform: rotate(180deg);">NOTES</span>
         </button>
     </div>
 
@@ -1917,10 +2155,10 @@
             if (progressFill) progressFill.style.width = progress + '%';
             if (progressPercent) progressPercent.textContent = progress + '%';
 
-            // Show/hide back to top button when scrolled down
+            // Show/hide back to top button when scrolled down (hidden if right sidebar panel is open on mobile)
             var backToTopBtn = document.getElementById('back-to-top');
             if (backToTopBtn) {
-                if (scrollTop > 300) {
+                if (scrollTop > 300 && (window.innerWidth > 991 || rightSidebarCollapsed)) {
                     backToTopBtn.style.display = 'flex';
                 } else {
                     backToTopBtn.style.display = 'none';
@@ -2122,17 +2360,54 @@
     var leftSidebarCollapsed = false;
     var rightSidebarCollapsed = false;
 
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.innerWidth <= 991) {
+            rightSidebarCollapsed = true;
+            var sidebar = document.getElementById('right-sidebar-col');
+            var expandBtn = document.getElementById('expand-right-btn');
+            if (sidebar) {
+                sidebar.classList.add('collapsed-sidebar');
+                sidebar.classList.remove('open');
+            }
+            if (expandBtn) expandBtn.style.display = 'flex';
+        } else {
+            rightSidebarCollapsed = false;
+            var sidebar = document.getElementById('right-sidebar-col');
+            var expandBtn = document.getElementById('expand-right-btn');
+            if (sidebar) {
+                sidebar.classList.remove('collapsed-sidebar', 'open');
+            }
+            if (expandBtn) expandBtn.style.display = 'none';
+        }
+        updateMiddleColumnWidth();
+    });
+
+    function toggleWordSearchCard() {
+        var searchCard = document.getElementById('word-search-card');
+        var searchTrigger = document.getElementById('word-search-trigger');
+        if (!searchCard) return;
+        if (searchCard.style.display === 'none' || getComputedStyle(searchCard).display === 'none') {
+            searchCard.style.display = 'block';
+            if (searchTrigger) searchTrigger.style.display = 'none';
+            var input = document.getElementById('document-search-input');
+            if (input) input.focus();
+        } else {
+            searchCard.style.display = 'none';
+            if (searchTrigger) searchTrigger.style.display = 'flex';
+        }
+    }
+
     function toggleLeftSidebar() {
         leftSidebarCollapsed = !leftSidebarCollapsed;
         var sidebar = document.getElementById('left-sidebar-col');
         var expandBtn = document.getElementById('expand-left-btn');
         
         if (leftSidebarCollapsed) {
-            sidebar.classList.add('collapsed-sidebar');
-            expandBtn.style.display = 'flex';
+            if (sidebar) sidebar.classList.add('collapsed-sidebar');
+            if (expandBtn) expandBtn.style.display = 'flex';
         } else {
-            sidebar.classList.remove('collapsed-sidebar');
-            expandBtn.style.display = 'none';
+            if (sidebar) sidebar.classList.remove('collapsed-sidebar');
+            if (expandBtn) expandBtn.style.display = 'none';
         }
         updateMiddleColumnWidth();
     }
@@ -2141,28 +2416,47 @@
         rightSidebarCollapsed = !rightSidebarCollapsed;
         var sidebar = document.getElementById('right-sidebar-col');
         var expandBtn = document.getElementById('expand-right-btn');
+        var backdrop = document.getElementById('right-sidebar-backdrop');
+        var searchTrigger = document.getElementById('word-search-trigger');
+        var backToTopBtn = document.getElementById('back-to-top');
         
         if (rightSidebarCollapsed) {
-            sidebar.classList.add('collapsed-sidebar');
-            expandBtn.style.display = 'flex';
+            if (sidebar) {
+                sidebar.classList.add('collapsed-sidebar');
+                sidebar.classList.remove('open');
+            }
+            if (expandBtn) expandBtn.style.display = 'flex';
+            if (backdrop) backdrop.style.display = 'none';
+            var searchCard = document.getElementById('word-search-card');
+            if (searchTrigger && (!searchCard || searchCard.style.display === 'none' || getComputedStyle(searchCard).display === 'none')) {
+                searchTrigger.style.display = 'flex';
+            }
+            if (backToTopBtn && window.scrollY > 300) {
+                backToTopBtn.style.display = 'flex';
+            }
         } else {
-            sidebar.classList.remove('collapsed-sidebar');
-            expandBtn.style.display = 'none';
+            if (sidebar) {
+                sidebar.classList.remove('collapsed-sidebar');
+                sidebar.classList.add('open');
+            }
+            if (expandBtn) expandBtn.style.display = 'none';
+            if (backdrop && window.innerWidth <= 991) backdrop.style.display = 'block';
+            if (searchTrigger) searchTrigger.style.display = 'none';
+            if (backToTopBtn) backToTopBtn.style.display = 'none';
         }
         updateMiddleColumnWidth();
     }
 
     function updateMiddleColumnWidth() {
         var middleCol = document.getElementById('middle-content-col');
-        
-        // Remove existing grid classes
-        middleCol.classList.remove('col-lg-6', 'col-lg-9', 'col-lg-12');
-        
-        var leftWidth = leftSidebarCollapsed ? 0 : 3;
-        var rightWidth = rightSidebarCollapsed ? 0 : 3;
-        var middleWidth = 12 - leftWidth - rightWidth;
-        
-        middleCol.classList.add('col-lg-' + middleWidth);
+        if (!middleCol) return;
+        if (window.innerWidth > 991) {
+            middleCol.classList.remove('col-lg-6', 'col-lg-9', 'col-lg-12');
+            var leftWidth = leftSidebarCollapsed ? 0 : 3;
+            var rightWidth = rightSidebarCollapsed ? 0 : 3;
+            var middleWidth = 12 - leftWidth - rightWidth;
+            middleCol.classList.add('col-lg-' + middleWidth);
+        }
     }
 
     function toggleMaximizeWorkspace() {
