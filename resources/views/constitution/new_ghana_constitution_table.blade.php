@@ -2299,7 +2299,7 @@
                 transform: translateX(-100%) !important;
             }
 
-            .left-sidebar:not(.collapsed) {
+            .left-sidebar.open {
                 transform: translateX(0) !important;
             }
 
@@ -2312,7 +2312,7 @@
                 transform: translateX(100%) !important;
             }
 
-            .right-sidebar:not(.collapsed) {
+            .right-sidebar.open {
                 transform: translateX(0) !important;
             }
 
@@ -3407,8 +3407,8 @@
             const leftSidebar = document.getElementById('leftSidebar');
             const rightSidebar = document.getElementById('rightSidebar');
             
-            const leftOpen = leftSidebar && !leftSidebar.classList.contains('collapsed');
-            const rightOpen = rightSidebar && !rightSidebar.classList.contains('collapsed');
+            const leftOpen = leftSidebar && (window.innerWidth > 991 ? !leftSidebar.classList.contains('collapsed') : leftSidebar.classList.contains('open'));
+            const rightOpen = rightSidebar && (window.innerWidth > 991 ? !rightSidebar.classList.contains('collapsed') : rightSidebar.classList.contains('open'));
             
             wrapper.classList.toggle('sidebar-open-left', leftOpen);
             wrapper.classList.toggle('sidebar-open-right', rightOpen);
@@ -3446,14 +3446,18 @@
             const backdrop = document.getElementById('mobileWorkspaceBackdrop');
             if (!sidebar) return;
             
-            if (sidebar.classList.contains('collapsed')) {
+            const isCurrentlyCollapsed = sidebar.classList.contains('collapsed') || (window.innerWidth <= 991 && !sidebar.classList.contains('open'));
+
+            if (isCurrentlyCollapsed) {
                 sidebar.classList.remove('collapsed');
+                sidebar.classList.add('open');
                 if (restoreBtn) restoreBtn.style.display = 'none';
                 if (window.innerWidth <= 991 && backdrop) {
                     backdrop.classList.add('active');
                 }
             } else {
                 sidebar.classList.add('collapsed');
+                sidebar.classList.remove('open');
                 if (restoreBtn) restoreBtn.style.display = 'flex';
                 if (window.innerWidth <= 991 && backdrop) {
                     backdrop.classList.remove('active');
@@ -3506,9 +3510,11 @@
             
             if (collapsed) {
                 sidebar.classList.add('collapsed');
+                sidebar.classList.remove('open');
                 if (restoreBtn) restoreBtn.style.display = 'flex';
             } else {
                 sidebar.classList.remove('collapsed');
+                sidebar.classList.add('open');
                 if (restoreBtn) restoreBtn.style.display = 'none';
             }
             
