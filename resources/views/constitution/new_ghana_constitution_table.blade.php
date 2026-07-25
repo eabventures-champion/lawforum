@@ -3043,12 +3043,12 @@
                 <button class="btn btn-sm btn-dark text-muted border-0 p-0" type="button" id="audioSettingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: transparent; cursor: pointer;">
                     <i class="fa-solid fa-sliders" style="font-size: 11px; color: var(--text-muted);"></i>
                 </button>
-                <div class="dropdown-menu dropdown-menu-right bg-dark border-secondary p-3" aria-labelledby="audioSettingsDropdown" style="width: 250px; border-radius: 8px; margin-top: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid var(--border-color); background-color: rgb(17, 24, 39) !important; z-index: 1050;">
+                <div class="dropdown-menu dropdown-menu-right bg-dark border-secondary p-3" aria-labelledby="audioSettingsDropdown" onclick="event.stopPropagation()" style="width: 250px; border-radius: 8px; margin-top: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid var(--border-color); background-color: rgb(17, 24, 39) !important; z-index: 1050;">
                     <h6 class="dropdown-header text-white px-0 pb-2 mb-2 border-bottom border-secondary" style="font-size: 12px; font-weight: 700; color: #fff !important; border-bottom: 1px solid rgba(255,255,255,0.1) !important;">Audio Settings</h6>
                     
                     <div class="form-group mb-2">
                         <label class="text-muted mb-1" style="font-size: 10px; font-weight: 600; color: var(--text-secondary) !important;">Voice Engine</label>
-                        <select id="audioVoiceSelect" class="form-control text-white bg-dark border-secondary" onchange="VoicePlayer.stop()" style="font-size: 11px; height: 28px; padding: 2px; background-color: rgba(0,0,0,0.5) !important; color: #fff;"></select>
+                        <select id="audioVoiceSelect" class="form-control text-white bg-dark border-secondary" onchange="syncVoiceSelect(this.value)" onclick="event.stopPropagation()" style="font-size: 11px; height: 28px; padding: 2px; background-color: rgba(0,0,0,0.5) !important; color: #fff; cursor: pointer;"></select>
                     </div>
                     <div class="form-group mb-0">
                         <label class="text-muted mb-1 d-flex justify-content-between" style="font-size: 10px; font-weight: 600; color: var(--text-secondary) !important;">
@@ -3925,12 +3925,13 @@
             const sidebarVoiceSelect = document.getElementById('sidebarVoiceSelect');
             if (sidebarVoiceSelect) sidebarVoiceSelect.innerHTML = '';
             
+            let defaultIndex = -1;
             voices.forEach((voice, i) => {
                 const option = document.createElement('option');
                 option.textContent = `${voice.name} (${voice.lang})`;
                 option.value = i;
-                if (voice.lang.includes('en') || voice.default) {
-                    option.selected = true;
+                if (defaultIndex === -1 && (voice.default || voice.lang.startsWith('en'))) {
+                    defaultIndex = i;
                 }
                 voiceSelect.appendChild(option);
                 
@@ -3940,9 +3941,12 @@
                 }
             });
             
-            if (currentSelection && voiceSelect.querySelector(`option[value="${currentSelection}"]`)) {
+            if (currentSelection !== "" && currentSelection !== null && voiceSelect.querySelector(`option[value="${currentSelection}"]`)) {
                 voiceSelect.value = currentSelection;
                 if (sidebarVoiceSelect) sidebarVoiceSelect.value = currentSelection;
+            } else if (defaultIndex !== -1) {
+                voiceSelect.value = defaultIndex;
+                if (sidebarVoiceSelect) sidebarVoiceSelect.value = defaultIndex;
             }
         }
 
