@@ -781,13 +781,13 @@
             border-radius: 10px;
             padding: 8px 14px !important;
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 70px;
         }
 
         .toc-welcome {
             text-align: center;
             max-width: 500px;
-            margin: 80px auto 0;
+            margin: 0 auto;
             color: var(--text-secondary);
         }
 
@@ -803,7 +803,7 @@
             color: var(--accent-light);
             font-size: 18px;
             cursor: pointer;
-            margin-bottom: 16px;
+            margin-bottom: 70px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             animation: bounceLeft 1.8s infinite ease-in-out;
             outline: none !important;
@@ -826,6 +826,7 @@
         .toc-welcome h5 {
             font-weight: 700;
             color: var(--text-primary);
+            margin-top: 0;
             margin-bottom: 12px;
         }
 
