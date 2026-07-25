@@ -219,30 +219,23 @@
 
         /* Article content Card */
         .article-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 40px 48px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-            transition: var(--transition);
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border: none !important;
+            border-radius: 0 !important;
+            padding: 20px 0 !important;
+            box-shadow: none !important;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
         }
 
         .article-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--accent-gradient);
+            display: none !important;
         }
 
         .article-card:hover {
-            border-color: var(--border-hover);
+            border-color: transparent !important;
         }
 
         /* Content / Legal text styling */
@@ -369,8 +362,8 @@
 
         /* Animations */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* Responsive styling */
@@ -379,7 +372,7 @@
                 padding: 0 12px 40px;
             }
             .article-card {
-                padding: 30px 24px;
+                padding: 16px 0 !important;
             }
             .content {
                 font-size: 15px;

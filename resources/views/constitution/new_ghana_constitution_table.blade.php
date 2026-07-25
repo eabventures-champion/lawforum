@@ -2297,7 +2297,7 @@
 
             .left-sidebar {
                 left: 0 !important;
-                transform: translateX(-100%) !important;
+                transform: translateX(calc(-100% - 30px)) !important;
             }
 
             .left-sidebar.open {
@@ -2305,12 +2305,12 @@
             }
 
             .left-sidebar.collapsed {
-                transform: translateX(-100%) !important;
+                transform: translateX(calc(-100% - 30px)) !important;
             }
 
             .right-sidebar {
                 right: 0 !important;
-                transform: translateX(100%) !important;
+                transform: translateX(calc(100% + 30px)) !important;
             }
 
             .right-sidebar.open {
@@ -2318,7 +2318,7 @@
             }
 
             .right-sidebar.collapsed {
-                transform: translateX(100%) !important;
+                transform: translateX(calc(100% + 30px)) !important;
             }
 
             /* Main Reader pane occupies full mobile width */
@@ -2340,7 +2340,7 @@
 
             .sidebar-restore-btn.left-restore {
                 left: 0 !important;
-                top: 80px !important;
+                top: 150px !important;
                 height: 44px !important;
                 width: 24px !important;
                 z-index: 95 !important;
@@ -2349,7 +2349,7 @@
 
             .sidebar-restore-btn.right-restore {
                 right: 0 !important;
-                top: 80px !important;
+                top: 150px !important;
                 height: 70px !important;
                 width: 24px !important;
                 z-index: 95 !important;
@@ -2741,7 +2741,7 @@
                             <div id="display_content">
                                 <div class="preamble-card">
                                     <a class="constitution_preamble_link" sid="preamble" href="/constitution/Republic/constitution_preamble/{{ $ghana_act['id'] }}">
-                                        <i class="fa-solid fa-scroll mr-2 text-warning"></i> Read Constitution Preamble / Introductory Text
+                                        <i class="fa-solid fa-scroll mr-2 text-warning"></i> Read Constitution Introductory Text
                                     </a>
                                 </div>
                                 <div class="toc-welcome">
