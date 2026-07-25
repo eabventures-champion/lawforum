@@ -3309,6 +3309,18 @@
             }
         });
 
+        function clearDOMHighlights(container) {
+            if (!container) return;
+            const marks = container.querySelectorAll('mark.highlight-match');
+            marks.forEach(mark => {
+                const parent = mark.parentNode;
+                if (parent) {
+                    parent.replaceChild(document.createTextNode(mark.textContent), mark);
+                    parent.normalize();
+                }
+            });
+        }
+
         function highlightKeyword(query) {
             const isExpanded = $('#v-pills-messages-tab').hasClass('active');
             const isSplit = $('#v-pills-split-tab').hasClass('active');
@@ -3324,21 +3336,24 @@
             
             if (!container) return;
 
-            // Save original loaded HTML to clear previous search matches safely
+            // Clear any existing highlighted mark tags from DOM first
+            clearDOMHighlights(container);
+
+            // Restore/save original clean HTML (only if clean/uncontaminated)
             if (isExpanded) {
-                if (originalExpandedHTML) {
+                if (originalExpandedHTML && !originalExpandedHTML.includes('class="highlight-match"')) {
                     container.innerHTML = originalExpandedHTML;
                 } else {
                     originalExpandedHTML = container.innerHTML;
                 }
             } else if (isSplit) {
-                if (originalPanelHTML[activeSplitPanel]) {
+                if (originalPanelHTML[activeSplitPanel] && !originalPanelHTML[activeSplitPanel].includes('class="highlight-match"')) {
                     container.innerHTML = originalPanelHTML[activeSplitPanel];
                 } else {
                     originalPanelHTML[activeSplitPanel] = container.innerHTML;
                 }
             } else {
-                if (originalArticleHTML) {
+                if (originalArticleHTML && !originalArticleHTML.includes('class="highlight-match"')) {
                     container.innerHTML = originalArticleHTML;
                 } else {
                     originalArticleHTML = container.innerHTML;
@@ -3374,11 +3389,15 @@
                 nodes.push(walker.currentNode);
             }
 
-            const regex = new RegExp('(' + escapeRegExp(query) + ')', 'gi');
+            const escapedQuery = escapeRegExp(query);
+            const regex = new RegExp('(' + escapedQuery + ')', 'gi');
 
             nodes.forEach(node => {
                 const text = node.nodeValue;
-                if (regex.test(text)) {
+                if (!text || !text.trim()) return;
+
+                const testRegex = new RegExp(escapedQuery, 'i');
+                if (testRegex.test(text)) {
                     const span = document.createElement('span');
                     span.innerHTML = text.replace(regex, '<mark class="highlight-match">$1</mark>');
                     node.parentNode.replaceChild(span, node);
