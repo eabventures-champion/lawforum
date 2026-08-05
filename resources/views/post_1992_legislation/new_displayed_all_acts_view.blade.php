@@ -506,7 +506,7 @@
                         </h5>
                     </div>
                     <div class="vertical-nav-group" id="sidebarNav">
-                        <a class="vertical-nav-link {{ (!isset($activeTab) || $activeTab === 'all') ? 'active' : '' }}" data-group="all" data-label="All Post-1992 Legislation" href="javascript:void(0)"><i class="fa-solid fa-landmark mr-3" style="width: 16px; text-align: center;"></i> All Laws</a>
+                        <a class="vertical-nav-link {{ (!isset($activeTab) || $activeTab === 'all') ? 'active' : '' }}" data-group="all" data-label="All New Laws" href="javascript:void(0)"><i class="fa-solid fa-landmark mr-3" style="width: 16px; text-align: center;"></i> All Laws</a>
                         <a class="vertical-nav-link {{ (isset($activeTab) && $activeTab === 'acts_of_parliament') ? 'active' : '' }}" data-group="acts_of_parliament" data-label="Acts of Parliament" href="javascript:void(0)"><i class="fa-solid fa-gavel mr-3" style="width: 16px; text-align: center;"></i> Acts of Parliament</a>
                         <a class="vertical-nav-link {{ (isset($activeTab) && $activeTab === 'legislative_instruments') ? 'active' : '' }}" data-group="legislative_instruments" data-label="Legislative Instruments" href="javascript:void(0)"><i class="fa-solid fa-file-contract mr-3" style="width: 16px; text-align: center;"></i> Legislative Instruments</a>
                         <a class="vertical-nav-link {{ (isset($activeTab) && $activeTab === 'constitutional_instruments') ? 'active' : '' }}" data-group="constitutional_instruments" data-label="Constitutional Instruments" href="javascript:void(0)"><i class="fa-solid fa-building-columns mr-3" style="width: 16px; text-align: center;"></i> Constitutional Instruments</a>
@@ -532,7 +532,7 @@
                         <table class="table table-hover" id="datatable" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <th id="thColumnName">All Post-1992 Legislation</th>
+                                    <th id="thColumnName">All New Laws</th>
                                     <th>Year</th>
                                 </tr>
                             </thead>

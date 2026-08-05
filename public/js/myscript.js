@@ -2349,7 +2349,7 @@ $(document).ready(function(){
     });
 
     // FILTERING POST-1992 LEGISLATION----------------------------------------------------
-    /* For all Post-1992 Legislation */
+    /* For All New Laws */
     $('#all_post_1992_legislation_filter').click(function(e){
         e.preventDefault();
         var year        = $(".all_post_1992_legislation_filter_year").val();

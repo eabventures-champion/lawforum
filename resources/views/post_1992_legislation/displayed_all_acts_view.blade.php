@@ -31,7 +31,7 @@ style="padding-left:1em;"
                                 <table class="table table-striped table-condensed" id="datatable">
                                     <thead>
                                         <tr>
-                                            <th>All Post-1992 Legislation</th>
+                                            <th>All New Laws</th>
                                             <th>Year</th>
                                         </tr>
                                     </thead>
