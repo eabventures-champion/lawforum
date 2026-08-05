@@ -19,7 +19,7 @@
         Post-1992 Legislation
     </a>
     <a href="{{ route('admin.laws.index', ['type' => 'pre1992']) }}" class="tab-btn {{ $type === 'pre1992' ? 'active' : '' }}">
-        Pre-1992 Legislation
+        Existing Laws
     </a>
     <a href="{{ route('admin.laws.index', ['type' => 'constitutional']) }}" class="tab-btn {{ $type === 'constitutional' ? 'active' : '' }}">
         Constitutional Acts

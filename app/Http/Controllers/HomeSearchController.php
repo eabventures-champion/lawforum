@@ -167,7 +167,7 @@ class HomeSearchController extends Controller
                 ->map(function($row) {
                     return [
                         'id' => $row->id,
-                        'type' => 'Pre 4th Republic (' . $row->pre_1992_group . ')',
+                        'type' => 'Existing Laws (' . $row->pre_1992_group . ')',
                         'category' => 'pre_4th_republic',
                         'parent_title' => $row->parent_title,
                         'subtitle' => $row->section,

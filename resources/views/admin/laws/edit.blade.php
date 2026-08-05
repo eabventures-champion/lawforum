@@ -40,7 +40,7 @@
                 </div>
             @elseif($type === 'pre1992')
                 <div class="form-group">
-                    <label for="pre_1992_group" class="form-label">Pre 1992 Group</label>
+                    <label for="pre_1992_group" class="form-label">Existing Laws Group</label>
                     <input type="text" id="pre_1992_group" name="pre_1992_group" class="form-control" value="{{ old('pre_1992_group', $law->pre_1992_group) }}" required>
                     @error('pre_1992_group') <small style="color: var(--danger-color);">{{ $message }}</small> @enderror
                 </div>
