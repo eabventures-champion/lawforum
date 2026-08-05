@@ -686,3 +686,30 @@ https://www.jqueryscript.net/tags.php?/search/
 |
 |http://jsfiddle.net/tU8R5/4/ : It is an important note
 */
+
+Route::get('/update-live-navigation-menu-secret', function() {
+    try {
+        // 1. Update URLs
+        \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET url = '/constitution/all_countries' WHERE id = 1 OR title LIKE '%Constitution%'");
+        \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET url = '/pre-1992-legislation' WHERE id = 2 OR title LIKE '%Existing%' OR title LIKE '%Pre-4th%'");
+        \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET url = '/post-1992-legislation' WHERE id = 3 OR title LIKE '%New Laws%' OR title LIKE '%4th Republic%'");
+
+        // 2. Insert Decree sub-menu if missing
+        \Illuminate\Support\Facades\DB::statement("INSERT INTO navigation_menus (`title`, `url`, `order`, `is_active`, `is_dropdown`, `parent_id`, `created_at`, `updated_at`) SELECT 'Decree', '#', 4, 1, 1, 2, NOW(), NOW() FROM DUAL WHERE NOT EXISTS (SELECT id FROM navigation_menus WHERE title = 'Decree' AND parent_id = 2)");
+
+        // 3. Move Decree items under Decree sub-menu
+        \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET parent_id = (SELECT id FROM (SELECT id FROM navigation_menus WHERE title = 'Decree' LIMIT 1) as t), `order` = CASE WHEN title LIKE '%NLC%' THEN 1 WHEN title LIKE '%NRC%' THEN 2 WHEN title LIKE '%SMC%' THEN 3 WHEN title LIKE '%AFRC%' THEN 4 END WHERE title LIKE '%Decree%' AND title != 'Decree'");
+
+        // 4. Set PNDC Law order to 5
+        \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET `order` = 5 WHERE title LIKE '%PNDC%'");
+
+        // 5. Clear caches
+        \Illuminate\Support\Facades\Artisan::call('view:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+
+        return "<h1>Success! Database updated & caches cleared.</h1><p>The Decree sub-menu and navigation menu links are now active!</p>";
+    } catch (\Exception $e) {
+        return "<h1>Error: " . $e->getMessage() . "</h1>";
+    }
+});
+
