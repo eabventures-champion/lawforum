@@ -605,6 +605,7 @@
             }
         }
     </style>
+    @include('partials._nav_subdropdown_styles')
   </head>
   <body>
       
@@ -617,20 +618,7 @@
             </a>
 
             <div class="nav-menu-links-premium">
-                @foreach($headerMenus as $menu)
-                    @if($menu->is_dropdown)
-                        <div class="nav-link-dropdown">
-                            <button class="nav-link-btn">{{ $menu->title }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></button>
-                            <div class="nav-dropdown-menu">
-                                @foreach($menu->children as $child)
-                                    <a href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">{{ $child->title }}</a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}" class="nav-link-btn" style="text-decoration:none !important;">{{ $menu->title }}</a>
-                    @endif
-                @endforeach
+                @include('partials._nav_desktop_menu')
             </div>
 
             <div class="nav-auth">
@@ -678,20 +666,7 @@
         <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')">
             <i class="fa-solid fa-xmark"></i>
         </button>
-        @foreach($headerMenus as $menu)
-            @if($menu->is_dropdown)
-                @php
-                    $url = '#';
-                    if ($menu->children && count($menu->children) > 0) {
-                        $firstChild = $menu->children->first();
-                        $url = $firstChild->custom_content ? route('dynamic.page', $firstChild->slug) : $firstChild->url;
-                    }
-                @endphp
-                <a href="{{ $url }}">{{ $menu->title }}</a>
-            @else
-                <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}">{{ $menu->title }}</a>
-            @endif
-        @endforeach
+        @include('partials._nav_mobile_menu')
         <div style="height: 16px;"></div>
         @guest
             <a href="{{ route('login') }}">Log In</a>
@@ -707,16 +682,16 @@
     <!-- ====== MAIN PORTAL AREA ====== -->
     <div class="container-fluid px-md-5 mt-4">
         
-        <!-- Header Text Block -->
-        <div class="mb-4">
-            <h1 class="page-title" style="font-size: 2.2rem; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Ghana Case Laws</h1>
-            <p class="page-subtitle" style="font-size: 15px; color: var(--text-secondary); line-height: 1.6;">Browse and search Ghana case laws including Supreme Court, Court of Appeal, and High Court judgements.</p>
-        </div>
-
         <div class="row">
             
             <!-- Left Main Column -->
             <div class="col-md-9">
+
+                <!-- Header Text Block -->
+                <div class="mb-4">
+                    <h1 class="page-title" style="font-size: 2.2rem; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Ghana Case Laws</h1>
+                    <p class="page-subtitle" style="font-size: 15px; color: var(--text-secondary); line-height: 1.6;">Browse and search Ghana case laws including Supreme Court, Court of Appeal, and High Court judgements.</p>
+                </div>
 
                 <!-- Premium Court Category Tabs -->
                 <div class="nav-underline-premium">
@@ -772,12 +747,8 @@
 
             <!-- Right Sidebar Column -->
             <div class="col-md-3">
-                <!-- Advertisement Cards -->
-                <div class="premium-sidebar-card p-2" style="background: transparent !important; border: none !important; box-shadow: none !important;">
-                    @include('ads.small_ads_image_main_page')
-                </div>
-
-                <div class="premium-sidebar-card p-2" style="background: transparent !important; border: none !important; box-shadow: none !important; margin-top: 15px;">
+                @include('ads.small_ads_image_main_page')
+                <div style="margin-bottom: 20px;">
                     @include('ads.adsense_vertical')
                 </div>
             </div>

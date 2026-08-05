@@ -1,4 +1,4 @@
-<div class="card mb-0 premium-placeholder-ad" style="background: linear-gradient(135deg, #0f172a, #1e293b); border: 1px dashed rgba(245, 158, 11, 0.25); border-radius: 12px; overflow: hidden; padding: 24px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.25); transition: all 0.3s ease; margin-bottom: 0 !important;">
+<div class="card premium-placeholder-ad" style="background: linear-gradient(135deg, #0f172a, #1e293b); border: 1px dashed rgba(245, 158, 11, 0.25); border-radius: 12px; overflow: hidden; padding: 24px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.25); transition: all 0.3s ease; margin-bottom: 20px !important;">
     <div class="placeholder-icon mb-3" style="display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 50%; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2);">
         <i class="fa-solid fa-rectangle-ad text-warning" style="font-size: 24px;"></i>
     </div>

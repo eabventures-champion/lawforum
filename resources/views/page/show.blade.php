@@ -283,6 +283,7 @@
             margin: 0;
         }
     </style>
+    @include('partials._nav_subdropdown_styles')
   </head>
   <body>
 
@@ -295,20 +296,7 @@
             </a>
 
             <div class="nav-menu-links-premium">
-                @foreach($headerMenus as $menuItem)
-                    @if($menuItem->is_dropdown)
-                        <div class="nav-link-dropdown">
-                            <button class="nav-link-btn">{{ $menuItem->title }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></button>
-                            <div class="nav-dropdown-menu">
-                                @foreach($menuItem->children as $child)
-                                    <a href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">{{ $child->title }}</a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <a href="{{ $menuItem->custom_content ? route('dynamic.page', $menuItem->slug) : $menuItem->url }}" class="nav-link-btn">{{ $menuItem->title }}</a>
-                    @endif
-                @endforeach
+                @include('partials._nav_desktop_menu')
             </div>
 
             <div class="nav-auth">

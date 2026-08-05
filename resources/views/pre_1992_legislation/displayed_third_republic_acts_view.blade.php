@@ -280,6 +280,7 @@
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
     </style>
+    @include('partials._nav_subdropdown_styles')
   </head>
   <body>
       
@@ -291,20 +292,7 @@
                 <span style="font-size: 22px; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(to right, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.3;">Legals Forum</span>
             </a>
             <div class="nav-menu-links-premium">
-                @foreach($headerMenus as $menu)
-                    @if($menu->is_dropdown)
-                        <div class="nav-link-dropdown">
-                            <button class="nav-link-btn">{{ $menu->title }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></button>
-                            <div class="nav-dropdown-menu">
-                                @foreach($menu->children as $child)
-                                    <a href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">{{ $child->title }}</a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}" class="nav-link-btn" style="text-decoration:none !important;">{{ $menu->title }}</a>
-                    @endif
-                @endforeach
+                @include('partials._nav_desktop_menu')
             </div>
             <div class="nav-auth">
                 @guest
@@ -351,7 +339,7 @@
                 <div class="premium-sidebar-card p-0" style="overflow: hidden; position: sticky; top: 90px;">
                     <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
                         <h5 style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px;">
-                            <i class="fa-solid fa-folder-open text-primary"></i> Pre-4th Republic
+                            <i class="fa-solid fa-folder-open text-primary"></i> Existing Laws
                         </h5>
                     </div>
                     <div class="vertical-nav-group" id="sidebarNav">
@@ -405,27 +393,8 @@
 
             <!-- Right Column: Filter & Ads -->
             <div class="col-lg-3 col-md-12 mt-md-4 mt-lg-0">
-                <div class="premium-sidebar-card">
-                    <h5 style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin: 0 0 15px 0; display: flex; align-items: center; gap: 8px;">
-                        <i class="fa-solid fa-filter text-primary"></i> Filter
-                    </h5>
-                    <select class="premium-select all_judgment_filter_category">
-                        <option selected value="">Select Category</option>
-                        @foreach($thirdRepublicCategories as $thirdRepublicCategory)
-                            <option value="{{ $thirdRepublicCategory->name }}">{{ $thirdRepublicCategory->name }}</option>
-                        @endforeach 
-                    </select>
-                    <form action="{{ url('third_republic_index_search') }}" method="GET" style="margin-top: 15px;">
-                        {{ csrf_field() }}
-                        <input class="premium-input" name="search_text" type="text" placeholder="Third Republic search" aria-label="Search" style="width: 100%;">
-                    </form>
-                </div>
-                <div class="premium-sidebar-card p-2" style="background: transparent !important; border: none !important; box-shadow: none !important;">
-                    @include('ads.small_ads_image_main_page')
-                </div>
-                <div class="premium-sidebar-card p-2" style="background: transparent !important; border: none !important; box-shadow: none !important; margin-top: 15px;">
-                    @include('ads.adsense_vertical')
-                </div>
+                @include('ads.small_ads_image_main_page')
+                @include('ads.adsense_vertical')
             </div>
 
         </div>

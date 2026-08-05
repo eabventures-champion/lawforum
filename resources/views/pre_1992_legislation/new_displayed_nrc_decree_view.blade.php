@@ -302,6 +302,151 @@
             border-left-color: var(--accent) !important;
             font-weight: 600 !important;
         }
+        .sidebar-decree-group {
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            margin: 4px 0;
+            padding: 4px 0;
+        }
+        .sidebar-group-header {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            padding: 10px 20px 6px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            user-select: none;
+        }
+        .sidebar-group-header:hover { color: var(--text-secondary); }
+        .sidebar-group-header .decree-chevron {
+            margin-left: auto;
+            font-size: 10px;
+            transition: transform 0.3s ease;
+        }
+        .sidebar-decree-group.expanded .decree-chevron {
+            transform: rotate(90deg);
+        }
+        .decree-sub-links {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+        .sidebar-decree-group.expanded .decree-sub-links {
+            max-height: 250px;
+        }
+        .decree-sub-link {
+            padding-left: 36px !important;
+            font-size: 12.5px !important;
+        }
+
+        /* Loading spinner overlay */
+        .table-loading-overlay {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(6,10,19,0.7); display: flex; align-items: center;
+            justify-content: center; z-index: 10; border-radius: 16px;
+            backdrop-filter: blur(4px); opacity: 0; visibility: hidden;
+            transition: all 0.2s ease;
+        }
+        .table-loading-overlay.show { opacity: 1; visibility: visible; }
+        .spinner-dot {
+            width: 10px; height: 10px; border-radius: 50%; margin: 0 4px;
+            animation: dotPulse 1.2s ease-in-out infinite;
+        }
+        .spinner-dot:nth-child(1) { background: var(--accent); animation-delay: 0s; }
+        .spinner-dot:nth-child(2) { background: #8b5cf6; animation-delay: 0.15s; }
+        .spinner-dot:nth-child(3) { background: var(--accent-light); animation-delay: 0.3s; }
+        @keyframes dotPulse {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* ============================================
+           PREMIUM DATATABLE OVERRIDES
+           ============================================ */
+        #datatable {
+            background-color: #0c1220 !important;
+            color: var(--text-secondary) !important;
+            border-collapse: collapse !important;
+        }
+        #datatable th {
+            background-color: #0c1220 !important;
+            border-bottom: 2px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+            font-weight: 700 !important; font-size: 12px !important;
+            text-transform: uppercase; letter-spacing: 0.5px; padding: 14px 16px !important;
+        }
+        #datatable td {
+            background-color: #0c1220 !important;
+            border-bottom: 1px solid var(--border-color) !important;
+            color: rgba(255,255,255,0.8) !important;
+            font-size: 14px !important; padding: 14px 16px !important;
+        }
+        #datatable tbody tr:hover,
+        #datatable tbody tr:hover td,
+        table.dataTable.hover tbody tr:hover,
+        table.dataTable.display tbody tr:hover,
+        .table-hover tbody tr:hover,
+        .table-hover tbody tr:hover td {
+            background-color: rgba(255,255,255,0.05) !important;
+            background: rgba(255,255,255,0.05) !important;
+            color: #fff !important;
+        }
+        #datatable td a {
+            color: var(--accent-light) !important; font-weight: 600 !important;
+            text-decoration: none !important;
+        }
+        #datatable td a:hover { color: var(--gold) !important; text-decoration: underline !important; }
+
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_paginate {
+            color: var(--text-secondary) !important; font-size: 13px !important; margin-bottom: 15px;
+        }
+        .dataTables_wrapper .dataTables_filter input {
+            background: rgba(17,24,39,0.7) !important; border: 1px solid var(--border-color) !important;
+            border-radius: 8px !important; color: var(--text-primary) !important;
+            padding: 6px 12px !important; font-size: 13px !important; outline: none !important; margin-left: 8px;
+        }
+        .dataTables_wrapper .dataTables_length select {
+            background: rgba(17,24,39,0.7) !important; border: 1px solid var(--border-color) !important;
+            border-radius: 8px !important; color: var(--text-primary) !important;
+            padding: 4px 8px !important; outline: none !important; margin: 0 4px;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            color: var(--text-secondary) !important; border-radius: 6px !important;
+            border: 1px solid var(--border-color) !important; padding: 4px 10px !important;
+            margin: 0 2px !important; cursor: pointer !important; background: transparent !important;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: rgba(255,255,255,0.05) !important; color: #fff !important;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            background: var(--accent-gradient) !important; color: #fff !important;
+            border: 1px solid var(--accent) !important; box-shadow: 0 4px 12px var(--accent-glow) !important;
+        }
+
+        /* Form Controls */
+        .premium-input {
+            background: rgba(17,24,39,0.6) !important; border: 1px solid var(--border-color) !important;
+            color: #fff !important; border-radius: 8px !important; padding: 8px 12px !important;
+            font-size: 13px !important; outline: none !important; transition: all 0.3s ease;
+        }
+        .premium-input:focus { border-color: var(--accent) !important; box-shadow: 0 0 0 2px var(--accent-glow) !important; }
+        .premium-select {
+            background: rgba(17,24,39,0.8) !important; border: 1px solid var(--border-color) !important;
+            color: #fff !important; border-radius: 8px !important; padding: 6px 12px !important;
+            font-size: 13px !important; outline: none !important; width: 100%;
+        }
+        .premium-select option { background-color: #0c1220; color: #fff; }
+
+        /* Scrollbars */
+        }
 
         /* Loading spinner overlay */
         .table-loading-overlay {
@@ -411,6 +556,8 @@
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
     </style>
+    @include('partials._nav_subdropdown_styles')
+    @include('partials._mobile_sidebar_drawer_styles')
   </head>
   <body>
       
@@ -422,20 +569,7 @@
                 <span class="nav-logo-text">Legals Forum</span>
             </a>
             <div class="nav-menu-links-premium">
-                @foreach($headerMenus as $menu)
-                    @if($menu->is_dropdown)
-                        <div class="nav-link-dropdown">
-                            <button class="nav-link-btn">{{ $menu->title }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></button>
-                            <div class="nav-dropdown-menu">
-                                @foreach($menu->children as $child)
-                                    <a href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">{{ $child->title }}</a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}" class="nav-link-btn" style="text-decoration:none !important;">{{ $menu->title }}</a>
-                    @endif
-                @endforeach
+                @include('partials._nav_desktop_menu')
             </div>
             <div class="nav-auth">
                 @guest
@@ -481,20 +615,7 @@
         <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')">
             <i class="fa-solid fa-xmark"></i>
         </button>
-        @foreach($headerMenus as $menu)
-            @if($menu->is_dropdown)
-                @php
-                    $url = '#';
-                    if ($menu->children && count($menu->children) > 0) {
-                        $firstChild = $menu->children->first();
-                        $url = $firstChild->custom_content ? route('dynamic.page', $firstChild->slug) : $firstChild->url;
-                    }
-                @endphp
-                <a href="{{ $url }}">{{ $menu->title }}</a>
-            @else
-                <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}">{{ $menu->title }}</a>
-            @endif
-        @endforeach
+        @include('partials._nav_mobile_menu')
         <div style="height: 16px;"></div>
         @guest
             <a href="{{ route('login') }}">Log In</a>
@@ -507,16 +628,26 @@
         @endguest
     </div>
 
+    <!-- Mobile Sidebar Backdrop & Toggle Button -->
+    <div class="mobile-sidebar-backdrop" id="mobileSidebarBackdrop" onclick="closeMobileSidebarCard()"></div>
+    <button class="mobile-sidebar-toggle-btn" id="mobileSidebarToggleBtn" onclick="toggleMobileSidebarCard()" title="Existing Laws Menu">
+        <i class="fa-solid fa-chevron-right" id="mobileSidebarToggleIcon"></i>
+    </button>
+
     <!-- ====== 3-COLUMN PORTAL AREA ====== -->
     <div class="container-fluid px-md-4 mt-4">
         <div class="row">
             
             <!-- Left Column: Vertical Menu -->
-            <div class="col-lg-3 col-md-4">
+            <div class="col-lg-3 col-md-4 mobile-sidebar-drawer" id="leftSidebarCol">
+                <div class="mobile-sidebar-close-header">
+                    <span><i class="fa-solid fa-folder-open text-primary mr-2"></i> Existing Laws</span>
+                    <button class="mobile-sidebar-close-btn" onclick="closeMobileSidebarCard()">&times;</button>
+                </div>
                 <div class="premium-sidebar-card p-0" style="overflow: hidden; position: sticky; top: 90px;">
                     <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
                         <h5 style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px;">
-                            <i class="fa-solid fa-folder-open text-primary"></i> Pre-4th Republic
+                            <i class="fa-solid fa-folder-open text-primary"></i> Existing Laws
                         </h5>
                     </div>
                     <div class="vertical-nav-group" id="sidebarNav">
@@ -524,17 +655,22 @@
                         <a class="vertical-nav-link " data-group="1" data-label="First Republic Legislation" href="javascript:void(0)"><i class="fa-solid fa-gavel mr-3" style="width: 16px; text-align: center;"></i> 1st Republic</a>
                         <a class="vertical-nav-link " data-group="2" data-label="Second Republic Legislation" href="javascript:void(0)"><i class="fa-solid fa-scale-balanced mr-3" style="width: 16px; text-align: center;"></i> 2nd Republic</a>
                         <a class="vertical-nav-link " data-group="3" data-label="Third Republic Legislation" href="javascript:void(0)"><i class="fa-solid fa-shield-halved mr-3" style="width: 16px; text-align: center;"></i> 3rd Republic</a>
-                        <a class="vertical-nav-link " data-group="5" data-label="NLC Decree" href="javascript:void(0)"><i class="fa-solid fa-building-columns mr-3" style="width: 16px; text-align: center;"></i> NLCD</a>
-                        <a class="vertical-nav-link active" data-group="6" data-label="NRC Decree" href="javascript:void(0)"><i class="fa-solid fa-scroll mr-3" style="width: 16px; text-align: center;"></i> NRCD</a>
-                        <a class="vertical-nav-link " data-group="7" data-label="SMC Decree" href="javascript:void(0)"><i class="fa-solid fa-file-contract mr-3" style="width: 16px; text-align: center;"></i> SMCD</a>
-                        <a class="vertical-nav-link " data-group="8" data-label="AFRC Decree" href="javascript:void(0)"><i class="fa-solid fa-signature mr-3" style="width: 16px; text-align: center;"></i> AFRCD</a>
+                        <div class="sidebar-decree-group expanded" id="decreeGroup">
+                            <div class="sidebar-group-header" onclick="document.getElementById('decreeGroup').classList.toggle('expanded')"><i class="fa-solid fa-folder mr-2" style="width: 16px; text-align: center; color: var(--gold);"></i> Decree <i class="fa-solid fa-chevron-right decree-chevron"></i></div>
+                            <div class="decree-sub-links">
+                                <a class="vertical-nav-link decree-sub-link " data-group="5" data-label="NLC Decree" href="javascript:void(0)"><i class="fa-solid fa-building-columns mr-3" style="width: 16px; text-align: center;"></i> NLCD</a>
+                                <a class="vertical-nav-link decree-sub-link active" data-group="6" data-label="NRC Decree" href="javascript:void(0)"><i class="fa-solid fa-scroll mr-3" style="width: 16px; text-align: center;"></i> NRCD</a>
+                                <a class="vertical-nav-link decree-sub-link " data-group="7" data-label="SMC Decree" href="javascript:void(0)"><i class="fa-solid fa-file-contract mr-3" style="width: 16px; text-align: center;"></i> SMCD</a>
+                                <a class="vertical-nav-link decree-sub-link " data-group="8" data-label="AFRC Decree" href="javascript:void(0)"><i class="fa-solid fa-signature mr-3" style="width: 16px; text-align: center;"></i> AFRCD</a>
+                            </div>
+                        </div>
                         <a class="vertical-nav-link " data-group="4" data-label="PNDC Laws" href="javascript:void(0)"><i class="fa-solid fa-book mr-3" style="width: 16px; text-align: center;"></i> PNDC</a>
                     </div>
                 </div>
             </div>
             
             <!-- Middle Column: Table -->
-            <div class="col-lg-6 col-md-8">
+            <div class="col-lg-6 col-md-8 col-12">
                 <div class="premium-card" style="position: relative;">
                     <!-- Loading overlay -->
                     <div class="table-loading-overlay" id="tableLoader">
@@ -600,9 +736,12 @@
             // AJAX tab switching
             $('#sidebarNav').on('click', '.vertical-nav-link', function(e) {
                 e.preventDefault();
+                if (typeof closeMobileSidebarCard === 'function') {
+                    closeMobileSidebarCard();
+                }
                 var $link = $(this);
-                var group = $link.data('group');
-                var label = $link.data('label');
+                var group = $link.attr('data-group');
+                var label = $link.attr('data-label');
 
                 // If already active, do nothing
                 if ($link.hasClass('active')) return;

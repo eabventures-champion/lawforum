@@ -2112,6 +2112,7 @@
             }
         }
     </style>
+    @include('partials._nav_subdropdown_styles')
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-174662621-1"></script>
     <script>
@@ -2145,20 +2146,7 @@
             </a>
 
             <div class="nav-menu-links-premium">
-                @foreach($headerMenus as $menu)
-                    @if($menu->is_dropdown)
-                        <div class="nav-link-dropdown">
-                            <button class="nav-link-btn">{{ $menu->title }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></button>
-                            <div class="nav-dropdown-menu">
-                                @foreach($menu->children as $child)
-                                    <a href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">{{ $child->title }}</a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}" class="nav-link-btn" style="text-decoration:none !important;">{{ $menu->title }}</a>
-                    @endif
-                @endforeach
+                @include('partials._nav_desktop_menu')
             </div>
 
             <div class="nav-auth">
@@ -2616,7 +2604,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-gavel mr-2"></i> Select Pre-4th Republic Laws</h5>
+                    <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-gavel mr-2"></i> Select Existing Laws Laws</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true" style="color:#fff;">&times;</span>
                     </button>

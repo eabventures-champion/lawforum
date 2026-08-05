@@ -17,7 +17,10 @@ class NavigationMenuController extends Controller
         $menus = NavigationMenu::whereNull('parent_id')
             ->orderBy('order')
             ->with(['children' => function($q) {
-                $q->orderBy('order');
+                $q->orderBy('order')
+                    ->with(['children' => function($q2) {
+                        $q2->orderBy('order');
+                    }]);
             }])
             ->get();
 
@@ -29,9 +32,11 @@ class NavigationMenuController extends Controller
      */
     public function create()
     {
-        // Get only parent items that are marked as dropdowns
-        $parentMenus = NavigationMenu::whereNull('parent_id')
-            ->where('is_dropdown', true)
+        // Get all items that are marked as dropdowns (top-level and sub-dropdowns)
+        $parentMenus = NavigationMenu::where('is_dropdown', true)
+            ->with('parent')
+            ->orderBy('parent_id')
+            ->orderBy('order')
             ->get();
 
         return view('admin.navigation-menus.create', compact('parentMenus'));
@@ -42,7 +47,7 @@ class NavigationMenuController extends Controller
      */
     public function store(Request $request)
     {
-        $isDropdown = $request->has('is_dropdown') && !$request->filled('parent_id');
+        $isDropdown = $request->has('is_dropdown');
 
         $request->validate([
             'title' => 'required|string|max:100',
@@ -87,9 +92,12 @@ class NavigationMenuController extends Controller
     {
         $menu = NavigationMenu::findOrFail($id);
         
-        $parentMenus = NavigationMenu::whereNull('parent_id')
-            ->where('is_dropdown', true)
+        // Get all dropdown items except the current one (and its children, to prevent circular refs)
+        $parentMenus = NavigationMenu::where('is_dropdown', true)
             ->where('id', '!=', $menu->id)
+            ->with('parent')
+            ->orderBy('parent_id')
+            ->orderBy('order')
             ->get();
 
         return view('admin.navigation-menus.edit', compact('menu', 'parentMenus'));
@@ -101,7 +109,7 @@ class NavigationMenuController extends Controller
     public function update(Request $request, $id)
     {
         $menu = NavigationMenu::findOrFail($id);
-        $isDropdown = $request->has('is_dropdown') && !$request->filled('parent_id');
+        $isDropdown = $request->has('is_dropdown');
 
         $request->validate([
             'title' => 'required|string|max:100',

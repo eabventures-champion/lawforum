@@ -31,7 +31,7 @@
                     <option value="">-- None (Creates a top-level header menu) --</option>
                     @foreach($parentMenus as $parent)
                         <option value="{{ $parent->id }}" {{ old('parent_id', $menu->parent_id) == $parent->id ? 'selected' : '' }}>
-                            {{ $parent->title }}
+                            {{ $parent->parent ? '↳ ' . $parent->parent->title . ' → ' . $parent->title : $parent->title }}
                         </option>
                     @endforeach
                 </select>
@@ -114,13 +114,10 @@
         const contentGroup = document.getElementById('content_group');
 
         // Toggle dropdown switch visibility based on parent selection
+        // Toggle dropdown switch visibility
+        // (Always show it - child items can also be sub-dropdown parents)
         function toggleDropdownSwitch() {
-            if (parentSelect.value !== "") {
-                dropdownGroup.style.display = 'none';
-                document.getElementById('is_dropdown').checked = false;
-            } else {
-                dropdownGroup.style.display = 'flex';
-            }
+            dropdownGroup.style.display = 'flex';
         }
 
         // Toggle destination fields based on link type selected

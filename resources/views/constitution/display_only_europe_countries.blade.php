@@ -472,7 +472,7 @@
                 @foreach($headerMenus as $menu)
                     @if($menu->is_dropdown)
                         <div class="nav-link-dropdown">
-                            <button class="nav-link-btn">{{ $menu->title }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></button>
+                            <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : ($menu->url ?? '#') }}" class="nav-link-btn" style="text-decoration:none !important;">{{ $menu->title }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></a>
                             <div class="nav-dropdown-menu">
                                 @foreach($menu->children as $child)
                                     <a href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">{{ $child->title }}</a>
@@ -524,16 +524,16 @@
     <!-- ====== MAIN PORTAL AREA ====== -->
     <div class="container-fluid px-md-5 mt-4">
         
-        <!-- Header Text Block -->
-        <div class="mb-4">
-            <h1 class="page-title" style="font-size: 2.2rem; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">European Constitutions</h1>
-            <p class="page-subtitle" style="font-size: 15px; color: var(--text-secondary); max-width: 700px; line-height: 1.6;">Browse, filter, and search constitution indexes and documents across Europe.</p>
-        </div>
-
         <div class="row">
             
             <!-- Left Main Column -->
             <div class="col-md-9">
+
+                <!-- Header Text Block -->
+                <div class="mb-4">
+                    <h1 class="page-title" style="font-size: 2.2rem; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">European Constitutions</h1>
+                    <p class="page-subtitle" style="font-size: 15px; color: var(--text-secondary); max-width: 700px; line-height: 1.6;">Browse, filter, and search constitution indexes and documents across Europe.</p>
+                </div>
 
                 <!-- Premium Continent Tabs Menu -->
                 <div class="nav-underline-premium">
@@ -614,12 +614,8 @@
 
             <!-- Right Sidebar Column -->
             <div class="col-md-3">
-                <!-- Advertisement Cards -->
-                <div class="premium-sidebar-card p-2" style="background: transparent !important; border: none !important; box-shadow: none !important;">
-                    @include('ads.small_ads_image_main_page')
-                </div>
-
-                <div class="premium-sidebar-card p-2" style="background: transparent !important; border: none !important; box-shadow: none !important; margin-top: 15px;">
+                @include('ads.small_ads_image_main_page')
+                <div style="margin-bottom: 20px;">
                     @include('ads.adsense_vertical')
                 </div>
             </div>

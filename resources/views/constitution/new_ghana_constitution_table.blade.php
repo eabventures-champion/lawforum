@@ -2527,6 +2527,7 @@
             }
         }
     </style>
+    @include('partials._nav_subdropdown_styles')
   </head>
   <body class="bg-light">
 
@@ -2543,20 +2544,7 @@
             </button>
 
             <div class="nav-menu-links-premium">
-                @foreach($headerMenus as $menu)
-                    @if($menu->is_dropdown)
-                        <div class="nav-link-dropdown">
-                            <button class="nav-link-btn">{{ $menu->title }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></button>
-                            <div class="nav-dropdown-menu">
-                                @foreach($menu->children as $child)
-                                    <a href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">{{ $child->title }}</a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}" class="nav-link-btn" style="text-decoration:none !important;">{{ $menu->title }}</a>
-                    @endif
-                @endforeach
+                @include('partials._nav_desktop_menu')
             </div>
 
             <div class="nav-auth">
@@ -2600,20 +2588,11 @@
         <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')">
             <i class="fa-solid fa-xmark"></i>
         </button>
-        @foreach($headerMenus as $menu)
-            @if($menu->is_dropdown)
-                @php
-                    $url = '#';
-                    if ($menu->children && count($menu->children) > 0) {
-                        $firstChild = $menu->children->first();
-                        $url = $firstChild->custom_content ? route('dynamic.page', $firstChild->slug) : $firstChild->url;
-                    }
-                @endphp
-                <a href="{{ $url }}">{{ $menu->title }}</a>
-            @else
-                <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}">{{ $menu->title }}</a>
-            @endif
-        @endforeach
+                            <a class="nav-link-premium {{ request()->is('constitution/display_only_african_countries') ? 'active' : '' }}" href="/constitution/display_only_african_countries"><i class="fa-solid fa-earth-africa mr-2"></i> Africa</a>
+                    <a class="nav-link-premium {{ request()->is('constitution/display_only_asia_countries') ? 'active' : '' }}" href="/constitution/display_only_asia_countries"><i class="fa-solid fa-earth-asia mr-2"></i> Asia</a>
+                    <a class="nav-link-premium {{ request()->is('constitution/display_only_europe_countries') ? 'active' : '' }}" href="/constitution/display_only_europe_countries"><i class="fa-solid fa-earth-europe mr-2"></i> Europe</a>
+                    <a class="nav-link-premium {{ request()->is('constitution/display_only_north_america_countries') ? 'active' : '' }}" href="/constitution/display_only_north_america_countries"><i class="fa-solid fa-earth-americas mr-2"></i> North America</a>
+                    <a class="nav-link-premium {{ request()->is('constitution/display_only_south_america_countries') ? 'active' : '' }}" href="/constitution/display_only_south_america_countries"><i class="fa-solid fa-earth-americas mr-2"></i> South America</a>
         <div style="height: 16px;"></div>
         @guest
             <a href="{{ route('login') }}">Log In</a>

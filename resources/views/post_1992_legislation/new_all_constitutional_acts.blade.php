@@ -103,6 +103,7 @@
             }
       
     </style>
+    @include('partials._nav_subdropdown_styles')
     <!-- Custom styles for this template -->
     <link href="{{ asset('css/offcanvas.css') }}" rel="stylesheet">
     {{-- navbar-white bg-white --}}
@@ -148,24 +149,7 @@
       {{-- <li class="nav-item active">
         <a class="nav-link" href="#">Constitution <span class="sr-only">(current)</span></a>
       </li> --}}
-      @foreach($headerMenus as $menu)
-                   @if($menu->is_dropdown)
-                       <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown{{ $menu->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $menu->title }}</a>
-                          <div class="dropdown-menu" aria-labelledby="navbarDropdown{{ $menu->id }}">
-                             @foreach($menu->children as $child)
-                                <a class="dropdown-item" href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">{{ $child->title }}</a>
-                             @endforeach
-                          </div>
-                       </li>
-                       &nbsp;&nbsp;
-                   @else
-                       <li class="nav-item">
-                          <a class="nav-link text-dark" href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}">{{ $menu->title }}</a>
-                       </li>
-                       &nbsp;&nbsp;
-                   @endif
-                @endforeach
+      @include('partials._nav_desktop_menu')
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 

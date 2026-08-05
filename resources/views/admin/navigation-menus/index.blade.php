@@ -38,7 +38,7 @@
         </thead>
         <tbody>
             @forelse($menus as $menu)
-                <!-- Parent Row -->
+                {{-- Parent Row --}}
                 <tr style="background: rgba(255, 255, 255, 0.02);">
                     <td style="font-weight: 700; color: #fff; font-size: 15px;">
                         @if($menu->is_dropdown)
@@ -90,17 +90,23 @@
                     </td>
                 </tr>
 
-                <!-- Child Rows -->
+                {{-- Child Rows --}}
                 @if($menu->is_dropdown && $menu->children->count() > 0)
                     @foreach($menu->children as $child)
                         <tr>
                             <td style="padding-left: 40px; color: var(--text-secondary); font-size: 14px;">
                                 <i class="fa-solid fa-arrow-turn-up" style="transform: rotate(90deg); margin-right: 8px; color: var(--border-hover); font-size: 11px;"></i>
-                                <i class="fa-solid fa-link" style="color: var(--text-muted); font-size: 12px; margin-right: 4px;"></i>
+                                @if($child->is_dropdown)
+                                    <i class="fa-solid fa-folder" style="color: var(--gold); font-size: 12px; margin-right: 4px;"></i>
+                                @else
+                                    <i class="fa-solid fa-link" style="color: var(--text-muted); font-size: 12px; margin-right: 4px;"></i>
+                                @endif
                                 {{ $child->title }}
                             </td>
                             <td>
-                                @if($child->custom_content)
+                                @if($child->is_dropdown)
+                                    <span style="color: var(--text-secondary); font-size: 13px;">Sub-Dropdown Group</span>
+                                @elseif($child->custom_content)
                                     <code style="color: var(--accent-light);">/page/{{ $child->slug }}</code>
                                 @else
                                     <code style="color: var(--text-secondary);">{{ $child->url }}</code>
@@ -108,7 +114,9 @@
                             </td>
                             <td>{{ $child->order }}</td>
                             <td>
-                                @if($child->custom_content)
+                                @if($child->is_dropdown)
+                                    <span class="badge" style="background: rgba(245, 158, 11, 0.1); color: var(--gold); border: 1px solid rgba(245, 158, 11, 0.2);">Sub-Dropdown</span>
+                                @elseif($child->custom_content)
                                     <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--success-color); border: 1px solid rgba(16, 185, 129, 0.2);">Custom Page</span>
                                 @else
                                     <span class="badge" style="background: rgba(59, 130, 246, 0.1); color: var(--primary-color); border: 1px solid rgba(59, 130, 246, 0.2);">Direct URL</span>
@@ -136,6 +144,56 @@
                                 </div>
                             </td>
                         </tr>
+
+                        {{-- Grandchild Rows (3rd level) --}}
+                        @if($child->is_dropdown && $child->children->count() > 0)
+                            @foreach($child->children as $grandchild)
+                                <tr>
+                                    <td style="padding-left: 76px; color: var(--text-muted); font-size: 13px;">
+                                        <i class="fa-solid fa-arrow-turn-up" style="transform: rotate(90deg); margin-right: 6px; color: var(--border-color); font-size: 10px;"></i>
+                                        <i class="fa-solid fa-arrow-turn-up" style="transform: rotate(90deg); margin-right: 6px; color: var(--border-color); font-size: 10px;"></i>
+                                        <i class="fa-solid fa-link" style="color: var(--text-muted); font-size: 11px; margin-right: 4px;"></i>
+                                        {{ $grandchild->title }}
+                                    </td>
+                                    <td>
+                                        @if($grandchild->custom_content)
+                                            <code style="color: var(--accent-light);">/page/{{ $grandchild->slug }}</code>
+                                        @else
+                                            <code style="color: var(--text-muted);">{{ $grandchild->url }}</code>
+                                        @endif
+                                    </td>
+                                    <td>{{ $grandchild->order }}</td>
+                                    <td>
+                                        @if($grandchild->custom_content)
+                                            <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--success-color); border: 1px solid rgba(16, 185, 129, 0.2);">Custom Page</span>
+                                        @else
+                                            <span class="badge" style="background: rgba(59, 130, 246, 0.1); color: var(--primary-color); border: 1px solid rgba(59, 130, 246, 0.2);">Direct URL</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($grandchild->is_active)
+                                            <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--success-color); border: 1px solid rgba(16, 185, 129, 0.2);">Active</span>
+                                        @else
+                                            <span class="badge" style="background: rgba(239, 68, 68, 0.1); color: var(--danger-color); border: 1px solid rgba(239, 68, 68, 0.2);">Hidden</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <div style="display: flex; gap: 8px;">
+                                            <a href="{{ route('navigation-menus.edit', $grandchild->id) }}" class="btn btn-secondary btn-action" style="padding: 6px 12px; font-size: 12px;">
+                                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                                            </a>
+                                            <form action="{{ route('navigation-menus.destroy', $grandchild->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this link?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-action" style="padding: 6px 12px; font-size: 12px;">
+                                                    <i class="fa-solid fa-trash"></i> Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
                     @endforeach
                 @endif
             @empty

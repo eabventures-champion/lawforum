@@ -35,7 +35,10 @@ class AppServiceProvider extends ServiceProvider
                 $menus = \App\NavigationMenu::whereNull('parent_id')
                     ->where('is_active', true)
                     ->with(['children' => function ($query) {
-                        $query->where('is_active', true)->orderBy('order');
+                        $query->where('is_active', true)->orderBy('order')
+                            ->with(['children' => function ($q) {
+                                $q->where('is_active', true)->orderBy('order');
+                            }]);
                     }])
                     ->orderBy('order')
                     ->get();

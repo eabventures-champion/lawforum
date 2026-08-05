@@ -1828,6 +1828,7 @@
             }
         }
     </style>
+    @include('partials._nav_subdropdown_styles')
 </head>
 <body>
 
@@ -1840,20 +1841,7 @@
             </a>
 
                         <div class="nav-menu-links-premium">
-                @foreach($headerMenus as $menu)
-                    @if($menu->is_dropdown)
-                        <div class="nav-link-dropdown">
-                            <button class="nav-link-btn">{{ $menu->title }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></button>
-                            <div class="nav-dropdown-menu">
-                                @foreach($menu->children as $child)
-                                    <a href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">{{ $child->title }}</a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}" class="nav-link-btn" style="text-decoration:none !important;">{{ $menu->title }}</a>
-                    @endif
-                @endforeach
+                @include('partials._nav_desktop_menu')
             </div>
 
             <div class="nav-auth">
@@ -1901,20 +1889,7 @@
         <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')">
             <i class="fa-solid fa-xmark"></i>
         </button>
-        @foreach($headerMenus as $menu)
-            @if($menu->is_dropdown)
-                @php
-                    $url = '#';
-                    if ($menu->children && count($menu->children) > 0) {
-                        $firstChild = $menu->children->first();
-                        $url = $firstChild->custom_content ? route('dynamic.page', $firstChild->slug) : $firstChild->url;
-                    }
-                @endphp
-                <a href="{{ $url }}">{{ $menu->title }}</a>
-            @else
-                <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}">{{ $menu->title }}</a>
-            @endif
-        @endforeach
+        @include('partials._nav_mobile_menu')
         <div style="height: 16px;"></div>
         @guest
             <a href="{{ route('login') }}">Log In</a>
@@ -2085,7 +2060,7 @@
 
             <a href="/pre-1992-legislation" class="category-card card-old-laws reveal">
                 <div class="card-icon-wrap"><i class="fa-solid fa-scroll"></i></div>
-                <h3 class="card-title">{{ homepage_setting('slide_1_card2_title', 'Pre-1992 Laws') }}</h3>
+                <h3 class="card-title">{{ homepage_setting('slide_1_card2_title', 'Existing Laws') }}</h3>
                 <p class="card-description">{{ homepage_setting('slide_1_card2_desc', 'Access over 200 Ghanaian laws and enactments passed before the Fourth Republic, covering historical legislation and ordinances.') }}</p>
                 <span class="card-arrow">Explore <i class="fa-solid fa-arrow-right"></i></span>
             </a>
@@ -2269,7 +2244,7 @@
                 <div class="footer-col">
                     <h4>Resources</h4>
                     <a href="/constitution/Republic/Ghana/1">Constitution</a>
-                    <a href="/pre-1992-legislation">Pre-1992 Laws</a>
+                    <a href="/pre-1992-legislation">Existing Laws</a>
                     <a href="/post-1992-legislation">Post-1992 Laws</a>
                     <a href="/judgement/Ghana">Case Laws</a>
                     <a href="/News/Ghana-News/1">Legal News</a>

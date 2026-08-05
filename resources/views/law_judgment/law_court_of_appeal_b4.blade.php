@@ -109,6 +109,7 @@
         @media (max-width: 991px) { .nav-inner { padding: 14px 20px !important; } .nav-menu-links-premium { display: none !important; } .nav-mobile-toggle { display: block !important; } .nav-auth { display: none !important; } }
         @media (max-width: 768px) { .nav-logo i { font-size: 18px !important; } .nav-logo-text { font-size: 18px !important; letter-spacing: 0.2px !important; } }
     </style>
+    @include('partials._nav_subdropdown_styles')
   </head>
   <body>
     <nav class="nav-wrap" id="mainNav">
@@ -118,20 +119,7 @@
                 <span class="nav-logo-text">Legals Forum</span>
             </a>
             <div class="nav-menu-links-premium">
-                @foreach($headerMenus as $menu)
-                    @if($menu->is_dropdown)
-                        <div class="nav-link-dropdown">
-                            <button class="nav-link-btn">{{ $menu->title }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></button>
-                            <div class="nav-dropdown-menu">
-                                @foreach($menu->children as $child)
-                                    <a href="{{ $child->custom_content ? route('dynamic.page', $child->slug) : $child->url }}">{{ $child->title }}</a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}" class="nav-link-btn" style="text-decoration:none !important;">{{ $menu->title }}</a>
-                    @endif
-                @endforeach
+                @include('partials._nav_desktop_menu')
             </div>
             <div class="nav-auth">
                 @guest
@@ -166,14 +154,7 @@
     </nav>
     <div class="mobile-nav-panel" id="mobileNav">
         <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')"><i class="fa-solid fa-xmark"></i></button>
-        @foreach($headerMenus as $menu)
-            @if($menu->is_dropdown)
-                @php $url = '#'; if ($menu->children && count($menu->children) > 0) { $firstChild = $menu->children->first(); $url = $firstChild->custom_content ? route('dynamic.page', $firstChild->slug) : $firstChild->url; } @endphp
-                <a href="{{ $url }}">{{ $menu->title }}</a>
-            @else
-                <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}">{{ $menu->title }}</a>
-            @endif
-        @endforeach
+        @include('partials._nav_mobile_menu')
         <div style="height: 16px;"></div>
         @guest
             <a href="{{ route('login') }}">Log In</a>
