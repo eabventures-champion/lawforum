@@ -390,7 +390,8 @@
             display: inline-block;
         }
     </style>
-</head>
+    @include('partials._nav_subdropdown_styles')
+  </head>
 
 <body class="standalone-view">
     <div class="premium-article-container" data-sid="{{ $constitutionContent['id'] }}">

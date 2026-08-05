@@ -4,7 +4,8 @@
 <head>
     <link rel="stylesheet" href="{{ asset('css/tooltipster.bundle.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('css/tooltipster-sideTip-borderless.min.css') }}" type="text/css">    
-</head>
+    @include('partials._nav_subdropdown_styles')
+  </head>
 
 <body>
 

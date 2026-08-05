@@ -12,7 +12,8 @@
         padding: .1rem .9rem;
         }
     </style>   
-</head>
+    @include('partials._nav_subdropdown_styles')
+  </head>
 
 <body>
 
