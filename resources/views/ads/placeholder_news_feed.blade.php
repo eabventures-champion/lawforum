@@ -2,7 +2,7 @@
     $carouselId = 'newsFeedCarousel_' . $ad->slot_name;
 @endphp
 
-<div class="card mb-0 news-feed-placeholder-ad" id="{{ $carouselId }}" style="background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.25); position: relative; margin-bottom: 0 !important;">
+<div class="card mb-0 news-feed-placeholder-ad" id="{{ $carouselId }}" style="background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.25); position: relative; margin-bottom: 20px !important;">
     <!-- Carousel Header -->
     <div style="background: rgba(255, 255, 255, 0.02); border-bottom: 1px solid rgba(255, 255, 255, 0.06); padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;">
         <div style="display: flex; align-items: center; gap: 6px;">

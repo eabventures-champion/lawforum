@@ -687,4 +687,21 @@ https://www.jqueryscript.net/tags.php?/search/
 |http://jsfiddle.net/tU8R5/4/ : It is an important note
 */
 
+Route::get('/update-live-navigation-menu-secret', function() {
+    try {
+        // 1. Update sidebar_ads slots so slot_1 is ALWAYS advertise (top) and slot_2 is ALWAYS news_feed (bottom)
+        \Illuminate\Support\Facades\DB::statement("UPDATE sidebar_ads SET placeholder_type = 'advertise' WHERE slot_name = 'slot_1'");
+        \Illuminate\Support\Facades\DB::statement("UPDATE sidebar_ads SET placeholder_type = 'news_feed' WHERE slot_name = 'slot_2'");
+
+        // 2. Clear caches
+        \Illuminate\Support\Facades\Artisan::call('view:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+
+        return "<h1>Success! Sidebar ads fixed & caches cleared.</h1><p>Top slot is now ADVERTISE YOUR PRODUCT and bottom slot is DAILY FEED with 20px gap!</p>";
+    } catch (\Exception $e) {
+        return "<h1>Error: " . $e->getMessage() . "</h1>";
+    }
+});
+
+
 
