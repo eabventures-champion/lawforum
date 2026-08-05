@@ -2613,7 +2613,7 @@
                     <table class="table" id="datatable" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th>All Pre-1992 Legislation</th>
+                                <th>Existing Laws</th>
                                 <th>Year</th>
                             </tr>
                         </thead>

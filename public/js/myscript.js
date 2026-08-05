@@ -2406,7 +2406,7 @@ $(document).ready(function(){
     });
 
     // FILTERING PRE-1992 LEGISLATION----------------------------------------------------
-    /* For all Pre-1992 Legislation */
+    /* For Existing Laws */
     $('#all_pre_1992_legislation_filter').click(function(e){
         e.preventDefault();
         var year        = $(".all_pre_1992_legislation_filter_year").val();

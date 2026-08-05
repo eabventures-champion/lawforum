@@ -477,7 +477,7 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="/pre-1992-legislation" style="text-decoration: none;">
+                        <a href="/existing-laws" style="text-decoration: none;">
                             <div class="intro-block">
                                 <h4><b><u>OLD LAWS</u></b></h4>
                                 <p><b>Access over 200 Ghanaian laws and enactments before the Fourth Republic</b></p>
@@ -490,7 +490,7 @@
                         </a>
                         <a href="/post-1992-legislation" style="text-decoration: none;">
                             <div class="intro-block">
-                                <h4><b><u>NEW LAWS</u></b></h4>
+                                <h4><b><u>Existing Laws</u></b></h4>
                                 <p><b>Access over 200 consolidated laws of Ghana including Acts, Regulations and Amendments in the Fourth Republic</b></p>
                                 <div class="icon">
                                     <a href="#efficiency-section">

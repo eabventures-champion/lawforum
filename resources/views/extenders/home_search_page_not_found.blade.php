@@ -122,7 +122,7 @@
             </div>
 
             <div class="custom-radio mb-2">
-              <input type="radio" class="pre_4th1" id="pre_4th" name="act-type" value="Pre_4th_Republic">&nbsp;Pre 4th Republic Laws&nbsp;<span class="badge badge-secondary">{{$pre_total_count}}</span>
+              <input type="radio" class="pre_4th1" id="pre_4th" name="act-type" value="Pre_4th_Republic">&nbsp;Existing Laws&nbsp;<span class="badge badge-secondary">{{$pre_total_count}}</span>
             </div>
 
             <div class="custom-radio mb-2">

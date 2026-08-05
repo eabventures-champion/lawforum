@@ -181,7 +181,8 @@ Route::view('/scan', 'scan');
 
 //------------------------------------------------------------------------------------PRE_1992_LEGISLATION------------------------------------------------------------------------------------
 
-Route::get('/pre-1992-legislation','Pre1992Controller@index');//display all acts
+Route::get('/existing-laws','Pre1992Controller@index');//display all acts
+Route::get('/pre-1992-legislation', function() { return redirect('/existing-laws'); });
     Route::get('/pre_1992_legislation/ajax-data','Pre1992Controller@pre1992_ajax_data'); //AJAX JSON data for tab switching
     Route::get('/pre_1992_legislation/filter/{year}/{category}','Pre1992Controller@all_pre_1992_legislation_filter'); //all pre-1992 filtering
     Route::get('/pre_1992_legislation/{group}/{title}/{id}','Pre1992Controller@pre_1992_legislation_table_of_content');//display acts table of content
@@ -689,15 +690,18 @@ https://www.jqueryscript.net/tags.php?/search/
 
 Route::get('/update-live-navigation-menu-secret', function() {
     try {
-        // 1. Update sidebar_ads slots so slot_1 is ALWAYS advertise (top) and slot_2 is ALWAYS news_feed (bottom)
+        // 1. Update Existing Laws URL to /existing-laws
+        \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET url = '/existing-laws' WHERE title LIKE '%Existing%' OR title LIKE '%Pre-4th%' OR id = 2");
+
+        // 2. Update sidebar_ads slots so slot_1 is ALWAYS advertise (top) and slot_2 is ALWAYS news_feed (bottom)
         \Illuminate\Support\Facades\DB::statement("UPDATE sidebar_ads SET placeholder_type = 'advertise' WHERE slot_name = 'slot_1'");
         \Illuminate\Support\Facades\DB::statement("UPDATE sidebar_ads SET placeholder_type = 'news_feed' WHERE slot_name = 'slot_2'");
 
-        // 2. Clear caches
+        // 3. Clear caches
         \Illuminate\Support\Facades\Artisan::call('view:clear');
         \Illuminate\Support\Facades\Artisan::call('cache:clear');
 
-        return "<h1>Success! Sidebar ads fixed & caches cleared.</h1><p>Top slot is now ADVERTISE YOUR PRODUCT and bottom slot is DAILY FEED with 20px gap!</p>";
+        return "<h1>Success! Database updated & caches cleared.</h1><p>Existing Laws link is now /existing-laws!</p>";
     } catch (\Exception $e) {
         return "<h1>Error: " . $e->getMessage() . "</h1>";
     }

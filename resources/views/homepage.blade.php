@@ -2058,7 +2058,7 @@
                 <span class="card-arrow">Explore <i class="fa-solid fa-arrow-right"></i></span>
             </a>
 
-            <a href="/pre-1992-legislation" class="category-card card-old-laws reveal">
+            <a href="/existing-laws" class="category-card card-old-laws reveal">
                 <div class="card-icon-wrap"><i class="fa-solid fa-scroll"></i></div>
                 <h3 class="card-title">{{ homepage_setting('slide_1_card2_title', 'Existing Laws') }}</h3>
                 <p class="card-description">{{ homepage_setting('slide_1_card2_desc', 'Access over 200 Ghanaian laws and enactments passed before the Fourth Republic, covering historical legislation and ordinances.') }}</p>
@@ -2244,7 +2244,7 @@
                 <div class="footer-col">
                     <h4>Resources</h4>
                     <a href="/constitution/Republic/Ghana/1">Constitution</a>
-                    <a href="/pre-1992-legislation">Existing Laws</a>
+                    <a href="/existing-laws">Existing Laws</a>
                     <a href="/post-1992-legislation">Post-1992 Laws</a>
                     <a href="/judgement/Ghana">Case Laws</a>
                     <a href="/News/Ghana-News/1">Legal News</a>

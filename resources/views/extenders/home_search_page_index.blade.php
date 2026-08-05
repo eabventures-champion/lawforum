@@ -1381,10 +1381,10 @@
                         <span class="filter-count" id="count-cases">{{ $cases_total_count }}</span>
                     </div>
 
-                    <!-- Pre 4th Republic Laws -->
+                    <!-- Existing Laws -->
                     <div class="filter-option {{ $pre_total_count == 0 ? 'disabled' : '' }}" data-category="Pre_4th_Republic" id="filter-pre4th">
                         <span class="filter-radio-dot"></span>
-                        <span class="filter-label">Pre 4th Republic Laws</span>
+                        <span class="filter-label">Existing Laws</span>
                         <span class="filter-count" id="count-pre4th">{{ $pre_total_count }}</span>
                     </div>
 

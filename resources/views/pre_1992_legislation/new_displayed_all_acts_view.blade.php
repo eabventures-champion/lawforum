@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Explore pre-1992 legislation laws on Legals Forum.">
-    <title>Pre 4th Republic Laws - Legals Forum</title>
+    <title>Existing Laws - Legals Forum</title>
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -677,7 +677,7 @@
                         </h5>
                     </div>
                     <div class="vertical-nav-group" id="sidebarNav">
-                        <a class="vertical-nav-link active" data-group="all" data-label="All Pre-1992 Legislation" href="javascript:void(0)"><i class="fa-solid fa-landmark mr-3" style="width: 16px; text-align: center;"></i> All Laws</a>
+                        <a class="vertical-nav-link active" data-group="all" data-label="Existing Laws" href="javascript:void(0)"><i class="fa-solid fa-landmark mr-3" style="width: 16px; text-align: center;"></i> All Laws</a>
                         <a class="vertical-nav-link " data-group="1" data-label="First Republic Legislation" href="javascript:void(0)"><i class="fa-solid fa-gavel mr-3" style="width: 16px; text-align: center;"></i> 1st Republic</a>
                         <a class="vertical-nav-link " data-group="2" data-label="Second Republic Legislation" href="javascript:void(0)"><i class="fa-solid fa-scale-balanced mr-3" style="width: 16px; text-align: center;"></i> 2nd Republic</a>
                         <a class="vertical-nav-link " data-group="3" data-label="Third Republic Legislation" href="javascript:void(0)"><i class="fa-solid fa-shield-halved mr-3" style="width: 16px; text-align: center;"></i> 3rd Republic</a>
@@ -711,7 +711,7 @@
                         <table class="table table-hover" id="datatable" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <th id="thColumnName">All Pre-1992 Legislation</th>
+                                    <th id="thColumnName">Existing Laws</th>
                                     <th>Year</th>
                                 </tr>
                             </thead>
@@ -802,7 +802,7 @@
 
                         // Update browser URL without reload
                         var urlMap = {
-                            'all': '/pre-1992-legislation',
+                            'all': '/existing-laws',
                             '1': '/pre_1992_legislation/1/First Republic',
                             '2': '/pre_1992_legislation/2/Second Republic',
                             '3': '/pre_1992_legislation/3/Third Republic',
