@@ -1401,16 +1401,12 @@
         </div>
     </nav>
 
-    <!-- Mobile Nav Panel (Image 1 Standard) -->
+    <!-- Mobile Nav Panel (Image 2 Standard) -->
     <div class="mobile-nav-panel" id="mobileNav">
         <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')">
             <i class="fa-solid fa-xmark"></i>
         </button>
-                            <a class="nav-link-premium {{ request()->is('constitution/display_only_african_countries') ? 'active' : '' }}" href="/constitution/display_only_african_countries"><i class="fa-solid fa-earth-africa mr-2"></i> Africa</a>
-                    <a class="nav-link-premium {{ request()->is('constitution/display_only_asia_countries') ? 'active' : '' }}" href="/constitution/display_only_asia_countries"><i class="fa-solid fa-earth-asia mr-2"></i> Asia</a>
-                    <a class="nav-link-premium {{ request()->is('constitution/display_only_europe_countries') ? 'active' : '' }}" href="/constitution/display_only_europe_countries"><i class="fa-solid fa-earth-europe mr-2"></i> Europe</a>
-                    <a class="nav-link-premium {{ request()->is('constitution/display_only_north_america_countries') ? 'active' : '' }}" href="/constitution/display_only_north_america_countries"><i class="fa-solid fa-earth-americas mr-2"></i> North America</a>
-                    <a class="nav-link-premium {{ request()->is('constitution/display_only_south_america_countries') ? 'active' : '' }}" href="/constitution/display_only_south_america_countries"><i class="fa-solid fa-earth-americas mr-2"></i> South America</a>
+        @include('partials._nav_mobile_menu')
         <div style="height: 16px;"></div>
         @guest
             <a href="{{ route('login') }}">Log In</a>
