@@ -31,7 +31,7 @@
                 <a data-scroll-to="body"
                 data-scroll-focus="body"
                 data-scroll-speed="400"
-                data-scroll-offset="-60" class="pre_content_link" sid="{{ $allPre1992Article->id }}"  href="/pre_1992_legislation/content/{{ $allPre1992Article->id }}">
+                data-scroll-offset="-60" class="pre_content_link" sid="{{ $allPre1992Article->id }}"  href="/existing-laws/content/{{ $allPre1992Article->id }}">
                 <span>{{ $allPre1992Article->section }}</span>
                 </a> 
                 </li>

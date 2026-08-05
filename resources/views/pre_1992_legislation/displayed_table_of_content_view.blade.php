@@ -444,7 +444,7 @@
                 <div class="col-md-9">
                    <br>
                    
-                   <a class="preamble_link" id="preamble_link_toggle" href="/pre_1992_legislation/preamble/{{ $allPre1992Act['id'] }}">
+                   <a class="preamble_link" id="preamble_link_toggle" href="/existing-laws/preamble/{{ $allPre1992Act['id'] }}">
                       
                       @if($allPre1992Act['preamble'] != null)
                         <p class="preamble_hide">Introductory Text</p>

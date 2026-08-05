@@ -40,7 +40,7 @@
                         } elseif ($bookmark->act_group == 'Legislative Instruments') {
                             $url = "/post_1992_legislation/regulation_acts_table_of_content/{$bookmark->act_group}/{$bookmark->act_title}/{$bookmark->act_id}";
                         } elseif (in_array($bookmark->act_group, ['First Republic', 'Second Republic', 'Third Republic', 'NLC Decree', 'NRC Decree', 'SMC Decree', 'AFRC Decree'])) {
-                            $url = "/pre_1992_legislation/{$bookmark->act_group}/{$bookmark->act_title}/{$bookmark->act_id}";
+                            $url = "/existing-laws/{$bookmark->act_group}/{$bookmark->act_title}/{$bookmark->act_id}";
                         } else {
                             $url = "/post-1992-legislation/executive-acts-table-of-content/{$bookmark->act_group}/{$bookmark->act_title}/{$bookmark->act_id}";
                         }

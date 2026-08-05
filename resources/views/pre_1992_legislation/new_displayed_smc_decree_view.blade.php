@@ -693,7 +693,7 @@
                               @foreach($smcDecrees as $smcDecree)
                                 <tr>
                                     <td>
-                                        <a href="/pre_1992_legislation/{{ $smcDecree->pre_1992_group }}/{{ $smcDecree->title }}/{{ $smcDecree->id }}">{{ $smcDecree->title }}</a>
+                                        <a href="/existing-laws/{{ $smcDecree->pre_1992_group }}/{{ $smcDecree->title }}/{{ $smcDecree->id }}">{{ $smcDecree->title }}</a>
                                     </td> 
                                     <td>{{ $smcDecree->year }}</td>  
                                 </tr>
@@ -758,7 +758,7 @@
 
                 // Fetch data via AJAX
                 $.ajax({
-                    url: '/pre_1992_legislation/ajax-data',
+                    url: '/existing-laws/ajax-data',
                     data: { group: group },
                     dataType: 'json',
                     success: function(response) {
@@ -777,14 +777,14 @@
                         // Update browser URL without reload
                         var urlMap = {
                             'all': '/existing-laws',
-                            '1': '/pre_1992_legislation/1/First Republic',
-                            '2': '/pre_1992_legislation/2/Second Republic',
-                            '3': '/pre_1992_legislation/3/Third Republic',
-                            '4': '/pre_1992_legislation/4/PNDC Law',
-                            '5': '/pre_1992_legislation/5/NLC Decree',
-                            '6': '/pre_1992_legislation/6/NRC Decree',
-                            '7': '/pre_1992_legislation/7/SMC Decree',
-                            '8': '/pre_1992_legislation/8/AFRC Decree'
+                            '1': '/existing-laws/1/First Republic',
+                            '2': '/existing-laws/2/Second Republic',
+                            '3': '/existing-laws/3/Third Republic',
+                            '4': '/existing-laws/4/PNDC Law',
+                            '5': '/existing-laws/5/NLC Decree',
+                            '6': '/existing-laws/6/NRC Decree',
+                            '7': '/existing-laws/7/SMC Decree',
+                            '8': '/existing-laws/8/AFRC Decree'
                         };
                         if (urlMap[group]) {
                             history.pushState({ group: group }, '', urlMap[group]);

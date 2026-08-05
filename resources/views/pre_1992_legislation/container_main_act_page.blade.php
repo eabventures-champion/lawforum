@@ -47,8 +47,8 @@
           --}}
         {{-- <center>
         <label style="color: black;">View Options</label>
-        <a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_1" href="/pre_1992_legislation/1/{{$allPre1992Act['pre_1992_group']}}/{{$allPre1992Act['title']}}/expanded-view/{{ $allPre1992Act['id'] }}"><li style="list-style:none;">Expanded View</li></a>
-        <a href="/pre_1992_legislation/1/{{$allPre1992Act['pre_1992_group']}}/{{$allPre1992Act['title']}}/plain_view/{{ $allPre1992Act['id'] }}" target="_blank"<li style="list-style:none;">Plain View</li></a>
+        <a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_1" href="/existing-laws/1/{{$allPre1992Act['pre_1992_group']}}/{{$allPre1992Act['title']}}/expanded-view/{{ $allPre1992Act['id'] }}"><li style="list-style:none;">Expanded View</li></a>
+        <a href="/existing-laws/1/{{$allPre1992Act['pre_1992_group']}}/{{$allPre1992Act['title']}}/plain_view/{{ $allPre1992Act['id'] }}" target="_blank"<li style="list-style:none;">Plain View</li></a>
         </center>  --}}
 
       <div class="dropdown">
@@ -57,8 +57,8 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-            <li><a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_1" href="/pre_1992_legislation/1/{{$allPre1992Act['pre_1992_group']}}/{{$allPre1992Act['title']}}/expanded-view/{{ $allPre1992Act['id'] }}"><span class="small"><center>Expanded View</center></span></a></li>
-            <li><a href="/pre_1992_legislation/1/{{$allPre1992Act['pre_1992_group']}}/{{$allPre1992Act['title']}}/plain_view/{{ $allPre1992Act['id'] }}" target="_blank"><span class="small"><center>Plain View</center></span></a></li>
+            <li><a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_1" href="/existing-laws/1/{{$allPre1992Act['pre_1992_group']}}/{{$allPre1992Act['title']}}/expanded-view/{{ $allPre1992Act['id'] }}"><span class="small"><center>Expanded View</center></span></a></li>
+            <li><a href="/existing-laws/1/{{$allPre1992Act['pre_1992_group']}}/{{$allPre1992Act['title']}}/plain_view/{{ $allPre1992Act['id'] }}" target="_blank"><span class="small"><center>Plain View</center></span></a></li>
           </ul>
       </div>
 

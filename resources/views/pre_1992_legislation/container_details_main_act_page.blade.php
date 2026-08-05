@@ -17,7 +17,7 @@
               </button>
               <ul class="dropdown-menu table-wrapper-scroll-view" style="width: 520px;">
                  @foreach($allPre1992Articles as $allPre1992Article)
-                  <li><a class="pre_view_all_section_link_with_prev_next" sid={{$allPre1992Article->id}} href="/pre_1992_legislation/content/{{ $allPre1992Article->id }}">{{$allPre1992Article->section }}</a></li>
+                  <li><a class="pre_view_all_section_link_with_prev_next" sid={{$allPre1992Article->id}} href="/existing-laws/content/{{ $allPre1992Article->id }}">{{$allPre1992Article->section }}</a></li>
               @endforeach   
               </ul>
         </div>
@@ -52,10 +52,10 @@
         <hr>
         <br>
         <center>
-          <button class="btn btn-sm btn-default expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/pre_1992_legislation/1/{{$allPre1992Act['pre_1992_group']}}/{{$allPre1992Act['title']}}/expanded-view/{{ $allPre1992Act['id'] }}"><li style="list-style:none;">Expanded View</li>
+          <button class="btn btn-sm btn-default expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/existing-laws/1/{{$allPre1992Act['pre_1992_group']}}/{{$allPre1992Act['title']}}/expanded-view/{{ $allPre1992Act['id'] }}"><li style="list-style:none;">Expanded View</li>
           </button>
         {{-- <label>View</label>
-            <a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/pre_1992_legislation/1/{{$allPre1992Act['pre_1992_group']}}/{{$allPre1992Act['title']}}/expanded-view/{{ $allPre1992Act['id'] }}"><li style="list-style:none;">Expanded View</li>
+            <a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/existing-laws/1/{{$allPre1992Act['pre_1992_group']}}/{{$allPre1992Act['title']}}/expanded-view/{{ $allPre1992Act['id'] }}"><li style="list-style:none;">Expanded View</li>
             </a> --}}
         <!-- <a><li>Plain View</li></a> -->
         </center>

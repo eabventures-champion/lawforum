@@ -11,35 +11,35 @@
             <br>{{$order_by_section->act_title}}
 
         @elseif($order_by_section->act_group == 'First Republic')
-            <a href="/pre_1992_legislation/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank">{{$order_by_section->act_section}}</a>
+            <a href="/existing-laws/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank">{{$order_by_section->act_section}}</a>
             <br>{{$order_by_section->act_title}}
 
         @elseif($order_by_section->act_group == 'Second Republic')
-            <a href="/pre_1992_legislation/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank">{{$order_by_section->act_section}}</a>
+            <a href="/existing-laws/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank">{{$order_by_section->act_section}}</a>
             <br>{{$order_by_section->act_title}}
 
         @elseif($order_by_section->act_group == 'Third Republic')
-            <a href="/pre_1992_legislation/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank">{{$order_by_section->act_section}}</a>
+            <a href="/existing-laws/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank">{{$order_by_section->act_section}}</a>
             <br>{{$order_by_section->act_title}}
 
         @elseif($order_by_section->act_group == 'NLC Decree')
-            <a href="/pre_1992_legislation/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank">{{$order_by_section->act_section}}</a>
+            <a href="/existing-laws/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank">{{$order_by_section->act_section}}</a>
             <br>{{$order_by_section->act_title}}
 
         @elseif($order_by_section->act_group == 'NRC Decree')
-            <a href="/pre_1992_legislation/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank">{{$order_by_section->act_section}}</a>
+            <a href="/existing-laws/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank">{{$order_by_section->act_section}}</a>
             <br>{{$order_by_section->act_title}}
             
         @elseif($order_by_section->act_group == 'SMC Decree')
-            <a href="/pre_1992_legislation/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank">{{$order_by_section->act_section}}</a>
+            <a href="/existing-laws/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank">{{$order_by_section->act_section}}</a>
             <br>{{$order_by_section->act_title}}
 
         @elseif($order_by_section->act_group == 'AFRC Decree')
-            <a href="/pre_1992_legislation/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank">{{$order_by_section->act_section}}</a>
+            <a href="/existing-laws/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank">{{$order_by_section->act_section}}</a>
             <br>{{$order_by_section->act_title}}
 
         @elseif($order_by_section->act_group == 'PNDC Law')
-            <a href="/pre_1992_legislation/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank">{{$order_by_section->act_section}}</a>
+            <a href="/existing-laws/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank">{{$order_by_section->act_section}}</a>
             <br>{{$order_by_section->act_title}}
 
         @else

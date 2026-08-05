@@ -183,58 +183,50 @@ Route::view('/scan', 'scan');
 
 Route::get('/existing-laws','Pre1992Controller@index');//display all acts
 Route::get('/pre-1992-legislation', function() { return redirect('/existing-laws'); });
-    Route::get('/pre_1992_legislation/ajax-data','Pre1992Controller@pre1992_ajax_data'); //AJAX JSON data for tab switching
-    Route::get('/pre_1992_legislation/filter/{year}/{category}','Pre1992Controller@all_pre_1992_legislation_filter'); //all pre-1992 filtering
-    Route::get('/pre_1992_legislation/{group}/{title}/{id}','Pre1992Controller@pre_1992_legislation_table_of_content');//display acts table of content
-    Route::get('/pre_1992_legislation/preamble/{id}','Pre1992Controller@pre_1992_legislation_preamble');//display act preamble
-    Route::get('/pre_1992_legislation/content/{id}','Pre1992Controller@pre_1992_legislation_content');//display act content
-    Route::get('/pre_1992_legislation/1/{group}/{title}/expanded-view/{id}','Pre1992Controller@expanded_view');//display in expanded view
 
-    Route::get('/pre_1992_legislation/print_preamble_content/{id}','Pre1992Controller@pre_1992_legislation_print_preamble_content');//display plain act content
-    Route::get('/pre_1992_legislation/print_section_content/{id}','Pre1992Controller@pre_1992_legislation_print_content');//display plain act content
-    Route::get('/pre_1992_legislation/1/{group}/{title}/print_view/{id}','Pre1992Controller@pre_1992_legislation_print_expanded_content');//display in print view
+foreach (['existing-laws', 'existing-law', 'existing_laws', 'pre_1992_legislation'] as $prefix) {
+    Route::get('/'.$prefix.'/ajax-data','Pre1992Controller@pre1992_ajax_data');
+    Route::get('/'.$prefix.'/filter/{year}/{category}','Pre1992Controller@all_pre_1992_legislation_filter');
+    Route::get('/'.$prefix.'/{group}/{title}/{id}','Pre1992Controller@pre_1992_legislation_table_of_content');
+    Route::get('/'.$prefix.'/preamble/{id}','Pre1992Controller@pre_1992_legislation_preamble');
+    Route::get('/'.$prefix.'/content/{id}','Pre1992Controller@pre_1992_legislation_content');
+    Route::get('/'.$prefix.'/1/{group}/{title}/expanded-view/{id}','Pre1992Controller@expanded_view');
 
-    Route::get('/pre_1992_legislation/plain_preamble_content/{id}','Pre1992Controller@pre_1992_legislation_plain_preamble_content');//display plain act content
-    Route::get('/pre_1992_legislation/plain/content/{title}/{id}','Pre1992Controller@pre_1992_legislation_plain_content');//display plain act content
-    Route::get('/pre_1992_legislation/1/{group}/{title}/plain_view/{id}','Pre1992Controller@pre_1992_legislation_plain_expanded_content');//display in plain view
+    Route::get('/'.$prefix.'/print_preamble_content/{id}','Pre1992Controller@pre_1992_legislation_print_preamble_content');
+    Route::get('/'.$prefix.'/print_section_content/{id}','Pre1992Controller@pre_1992_legislation_print_content');
+    Route::get('/'.$prefix.'/1/{group}/{title}/print_view/{id}','Pre1992Controller@pre_1992_legislation_print_expanded_content');
 
+    Route::get('/'.$prefix.'/plain_preamble_content/{id}','Pre1992Controller@pre_1992_legislation_plain_preamble_content');
+    Route::get('/'.$prefix.'/plain/content/{title}/{id}','Pre1992Controller@pre_1992_legislation_plain_content');
+    Route::get('/'.$prefix.'/1/{group}/{title}/plain_view/{id}','Pre1992Controller@pre_1992_legislation_plain_expanded_content');
 
-    Route::get('/pre_1992_legislation/pdf/preamble_content/{title}/{id}','Pre1992Controller@pre_1992_legislation_pdf_preamble_content');//display plain act content
-    Route::get('/pre_1992_legislation/pdf/content/{title}/{id}','Pre1992Controller@pre_1992_legislation_pdf_content');//display plain act content
-    Route::get('/pre_1992_legislation/1/{group}/{title}/pdf_view/{id}','Pre1992Controller@pre_1992_legislation_pdf_expanded_content');//display in plain view
+    Route::get('/'.$prefix.'/pdf/preamble_content/{title}/{id}','Pre1992Controller@pre_1992_legislation_pdf_preamble_content');
+    Route::get('/'.$prefix.'/pdf/content/{title}/{id}','Pre1992Controller@pre_1992_legislation_pdf_content');
+    Route::get('/'.$prefix.'/1/{group}/{title}/pdf_view/{id}','Pre1992Controller@pre_1992_legislation_pdf_expanded_content');
 
+    Route::get('/'.$prefix.'/1/{group}','Pre1992Controller@first_republic');
+    Route::get('/'.$prefix.'/1/filter/{year}/{category}','Pre1992Controller@first_republic_filter');
 
+    Route::get('/'.$prefix.'/2/{group}','Pre1992Controller@second_republic');
+    Route::get('/'.$prefix.'/2/filter/{year}/{category}','Pre1992Controller@second_republic_filter');
 
-    //First Republic
-    Route::get('/pre_1992_legislation/1/{group}','Pre1992Controller@first_republic');
-        Route::get('/pre_1992_legislation/1/filter/{year}/{category}','Pre1992Controller@first_republic_filter'); //first republic filtering
+    Route::get('/'.$prefix.'/3/{group}','Pre1992Controller@third_republic');
+    Route::get('/'.$prefix.'/3/filter/{year}/{category}','Pre1992Controller@third_republic_filter');
 
-    //Second Republic
-    Route::get('/pre_1992_legislation/2/{group}','Pre1992Controller@second_republic');
-        Route::get('/pre_1992_legislation/2/filter/{year}/{category}','Pre1992Controller@second_republic_filter'); //second republic filtering
+    Route::get('/'.$prefix.'/4/{group}','Pre1992Controller@pndc_law');
+    Route::get('/'.$prefix.'/4/filter/{year}/{category}','Pre1992Controller@pndc_law_filter');
 
-    //Third Republic
-    Route::get('/pre_1992_legislation/3/{group}','Pre1992Controller@third_republic');
-        Route::get('/pre_1992_legislation/3/filter/{year}/{category}','Pre1992Controller@third_republic_filter'); //third republic filtering
+    Route::get('/'.$prefix.'/5/{group}','Pre1992Controller@nlc_decree');
+    Route::get('/'.$prefix.'/5/filter/{year}/{category}','Pre1992Controller@nlc_decree_filter');
 
-    //PNDC Law
-    Route::get('/pre_1992_legislation/4/{group}','Pre1992Controller@pndc_law');
-        Route::get('/pre_1992_legislation/4/filter/{year}/{category}','Pre1992Controller@pndc_law_filter'); //pndc filtering
+    Route::get('/'.$prefix.'/6/{group}','Pre1992Controller@nrc_decree');
+    Route::get('/'.$prefix.'/6/filter/{year}/{category}','Pre1992Controller@nrc_decree_filter');
 
-    //NLC Decree
-    Route::get('/pre_1992_legislation/5/{group}','Pre1992Controller@nlc_decree');
-        Route::get('/pre_1992_legislation/5/filter/{year}/{category}','Pre1992Controller@nlc_decree_filter'); //nlc filtering
+    Route::get('/'.$prefix.'/7/{group}','Pre1992Controller@smc_decree');
+    Route::get('/'.$prefix.'/7/filter/{year}/{category}','Pre1992Controller@smc_decree_filter');
 
-    //NRC Decree
-    Route::get('/pre_1992_legislation/6/{group}','Pre1992Controller@nrc_decree');
-        Route::get('/pre_1992_legislation/6/filter/{year}/{category}','Pre1992Controller@nrc_decree_filter'); //nrc filtering
-
-    //SMC Decree
-    Route::get('/pre_1992_legislation/7/{group}','Pre1992Controller@smc_decree');
-        Route::get('/pre_1992_legislation/7/filter/{year}/{category}','Pre1992Controller@smc_decree_filter'); //smc filtering
-
-    //AFRC Decree
-    Route::get('/pre_1992_legislation/8/{group}','Pre1992Controller@afrc_decree');
+    Route::get('/'.$prefix.'/8/{group}','Pre1992Controller@afrc_decree');
+}
         // Route::get('/pre_1992_legislation/7/filter/{year}/{category}','Pre1992Controller@smc_decree_filter'); //smc filtering
 
 //----------------------------------------------------------------------------END OF PRE-1992-LEGISLATION------------------------------------------------------------------------------------
@@ -690,8 +682,10 @@ https://www.jqueryscript.net/tags.php?/search/
 
 Route::get('/update-live-navigation-menu-secret', function() {
     try {
-        // 1. Update Existing Laws URL to /existing-laws
+        // 1. Update Existing Laws URLs to /existing-laws/
         \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET url = '/existing-laws' WHERE title LIKE '%Existing%' OR title LIKE '%Pre-4th%' OR id = 2");
+        \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET url = REPLACE(url, '/pre_1992_legislation/', '/existing-laws/') WHERE url LIKE '%pre_1992_legislation%'");
+        \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET url = REPLACE(url, '/pre-1992-legislation/', '/existing-laws/') WHERE url LIKE '%pre-1992-legislation%'");
 
         // 2. Update sidebar_ads slots so slot_1 is ALWAYS advertise (top) and slot_2 is ALWAYS news_feed (bottom)
         \Illuminate\Support\Facades\DB::statement("UPDATE sidebar_ads SET placeholder_type = 'advertise' WHERE slot_name = 'slot_1'");

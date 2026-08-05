@@ -2364,7 +2364,7 @@
                             <div id="display_content">
                                 @if($allPre1992Act['preamble'] != null)
                                     <div class="preamble-card">
-                                        <a class="pre_preamble_content_link" sid="preamble" href="/pre_1992_legislation/preamble/{{ $allPre1992Act['id'] }}">
+                                        <a class="pre_preamble_content_link" sid="preamble" href="/existing-laws/preamble/{{ $allPre1992Act['id'] }}">
                                             <i class="fa-solid fa-scroll mr-2 text-warning"></i> Read Act Preamble / Introductory Text
                                         </a>
                                     </div>
@@ -2419,10 +2419,10 @@
                                         <select class="form-control text-white bg-dark border-secondary split-article-select" data-panel="A" style="height: 32px; font-size: 12px; padding: 2px 8px; border-radius: 6px; background-color: rgba(17, 24, 39, 0.8) !important;">
                                             <option value="">-- Load Section --</option>
                                             @if($allPre1992Act['preamble'] != null)
-                                                <option value="/pre_1992_legislation/preamble/{{ $allPre1992Act['id'] }}">Introductory Text</option>
+                                                <option value="/existing-laws/preamble/{{ $allPre1992Act['id'] }}">Introductory Text</option>
                                             @endif
                                             @foreach($allPre1992Articles as $art)
-                                                <option value="/pre_1992_legislation/content/{{ $art->id }}">{{ $art->section }}</option>
+                                                <option value="/existing-laws/content/{{ $art->id }}">{{ $art->section }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -2454,10 +2454,10 @@
                                         <select class="form-control text-white bg-dark border-secondary split-article-select" data-panel="B" style="height: 32px; font-size: 12px; padding: 2px 8px; border-radius: 6px; background-color: rgba(17, 24, 39, 0.8) !important;">
                                             <option value="">-- Load Section --</option>
                                             @if($allPre1992Act['preamble'] != null)
-                                                <option value="/pre_1992_legislation/preamble/{{ $allPre1992Act['id'] }}">Introductory Text</option>
+                                                <option value="/existing-laws/preamble/{{ $allPre1992Act['id'] }}">Introductory Text</option>
                                             @endif
                                             @foreach($allPre1992Articles as $art)
-                                                <option value="/pre_1992_legislation/content/{{ $art->id }}">{{ $art->section }}</option>
+                                                <option value="/existing-laws/content/{{ $art->id }}">{{ $art->section }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -2621,7 +2621,7 @@
                             @foreach($allPre1992Acts as $preAct)
                                 <tr>
                                     <td>
-                                        <a href="/pre_1992_legislation/{{$preAct->pre_1992_group}}/{{ $preAct->title }}/{{ $preAct->id}}">{{ $preAct->title }}</a>
+                                        <a href="/existing-laws/{{$preAct->pre_1992_group}}/{{ $preAct->title }}/{{ $preAct->id}}">{{ $preAct->title }}</a>
                                     </td>
                                     <td>{{ $preAct->year }}</td>
                                 </tr>
@@ -3593,26 +3593,26 @@
             if (!activeSid || activeSid === 'preamble') {
                 // We are on the preamble
                 prevBtn.attr('href', 'javascript:;').css({ opacity: 0.5, 'pointer-events': 'none' });
-                nextBtn.attr('href', `/pre_1992_legislation/content/${ids[0]}`);
+                nextBtn.attr('href', `/existing-laws/content/${ids[0]}`);
             } else {
                 const index = ids.findIndex(id => String(id) === String(activeSid));
                 
                 if (index === -1) {
-                    prevBtn.attr('href', `/pre_1992_legislation/preamble/${pre1992ActId}`);
-                    nextBtn.attr('href', `/pre_1992_legislation/content/${ids[0]}`);
+                    prevBtn.attr('href', `/existing-laws/preamble/${pre1992ActId}`);
+                    nextBtn.attr('href', `/existing-laws/content/${ids[0]}`);
                 } else if (index === 0) {
-                    prevBtn.attr('href', `/pre_1992_legislation/preamble/${pre1992ActId}`);
+                    prevBtn.attr('href', `/existing-laws/preamble/${pre1992ActId}`);
                     if (ids.length > 1) {
-                        nextBtn.attr('href', `/pre_1992_legislation/content/${ids[1]}`);
+                        nextBtn.attr('href', `/existing-laws/content/${ids[1]}`);
                     } else {
                         nextBtn.attr('href', 'javascript:;').css({ opacity: 0.5, 'pointer-events': 'none' });
                     }
                 } else {
-                    prevBtn.attr('href', `/pre_1992_legislation/content/${ids[index - 1]}`);
+                    prevBtn.attr('href', `/existing-laws/content/${ids[index - 1]}`);
                     if (index === ids.length - 1) {
                         nextBtn.attr('href', 'javascript:;').css({ opacity: 0.5, 'pointer-events': 'none' });
                     } else {
-                        nextBtn.attr('href', `/pre_1992_legislation/content/${ids[index + 1]}`);
+                        nextBtn.attr('href', `/existing-laws/content/${ids[index + 1]}`);
                     }
                 }
             }
@@ -3632,22 +3632,22 @@
             if (!currentSid || currentSid === 'preamble') {
                 if (direction === 'next') {
                     targetArticle = allArticlesData[0];
-                    targetUrl = `/pre_1992_legislation/content/${targetArticle.id}`;
+                    targetUrl = `/existing-laws/content/${targetArticle.id}`;
                 }
             } else {
                 const currentIndex = allArticlesData.findIndex(item => String(item.id) === String(currentSid));
                 if (direction === 'next') {
                     if (currentIndex >= 0 && currentIndex < allArticlesData.length - 1) {
                         targetArticle = allArticlesData[currentIndex + 1];
-                        targetUrl = `/pre_1992_legislation/content/${targetArticle.id}`;
+                        targetUrl = `/existing-laws/content/${targetArticle.id}`;
                     }
                 } else {
                     if (currentIndex === 0) {
                         isPreamble = true;
-                        targetUrl = `/pre_1992_legislation/preamble/${pre1992ActId}`;
+                        targetUrl = `/existing-laws/preamble/${pre1992ActId}`;
                     } else if (currentIndex > 0) {
                         targetArticle = allArticlesData[currentIndex - 1];
-                        targetUrl = `/pre_1992_legislation/content/${targetArticle.id}`;
+                        targetUrl = `/existing-laws/content/${targetArticle.id}`;
                     }
                 }
             }
@@ -4007,7 +4007,7 @@
                     // Preamble loaded or welcome screen
                     if (isNext && allArticlesData.length > 0) {
                         targetArticle = allArticlesData[0];
-                        targetUrl = `/pre_1992_legislation/content/${targetArticle.id}`;
+                        targetUrl = `/existing-laws/content/${targetArticle.id}`;
                     } else {
                         // Previous clicked on preamble: do nothing
                         return;
@@ -4017,12 +4017,12 @@
                     if (isNext) {
                         if (currentIndex >= 0 && currentIndex < allArticlesData.length - 1) {
                             targetArticle = allArticlesData[currentIndex + 1];
-                            targetUrl = `/pre_1992_legislation/content/${targetArticle.id}`;
+                            targetUrl = `/existing-laws/content/${targetArticle.id}`;
                         }
                     } else {
                         if (currentIndex === 0) {
                             // First article: go to preamble
-                            targetUrl = `/pre_1992_legislation/preamble/${pre1992ActId}`;
+                            targetUrl = `/existing-laws/preamble/${pre1992ActId}`;
                              $(`#bodyPanel${panel}`).attr('data-loaded-sid', 'preamble');
                              updateActiveTOCHighlight('preamble');
                             $(`.split-article-select[data-panel="${panel}"]`).val(targetUrl);
@@ -4044,7 +4044,7 @@
                             return;
                         } else if (currentIndex > 0) {
                             targetArticle = allArticlesData[currentIndex - 1];
-                            targetUrl = `/pre_1992_legislation/content/${targetArticle.id}`;
+                            targetUrl = `/existing-laws/content/${targetArticle.id}`;
                         }
                     }
                 }
@@ -4104,7 +4104,7 @@
                 const expandedContainer = $('#acts_expanded_view');
                 if (expandedContainer.find('.fa-spinner').length > 0 && !expandedContainer.attr('data-loading')) {
                     expandedContainer.attr('data-loading', 'true');
-                    const expandedUrl = `/pre_1992_legislation/1/${pre1992Group}/${pre1992Title}/expanded-view/${pre1992ActId}`.replace(/ /g, '%20');
+                    const expandedUrl = `/existing-laws/1/${pre1992Group}/${pre1992Title}/expanded-view/${pre1992ActId}`.replace(/ /g, '%20');
                     const startTime = Date.now();
                     $.get(expandedUrl, function(response) {
                         const elapsed = Date.now() - startTime;
