@@ -172,7 +172,7 @@ class HomeSearchController extends Controller
                         'parent_title' => $row->parent_title,
                         'subtitle' => $row->section,
                         'content' => $row->content,
-                        'link' => "/pre_1992_legislation/content/{$row->id}",
+                        'link' => "/existing-laws/content/{$row->id}",
                         'priority' => $row->priority ?? 999,
                         'year' => $row->year
                     ];

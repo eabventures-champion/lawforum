@@ -440,7 +440,7 @@ class Pre1992Controller extends Controller
             return [
                 'title' => $act->title,
                 'year'  => $act->year,
-                'url'   => '/pre_1992_legislation/' . $act->pre_1992_group . '/' . $act->title . '/' . $act->id,
+                'url'   => '/existing-laws/' . $act->pre_1992_group . '/' . $act->title . '/' . $act->id,
             ];
         });
 

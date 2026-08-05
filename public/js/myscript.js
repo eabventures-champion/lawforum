@@ -1389,8 +1389,8 @@ $(document).ready(function(){
         console.log('previous', aay[previous], 'next',aay[next]); //showing the next and previous ids
         psid = aay[previous]; nsid = aay[next];
         
-        var pLink = '/pre_1992_legislation/content/'+aay[previous];
-        var nLink = '/pre_1992_legislation/content/'+aay[next];
+        var pLink = '/existing-laws/content/'+aay[previous];
+        var nLink = '/existing-laws/content/'+aay[next];
         
         $('.previous_content_pre_act').attr('href', pLink);
         $('.next_content_pre_act').attr('href', nLink);
@@ -2417,7 +2417,7 @@ $(document).ready(function(){
         if(category === ""){
             category = 0;
         }        
-        window.location.href = '/pre_1992_legislation/filter/'+year+'/'+category;
+        window.location.href = '/existing-laws/filter/'+year+'/'+category;
     });
 
     /* For all first republic*/
@@ -2431,7 +2431,7 @@ $(document).ready(function(){
         if(category === ""){
             category = 0;
         }        
-        window.location.href = '/pre_1992_legislation/1/filter/'+year+'/'+category;
+        window.location.href = '/existing-laws/1/filter/'+year+'/'+category;
     });
 
     /* For all second republic*/
@@ -2445,7 +2445,7 @@ $(document).ready(function(){
         if(category === ""){
             category = 0;
         }        
-        window.location.href = '/pre_1992_legislation/2/filter/'+year+'/'+category;
+        window.location.href = '/existing-laws/2/filter/'+year+'/'+category;
     });
 
     /* For all third republic*/
@@ -2459,7 +2459,7 @@ $(document).ready(function(){
         if(category === ""){
             category = 0;
         }        
-        window.location.href = '/pre_1992_legislation/3/filter/'+year+'/'+category;
+        window.location.href = '/existing-laws/3/filter/'+year+'/'+category;
     });
 
     /* PNDC Law*/
@@ -2473,7 +2473,7 @@ $(document).ready(function(){
         if(category === ""){
             category = 0;
         }        
-        window.location.href = '/pre_1992_legislation/4/filter/'+year+'/'+category;
+        window.location.href = '/existing-laws/4/filter/'+year+'/'+category;
     });
 
     /* NLC Decree*/
@@ -2487,7 +2487,7 @@ $(document).ready(function(){
         if(category === ""){
             category = 0;
         }        
-        window.location.href = '/pre_1992_legislation/5/filter/'+year+'/'+category;
+        window.location.href = '/existing-laws/5/filter/'+year+'/'+category;
     });
 
     /* NRC Decree*/
@@ -2501,7 +2501,7 @@ $(document).ready(function(){
         if(category === ""){
             category = 0;
         }        
-        window.location.href = '/pre_1992_legislation/6/filter/'+year+'/'+category;
+        window.location.href = '/existing-laws/6/filter/'+year+'/'+category;
     });
 
     /* SMC Decree*/
@@ -2515,7 +2515,7 @@ $(document).ready(function(){
         if(category === ""){
             category = 0;
         }        
-        window.location.href = '/pre_1992_legislation/7/filter/'+year+'/'+category;
+        window.location.href = '/existing-laws/7/filter/'+year+'/'+category;
     });
 
     // FILTERING LAW JUDGMENTS-----------------------------------------------------------
