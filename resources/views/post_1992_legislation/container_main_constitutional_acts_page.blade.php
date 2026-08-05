@@ -42,7 +42,7 @@
         --}}
 
         {{-- <label style="color: black;">View Options</label>
-        <a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_1" href="/post_1992_legislation/amended_acts/expanded_view/{{$amendedAct['post_category']}}/{{$amendedAct['title']}}/{{$amendedAct['id']}}"><li style="list-style: none;">Expanded View</li></a>
+        <a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_1" href="/new-laws/amended_acts/expanded_view/{{$amendedAct['post_category']}}/{{$amendedAct['title']}}/{{$amendedAct['id']}}"><li style="list-style: none;">Expanded View</li></a>
         <a href=""><li style="list-style: none;">Plain View</li></a> --}}
 
       <div class="dropdown">
@@ -51,8 +51,8 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-            <li><a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_1" href="/post-1992-legislation/constitutional-acts/expanded-view/{{$allConstitutionalAct['constitutional_group']}}/{{$allConstitutionalAct['title']}}/{{$allConstitutionalAct['id']}}"><span class="small"><center>Expanded View</center></span></a></li>
-            <li><a href="/post_1992_legislation/constitutional-acts/plain-view-full-act-content/{{$allConstitutionalAct['constitutional_group']}}/{{$allConstitutionalAct['title']}}/{{ $allConstitutionalAct['id'] }}" target="_blank"><span class="small"><center>Plain View</center></span></a></li>
+            <li><a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_1" href="/new-laws/constitutional-acts/expanded-view/{{$allConstitutionalAct['constitutional_group']}}/{{$allConstitutionalAct['title']}}/{{$allConstitutionalAct['id']}}"><span class="small"><center>Expanded View</center></span></a></li>
+            <li><a href="/new-laws/constitutional-acts/plain-view-full-act-content/{{$allConstitutionalAct['constitutional_group']}}/{{$allConstitutionalAct['title']}}/{{ $allConstitutionalAct['id'] }}" target="_blank"><span class="small"><center>Plain View</center></span></a></li>
           </ul>
       </div>
 

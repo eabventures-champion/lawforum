@@ -31,7 +31,7 @@
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
               
                 @if($amendedregulationcount > 0)
-                    <li><a class="all_amendments_link" id="all_amendments_link_toggle"  href="/post_1992_legislation/{{$regulationAct['act_category']}}/all_amended_regulation_acts/{{$regulationAct['title']}}/{{ $regulationAct['id'] }}"><span class="small"><center>Amendments</center></span></a></li>
+                    <li><a class="all_amendments_link" id="all_amendments_link_toggle"  href="/new-laws/{{$regulationAct['act_category']}}/all_amended_regulation_acts/{{$regulationAct['title']}}/{{ $regulationAct['id'] }}"><span class="small"><center>Amendments</center></span></a></li>
                     
                     @else
                     
@@ -53,7 +53,7 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-            <li><a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_1" href="/post_1992_legislation/regulation/expanded_view/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{$regulationAct['id']}}"><span class="small"><center>Expanded View</center></span></a></li>
+            <li><a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_1" href="/new-laws/regulation/expanded_view/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{$regulationAct['id']}}"><span class="small"><center>Expanded View</center></span></a></li>
 
             @if (Route::has('login'))
               @auth  
@@ -69,7 +69,7 @@
 
                     @else
                     {{-- View Plain View --}}
-                    <li><a href="/post_1992_legislation/plain/regulation/expanded/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{ $regulationAct['id'] }}" target="_blank"><span class="small"><center>Plain View</center></span></a></li>
+                    <li><a href="/new-laws/plain/regulation/expanded/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{ $regulationAct['id'] }}" target="_blank"><span class="small"><center>Plain View</center></span></a></li>
                   @endif
 
                 @else

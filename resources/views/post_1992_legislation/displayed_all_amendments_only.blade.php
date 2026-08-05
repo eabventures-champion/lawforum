@@ -37,7 +37,7 @@
                                 @foreach($allAmendments as $allAmendment)
                                     <tr>
                                         <td>
-                                            <a href="/post_1992_legislation/amended_acts_table_of_content/{{$allAmendment->post_category}}/{{ $allAmendment->title }}/{{ $allAmendment->id}}"><li style="list-style: none;">{{ $allAmendment->title }}</li></a>
+                                            <a href="/new-laws/amended_acts_table_of_content/{{$allAmendment->post_category}}/{{ $allAmendment->title }}/{{ $allAmendment->id}}"><li style="list-style: none;">{{ $allAmendment->title }}</li></a>
                                         </td> 
                                         <td>{{ $allAmendment->year }}</td>
                                     </tr>
@@ -47,7 +47,7 @@
                                 @foreach($allAmendmentsForRegulations as $allAmendmentsForRegulation)
                                     <tr>
                                         <td>
-                                            <a href="/post_1992_legislation/amended_regulation_acts_table_of_content/{{$allAmendmentsForRegulation->act_category}}/{{ $allAmendmentsForRegulation->title }}/{{ $allAmendmentsForRegulation->id}}"><li style="list-style: none;">{{ $allAmendmentsForRegulation->title }}</li></a>
+                                            <a href="/new-laws/amended_regulation_acts_table_of_content/{{$allAmendmentsForRegulation->act_category}}/{{ $allAmendmentsForRegulation->title }}/{{ $allAmendmentsForRegulation->id}}"><li style="list-style: none;">{{ $allAmendmentsForRegulation->title }}</li></a>
                                         </td> 
                                         <td>{{ $allAmendmentsForRegulation->year }}</td>
                                     </tr>

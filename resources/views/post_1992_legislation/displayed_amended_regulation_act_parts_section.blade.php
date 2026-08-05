@@ -30,7 +30,7 @@ if ($oldpart !== $amendedRegulationContent->part){
                     <a data-scroll-to="body"
                     data-scroll-focus="body"
                     data-scroll-speed="400"
-                    data-scroll-offset="-60" class="single_amendments_to_regulation_link" sid="{{$amendedRegulationContent->id}}" href="/post_1992_legislation/amended_act_regulation_content/{{ $amendedRegulationContent->id }}">
+                    data-scroll-offset="-60" class="single_amendments_to_regulation_link" sid="{{$amendedRegulationContent->id}}" href="/new-laws/amended_act_regulation_content/{{ $amendedRegulationContent->id }}">
                     <span style="color:black;">{{ $amendedRegulationContent->section }}</span>
                     </a> 
                 </li>

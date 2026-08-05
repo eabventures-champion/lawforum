@@ -245,12 +245,12 @@
                   <div class="pt_for_content_container">
                      <div class="nav-scroller bg-header-color rounded shadow-sm">
                         <nav class="nav nav-underline">
-                           <a class="nav-link active text-white" href="/post-1992-legislation">All 4th Republic Laws</a>
-                           <a class="nav-link text-white" href="/post-1992-legislation/1/Acts of Parliament">Acts of Parliament</a>
-                           <a class="nav-link text-white" href="/post-1992-legislation/only-regulations">Legislative Instruments</a>
-                           <a class="nav-link text-white" href="/post-1992-legislation/Constitutional-Intruments">Constitutional Instruments</a>
-                           <a class="nav-link text-white" href="/post-1992-legislation/Executive-Intruments">Executive Instruments</a>
-                           <a class="nav-link text-white" href="/post-1992-legislation/only-amendments">Amendments</a>
+                           <a class="nav-link active text-white" href="/new-laws">All 4th Republic Laws</a>
+                           <a class="nav-link text-white" href="/new-laws/1/Acts of Parliament">Acts of Parliament</a>
+                           <a class="nav-link text-white" href="/new-laws/only-regulations">Legislative Instruments</a>
+                           <a class="nav-link text-white" href="/new-laws/Constitutional-Intruments">Constitutional Instruments</a>
+                           <a class="nav-link text-white" href="/new-laws/Executive-Intruments">Executive Instruments</a>
+                           <a class="nav-link text-white" href="/new-laws/only-amendments">Amendments</a>
                            {{-- 
                            <form action="{{ url('cases_index_search') }}" method="GET" class="form-inline my-2 my-lg-0 justify-content-center">
                               {{ csrf_field() }}
@@ -274,7 +274,7 @@
                                  @foreach($allRegulations as $allRegulation)
                                  <tr>
                                     <td>
-                                       <a href="/post_1992_legislation/regulation_acts_table_of_content/{{$allRegulation->group}}/{{ $allRegulation->title }}/{{ $allRegulation->id}}">
+                                       <a href="/new-laws/regulation_acts_table_of_content/{{$allRegulation->group}}/{{ $allRegulation->title }}/{{ $allRegulation->id}}">
                                           <li style="list-style: none;">{{ $allRegulation->title }}</li>
                                        </a>
                                     </td>

@@ -1,20 +1,20 @@
 {{-- FOR CONSTITUTIONAL ACTS --}}
 @if($order_by_act->act_group == 'Judiciary')
-    <a href="/post-1992-legislation/constitutional-acts/pdf-full-act-content/{{$order_by_act->act_group}}/{{$order_by_act->act_title}}/{{$order_by_act->act_id}}" class="btn btn-sm btn-outline-secondary">
+    <a href="/new-laws/constitutional-acts/pdf-full-act-content/{{$order_by_act->act_group}}/{{$order_by_act->act_title}}/{{$order_by_act->act_id}}" class="btn btn-sm btn-outline-secondary">
         <i class="fa fa-cloud-download" aria-hidden="true"></i>
     </a>
 
 
         {{-- FOR ACTS OF PARLIAMENT --}}
         @elseif($order_by_act->act_group == 'Acts of Parliament')
-            <a href="/post-1992-legislation/1/{{$order_by_act->act_group}}/{{$order_by_act->act_title}}/pdf-view/{{$order_by_act->act_id}}" class="btn btn-sm btn-outline-secondary">
+            <a href="/new-laws/1/{{$order_by_act->act_group}}/{{$order_by_act->act_title}}/pdf-view/{{$order_by_act->act_id}}" class="btn btn-sm btn-outline-secondary">
                 <i class="fa fa-cloud-download" aria-hidden="true"></i>
             </a>
 
 
         {{-- REGULATIONS --}}
         @elseif($order_by_act->act_group == 'Legislative Instruments')
-        <a href="/post_1992_legislation/pdf/regulation/expanded/{{$order_by_act->act_group}}/{{$order_by_act->act_title}}/{{$order_by_act->act_id}}" class="btn btn-sm btn-outline-secondary">
+        <a href="/new-laws/pdf/regulation/expanded/{{$order_by_act->act_group}}/{{$order_by_act->act_title}}/{{$order_by_act->act_id}}" class="btn btn-sm btn-outline-secondary">
             <i class="fa fa-cloud-download" aria-hidden="true"></i>
         </a>
 
@@ -80,7 +80,7 @@
 
         {{-- FOR EXECUTIVE ACTS --}}
         @else
-            <a href="/post-1992-legislation/executive-acts/pdf-full-act-content/{{$order_by_act->act_group}}/{{$order_by_act->act_title}}/{{$order_by_act->act_id}}" class="btn btn-sm btn-outline-secondary">
+            <a href="/new-laws/executive-acts/pdf-full-act-content/{{$order_by_act->act_group}}/{{$order_by_act->act_title}}/{{$order_by_act->act_id}}" class="btn btn-sm btn-outline-secondary">
                 <i class="fa fa-cloud-download" aria-hidden="true"></i>
             </a>
 

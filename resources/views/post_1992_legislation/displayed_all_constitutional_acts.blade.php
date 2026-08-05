@@ -31,7 +31,7 @@
                                 @foreach($allConstitutionalActs as $allConstitutionalAct)
                                     <tr>
                                         <td>
-                                            <a href="/post-1992-legislation/constitutional-acts-table-of-content/{{$allConstitutionalAct->constitutional_group}}/{{ $allConstitutionalAct->title }}/{{ $allConstitutionalAct->id}}"><li style="list-style: none;">{{ $allConstitutionalAct->title }}</li></a>
+                                            <a href="/new-laws/constitutional-acts-table-of-content/{{$allConstitutionalAct->constitutional_group}}/{{ $allConstitutionalAct->title }}/{{ $allConstitutionalAct->id}}"><li style="list-style: none;">{{ $allConstitutionalAct->title }}</li></a>
                                         </td> 
                                         <td>{{ $allConstitutionalAct->year }}</td>
                                     </tr>

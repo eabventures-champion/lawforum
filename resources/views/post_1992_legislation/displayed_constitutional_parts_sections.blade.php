@@ -25,7 +25,7 @@
                                 <a data-scroll-to="body"
                                 data-scroll-focus="body"
                                 data-scroll-speed="400"
-                                data-scroll-offset="-60" class="constitutional_content_link list-group-item" style="white-space:normal; line-height: 0.4cm;" sid="{{ $allConstitutionalArticle->id }}"  href="/post-1992-legislation/constitutional-acts/content/{{ $allConstitutionalArticle->id }}">
+                                data-scroll-offset="-60" class="constitutional_content_link list-group-item" style="white-space:normal; line-height: 0.4cm;" sid="{{ $allConstitutionalArticle->id }}"  href="/new-laws/constitutional-acts/content/{{ $allConstitutionalArticle->id }}">
                                 {{ $allConstitutionalArticle->section }}
                                 </a>
                                            

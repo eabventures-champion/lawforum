@@ -9,8 +9,8 @@
         <div class="menu_options pull-right" style="display: none;">
             @if (Route::has('login'))
                 @auth
-                    <a href="/post_1992_legislation/constitutional-acts/pdf_preamble_content/{{$allConstitutionalAct['title']}}/{{ $allConstitutionalAct['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
-                    <a href="/post_1992_legislation/constitutional-acts/print_preamble_content/{{ $allConstitutionalAct['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="/new-laws/constitutional-acts/pdf_preamble_content/{{$allConstitutionalAct['title']}}/{{ $allConstitutionalAct['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
+                    <a href="/new-laws/constitutional-acts/print_preamble_content/{{ $allConstitutionalAct['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         
                     @else
 

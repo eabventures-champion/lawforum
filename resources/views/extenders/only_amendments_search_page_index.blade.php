@@ -152,7 +152,7 @@ color: green;
             <div class="search-well">
                 <h5 style="color:blue;"><b>{!! $amend->act_title !!}</b></h4>
                 <b>{!! $amend->section !!}</b>
-              {{-- <a href="/post_1992_legislation/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
+              {{-- <a href="/new-laws/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
               <br><br>
             {!! $amend->content !!}
             </div>
@@ -163,7 +163,7 @@ color: green;
             <div class="search-well">
                 <h5 style="color:blue;"><b>{!! $amends_reg->title !!}</b></h4>
                 <b>{!! $amends_reg->section !!}</b>
-              {{-- <a href="/post_1992_legislation/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
+              {{-- <a href="/new-laws/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
               <br><br>
             {!! $amends_reg->content !!}
             </div>

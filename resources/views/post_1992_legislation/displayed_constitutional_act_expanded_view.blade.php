@@ -19,15 +19,15 @@
         <div class="menu_options pull-right" style="display: none;">
             @if (Route::has('login'))
                 @auth
-                    <a class="act_download_link" href="javascript:;" rel="/post-1992-legislation/constitutional-acts/pdf-full-act-content/{{$allConstitutionalAct['constitutional_group']}}/{{$allConstitutionalAct['title']}}/{{ $allConstitutionalAct['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
+                    <a class="act_download_link" href="javascript:;" rel="/new-laws/constitutional-acts/pdf-full-act-content/{{$allConstitutionalAct['constitutional_group']}}/{{$allConstitutionalAct['title']}}/{{ $allConstitutionalAct['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
                     <a class="act_id hidden" href="javascript:;" rel="/acts-downloads/{{$allConstitutionalAct['title']}}/{{ Auth::user()->name }}/{{ Auth::user()->id }}/{{$allConstitutionalAct['constitutional_group']}}/{{$allConstitutionalAct['id']}}/{{ Auth::user()->id }}{{$allConstitutionalAct['title']}}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>
-                    <a href="/post_1992_legislation/constitutional-acts/plain-view-full-act-content/{{$allConstitutionalAct['constitutional_group']}}/{{$allConstitutionalAct['title']}}/{{ $allConstitutionalAct['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp;
-                    <a href="/post_1992_legislation/constitutional-acts/print_view/{{$allConstitutionalAct['constitutional_group']}}/{{$allConstitutionalAct['title']}}/{{ $allConstitutionalAct['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="/new-laws/constitutional-acts/plain-view-full-act-content/{{$allConstitutionalAct['constitutional_group']}}/{{$allConstitutionalAct['title']}}/{{ $allConstitutionalAct['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp;
+                    <a href="/new-laws/constitutional-acts/print_view/{{$allConstitutionalAct['constitutional_group']}}/{{$allConstitutionalAct['title']}}/{{ $allConstitutionalAct['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                     @else
 
                     <a href="" data-toggle="modal" data-target="#myModal"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
-                    <a href="/post_1992_legislation/constitutional-acts/plain-view-full-act-content/{{$allConstitutionalAct['constitutional_group']}}/{{$allConstitutionalAct['title']}}/{{ $allConstitutionalAct['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp;
+                    <a href="/new-laws/constitutional-acts/plain-view-full-act-content/{{$allConstitutionalAct['constitutional_group']}}/{{$allConstitutionalAct['title']}}/{{ $allConstitutionalAct['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp;
                     <a href="" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                     {{-- <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">

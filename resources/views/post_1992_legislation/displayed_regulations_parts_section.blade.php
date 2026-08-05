@@ -28,7 +28,7 @@ if ($oldpart !== $regulationContent->part){
             <a data-scroll-to="body"
                data-scroll-focus="body"
                data-scroll-speed="400"
-               data-scroll-offset="-60" class="sinlge_regulation_act_content_link list-group-item" sid="{{$regulationContent->id}}" style="white-space:normal; line-height: 0.4cm;" href="/post_1992_legislation/regulations_content/{{ $regulationContent->id }}"><li style="list-style: none;">{{ $regulationContent->section }}</li></a>
+               data-scroll-offset="-60" class="sinlge_regulation_act_content_link list-group-item" sid="{{$regulationContent->id}}" style="white-space:normal; line-height: 0.4cm;" href="/new-laws/regulations_content/{{ $regulationContent->id }}"><li style="list-style: none;">{{ $regulationContent->section }}</li></a>
 @endforeach 
 <input type="hidden" id="regulation_under_act_contents" value="<?php echo json_encode($ids); ?>" />
 </div>

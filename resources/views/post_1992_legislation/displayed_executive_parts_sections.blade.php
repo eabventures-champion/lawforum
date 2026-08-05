@@ -25,7 +25,7 @@
                                 <a data-scroll-to="body"
                                 data-scroll-focus="body"
                                 data-scroll-speed="400"
-                                data-scroll-offset="-60" class="executive_content_link list-group-item" style="white-space:normal; line-height: 0.4cm;" sid="{{ $allExecutiveArticle->id }}"  href="/post-1992-legislation/executive-acts/content/{{ $allExecutiveArticle->id }}">
+                                data-scroll-offset="-60" class="executive_content_link list-group-item" style="white-space:normal; line-height: 0.4cm;" sid="{{ $allExecutiveArticle->id }}"  href="/new-laws/executive-acts/content/{{ $allExecutiveArticle->id }}">
                                 {{ $allExecutiveArticle->section }}
                                 </a>
                                            

@@ -343,12 +343,12 @@
                   <div class="pt_for_content">
                      <div class="nav-scroller bg-header-color rounded shadow-sm">
                         <nav class="nav nav-underline">
-                           <a class="nav-link active text-white" href="/post-1992-legislation">All 4th Republic Laws</a>
-                           <a class="nav-link text-white" href="/post-1992-legislation/1/Acts of Parliament">Acts of Parliament</a>
-                           <a class="nav-link text-white" href="/post-1992-legislation/only-regulations">Legislative Instruments</a>
-                           <a class="nav-link text-white" href="/post-1992-legislation/Constitutional-Intruments">Constitutional Instruments</a>
-                           <a class="nav-link text-white" href="/post-1992-legislation/Executive-Intruments">Executive Instruments</a>
-                           <a class="nav-link text-white" href="/post-1992-legislation/only-amendments">Amendments</a>
+                           <a class="nav-link active text-white" href="/new-laws">All 4th Republic Laws</a>
+                           <a class="nav-link text-white" href="/new-laws/1/Acts of Parliament">Acts of Parliament</a>
+                           <a class="nav-link text-white" href="/new-laws/only-regulations">Legislative Instruments</a>
+                           <a class="nav-link text-white" href="/new-laws/Constitutional-Intruments">Constitutional Instruments</a>
+                           <a class="nav-link text-white" href="/new-laws/Executive-Intruments">Executive Instruments</a>
+                           <a class="nav-link text-white" href="/new-laws/only-amendments">Amendments</a>
                         </nav>
                      </div>
                   </div>
@@ -399,7 +399,7 @@
                               <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                                  <div class="row">
                                     <div class="col-md-9">
-                                       <a class="post_preamble_content_link" href="/post_1992_legislation/preamble/{{ $allPost1992Act['id'] }}">
+                                       <a class="post_preamble_content_link" href="/new-laws/preamble/{{ $allPost1992Act['id'] }}">
                                           @if($allPost1992Act['preamble'] != null)
                                           <span style="color: blue;" class="preamble_hide">Introductory Text</span>
                                           <hr>
@@ -445,13 +445,13 @@
                                                 </a>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                                    <li>
-                                                      <a class="all_amendments_link dropdown-item" id="all_amendments_link_toggle"  href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
+                                                      <a class="all_amendments_link dropdown-item" id="all_amendments_link_toggle"  href="/new-laws/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
                                                          <center>Amendments</center>
                                                       </a>
                                                    </li>
                                                    {{-- 
                                                    <li>
-                                                      <a class="all_regulations_link dropdown-item" id="all_regulations_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_regulations_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
+                                                      <a class="all_regulations_link dropdown-item" id="all_regulations_link_toggle" href="/new-laws/{{$allPost1992Act['post_group']}}/all_regulations_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
                                                          <center>Regulations</center>
                                                       </a>
                                                    </li>
@@ -466,7 +466,7 @@
                                                 </a>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                                    <li>
-                                                      <a class="all_amendments_link dropdown-item" id="all_amendments_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
+                                                      <a class="all_amendments_link dropdown-item" id="all_amendments_link_toggle" href="/new-laws/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
                                                          <center>Amendments</center>
                                                       </a>
                                                    </li>
@@ -480,7 +480,7 @@
                                                 </a>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                                    <li>
-                                                      <a class="all_regulations_link dropdown-item" id="all_regulations_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_regulations_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
+                                                      <a class="all_regulations_link dropdown-item" id="all_regulations_link_toggle" href="/new-laws/{{$allPost1992Act['post_group']}}/all_regulations_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
                                                          <center>Regulations</center>
                                                       </a>
                                                    </li>
@@ -490,7 +490,7 @@
                                              @else
                                              <div class="d-none"></div>
                                              @endif
-                                             <a class="btn btn-outline-dark btn-sm expanded_link toggle_expanded_view btn-customised" href="/post_1992_legislation/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/expanded-view/{{ $allPost1992Act['id'] }}" role="button">Expanded View</a>
+                                             <a class="btn btn-outline-dark btn-sm expanded_link toggle_expanded_view btn-customised" href="/new-laws/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/expanded-view/{{ $allPost1992Act['id'] }}" role="button">Expanded View</a>
                                              @if (Route::has('login'))
                                              @auth
                                              {{-- No Subscription --}}
@@ -504,7 +504,7 @@
                                              <a class="btn btn-outline-dark btn-sm" href="" data-toggle="modal" data-target="#maximumDownloadReachedplain">Plain View</a>
                                              @else
                                              {{-- View Plain View --}}
-                                             <a class="btn btn-outline-dark btn-sm btn-customised" href="/post_1992_legislation/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/plain_view/{{ $allPost1992Act['id'] }}" target="_blank">Plain View</a>
+                                             <a class="btn btn-outline-dark btn-sm btn-customised" href="/new-laws/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/plain_view/{{ $allPost1992Act['id'] }}" target="_blank">Plain View</a>
                                              @endif
                                              @else
                                              {{-- Create Account --}}
@@ -548,7 +548,7 @@
                                                    <a data-scroll-to="body"
                                                       data-scroll-focus="body"
                                                       data-scroll-speed="400"
-                                                      data-scroll-offset="-60" class="view_all_section_link_with_prev_next dropdown-item" sid="{{$allPost1992Article->id}}" href="/post_1992_legislation/content/{{ $allPost1992Article->id }}">{{$allPost1992Article->section }}
+                                                      data-scroll-offset="-60" class="view_all_section_link_with_prev_next dropdown-item" sid="{{$allPost1992Article->id}}" href="/new-laws/content/{{ $allPost1992Article->id }}">{{$allPost1992Article->section }}
                                                    </a>
                                                    @endforeach              
                                                 </div>
@@ -664,7 +664,7 @@
                                     @foreach($actsOfParliaments as $actsOfParliament)
                                     <tr>
                                        <td>
-                                          <a href="/post-1992-legislation/table-of-content/{{$actsOfParliament->post_group}}/{{ $actsOfParliament->title }}/{{ $actsOfParliament->id}}">
+                                          <a href="/new-laws/table-of-content/{{$actsOfParliament->post_group}}/{{ $actsOfParliament->title }}/{{ $actsOfParliament->id}}">
                                              <li style="list-style: none;">{{ $actsOfParliament->title }}</li>
                                           </a>
                                        </td>

@@ -152,7 +152,7 @@ color: green;
             <div class="search-well">
                 <h4 style="color:blue;"><b>{!! $africa_countries_constitution->title !!}</b></h4>
                 {{-- <h5 style="color:blue;"><b>{!! $africa_countries_constitution->section !!}</b></h5> --}}
-              {{-- <a href="/post_1992_legislation/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
+              {{-- <a href="/new-laws/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
               <br>
             {!! $africa_countries_constitution->content !!}
             </div>

@@ -2,7 +2,7 @@
   @foreach ($posts as $post)
   <div class="search-well">
     <h5 style="color:blue;"><b>{!! $post->post_act !!}</b></h5>
-    {{-- <a href="/post_1992_legislation/content/{{$post->id}}" target="_blank"><b style="color:black;">{!! $post->section !!}</b></a> --}}
+    {{-- <a href="/new-laws/content/{{$post->id}}" target="_blank"><b style="color:black;">{!! $post->section !!}</b></a> --}}
     <a href=""><b style="color:black;">{!! $post->section !!}</b></a>
     <br>
     {!! $post->content !!}
@@ -16,7 +16,7 @@
   <div class="search-well">
     <h5 style="color:blue;"><b>{!! $regulation->regulation_title !!}</b></h5>
     <a href=""><b style="color:black;">{!! $regulation->section !!}</b></a>
-    {{-- <a href="/post_1992_legislation/content/{{$regulation->id}}" target="_blank"><b style="color:black;">{!! $regulation->section !!}</b></a> --}}
+    {{-- <a href="/new-laws/content/{{$regulation->id}}" target="_blank"><b style="color:black;">{!! $regulation->section !!}</b></a> --}}
     <br>
     {!! $regulation->content !!}
   </div>
@@ -29,7 +29,7 @@
   <div class="search-well">
     <h5 style="color:blue;"><b>{!! $constitutional->constitutional_act !!}</b></h5>
     <a href=""><b style="color:black;">{!! $constitutional->section !!}</b></a>
-    {{-- <a href="/post_1992_legislation/content/{{$constitutional->id}}" target="_blank"><b style="color:black;">{!! $constitutional->section !!}</b></a> --}}
+    {{-- <a href="/new-laws/content/{{$constitutional->id}}" target="_blank"><b style="color:black;">{!! $constitutional->section !!}</b></a> --}}
     <br>
     {!! $constitutional->content !!}
   </div>
@@ -42,7 +42,7 @@
   <div class="search-well">
     <h5 style="color:blue;"><b>{!! $executive->executive_act !!}</b></h5>
     <a href=""><b style="color:black;">{!! $executive->section !!}</b></a>
-    {{-- <a href="/post_1992_legislation/content/{{$executive->id}}" target="_blank"><b style="color:black;">{!! $executive->section !!}</b></a> --}}
+    {{-- <a href="/new-laws/content/{{$executive->id}}" target="_blank"><b style="color:black;">{!! $executive->section !!}</b></a> --}}
     <br>
     {!! $executive->content !!}
   </div>
@@ -55,7 +55,7 @@
     <div class="search-well">
       <h5 style="color:blue;"><b>{!! $amend->act_title !!}</b></h5>
       <a href=""><b style="color:black;">{!! $amend->section !!}</b></a>
-      {{-- <a href="/post_1992_legislation/amended_acts/content/{{$amend->id}}" target="_blank"><b style="color:black;">{!! $amend->section !!}</b></a> --}}
+      {{-- <a href="/new-laws/amended_acts/content/{{$amend->id}}" target="_blank"><b style="color:black;">{!! $amend->section !!}</b></a> --}}
       <br>
       {!! $amend->content !!}
     </div>
@@ -68,7 +68,7 @@
   <div class="search-well">
     <h5 style="color:blue;"><b>{!! $amends_reg->title !!}</b></h5>
     <a href=""><b style="color:black;">{!! $amends_reg->section !!}</b></a>
-    {{-- <a href="/post_1992_legislation/amended_regulation_acts/content/{{$amends_reg->id}}" target="_blank"><b style="color:black;">{!! $amends_reg->section !!}</b></a> --}}
+    {{-- <a href="/new-laws/amended_regulation_acts/content/{{$amends_reg->id}}" target="_blank"><b style="color:black;">{!! $amends_reg->section !!}</b></a> --}}
     <br>
     {!! $amends_reg->content !!}
   </div>

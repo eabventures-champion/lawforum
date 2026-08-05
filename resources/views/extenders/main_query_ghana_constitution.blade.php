@@ -5,7 +5,7 @@
                         <h5 class="all_specific"><b>{!! $ghana_article->gh_title !!}</b></h5>
                         <h5><b>{!! $ghana_article->chapter !!}</b></h5>
                         <h5 style="color:blue;"><b>{!! $ghana_article->section !!}</b></h5>
-                    {{-- <a href="/post_1992_legislation/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
+                    {{-- <a href="/new-laws/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
                     <br>
                     {!! $ghana_article->articles !!}
                     </div>
@@ -17,7 +17,7 @@
             <h5 class="all_specific"><b>{!! $ghana_amended_article->gh_title !!}</b></h5>
             <h5><b>{!! $ghana_amended_article->chapter !!}</b></h5>
             <h5 style="color:blue;"><b>{!! $ghana_amended_article->section !!}</b></h5>
-        {{-- <a href="/post_1992_legislation/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
+        {{-- <a href="/new-laws/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
         <br>
         {!! $ghana_amended_article->articles !!}
         </div>

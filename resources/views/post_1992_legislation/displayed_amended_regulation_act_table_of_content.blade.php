@@ -9,12 +9,12 @@
         <span style="color: blue;">{{ $amendedRegulationAct['title'] }}</span>
         
         <div class="container" style="display:none;">
-            <a href="/post_1992_legislation/display_amended_regulation_sections/{{$amendedRegulationAct['title']}}" class="single_container_details_link_amend_regulation"><p>Click to View details</p>
+            <a href="/new-laws/display_amended_regulation_sections/{{$amendedRegulationAct['title']}}" class="single_container_details_link_amend_regulation"><p>Click to View details</p>
             </a>
         </div>
            
         <div class="container">
-            {{-- <a href="/post_1992_legislation/amended_regulation_preamble/{{ $amendedRegulationAct['id'] }}" class="single_preamble_amended_regulation_link" style="color: blue;">Introductory Text</a> --}}
+            {{-- <a href="/new-laws/amended_regulation_preamble/{{ $amendedRegulationAct['id'] }}" class="single_preamble_amended_regulation_link" style="color: blue;">Introductory Text</a> --}}
             <div style="height: auto;">
                 @include('post_1992_legislation.displayed_amended_regulation_act_parts_section')
             </div>

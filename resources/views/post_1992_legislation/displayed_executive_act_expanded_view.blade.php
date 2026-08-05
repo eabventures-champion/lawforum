@@ -19,15 +19,15 @@
         <div class="menu_options pull-right" style="display: none;">
             @if (Route::has('login'))
                 @auth
-                    <a class="act_download_link" href="javascript:;" rel="/post-1992-legislation/executive-acts/pdf-full-act-content/{{$allExecutiveAct['executive_group']}}/{{$allExecutiveAct['title']}}/{{ $allExecutiveAct['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
+                    <a class="act_download_link" href="javascript:;" rel="/new-laws/executive-acts/pdf-full-act-content/{{$allExecutiveAct['executive_group']}}/{{$allExecutiveAct['title']}}/{{ $allExecutiveAct['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
                     <a class="act_id hidden" href="javascript:;" rel="/acts-downloads/{{$allExecutiveAct['title']}}/{{ Auth::user()->name }}/{{ Auth::user()->id }}/{{$allExecutiveAct['executive_group']}}/{{$allExecutiveAct['id']}}/{{ Auth::user()->id }}{{$allExecutiveAct['title']}}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>
-                    <a href="/post_1992_legislation/executive-acts/plain-view-full-act-content/{{$allExecutiveAct['executive_group']}}/{{$allExecutiveAct['title']}}/{{ $allExecutiveAct['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp;
-                    <a href="/post_1992_legislation/executive-acts/print_view/{{$allExecutiveAct['executive_group']}}/{{$allExecutiveAct['title']}}/{{ $allExecutiveAct['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="/new-laws/executive-acts/plain-view-full-act-content/{{$allExecutiveAct['executive_group']}}/{{$allExecutiveAct['title']}}/{{ $allExecutiveAct['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp;
+                    <a href="/new-laws/executive-acts/print_view/{{$allExecutiveAct['executive_group']}}/{{$allExecutiveAct['title']}}/{{ $allExecutiveAct['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                     @else
 
                     <a href="" data-toggle="modal" data-target="#myModal"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
-                    <a href="/post_1992_legislation/executive-acts/plain-view-full-act-content/{{$allExecutiveAct['executive_group']}}/{{$allExecutiveAct['title']}}/{{ $allExecutiveAct['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp;
+                    <a href="/new-laws/executive-acts/plain-view-full-act-content/{{$allExecutiveAct['executive_group']}}/{{$allExecutiveAct['title']}}/{{ $allExecutiveAct['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp;
                     <a href="" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                     {{-- <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">

@@ -17,7 +17,7 @@
                       </button>
                       <ul class="dropdown-menu table-wrapper-scroll-view" style="width: 520px;">
                           @foreach($amendedRegulationContents as $title)
-                            <li><a href="/post_1992_legislation/amended_act_regulation_content/{{ $title->id }}" sid="{{$title->id}}" class="single_view_all_amendments_under_regulation_section_link">{{ $title->section }}</a></li>
+                            <li><a href="/new-laws/amended_act_regulation_content/{{ $title->id }}" sid="{{$title->id}}" class="single_view_all_amendments_under_regulation_section_link">{{ $title->section }}</a></li>
                           @endforeach
                       </ul>
                 </div>

@@ -13,7 +13,7 @@
                       </button>
                       <ul class="dropdown-menu table-wrapper-scroll-view" style="width: 520px;">
                          @foreach($regulationsContents as $title)
-                            <li><a href="/post_1992_legislation/regulations_content/{{ $title->id }}" sid="{{$title->id}}" class="single_view_all_regulation_section_link">{{ $title->section }}</a></li>
+                            <li><a href="/new-laws/regulations_content/{{ $title->id }}" sid="{{$title->id}}" class="single_view_all_regulation_section_link">{{ $title->section }}</a></li>
                         @endforeach 
                       </ul>
                 </div>

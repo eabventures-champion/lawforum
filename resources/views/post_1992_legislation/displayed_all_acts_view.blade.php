@@ -41,7 +41,7 @@ style="padding-left:1em;"
                                     @foreach($allPost1992Acts as $allPost1992Act)
                                         <tr>
                                             <td>
-                                                <a href="/post-1992-legislation/table-of-content/{{$allPost1992Act->post_group}}/{{ $allPost1992Act->title }}/{{ $allPost1992Act->id}}"><li style="list-style: none;">{{ $allPost1992Act->title }}</li></a>
+                                                <a href="/new-laws/table-of-content/{{$allPost1992Act->post_group}}/{{ $allPost1992Act->title }}/{{ $allPost1992Act->id}}"><li style="list-style: none;">{{ $allPost1992Act->title }}</li></a>
                                             </td> 
                                             <td>{{ $allPost1992Act->year }}</td>
                                         </tr>
@@ -51,7 +51,7 @@ style="padding-left:1em;"
                                     @foreach($allConstitutionalActs as $allConstitutionalAct)
                                         <tr>
                                             <td>
-                                                <a href="/post-1992-legislation/constitutional-acts-table-of-content/{{$allConstitutionalAct->constitutional_group}}/{{ $allConstitutionalAct->title }}/{{ $allConstitutionalAct->id}}"><li style="list-style: none;">{{ $allConstitutionalAct->title }}</li></a>
+                                                <a href="/new-laws/constitutional-acts-table-of-content/{{$allConstitutionalAct->constitutional_group}}/{{ $allConstitutionalAct->title }}/{{ $allConstitutionalAct->id}}"><li style="list-style: none;">{{ $allConstitutionalAct->title }}</li></a>
                                             </td> 
                                             <td>{{ $allConstitutionalAct->year }}</td>
                                         </tr>
@@ -61,7 +61,7 @@ style="padding-left:1em;"
                                     @foreach($allExecutiveActs as $allExecutiveAct)
                                         <tr>
                                             <td>
-                                                <a href="/post-1992-legislation/table-of-content/{{$allExecutiveAct->executive_group}}/{{ $allExecutiveAct->title }}/{{ $allExecutiveAct->id}}"><li style="list-style: none;">{{ $allExecutiveAct->title }}</li></a>
+                                                <a href="/new-laws/table-of-content/{{$allExecutiveAct->executive_group}}/{{ $allExecutiveAct->title }}/{{ $allExecutiveAct->id}}"><li style="list-style: none;">{{ $allExecutiveAct->title }}</li></a>
                                             </td> 
                                             <td>{{ $allExecutiveAct->year }}</td>
                                         </tr>
@@ -71,7 +71,7 @@ style="padding-left:1em;"
                                     @foreach($allPostRegulations as $allPostRegulation)
                                         <tr>
                                             <td>
-                                                <a href="/post_1992_legislation/regulation_acts_table_of_content/{{$allPostRegulation->act_category}}/{{ $allPostRegulation->title }}/{{ $allPostRegulation->id}}"><li style="list-style: none;">{{ $allPostRegulation->title }}</li></a>
+                                                <a href="/new-laws/regulation_acts_table_of_content/{{$allPostRegulation->act_category}}/{{ $allPostRegulation->title }}/{{ $allPostRegulation->id}}"><li style="list-style: none;">{{ $allPostRegulation->title }}</li></a>
                                             </td> 
                                             <td>{{ $allPostRegulation->year }}</td>
                                         </tr>
@@ -81,7 +81,7 @@ style="padding-left:1em;"
                                     @foreach($allPostsAmends as $allPostsAmend)
                                         <tr>
                                             <td>
-                                                <a href="/post_1992_legislation/amended_acts_table_of_content/{{$allPostsAmend->post_category}}/{{ $allPostsAmend->title }}/{{ $allPostsAmend->id}}"><li style="list-style: none;">{{ $allPostsAmend->title }}</li></a>
+                                                <a href="/new-laws/amended_acts_table_of_content/{{$allPostsAmend->post_category}}/{{ $allPostsAmend->title }}/{{ $allPostsAmend->id}}"><li style="list-style: none;">{{ $allPostsAmend->title }}</li></a>
                                             </td> 
                                             <td>{{ $allPostsAmend->year }}</td>
                                         </tr>
@@ -91,7 +91,7 @@ style="padding-left:1em;"
                                     @foreach($allPostsAmendsOnRegulations as $allPostsAmendsOnRegulation)
                                         <tr>
                                             <td>
-                                                <a href="/post_1992_legislation/amended_regulation_acts_table_of_content/{{$allPostsAmendsOnRegulation->act_category}}/{{ $allPostsAmendsOnRegulation->title }}/{{ $allPostsAmendsOnRegulation->id}}"><li style="list-style: none;">{{ $allPostsAmendsOnRegulation->title }}</li></a>
+                                                <a href="/new-laws/amended_regulation_acts_table_of_content/{{$allPostsAmendsOnRegulation->act_category}}/{{ $allPostsAmendsOnRegulation->title }}/{{ $allPostsAmendsOnRegulation->id}}"><li style="list-style: none;">{{ $allPostsAmendsOnRegulation->title }}</li></a>
                                             </td> 
                                             <td>{{ $allPostsAmendsOnRegulation->year }}</td>
                                         </tr>

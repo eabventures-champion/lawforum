@@ -30,13 +30,13 @@
                     {{-- Download PDF and Others --}}
                     @else
                       {{-- DOWNLOAD PDF --}}
-                      <a class="regulation_act_download_link" href="javascript:;"  rel="/post_1992_legislation/pdf/regulation/expanded/{{$regulationAct['group']}}/{{$regulationAct['title']}}/{{ $regulationAct['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
+                      <a class="regulation_act_download_link" href="javascript:;"  rel="/new-laws/pdf/regulation/expanded/{{$regulationAct['group']}}/{{$regulationAct['title']}}/{{ $regulationAct['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
                       {{-- SAVE USER DOWNLOAD --}}
                       <a class="regulation_act_id hidden" href="javascript:;" rel="/acts-downloads/{{$regulationAct['title']}}/{{ Auth::user()->name }}/{{ Auth::user()->id }}/{{$regulationAct['group']}}/{{$regulationAct['id']}}/{{ Auth::user()->id }}{{$regulationAct['title']}}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>
                       {{-- PLAIN VIEW --}}
-                      <a href="/post_1992_legislation/plain/regulation/expanded/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{ $regulationAct['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp;
+                      <a href="/new-laws/plain/regulation/expanded/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{ $regulationAct['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp;
                       {{-- PRINT --}}
-                      <a href="/post_1992_legislation/print/regulation/expanded/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{ $regulationAct['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <a href="/new-laws/print/regulation/expanded/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{ $regulationAct['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 @endif
 
               @else

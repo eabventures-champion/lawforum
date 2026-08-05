@@ -16,7 +16,7 @@
                       <a data-scroll-to="body"
                       data-scroll-focus="body"
                       data-scroll-speed="400"
-                      data-scroll-offset="-60" class="constitutional_view_all_section_link_with_prev_next" sid="{{$allConstitutionalArticle->id}}" href="/post-1992-legislation/constitutional-acts/content/{{ $allConstitutionalArticle->id }}">{{$allConstitutionalArticle->section }}
+                      data-scroll-offset="-60" class="constitutional_view_all_section_link_with_prev_next" sid="{{$allConstitutionalArticle->id}}" href="/new-laws/constitutional-acts/content/{{ $allConstitutionalArticle->id }}">{{$allConstitutionalArticle->section }}
                       </a>
                     </li>
                   @endforeach
@@ -53,7 +53,7 @@
         <hr>
         <br>
         <center>
-            <button class="btn btn-sm btn-default expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/post-1992-legislation/constitutional-acts/expanded-view/{{$allConstitutionalAct['constitutional_group']}}/{{$allConstitutionalAct['title']}}/{{$allConstitutionalAct['id']}}"><li style="list-style:none;">Expanded View</li>
+            <button class="btn btn-sm btn-default expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/new-laws/constitutional-acts/expanded-view/{{$allConstitutionalAct['constitutional_group']}}/{{$allConstitutionalAct['title']}}/{{$allConstitutionalAct['id']}}"><li style="list-style:none;">Expanded View</li>
             </button>
         </center> 
         {{-- @include('extenders.case_law_main_search') --}}

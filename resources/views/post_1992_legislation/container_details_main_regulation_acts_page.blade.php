@@ -13,7 +13,7 @@
               </button>
               <ul class="dropdown-menu table-wrapper-scroll-view" style="width: 520px;">
                   @foreach($allRegulationArticles as $allRegulationArticle)
-                  <li><a class="regulation_view_all_section_link_with_prev_next" sid={{$allRegulationArticle->id}} href="/post_1992_legislation/regulation_act/content/{{ $allRegulationArticle->id }}">{{$allRegulationArticle->section }}</a></li>
+                  <li><a class="regulation_view_all_section_link_with_prev_next" sid={{$allRegulationArticle->id}} href="/new-laws/regulation_act/content/{{ $allRegulationArticle->id }}">{{$allRegulationArticle->section }}</a></li>
                   @endforeach 
               </ul>
         </div>
@@ -50,7 +50,7 @@
         <hr>
         <br>
         <center>
-            <button class="btn btn-sm btn-default expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/post_1992_legislation/regulation/expanded_view/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{$regulationAct['id']}}"><li style="list-style:none;">Expanded View</li>
+            <button class="btn btn-sm btn-default expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/new-laws/regulation/expanded_view/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{$regulationAct['id']}}"><li style="list-style:none;">Expanded View</li>
             </button>
             <!-- <a><li>Plain View</li></a> -->
         </center>

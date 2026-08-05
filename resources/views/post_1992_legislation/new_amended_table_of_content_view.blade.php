@@ -336,12 +336,12 @@
                 <div class="pt_for_content">
                     <div class="nav-scroller bg-header-color rounded shadow-sm">
                         <nav class="nav nav-underline">
-                            <a class="nav-link active text-white" href="/post-1992-legislation">All 4th Republic Laws</a>
-                            <a class="nav-link text-white" href="/post-1992-legislation/1/Acts of Parliament">Acts of Parliament</a>
-                            <a class="nav-link text-white" href="/post-1992-legislation/only-regulations">Legislative Instruments</a>
-                            <a class="nav-link text-white" href="/post-1992-legislation/Constitutional-Intruments">Constitutional Instruments</a>
-                            <a class="nav-link text-white" href="/post-1992-legislation/Executive-Intruments">Executive Instruments</a>
-                            <a class="nav-link text-white" href="/post-1992-legislation/only-amendments">Amendments</a>
+                            <a class="nav-link active text-white" href="/new-laws">All 4th Republic Laws</a>
+                            <a class="nav-link text-white" href="/new-laws/1/Acts of Parliament">Acts of Parliament</a>
+                            <a class="nav-link text-white" href="/new-laws/only-regulations">Legislative Instruments</a>
+                            <a class="nav-link text-white" href="/new-laws/Constitutional-Intruments">Constitutional Instruments</a>
+                            <a class="nav-link text-white" href="/new-laws/Executive-Intruments">Executive Instruments</a>
+                            <a class="nav-link text-white" href="/new-laws/only-amendments">Amendments</a>
                         </nav>
                     </div>
                 </div>
@@ -379,7 +379,7 @@
                           <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                             <div class="row">
                               <div class="col-md-9">
-                                <a class="amendments_preamble_link" href="/post_1992_legislation/amended_acts/preamble/{{ $amendedAct['id'] }}">
+                                <a class="amendments_preamble_link" href="/new-laws/amended_acts/preamble/{{ $amendedAct['id'] }}">
                                     
                                   @if($amendedAct['preamble'] != null)
                                       <span style="color: blue;" class="preamble_hide">Introductory Text</span><hr>
@@ -400,7 +400,7 @@
                                       <center>
                                         <div class="hide-on-desktop mt-3 flex">
                                           
-                                          <a class="btn btn-outline-dark btn-sm expanded_link toggle_expanded_view btn-customised" href="/post_1992_legislation/amended_acts/expanded_view/{{$amendedAct['post_category']}}/{{$amendedAct['title']}}/{{$amendedAct['id']}}" role="button">Expanded View</a>
+                                          <a class="btn btn-outline-dark btn-sm expanded_link toggle_expanded_view btn-customised" href="/new-laws/amended_acts/expanded_view/{{$amendedAct['post_category']}}/{{$amendedAct['title']}}/{{$amendedAct['id']}}" role="button">Expanded View</a>
                                           
                                           @if (Route::has('login'))
                                             @auth
@@ -416,7 +416,7 @@
                                                 
                                                     @else
                                                     {{-- View Plain View --}}
-                                                      {{-- <a class="btn btn-outline-dark btn-sm" href="/post_1992_legislation/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/plain_view/{{ $allPost1992Act['id'] }}" target="_blank">Plain View</a> --}}
+                                                      {{-- <a class="btn btn-outline-dark btn-sm" href="/new-laws/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/plain_view/{{ $allPost1992Act['id'] }}" target="_blank">Plain View</a> --}}
                                                   @endif
                                                 @else
                                               {{-- Create Account --}}
@@ -463,7 +463,7 @@
                                             <a data-scroll-to="body"
                                             data-scroll-focus="body"
                                             data-scroll-speed="400"
-                                            data-scroll-offset="-60" class="amendments_view_all_section_link_with_prev_next dropdown-item" sid="{{$allAmendedArticle->id}}" href="/post_1992_legislation/amended_acts/content/{{ $allAmendedArticle->id }}">{{$allAmendedArticle->section }}
+                                            data-scroll-offset="-60" class="amendments_view_all_section_link_with_prev_next dropdown-item" sid="{{$allAmendedArticle->id}}" href="/new-laws/amended_acts/content/{{ $allAmendedArticle->id }}">{{$allAmendedArticle->section }}
                                             </a>
                                         @endforeach              
                                       </div>
@@ -549,7 +549,7 @@
                                 @foreach($allAmendments as $allAmendment)
                                 <tr>
                                         <td>
-                                            <a href="/post_1992_legislation/amended_acts_table_of_content/{{$allAmendment->post_category}}/{{ $allAmendment->title }}/{{ $allAmendment->id}}"><li style="list-style: none;">{{ $allAmendment->title }}</li></a>
+                                            <a href="/new-laws/amended_acts_table_of_content/{{$allAmendment->post_category}}/{{ $allAmendment->title }}/{{ $allAmendment->id}}"><li style="list-style: none;">{{ $allAmendment->title }}</li></a>
                                         </td> 
                                         <td>{{ $allAmendment->year }}</td>
                                     </tr>

@@ -12,7 +12,7 @@
         @foreach($regulationsActs as $regulationsAct)
         <tr>
             <td>
-                <a href="/post_1992_legislation/regulations_table_of_content/{{$regulationsAct->act_category}}/{{$regulationsAct->title}}/{{ $regulationsAct->id }}" class="regulated_link"><li style="list-style: none;">{{ $regulationsAct->title }}</li></a>
+                <a href="/new-laws/regulations_table_of_content/{{$regulationsAct->act_category}}/{{$regulationsAct->title}}/{{ $regulationsAct->id }}" class="regulated_link"><li style="list-style: none;">{{ $regulationsAct->title }}</li></a>
             </td> 
             <td>{{ $regulationsAct->year }}</td>    
         </tr>

@@ -46,7 +46,7 @@
         --}}    
 
         {{-- <label style="color: black;">View Options</label>
-        <a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_1" href="/post_1992_legislation/amended_regulation_acts/expanded_view/{{$amendedRegulationAct['act_category']}}/{{$amendedRegulationAct['title']}}/{{$amendedRegulationAct['id']}}"><li style="list-style:none;">Expanded View</li></a>
+        <a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_1" href="/new-laws/amended_regulation_acts/expanded_view/{{$amendedRegulationAct['act_category']}}/{{$amendedRegulationAct['title']}}/{{$amendedRegulationAct['id']}}"><li style="list-style:none;">Expanded View</li></a>
         <a href=""><li style="list-style:none;">Plain View</li></a> --}}
 
       <div class="dropdown">
@@ -55,7 +55,7 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-            <li><a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_1" href="/post_1992_legislation/amended_regulation_acts/expanded_view/{{$amendedRegulationAct['act_category']}}/{{$amendedRegulationAct['title']}}/{{$amendedRegulationAct['id']}}"><span class="small"><center>Expanded View</center></span></a></li>
+            <li><a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_1" href="/new-laws/amended_regulation_acts/expanded_view/{{$amendedRegulationAct['act_category']}}/{{$amendedRegulationAct['title']}}/{{$amendedRegulationAct['id']}}"><span class="small"><center>Expanded View</center></span></a></li>
             <li><a href="" target="_blank"><span class="small"><center>Plain View</center></span></a></li>
           </ul>
       </div>

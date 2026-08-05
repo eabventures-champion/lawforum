@@ -16,7 +16,7 @@
               </button>
               <ul class="dropdown-menu table-wrapper-scroll-view" style="width: 520px;">
                   @foreach($allAmendedRegulationArticles as $allAmendedRegulationArticle)
-                  <li><a class="view_all_section_link" href="/post_1992_legislation/amended_regulation_acts/content/{{ $allAmendedRegulationArticle->id }}">{{$allAmendedRegulationArticle->section }}</a></li>
+                  <li><a class="view_all_section_link" href="/new-laws/amended_regulation_acts/content/{{ $allAmendedRegulationArticle->id }}">{{$allAmendedRegulationArticle->section }}</a></li>
                   @endforeach    
               </ul>
         </div>
@@ -51,9 +51,9 @@
         <hr>
         <br>
         <center>
-            {{-- <a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/post_1992_legislation/amended_regulation_acts/expanded_view/{{$amendedRegulationAct['act_category']}}/{{$amendedRegulationAct['title']}}/{{$amendedRegulationAct['id']}}"><li style="list-style:none;">Expanded View</li>
+            {{-- <a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/new-laws/amended_regulation_acts/expanded_view/{{$amendedRegulationAct['act_category']}}/{{$amendedRegulationAct['title']}}/{{$amendedRegulationAct['id']}}"><li style="list-style:none;">Expanded View</li>
             </a> --}}
-            <button class="btn btn-sm btn-default expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/post_1992_legislation/amended_regulation_acts/expanded_view/{{$amendedRegulationAct['act_category']}}/{{$amendedRegulationAct['title']}}/{{$amendedRegulationAct['id']}}"><li style="list-style:none;">Expanded View</li>
+            <button class="btn btn-sm btn-default expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/new-laws/amended_regulation_acts/expanded_view/{{$amendedRegulationAct['act_category']}}/{{$amendedRegulationAct['title']}}/{{$amendedRegulationAct['id']}}"><li style="list-style:none;">Expanded View</li>
             </button>
             {{-- @include('extenders.case_law_main_search') --}}
             <!-- <a><li>Plain View</li></a> -->

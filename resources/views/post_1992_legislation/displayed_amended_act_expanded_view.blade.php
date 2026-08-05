@@ -39,13 +39,13 @@
                     {{-- Download PDF and Others --}}
                     @else
                       {{-- DOWNLOAD PDF --}}
-                      <a class="amended_act_download_link" href="javascript:;" rel="/post_1992_legislation/pdf_expanded_amended_act/content/{{$amendedAct['post_category']}}/{{$amendedAct['title']}}/{{ $amendedAct['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
+                      <a class="amended_act_download_link" href="javascript:;" rel="/new-laws/pdf_expanded_amended_act/content/{{$amendedAct['post_category']}}/{{$amendedAct['title']}}/{{ $amendedAct['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
                       {{-- SAVE USER DOWNLOAD --}}
                       <a class="amended_act_id hidden" href="javascript:;" rel="/acts-downloads/{{$amendedAct['title']}}/{{ Auth::user()->name }}/{{ Auth::user()->id }}/{{$amendedAct['post_category']}}/{{$amendedAct['id']}}/{{ Auth::user()->id }}{{$amendedAct['title']}}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>
                       {{-- PLAIN VIEW --}}
-                      <a href="/post_1992_legislation/plain_expanded_amended_act/content/{{$amendedAct['post_category']}}/{{$amendedAct['title']}}/{{ $amendedAct['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp;
+                      <a href="/new-laws/plain_expanded_amended_act/content/{{$amendedAct['post_category']}}/{{$amendedAct['title']}}/{{ $amendedAct['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp;
                       {{-- PRINT --}}
-                      <a href="/post_1992_legislation/print_expanded_amended_act/content/{{$amendedAct['post_category']}}/{{$amendedAct['title']}}/{{ $amendedAct['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print Preview</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <a href="/new-laws/print_expanded_amended_act/content/{{$amendedAct['post_category']}}/{{$amendedAct['title']}}/{{ $amendedAct['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print Preview</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               @endif
 
             @else

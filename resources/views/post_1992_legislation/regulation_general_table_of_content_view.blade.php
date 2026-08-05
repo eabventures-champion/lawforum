@@ -101,10 +101,10 @@
                 <div class="col-md-7">
                    <h5><b>{{ $allPost1992Act['title'] }}</b></h5>
                    <span>View All
-                        <a class="all_amendments_link" id="all_amendments_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><b> Amendents</b></a>
+                        <a class="all_amendments_link" id="all_amendments_link_toggle" href="/new-laws/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><b> Amendents</b></a>
                     </span>
                    <hr>
-                   <a class="preamble_link" id="preamble_link_toggle" href="/post_1992_legislation/preamble/{{ $allPost1992Act['id'] }}">
+                   <a class="preamble_link" id="preamble_link_toggle" href="/new-laws/preamble/{{ $allPost1992Act['id'] }}">
                       <p>Introductory Text</p>
                    </a>
                    

@@ -12,14 +12,14 @@
 		<div class="menu_options pull-right" style="display: none;">
 			@if (Route::has('login'))
 				@auth
-					<a href="/post_1992_legislation/pdf/amended_preamble_content/{{$amendedPreamble['title']}}/{{ $amendedPreamble['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
-					{{-- <a href="/post_1992_legislation/plain_amended/preamble_content/{{ $amendedPreamble['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp; --}}
-					<a href="/post_1992_legislation/print_amended/preamble_content/{{ $amendedPreamble['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="/new-laws/pdf/amended_preamble_content/{{$amendedPreamble['title']}}/{{ $amendedPreamble['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
+					{{-- <a href="/new-laws/plain_amended/preamble_content/{{ $amendedPreamble['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp; --}}
+					<a href="/new-laws/print_amended/preamble_content/{{ $amendedPreamble['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		
 					@else
 
 					<a href="" data-toggle="modal" data-target="#myModalap"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
-					{{-- <a href="/post_1992_legislation/plain_amended/preamble_content/{{ $amendedPreamble['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp; --}}
+					{{-- <a href="/new-laws/plain_amended/preamble_content/{{ $amendedPreamble['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp; --}}
 					<a href="" data-toggle="modal" data-target="#myModalap"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					
 					<div class="modal fade" id="myModalap" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

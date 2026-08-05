@@ -123,7 +123,7 @@
         <div class="search-well">
             <h5 style="color:blue;"><b>{!! $afrc_decree_law->title !!}</b></h4>
             <b>{!! $afrc_decree_law->section !!}</b>
-          {{-- <a href="/post_1992_legislation/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
+          {{-- <a href="/new-laws/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
           <br><br>
         {!! $afrc_decree_law->content !!}
         </div>

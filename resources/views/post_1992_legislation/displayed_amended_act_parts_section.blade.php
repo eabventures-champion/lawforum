@@ -30,7 +30,7 @@ if ($oldpart !== $amendedContent->part){
             <a data-scroll-to="body"
                data-scroll-focus="body"
                data-scroll-speed="400"
-               data-scroll-offset="-60" class="sinlge_amended_act_content_link" sid="{{$amendedContent->id}}" href="/post_1992_legislation/amended_act_content/{{ $amendedContent->id }}">
+               data-scroll-offset="-60" class="sinlge_amended_act_content_link" sid="{{$amendedContent->id}}" href="/new-laws/amended_act_content/{{ $amendedContent->id }}">
                <span style="color:black;">{{ $amendedContent->section }}</span>
             </a> 
             </li>

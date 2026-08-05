@@ -1284,19 +1284,19 @@ $(document).ready(function(){
         console.log('previous', aay[previous], 'next',aay[next]); //showing the next and previous ids
         psid = aay[previous]; nsid = aay[next];
         
-        var pLink = '/post_1992_legislation/content/'+aay[previous];
-        var nLink = '/post_1992_legislation/content/'+aay[next];
+        var pLink = '/new-laws/content/'+aay[previous];
+        var nLink = '/new-laws/content/'+aay[next];
 
         $('.previous_content_act').attr('href', pLink);
         $('.next_content_act').attr('href', nLink);
 
         // for the plain view
 
-        // var p_Link = '/post_1992_legislation/plain-content/'+aay[previous];
-        // var n_Link = '/post_1992_legislation/plain-content/'+aay[next];
+        // var p_Link = '/new-laws/plain-content/'+aay[previous];
+        // var n_Link = '/new-laws/plain-content/'+aay[next];
 
-        // var p_Link = '/post_1992_legislation/plain-content/'+aay[previous];
-        // var n_Link = '/post_1992_legislation/plain-content/'+aay[next];
+        // var p_Link = '/new-laws/plain-content/'+aay[previous];
+        // var n_Link = '/new-laws/plain-content/'+aay[next];
         
         // $('.plain_previous_content_act').attr('href', p_Link);
         // $('.plain_next_content_act').attr('href', n_Link);
@@ -1326,8 +1326,8 @@ $(document).ready(function(){
         console.log('previous', aay[previous], 'next',aay[next]); //showing the next and previous ids
         psid = aay[previous]; nsid = aay[next];
         
-        var pLink = '/post-1992-legislation/constitutional-acts/content/'+aay[previous];
-        var nLink = '/post-1992-legislation/constitutional-acts/content/'+aay[next];
+        var pLink = '/new-laws/constitutional-acts/content/'+aay[previous];
+        var nLink = '/new-laws/constitutional-acts/content/'+aay[next];
         
         $('.previous_constitutional_acts').attr('href', pLink);
         $('.next_constitutional_acts').attr('href', nLink);
@@ -1357,8 +1357,8 @@ $(document).ready(function(){
         console.log('previous', aay[previous], 'next',aay[next]); //showing the next and previous ids
         psid = aay[previous]; nsid = aay[next];
         
-        var pLink = '/post-1992-legislation/executive-acts/content/'+aay[previous];
-        var nLink = '/post-1992-legislation/executive-acts/content/'+aay[next];
+        var pLink = '/new-laws/executive-acts/content/'+aay[previous];
+        var nLink = '/new-laws/executive-acts/content/'+aay[next];
         
         $('.previous_executive_acts').attr('href', pLink);
         $('.next_executive_acts').attr('href', nLink);
@@ -1490,8 +1490,8 @@ $(document).ready(function(){
         console.log('previous', aay[previous], 'next',aay[next]); //showing the next and previous ids
         psid = aay[previous]; nsid = aay[next];
         
-        var pLink = '/post_1992_legislation/regulation_act/content/'+aay[previous];
-        var nLink = '/post_1992_legislation/regulation_act/content/'+aay[next];
+        var pLink = '/new-laws/regulation_act/content/'+aay[previous];
+        var nLink = '/new-laws/regulation_act/content/'+aay[next];
         
         $('.previous_content_regulation').attr('href', pLink);
         $('.next_content_regulation').attr('href', nLink);
@@ -1521,8 +1521,8 @@ $(document).ready(function(){
         console.log('previous', aay[previous], 'next',aay[next]); //showing the next and previous ids
         psid = aay[previous]; nsid = aay[next];
         
-        var pLink = '/post_1992_legislation/amended_acts/content/'+aay[previous];
-        var nLink = '/post_1992_legislation/amended_acts/content/'+aay[next];
+        var pLink = '/new-laws/amended_acts/content/'+aay[previous];
+        var nLink = '/new-laws/amended_acts/content/'+aay[next];
         
         $('.previous_content_amendments').attr('href', pLink);
         $('.next_content_amendments').attr('href', nLink);
@@ -1551,8 +1551,8 @@ $(document).ready(function(){
         console.log('previous', aay[previous], 'next',aay[next]); //showing the next and previous ids
         psid = aay[previous]; nsid = aay[next];
         
-        var pLink = '/post_1992_legislation/amended_act_content/'+aay[previous];
-        var nLink = '/post_1992_legislation/amended_act_content/'+aay[next];
+        var pLink = '/new-laws/amended_act_content/'+aay[previous];
+        var nLink = '/new-laws/amended_act_content/'+aay[next];
         
         $('.previous_amended_under_act').attr('href', pLink);
         $('.next_amended_under_act').attr('href', nLink);
@@ -1582,8 +1582,8 @@ $(document).ready(function(){
         console.log('previous', aay[previous], 'next',aay[next]); //showing the next and previous ids
         psid = aay[previous]; nsid = aay[next];
         
-        var pLink = '/post_1992_legislation/amended_act_regulation_content/'+aay[previous];
-        var nLink = '/post_1992_legislation/amended_act_regulation_content/'+aay[next];
+        var pLink = '/new-laws/amended_act_regulation_content/'+aay[previous];
+        var nLink = '/new-laws/amended_act_regulation_content/'+aay[next];
         
         $('.previous_amendment_under_regulation').attr('href', pLink);
         $('.next_amendment_under_regulation').attr('href', nLink);
@@ -1613,8 +1613,8 @@ $(document).ready(function(){
         console.log('previous', aay[previous], 'next',aay[next]); //showing the next and previous ids
         psid = aay[previous]; nsid = aay[next];
         
-        var pLink = '/post_1992_legislation/regulations_content/'+aay[previous];
-        var nLink = '/post_1992_legislation/regulations_content/'+aay[next];
+        var pLink = '/new-laws/regulations_content/'+aay[previous];
+        var nLink = '/new-laws/regulations_content/'+aay[next];
         
         $('.previous_regulation_under_act').attr('href', pLink);
         $('.next_regulation_under_act').attr('href', nLink);
@@ -2360,7 +2360,7 @@ $(document).ready(function(){
         if(category === ""){
             category = 0;
         }        
-        window.location.href = '/post_1992_legislation/filter/'+year+'/'+category;
+        window.location.href = '/new-laws/filter/'+year+'/'+category;
     });
 
     /* For Acts of Parliament */
@@ -2374,7 +2374,7 @@ $(document).ready(function(){
         if(category === ""){
             category = 0;
         }        
-        window.location.href = '/post_1992_legislation/1/filter/'+year+'/'+category;
+        window.location.href = '/new-laws/1/filter/'+year+'/'+category;
     });
 
     /* For Legislative Instruments */
@@ -2388,7 +2388,7 @@ $(document).ready(function(){
         if(category === ""){
             category = 0;
         }        
-        window.location.href = '/post_1992_legislation/2/filter/'+year+'/'+category;
+        window.location.href = '/new-laws/2/filter/'+year+'/'+category;
     });
 
     /* For Amendments */
@@ -2402,7 +2402,7 @@ $(document).ready(function(){
         if(category === ""){
             category = 0;
         }        
-        window.location.href = '/post_1992_legislation/3/filter/'+year+'/'+category;
+        window.location.href = '/new-laws/3/filter/'+year+'/'+category;
     });
 
     // FILTERING PRE-1992 LEGISLATION----------------------------------------------------
@@ -2708,7 +2708,7 @@ $(document).ready(function(){
         if(category === ""){
              category = 0;
         }
-        window.location.href = '/post_1992_legislation/acts_of_parliament/'+id+'/'+year+'/'+category;
+        window.location.href = '/new-laws/acts_of_parliament/'+id+'/'+year+'/'+category;
     });
     */
     //------------------------------------------------------------------------------------------------------
@@ -2723,7 +2723,7 @@ $(document).ready(function(){
         if(category === ""){
              category = 0;
         }
-       window.location.href = '/post_1992_legislation/amendments/'+year+'/'+category;
+       window.location.href = '/new-laws/amendments/'+year+'/'+category;
     }); 
 });
 

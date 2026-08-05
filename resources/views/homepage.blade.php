@@ -2065,7 +2065,7 @@
                 <span class="card-arrow">Explore <i class="fa-solid fa-arrow-right"></i></span>
             </a>
 
-            <a href="/post-1992-legislation" class="category-card card-new-laws reveal">
+            <a href="/new-laws" class="category-card card-new-laws reveal">
                 <div class="card-icon-wrap"><i class="fa fa-balance-scale"></i></div>
                 <h3 class="card-title">{{ homepage_setting('slide_1_card3_title', 'Post-1992 Laws') }}</h3>
                 <p class="card-description">{{ homepage_setting('slide_1_card3_desc', 'Access over 200 consolidated laws of Ghana including Acts, Regulations, and Amendments enacted in the Fourth Republic.') }}</p>
@@ -2245,7 +2245,7 @@
                     <h4>Resources</h4>
                     <a href="/constitution/Republic/Ghana/1">Constitution</a>
                     <a href="/existing-laws">Existing Laws</a>
-                    <a href="/post-1992-legislation">Post-1992 Laws</a>
+                    <a href="/new-laws">Post-1992 Laws</a>
                     <a href="/judgement/Ghana">Case Laws</a>
                     <a href="/News/Ghana-News/1">Legal News</a>
                 </div>

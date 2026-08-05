@@ -1,15 +1,15 @@
 @if($order_by_section->act_group == 'Judiciary')
-        <a href="/post-1992-legislation/constitutional-acts-table-of-content/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank"" class="btn btn-sm btn-outline-secondary">
+        <a href="/new-laws/constitutional-acts-table-of-content/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank"" class="btn btn-sm btn-outline-secondary">
             <i class="fa fa-eye" aria-hidden="true"></i>
         </a>
 
         @elseif($order_by_section->act_group == 'Acts of Parliament')
-            <a href="/post-1992-legislation/table-of-content/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank"" class="btn btn-sm btn-outline-secondary">
+            <a href="/new-laws/table-of-content/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank"" class="btn btn-sm btn-outline-secondary">
                 <i class="fa fa-eye" aria-hidden="true"></i>
             </a>
 
         @elseif($order_by_section->act_group == 'Legislative Instruments')
-            <a href="/post_1992_legislation/regulation_acts_table_of_content/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank"" class="btn btn-sm btn-outline-secondary">
+            <a href="/new-laws/regulation_acts_table_of_content/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank"" class="btn btn-sm btn-outline-secondary">
                 <i class="fa fa-eye" aria-hidden="true"></i>
             </a>
 
@@ -54,7 +54,7 @@
             </a>
 
         @else
-            <a href="/post-1992-legislation/executive-acts-table-of-content/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank"" class="btn btn-sm btn-outline-secondary">
+            <a href="/new-laws/executive-acts-table-of-content/{{$order_by_section->act_group}}/{{$order_by_section->act_title}}/{{$order_by_section->act_id}}" target="_blank"" class="btn btn-sm btn-outline-secondary">
                 <i class="fa fa-eye" aria-hidden="true"></i>
             </a>
 @endif

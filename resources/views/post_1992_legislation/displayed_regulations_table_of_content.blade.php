@@ -6,12 +6,12 @@
         <div class="container"><h5><b>{{ $regulationsAct['title'] }}</b></h5></div>
         
         <div class="container" style="display: none">
-            <a href="/post_1992_legislation/display_regulations_sections/{{$regulationsAct['title']}}" class="single_container_details_link_regulation"><p>Click to View details</p>
+            <a href="/new-laws/display_regulations_sections/{{$regulationsAct['title']}}" class="single_container_details_link_regulation"><p>Click to View details</p>
             </a>
         </div>    
           
         <div class="container">
-            <a href="/post_1992_legislation/regulations_preamble/{{ $regulationsAct['id'] }}" class="single_preamble_regulation_link"><p>Introductory Text</p>
+            <a href="/new-laws/regulations_preamble/{{ $regulationsAct['id'] }}" class="single_preamble_regulation_link"><p>Introductory Text</p>
             </a>
         </div>
 

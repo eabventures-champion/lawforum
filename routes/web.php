@@ -232,234 +232,154 @@ foreach (['existing-laws', 'existing-law', 'existing_laws', 'pre_1992_legislatio
 //----------------------------------------------------------------------------END OF PRE-1992-LEGISLATION------------------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------CONSTITUTIONAL INSTRUMENTS-------------------------------------------------------------------------------------
-Route::get('/post-1992-legislation/Constitutional-Intruments','ConstitutionalActController@only_constitutional_acts');
-    Route::get('/post-1992-legislation/constitutional-acts-table-of-content/{group}/{title}/{id}','ConstitutionalActController@table_of_content');//display acts table of content
+//-----------------------------------------------------------------------------NEW LAWS (POST 1992)-------------------------------------------------------------------------------------
+Route::get('/new-laws','Post1992Controller@index');//display all acts
+Route::get('/post-1992-legislation', function() { return redirect('/new-laws'); });
+Route::get('/post_1992_legislation', function() { return redirect('/new-laws'); });
 
-    // contents
-    Route::get('/post-1992-legislation/constitutional-acts/preamble/{id}','ConstitutionalActController@preamble_content');//display act preamble
-    Route::get('/post-1992-legislation/constitutional-acts/content/{id}','ConstitutionalActController@section_content');//display act content
-    Route::get('/post-1992-legislation/constitutional-acts/expanded-view/{group}/{title}/{id}','ConstitutionalActController@expanded_view');//display in expanded view
+foreach (['new-laws', 'new_laws', 'new-law', 'post-1992-legislation', 'post_1992_legislation'] as $prefix) {
+    // CONSTITUTIONAL INSTRUMENTS
+    Route::get('/'.$prefix.'/Constitutional-Intruments','ConstitutionalActController@only_constitutional_acts');
+    Route::get('/'.$prefix.'/constitutional-acts-table-of-content/{group}/{title}/{id}','ConstitutionalActController@table_of_content');
+    Route::get('/'.$prefix.'/constitutional-acts/preamble/{id}','ConstitutionalActController@preamble_content');
+    Route::get('/'.$prefix.'/constitutional-acts/content/{id}','ConstitutionalActController@section_content');
+    Route::get('/'.$prefix.'/constitutional-acts/expanded-view/{group}/{title}/{id}','ConstitutionalActController@expanded_view');
+    Route::get('/'.$prefix.'/constitutional-acts/plain-view-full-act-content/{group}/{title}/{id}','ConstitutionalActController@plain_view');
+    Route::get('/'.$prefix.'/constitutional-acts/print_preamble_content/{id}','ConstitutionalActController@print_preamble_content');
+    Route::get('/'.$prefix.'/constitutional-acts/print_section_content/{id}','ConstitutionalActController@print_content');
+    Route::get('/'.$prefix.'/constitutional-acts/print_view/{group}/{title}/{id}','ConstitutionalActController@print_full_act');
+    Route::get('/'.$prefix.'/constitutional-acts/pdf_preamble_content/{title}/{id}','ConstitutionalActController@pdf_preamble_content');
+    Route::get('/'.$prefix.'/constitutional-acts/pdf-section-content/{title}/{id}','ConstitutionalActController@pdf_section_content');
+    Route::get('/'.$prefix.'/constitutional-acts/pdf-full-act-content/{group}/{title}/{id}','ConstitutionalActController@pdf_full_act_content');
 
-    // plain view
-    Route::get('/post_1992_legislation/constitutional-acts/plain-view-full-act-content/{group}/{title}/{id}','ConstitutionalActController@plain_view');//display in plain view
+    // EXECUTIVE INSTRUMENTS
+    Route::get('/'.$prefix.'/Executive-Intruments','ExecutiveActController@only_executive_acts');
+    Route::get('/'.$prefix.'/executive-acts-table-of-content/{group}/{title}/{id}','ExecutiveActController@table_of_content');
+    Route::get('/'.$prefix.'/executive-acts/preamble/{id}','ExecutiveActController@preamble_content');
+    Route::get('/'.$prefix.'/executive-acts/content/{id}','ExecutiveActController@section_content');
+    Route::get('/'.$prefix.'/executive-acts/expanded-view/{group}/{title}/{id}','ExecutiveActController@expanded_view');
+    Route::get('/'.$prefix.'/executive-acts/plain-view-full-act-content/{group}/{title}/{id}','ExecutiveActController@plain_view');
+    Route::get('/'.$prefix.'/executive-acts/print_preamble_content/{id}','ExecutiveActController@print_preamble_content');
+    Route::get('/'.$prefix.'/executive-acts/print_section_content/{id}','ExecutiveActController@print_content');
+    Route::get('/'.$prefix.'/executive-acts/print_view/{group}/{title}/{id}','ExecutiveActController@print_full_act');
+    Route::get('/'.$prefix.'/executive-acts/pdf_preamble_content/{title}/{id}','ExecutiveActController@pdf_preamble_content');
+    Route::get('/'.$prefix.'/executive-acts/pdf-section-content/{title}/{id}','ExecutiveActController@pdf_section_content');
+    Route::get('/'.$prefix.'/executive-acts/pdf-full-act-content/{group}/{title}/{id}','ExecutiveActController@pdf_full_act_content');
 
-    // print
-    Route::get('/post_1992_legislation/constitutional-acts/print_preamble_content/{id}','ConstitutionalActController@print_preamble_content');//display plain act content
-    Route::get('/post_1992_legislation/constitutional-acts/print_section_content/{id}','ConstitutionalActController@print_content');//print content
-    Route::get('/post_1992_legislation/constitutional-acts/print_view/{group}/{title}/{id}','ConstitutionalActController@print_full_act');//display in print view
+    // POST 1992 CORE
+    Route::get('/'.$prefix.'/ajax-data','Post1992Controller@post1992_ajax_data');
+    Route::get('/'.$prefix.'/filter/{year}/{category}','Post1992Controller@all_post_1992_legislation_filter');
+    Route::get('/'.$prefix.'/preamble/{id}','Post1992Controller@post_1992_legislation_preamble');
+    Route::get('/'.$prefix.'/content/{id}','Post1992Controller@post_1992_legislation_content');
+    Route::get('/'.$prefix.'/plain-content/{id}','Post1992Controller@post_1992_legislation_p_pre_next_content');
+    Route::get('/'.$prefix.'/plain-content/{title}/{content_id}','Post1992Controller@post_1992_legislation_plain_content');
+    Route::get('/'.$prefix.'/plain_preamble_content/{id}','Post1992Controller@post_1992_legislation_plain_preamble_content');
+    Route::get('/'.$prefix.'/1/{group}/{title}/expanded-view/{id}','Post1992Controller@expanded_view');
+    Route::get('/'.$prefix.'/pdf-content/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_content');
+    Route::get('/'.$prefix.'/pdf_preamble_content/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_preamble_content');
+    Route::get('/'.$prefix.'/print_section_content/{id}','Post1992Controller@post_1992_legislation_print_content');
+    Route::get('/'.$prefix.'/print_preamble_content/{id}','Post1992Controller@post_1992_legislation_print_preamble_content');
+    Route::get('/'.$prefix.'/1/{group}/{title}/plain_view/{id}','Post1992Controller@plain_view');
+    Route::get('/'.$prefix.'/1/{group}/{title}/pdf-view/{id}','Post1992Controller@pdf_view');
+    Route::get('/'.$prefix.'/1/{group}/{title}/print_view/{id}','Post1992Controller@print_view');
+    Route::get('/'.$prefix.'/table-of-content/{act_group}/{title}/{id}','Post1992Controller@post_1992_legislation_table_of_content');
 
-    // pdf
-    Route::get('/post_1992_legislation/constitutional-acts/pdf_preamble_content/{title}/{id}','ConstitutionalActController@pdf_preamble_content');//display plain act content
-    Route::get('/post-1992-legislation/constitutional-acts/pdf-section-content/{title}/{id}','ConstitutionalActController@pdf_section_content');//display plain act content
-    Route::get('/post-1992-legislation/constitutional-acts/pdf-full-act-content/{group}/{title}/{id}','ConstitutionalActController@pdf_full_act_content');//display in plain view
+    // ACTS OF PARLIAMENT
+    Route::get('/'.$prefix.'/1/{group}','Post1992Controller@acts_of_parliament_tab');
+    Route::get('/'.$prefix.'/1/filter/{year}/{category}','Post1992Controller@acts_of_parliament_filter');
 
-//-----------------------------------------------------------------------------END OF CONSTITUTIONAL INSRUMENTS--------------------------------------------------------------------------
+    // AMENDMENTS
+    Route::get('/'.$prefix.'/amended_acts_table_of_content/{category}/{title}/{id}','Post1992Controller@amended_acts_display_table_of_content');
+    Route::get('/'.$prefix.'/amended_acts/preamble/{id}','Post1992Controller@amended_acts_preamble');
+    Route::get('/'.$prefix.'/amended_acts/content/{id}','Post1992Controller@amended_acts_content');
+    Route::get('/'.$prefix.'/amended_acts/expanded_view/{category}/{title}/{id}','Post1992Controller@amended_act_expanded_view');
+    Route::get('/'.$prefix.'/only-amendments','Post1992Controller@only_amendments_acts_tab');
 
+    Route::get('/'.$prefix.'/print_regulation_amends_act/preamble_content/{id}','Post1992Controller@post_1992_legislation_print_regulation_amends_act_preamble_content');
+    Route::get('/'.$prefix.'/print_regulation_amends_act/content_section/{id}','Post1992Controller@post_1992_legislation_print_regulation_amends_act_content_section');
+    Route::get('/'.$prefix.'/print_expanded_regulation_amended_act/content/{category}/{title}/{id}','Post1992Controller@post_1992_legislation_print_expanded_regulation_amended_act_content');
 
-//-----------------------------------------------------------------------------EXECUTIVE INSTRUMENTS-------------------------------------------------------------------------------------
-Route::get('/post-1992-legislation/Executive-Intruments','ExecutiveActController@only_executive_acts');
-    Route::get('/post-1992-legislation/executive-acts-table-of-content/{group}/{title}/{id}','ExecutiveActController@table_of_content');//display acts table of content
+    Route::get('/'.$prefix.'/plain_regulation_amends_act/preamble_content/{id}','Post1992Controller@post_1992_legislation_plain_regulation_amends_act_preamble_content');
+    Route::get('/'.$prefix.'/plain_regulation_amends_act/content_section/{id}','Post1992Controller@post_1992_legislation_plain_regulation_amends_act_content_section');
+    Route::get('/'.$prefix.'/plain_expanded_regulation_amended_act/content/{category}/{title}/{id}','Post1992Controller@post_1992_legislation_plain_expanded_regulation_amended_act_content');
 
-    // contents
-    Route::get('/post-1992-legislation/executive-acts/preamble/{id}','ExecutiveActController@preamble_content');//display act preamble
-    Route::get('/post-1992-legislation/executive-acts/content/{id}','ExecutiveActController@section_content');//display act content
-    Route::get('/post-1992-legislation/executive-acts/expanded-view/{group}/{title}/{id}','ExecutiveActController@expanded_view');//display in expanded view
+    Route::get('/'.$prefix.'/pdf/regulation_amends_act/preamble_content/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_regulation_amends_act_preamble_content');
+    Route::get('/'.$prefix.'/pdf/regulation_amends_act/content_section/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_regulation_amends_act_content_section');
+    Route::get('/'.$prefix.'/pdf_expanded_regulation_amended_act/content/{category}/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_expanded_regulation_amended_act_content');
 
-    //plain view
-    Route::get('/post_1992_legislation/executive-acts/plain-view-full-act-content/{group}/{title}/{id}','ExecutiveActController@plain_view');//display in plain view
+    Route::get('/'.$prefix.'/print_amended_act/preamble_content/{id}','Post1992Controller@post_1992_legislation_print_amended_act_preamble_content');
+    Route::get('/'.$prefix.'/print_amended_act/content_section/{id}','Post1992Controller@post_1992_legislation_print_amended_act_content_section');
+    Route::get('/'.$prefix.'/print_expanded_amended_act/content/{category}/{title}/{id}','Post1992Controller@post_1992_legislation_print_expanded_amended_act_content');
 
-    // print
-    Route::get('/post_1992_legislation/executive-acts/print_preamble_content/{id}','ExecutiveActController@print_preamble_content');//display plain act content
-    Route::get('/post_1992_legislation/executive-acts/print_section_content/{id}','ExecutiveActController@print_content');//print content
-    Route::get('/post_1992_legislation/executive-acts/print_view/{group}/{title}/{id}','ExecutiveActController@print_full_act');//display in print view
+    Route::get('/'.$prefix.'/plain_amended_act/preamble_content/{id}','Post1992Controller@post_1992_legislation_plain_amended_act_preamble_content');
+    Route::get('/'.$prefix.'/plain_amended_act/content_section/{id}','Post1992Controller@post_1992_legislation_plain_amended_act_content_section');
+    Route::get('/'.$prefix.'/plain_expanded_amended_act/content/{category}/{title}/{id}','Post1992Controller@post_1992_legislation_plain_expanded_amended_act_content');
 
-    // pdf
-    Route::get('/post_1992_legislation/executive-acts/pdf_preamble_content/{title}/{id}','ExecutiveActController@pdf_preamble_content');//display plain act content
-    Route::get('/post-1992-legislation/executive-acts/pdf-section-content/{title}/{id}','ExecutiveActController@pdf_section_content');//display plain act content
-    Route::get('/post-1992-legislation/executive-acts/pdf-full-act-content/{group}/{title}/{id}','ExecutiveActController@pdf_full_act_content');//display in plain view
+    Route::get('/'.$prefix.'/pdf/amended_act/preamble_content/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_amended_act_preamble_content');
+    Route::get('/'.$prefix.'/pdf/amended_act/content_section/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_amended_act_content_section');
+    Route::get('/'.$prefix.'/pdf_expanded_amended_act/content/{category}/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_expanded_amended_act_content');
 
-//---------------------------------------------------------------------------END OF EXECUTIVE INSRUMENTS---------------------------------------------------------------------------------
+    // REGULATIONS
+    Route::get('/'.$prefix.'/regulation_acts_table_of_content/{group}/{title}/{id}','Post1992Controller@regulation_acts_display_table_of_content');
+    Route::get('/'.$prefix.'/regulation/preamble/{id}','Post1992Controller@regulation_acts_preamble');
+    Route::get('/'.$prefix.'/regulation_act/content/{id}','Post1992Controller@regulation_acts_content');
+    Route::get('/'.$prefix.'/regulation/expanded_view/{category}/{title}/{id}','Post1992Controller@regulation_act_expanded_view');
+    Route::get('/'.$prefix.'/only-regulations','Post1992Controller@only_regulations_acts_tab');
 
-//-----------------------------------------------------------------------------POST_1992_LEGISLATION-------------------------------------------------------------------------------------
-Route::get('/post-1992-legislation','Post1992Controller@index');//display all acts
-    Route::get('/post_1992_legislation/ajax-data','Post1992Controller@post1992_ajax_data'); //AJAX JSON data for tab switching
-    Route::get('/post_1992_legislation/filter/{year}/{category}','Post1992Controller@all_post_1992_legislation_filter'); //all post-1992 filtering
-    Route::get('/post_1992_legislation/preamble/{id}','Post1992Controller@post_1992_legislation_preamble');//display act preamble
+    Route::get('/'.$prefix.'/print/regulation/preamble/{id}','Post1992Controller@post_1992_legislation_print_regulation_preamble');
+    Route::get('/'.$prefix.'/print/regulation/content_section/{id}','Post1992Controller@post_1992_legislation_print_regulation_content_section');
+    Route::get('/'.$prefix.'/print/regulation/expanded/{category}/{title}/{id}','Post1992Controller@post_1992_legislation_print_regulation_expanded');
 
-    Route::get('/post_1992_legislation/content/{id}','Post1992Controller@post_1992_legislation_content');//display act content
-    Route::get('/post_1992_legislation/plain-content/{id}','Post1992Controller@post_1992_legislation_p_pre_next_content');//display act content
+    Route::get('/'.$prefix.'/plain/regulation/preamble/{id}','Post1992Controller@post_1992_legislation_plain_regulation_preamble');
+    Route::get('/'.$prefix.'/plain/regulation/content_section/{id}','Post1992Controller@post_1992_legislation_plain_regulation_content_section');
+    Route::get('/'.$prefix.'/plain/regulation/expanded/{category}/{title}/{id}','Post1992Controller@post_1992_legislation_plain_regulation_expanded');
 
-    Route::get('/post_1992_legislation/plain-content/{title}/{content_id}','Post1992Controller@post_1992_legislation_plain_content');//display plain act content
+    Route::get('/'.$prefix.'/pdf/regulation/preamble/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_regulation_preamble');
+    Route::get('/'.$prefix.'/pdf/regulation/content_section/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_regulation_content_section');
+    Route::get('/'.$prefix.'/pdf/regulation/expanded/{group}/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_regulation_expanded');
 
-    // Route::get('/post_1992_legislation/content/{act_id}/{title}/{id}','Post1992Controller@post_1992_legislation_content');//display act content
-    // Route::get('/post_1992_legislation/{title}/{id}/plain_content/{content_id}','Post1992Controller@post_1992_legislation_plain_content');//display plain act content
-    Route::get('/post_1992_legislation/plain_preamble_content/{id}','Post1992Controller@post_1992_legislation_plain_preamble_content');//display plain act content
-    Route::get('/post_1992_legislation/1/{group}/{title}/expanded-view/{id}','Post1992Controller@expanded_view');//display in expanded view
+    // AMENDMENTS UNDER AN ACT
+    Route::get('/'.$prefix.'/{group}/all_amended_acts/{title}/{id}','Post1992Controller@all_amendedments_for_an_acts');
+    Route::get('/'.$prefix.'/amended_act_table_of_content/{category}/{title}/{id}','Post1992Controller@amended_act_table_of_content');
+    Route::get('/'.$prefix.'/amended_preamble/{id}','Post1992Controller@amended_act_preamble');
+    Route::get('/'.$prefix.'/amended_act_content/{id}','Post1992Controller@amended_act_content');
+    Route::get('/'.$prefix.'/display_amended_sections/{title}','Post1992Controller@display_amended_sections_container');
+    Route::get('/'.$prefix.'/print_amended/preamble_content/{id}','Post1992Controller@post_1992_legislation_print_amended_preamble_content');
+    Route::get('/'.$prefix.'/print_amended/content_section/{id}','Post1992Controller@post_1992_legislation_print_amended_content_section');
+    Route::get('/'.$prefix.'/plain_amended/preamble_content/{id}','Post1992Controller@post_1992_legislation_plain_amended_preamble_content');
+    Route::get('/'.$prefix.'/plain_amended/content_section/{id}','Post1992Controller@post_1992_legislation_plain_amended_content_section');
+    Route::get('/'.$prefix.'/pdf/amended_preamble_content/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_amended_preamble_content');
+    Route::get('/'.$prefix.'/pdf/amended_content_section/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_amended_content_section');
 
-    Route::get('/post-1992-legislation/pdf-content/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_content');//display plain act content
-    Route::get('/post_1992_legislation/pdf_preamble_content/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_preamble_content');//display plain act content
-    Route::get('/post_1992_legislation/print_section_content/{id}','Post1992Controller@post_1992_legislation_print_content');//display plain act content
-    Route::get('/post_1992_legislation/print_preamble_content/{id}','Post1992Controller@post_1992_legislation_print_preamble_content');//display plain act content
+    // AMENDMENTS UNDER A REGULATION
+    Route::get('/'.$prefix.'/{category}/all_amended_regulation_acts/{title}/{id}','Post1992Controller@all_amendedments_for_a_regulation');
+    Route::get('/'.$prefix.'/amended_regulation_act_table_of_content/{category}/{title}/{id}','Post1992Controller@amended_regulation_act_table_of_content');
+    Route::get('/'.$prefix.'/amended_regulation_preamble/{id}','Post1992Controller@amended_regulation_act_preamble');
+    Route::get('/'.$prefix.'/amended_act_regulation_content/{id}','Post1992Controller@amended_act_regulation_content');
+    Route::get('/'.$prefix.'/display_amended_regulation_sections/{title}','Post1992Controller@display_amended_regulation_sections_container');
+    Route::get('/'.$prefix.'/print_amended_regulation_act/preamble_content/{id}','Post1992Controller@post_1992_legislation_print_amended_regulation_act_preamble_content');
+    Route::get('/'.$prefix.'/print_amended_regulation_act/content_section/{id}','Post1992Controller@post_1992_legislation_print_amended_regulation_act_content_section');
+    Route::get('/'.$prefix.'/plain_amended_regulation_act/preamble_content/{id}','Post1992Controller@post_1992_legislation_plain_amended_regulation_act_preamble_content');
+    Route::get('/'.$prefix.'/plain_amended_regulation_act/content_section/{id}','Post1992Controller@post_1992_legislation_plain_amended_regulation_act_content_section');
+    Route::get('/'.$prefix.'/pdf/amended_regulation_preamble_content/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_amended_regulation_act_preamble_content');
+    Route::get('/'.$prefix.'/pdf/amended_regulation_act/content_section/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_amended_regulation_act_content_section');
 
-    Route::get('/post_1992_legislation/1/{group}/{title}/plain_view/{id}','Post1992Controller@plain_view');//display in plain view
-    Route::get('/post-1992-legislation/1/{group}/{title}/pdf-view/{id}','Post1992Controller@pdf_view');//display in plain view
-    Route::get('/post_1992_legislation/1/{group}/{title}/print_view/{id}','Post1992Controller@print_view');//display in print view
+    // REGULATIONS UNDER AN ACT
+    Route::get('/'.$prefix.'/{group}/all_regulations_acts/{title}/{id}','Post1992Controller@all_regulations_for_an_act');
+    Route::get('/'.$prefix.'/regulations_table_of_content/{category}/{title}/{id}','Post1992Controller@regulations_table_of_content');
+    Route::get('/'.$prefix.'/regulations_preamble/{id}','Post1992Controller@regulations_preamble');
+    Route::get('/'.$prefix.'/regulations_content/{id}','Post1992Controller@regulations_content');
+    Route::get('/'.$prefix.'/display_regulations_sections/{title}','Post1992Controller@display_regulations_sections_container');
+    Route::get('/'.$prefix.'/print_regulation_act/preamble_content/{id}','Post1992Controller@post_1992_legislation_print_regulation_act_preamble_content');
+    Route::get('/'.$prefix.'/print_regulation_act/content_section/{id}','Post1992Controller@post_1992_legislation_print_regulation_act_content_section');
+    Route::get('/'.$prefix.'/plain_regulation_act/preamble_content/{id}','Post1992Controller@post_1992_legislation_plain_regulation_act_preamble_content');
+    Route::get('/'.$prefix.'/plain_regulation_act/content_section/{id}','Post1992Controller@post_1992_legislation_plain_regulation_act_content_section');
+    Route::get('/'.$prefix.'/pdf_regulation_act/preamble_content/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_regulation_act_preamble_content');
+    Route::get('/'.$prefix.'/pdf_regulation_act/content_section/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_regulation_act_content_section');
 
-    Route::get('/post-1992-legislation/table-of-content/{act_group}/{title}/{id}','Post1992Controller@post_1992_legislation_table_of_content');//display acts table of content
-
-
-    //For All Acts of Parliament only
-    Route::get('/post-1992-legislation/1/{group}','Post1992Controller@acts_of_parliament_tab');
-    Route::get('/post_1992_legislation/1/filter/{year}/{category}','Post1992Controller@acts_of_parliament_filter'); //acts of parliament filtering
-
-
-
-        //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-                                                                            // FOR ACTS AMENDMENTS
-        //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-        //New Amendments for an act: Amendments in all Post-Legislation
-        Route::get('/post_1992_legislation/amended_acts_table_of_content/{category}/{title}/{id}','Post1992Controller@amended_acts_display_table_of_content');//display amended acts table of content
-        Route::get('/post_1992_legislation/amended_acts/preamble/{id}','Post1992Controller@amended_acts_preamble');//display amended act preamble
-        Route::get('/post_1992_legislation/amended_acts/content/{id}','Post1992Controller@amended_acts_content');//display amended act content
-        Route::get('/post_1992_legislation/amended_acts/expanded_view/{category}/{title}/{id}','Post1992Controller@amended_act_expanded_view');//display amended acts in expanded view
-
-
-        //New Amendments for only Amendments Tab
-        //For All Amendments only
-        Route::get('/post-1992-legislation/only-amendments','Post1992Controller@only_amendments_acts_tab');
-
-        //----------------------------------------------------------------------------------Regulations Amendments------------------------------------------------------------------------
-        Route::get('/post_1992_legislation/print_regulation_amends_act/preamble_content/{id}','Post1992Controller@post_1992_legislation_print_regulation_amends_act_preamble_content');//display plain act content
-        Route::get('/post_1992_legislation/print_regulation_amends_act/content_section/{id}','Post1992Controller@post_1992_legislation_print_regulation_amends_act_content_section');//display plain act content
-        Route::get('/post_1992_legislation/print_expanded_regulation_amended_act/content/{category}/{title}/{id}','Post1992Controller@post_1992_legislation_print_expanded_regulation_amended_act_content');//display plain act content
-
-        Route::get('/post_1992_legislation/plain_regulation_amends_act/preamble_content/{id}','Post1992Controller@post_1992_legislation_plain_regulation_amends_act_preamble_content');//display plain act content
-        Route::get('/post_1992_legislation/plain_regulation_amends_act/content_section/{id}','Post1992Controller@post_1992_legislation_plain_regulation_amends_act_content_section');//display plain act content
-        Route::get('/post_1992_legislation/plain_expanded_regulation_amended_act/content/{category}/{title}/{id}','Post1992Controller@post_1992_legislation_plain_expanded_regulation_amended_act_content');//display plain act content
-
-        Route::get('/post_1992_legislation/pdf/regulation_amends_act/preamble_content/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_regulation_amends_act_preamble_content');//display plain act content
-        Route::get('/post_1992_legislation/pdf/regulation_amends_act/content_section/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_regulation_amends_act_content_section');//display plain act content
-        Route::get('/post_1992_legislation/pdf_expanded_regulation_amended_act/content/{category}/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_expanded_regulation_amended_act_content');//display plain act content
-
-        //-------------------------------------------------------------------------------------Acts Amendments--------------------------------------------------------------------------------
-        Route::get('/post_1992_legislation/print_amended_act/preamble_content/{id}','Post1992Controller@post_1992_legislation_print_amended_act_preamble_content');//display plain act content
-        Route::get('/post_1992_legislation/print_amended_act/content_section/{id}','Post1992Controller@post_1992_legislation_print_amended_act_content_section');//display plain act content
-        Route::get('/post_1992_legislation/print_expanded_amended_act/content/{category}/{title}/{id}','Post1992Controller@post_1992_legislation_print_expanded_amended_act_content');//display plain act content
-
-        Route::get('/post_1992_legislation/plain_amended_act/preamble_content/{id}','Post1992Controller@post_1992_legislation_plain_amended_act_preamble_content');//display plain act content
-        Route::get('/post_1992_legislation/plain_amended_act/content_section/{id}','Post1992Controller@post_1992_legislation_plain_amended_act_content_section');//display plain act content
-        Route::get('/post_1992_legislation/plain_expanded_amended_act/content/{category}/{title}/{id}','Post1992Controller@post_1992_legislation_plain_expanded_amended_act_content');//display plain act content
-
-        Route::get('/post_1992_legislation/pdf/amended_act/preamble_content/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_amended_act_preamble_content');//display plain act content
-        Route::get('/post_1992_legislation/pdf/amended_act/content_section/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_amended_act_content_section');//display plain act content
-        Route::get('/post_1992_legislation/pdf_expanded_amended_act/content/{category}/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_expanded_amended_act_content');//display plain act content
-
-        //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-        //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-                                                                            // FOR REGULATION AMENDMENTS
-        //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-        //New Amendments for an act: Amendments in all Post-Legislation
-        Route::get('/post_1992_legislation/amended_regulation_acts_table_of_content/{category}/{title}/{id}','Post1992Controller@amended_regulation_display_table_of_content');//display amended regulation table of content
-        Route::get('/post_1992_legislation/amended_regulation_acts/preamble/{id}','Post1992Controller@amended_regulation_acts_preamble');//display amended regulation act preamble
-        Route::get('/post_1992_legislation/amended_regulation_acts/content/{id}','Post1992Controller@amended_regulation_acts_content');//display amended regulation act content
-        Route::get('/post_1992_legislation/amended_regulation_acts/expanded_view/{category}/{title}/{id}','Post1992Controller@amended_regulation_act_expanded_view');//display amended acts in expanded view
-
-        //New Amendments for only Amendments Tab
-        //For All Amendments only
-        // Route::get('/post_1992_legislation/only_amendments','Post1992Controller@only_amendments_acts_tab');
-        //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-        //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-                                                                            // FOR REGULATIONS
-        //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-         //New Regulations for an act: Regulations in all Post-Legislation
-         Route::get('/post_1992_legislation/regulation_acts_table_of_content/{group}/{title}/{id}','Post1992Controller@regulation_acts_display_table_of_content');//display regulation acts table of content
-         Route::get('/post_1992_legislation/regulation/preamble/{id}','Post1992Controller@regulation_acts_preamble');//display regulation act preamble
-         Route::get('/post_1992_legislation/regulation_act/content/{id}','Post1992Controller@regulation_acts_content');//display regulation act content
-         Route::get('/post_1992_legislation/regulation/expanded_view/{category}/{title}/{id}','Post1992Controller@regulation_act_expanded_view');//display regulation acts in expanded view
-
-         //New Regulations for only Regulations Tab
-         //For All Regulations only
-         Route::get('/post-1992-legislation/only-regulations','Post1992Controller@only_regulations_acts_tab');
-
-            Route::get('/post_1992_legislation/print/regulation/preamble/{id}','Post1992Controller@post_1992_legislation_print_regulation_preamble');//display plain act content
-            Route::get('/post_1992_legislation/print/regulation/content_section/{id}','Post1992Controller@post_1992_legislation_print_regulation_content_section');//display plain act content
-            Route::get('/post_1992_legislation/print/regulation/expanded/{category}/{title}/{id}','Post1992Controller@post_1992_legislation_print_regulation_expanded');//display in print view
-
-
-            Route::get('/post_1992_legislation/plain/regulation/preamble/{id}','Post1992Controller@post_1992_legislation_plain_regulation_preamble');//display plain act content
-            Route::get('/post_1992_legislation/plain/regulation/content_section/{id}','Post1992Controller@post_1992_legislation_plain_regulation_content_section');//display plain act content
-            Route::get('/post_1992_legislation/plain/regulation/expanded/{category}/{title}/{id}','Post1992Controller@post_1992_legislation_plain_regulation_expanded');//display in print view
-
-            Route::get('/post_1992_legislation/pdf/regulation/preamble/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_regulation_preamble');//display plain act content
-            Route::get('/post_1992_legislation/pdf/regulation/content_section/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_regulation_content_section');//display plain act content
-            Route::get('/post_1992_legislation/pdf/regulation/expanded/{group}/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_regulation_expanded');//display in print view
-
-        //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-        //---------------------------------------------------------------------------------------------------------------------------------------------------------------
-                                                                            //FOR AMENDMENTS UNDER AN ACT
-        //---------------------------------------------------------------------------------------------------------------------------------------------------------------
-        //All Amendments for an act
-        Route::get('/post_1992_legislation/{group}/all_amended_acts/{title}/{id}','Post1992Controller@all_amendedments_for_an_acts');//all list of amendments for an act
-        Route::get('/post_1992_legislation/amended_act_table_of_content/{category}/{title}/{id}','Post1992Controller@amended_act_table_of_content');//table of content for a single amended act
-        Route::get('/post_1992_legislation/amended_preamble/{id}','Post1992Controller@amended_act_preamble');//amended act preamble
-        Route::get('/post_1992_legislation/amended_act_content/{id}','Post1992Controller@amended_act_content');//amended act content
-        Route::get('/post_1992_legislation/display_amended_sections/{title}','Post1992Controller@display_amended_sections_container');//display amended sections in container
-
-        Route::get('/post_1992_legislation/print_amended/preamble_content/{id}','Post1992Controller@post_1992_legislation_print_amended_preamble_content');//display plain act content
-        Route::get('/post_1992_legislation/print_amended/content_section/{id}','Post1992Controller@post_1992_legislation_print_amended_content_section');//display plain act content
-
-        Route::get('/post_1992_legislation/plain_amended/preamble_content/{id}','Post1992Controller@post_1992_legislation_plain_amended_preamble_content');//display plain act content
-        Route::get('/post_1992_legislation/plain_amended/content_section/{id}','Post1992Controller@post_1992_legislation_plain_amended_content_section');//display plain act content
-
-        Route::get('/post_1992_legislation/pdf/amended_preamble_content/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_amended_preamble_content');//display plain act content
-        Route::get('/post_1992_legislation/pdf/amended_content_section/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_amended_content_section');//display plain act content
-        //----------------------------------------------------------------------------------------------------------------------------------------------------------------
-         //---------------------------------------------------------------------------------------------------------------------------------------------------------------
-                                                                            //FOR AMENDMENTS UNDER A REGULATION
-        //---------------------------------------------------------------------------------------------------------------------------------------------------------------
-        //All Amendments for a regulation
-        Route::get('/post_1992_legislation/{category}/all_amended_regulation_acts/{title}/{id}','Post1992Controller@all_amendedments_for_a_regulation');//all list of amendments for a regulation
-        Route::get('/post_1992_legislation/amended_regulation_act_table_of_content/{category}/{title}/{id}','Post1992Controller@amended_regulation_act_table_of_content');//table of content for a single amended act
-        Route::get('/post_1992_legislation/amended_regulation_preamble/{id}','Post1992Controller@amended_regulation_act_preamble');//amended act preamble
-        Route::get('/post_1992_legislation/amended_act_regulation_content/{id}','Post1992Controller@amended_act_regulation_content');//amended act content
-        Route::get('/post_1992_legislation/display_amended_regulation_sections/{title}','Post1992Controller@display_amended_regulation_sections_container');//display amended sections in container
-
-        Route::get('/post_1992_legislation/print_amended_regulation_act/preamble_content/{id}','Post1992Controller@post_1992_legislation_print_amended_regulation_act_preamble_content');//display plain act content
-        Route::get('/post_1992_legislation/print_amended_regulation_act/content_section/{id}','Post1992Controller@post_1992_legislation_print_amended_regulation_act_content_section');//display plain act content
-
-        Route::get('/post_1992_legislation/plain_amended_regulation_act/preamble_content/{id}','Post1992Controller@post_1992_legislation_plain_amended_regulation_act_preamble_content');//display plain act content
-        Route::get('/post_1992_legislation/plain_amended_regulation_act/content_section/{id}','Post1992Controller@post_1992_legislation_plain_amended_regulation_act_content_section');//display plain act content
-
-        Route::get('/post_1992_legislation/pdf/amended_regulation_preamble_content/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_amended_regulation_act_preamble_content');//display plain act content
-        Route::get('/post_1992_legislation/pdf/amended_regulation_act/content_section/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_amended_regulation_act_content_section');//display plain act content
-
-        //----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-        //----------------------------------------------------------------------------------------------------------------------------------------------------------------
-                                                                            //FOR REGULATIONS UNDER AN ACT
-        //----------------------------------------------------------------------------------------------------------------------------------------------------------------
-        //All Regulations for an act
-        Route::get('/post_1992_legislation/{group}/all_regulations_acts/{title}/{id}','Post1992Controller@all_regulations_for_an_act');//all list of regulations for an act
-        Route::get('/post_1992_legislation/regulations_table_of_content/{category}/{title}/{id}','Post1992Controller@regulations_table_of_content');//table of content for a single regulation
-        Route::get('/post_1992_legislation/regulations_preamble/{id}','Post1992Controller@regulations_preamble');//regulations preamble
-        Route::get('/post_1992_legislation/regulations_content/{id}','Post1992Controller@regulations_content');//regulations content
-        Route::get('/post_1992_legislation/display_regulations_sections/{title}','Post1992Controller@display_regulations_sections_container');//display regulations sections in container
-
-        Route::get('/post_1992_legislation/print_regulation_act/preamble_content/{id}','Post1992Controller@post_1992_legislation_print_regulation_act_preamble_content');//display plain act content
-        Route::get('/post_1992_legislation/print_regulation_act/content_section/{id}','Post1992Controller@post_1992_legislation_print_regulation_act_content_section');//display plain act content
-
-        Route::get('/post_1992_legislation/plain_regulation_act/preamble_content/{id}','Post1992Controller@post_1992_legislation_plain_regulation_act_preamble_content');//display plain act content
-        Route::get('/post_1992_legislation/plain_regulation_act/content_section/{id}','Post1992Controller@post_1992_legislation_plain_regulation_act_content_section');//display plain act content
-
-        Route::get('/post_1992_legislation/pdf_regulation_act/preamble_content/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_regulation_act_preamble_content');//display plain act content
-        Route::get('/post_1992_legislation/pdf_regulation_act/content_section/{title}/{id}','Post1992Controller@post_1992_legislation_pdf_regulation_act_content_section');//display plain act content
-        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-                                                                            //FOR PDF
-        //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        Route::get('/post_1992_legislation/act_pdf/{id}', 'PDFController@post_act_pdf');
+    // PDF
+    Route::get('/'.$prefix.'/act_pdf/{id}', 'PDFController@post_act_pdf');
+}
 
 //-----------------------------------------------------------------------------------END OF POST-1992-LEGISLATION-------------------------------------------------------------------------------
 
@@ -684,8 +604,13 @@ Route::get('/update-live-navigation-menu-secret', function() {
     try {
         // 1. Update Existing Laws URLs to /existing-laws/
         \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET url = '/existing-laws' WHERE title LIKE '%Existing%' OR title LIKE '%Pre-4th%' OR id = 2");
-        \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET url = REPLACE(url, '/pre_1992_legislation/', '/existing-laws/') WHERE url LIKE '%pre_1992_legislation%'");
-        \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET url = REPLACE(url, '/pre-1992-legislation/', '/existing-laws/') WHERE url LIKE '%pre-1992-legislation%'");
+        \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET url = REPLACE(url, '/pre_1992_legislation', '/existing-laws') WHERE url LIKE '%pre_1992_legislation%'");
+        \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET url = REPLACE(url, '/pre-1992-legislation', '/existing-laws') WHERE url LIKE '%pre-1992-legislation%'");
+
+        // 2. Update New Laws URLs to /new-laws/
+        \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET url = '/new-laws' WHERE title LIKE '%New Laws%' OR title LIKE '%4th Republic%' OR id = 3");
+        \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET url = REPLACE(url, '/post_1992_legislation', '/new-laws') WHERE url LIKE '%post_1992_legislation%'");
+        \Illuminate\Support\Facades\DB::statement("UPDATE navigation_menus SET url = REPLACE(url, '/post-1992-legislation', '/new-laws') WHERE url LIKE '%post-1992-legislation%'");
 
         // 2. Update sidebar_ads slots so slot_1 is ALWAYS advertise (top) and slot_2 is ALWAYS news_feed (bottom)
         \Illuminate\Support\Facades\DB::statement("UPDATE sidebar_ads SET placeholder_type = 'advertise' WHERE slot_name = 'slot_1'");

@@ -27,9 +27,9 @@
         <div class="menu_options pull-right" style="display: none;">
             @if (Route::has('login'))
                 @auth
-                    <a class="download_link" href="javascript:;" rel="/post-1992-legislation/constitutional-acts/pdf-section-content/{{$allConstitutionalAct['constitutional_act']}}/{{ $allConstitutionalAct['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
+                    <a class="download_link" href="javascript:;" rel="/new-laws/constitutional-acts/pdf-section-content/{{$allConstitutionalAct['constitutional_act']}}/{{ $allConstitutionalAct['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
                     <a class="hidden section_id" href="javascript:;" rel="/section_downloads/{{$allConstitutionalAct['constitutional_act']}}/{{$allConstitutionalAct['section']}}/{{$allConstitutionalAct['id']}}/{{ Auth::user()->name }}/{{ Auth::user()->id }}/{{ Auth::user()->id }}{{$allConstitutionalAct['section']}}/{{$allConstitutionalAct['consti_group']}}/{{$allConstitutionalAct['consti_act_id']}}">Testing</a>
-                    <a href="/post_1992_legislation/constitutional-acts/print_section_content/{{ $allConstitutionalAct['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="/new-laws/constitutional-acts/print_section_content/{{ $allConstitutionalAct['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     
                     @else
 

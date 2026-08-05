@@ -27,9 +27,9 @@
         <div class="menu_options pull-right" style="display: none;">
             @if (Route::has('login'))
                 @auth
-                    <a class="download_link" href="javascript:;" rel="/post-1992-legislation/executive-acts/pdf-section-content/{{$allExecutiveAct['executive_act']}}/{{ $allExecutiveAct['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
+                    <a class="download_link" href="javascript:;" rel="/new-laws/executive-acts/pdf-section-content/{{$allExecutiveAct['executive_act']}}/{{ $allExecutiveAct['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
                     <a class="hidden section_id" href="javascript:;" rel="/section_downloads/{{$allExecutiveAct['executive_act']}}/{{$allExecutiveAct['section']}}/{{$allExecutiveAct['id']}}/{{ Auth::user()->name }}/{{ Auth::user()->id }}/{{ Auth::user()->id }}{{$allExecutiveAct['section']}}/{{$allExecutiveAct['executive_group']}}/{{$allExecutiveAct['executive_act_id']}}">Testing</a>
-                    <a href="/post_1992_legislation/executive-acts/print_section_content/{{ $allExecutiveAct['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="/new-laws/executive-acts/print_section_content/{{ $allExecutiveAct['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     
                     @else
 

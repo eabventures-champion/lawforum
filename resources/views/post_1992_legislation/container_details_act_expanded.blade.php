@@ -30,7 +30,7 @@
         <br>
         
         <label>View</label>
-        <a href="/post_1992_legislation/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/plain-view/{{ $allPost1992Act['id'] }}"><li>Plain View</li></a>    
+        <a href="/new-laws/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/plain-view/{{ $allPost1992Act['id'] }}"><li>Plain View</li></a>    
     </div>
   </div>
   @include('extenders.case_law_main_search')

@@ -1,16 +1,16 @@
 @if($order_by_section->act_group == 'Judiciary')
-    <a href="/post-1992-legislation/constitutional-acts/pdf-section-content/{{$order_by_section->act_title}}/{{$order_by_section->section_id}}" class="btn btn-sm btn-outline-secondary">
+    <a href="/new-laws/constitutional-acts/pdf-section-content/{{$order_by_section->act_title}}/{{$order_by_section->section_id}}" class="btn btn-sm btn-outline-secondary">
         <i class="fa fa-cloud-download" aria-hidden="true"></i>
     </a>
 
     @elseif($order_by_section->act_group == 'Acts of Parliament')
-        <a href="/post-1992-legislation/pdf-content/{{$order_by_section->act_title}}/{{$order_by_section->section_id}}
+        <a href="/new-laws/pdf-content/{{$order_by_section->act_title}}/{{$order_by_section->section_id}}
             " class="btn btn-sm btn-outline-secondary">
             <i class="fa fa-cloud-download" aria-hidden="true"></i>
         </a>
 
     @elseif($order_by_section->act_group == 'Legislative Instruments')
-        <a href="/post_1992_legislation/pdf/regulation/content_section/{{$order_by_section->act_title}}/{{$order_by_section->section_id}}
+        <a href="/new-laws/pdf/regulation/content_section/{{$order_by_section->act_title}}/{{$order_by_section->section_id}}
             " class="btn btn-sm btn-outline-secondary">
             <i class="fa fa-cloud-download" aria-hidden="true"></i>
         </a>
@@ -64,7 +64,7 @@
         </a>
 
     @else
-        <a href="/post-1992-legislation/executive-acts/pdf-section-content/{{$order_by_section->act_title}}/{{$order_by_section->section_id}}" class="btn btn-sm btn-outline-secondary">
+        <a href="/new-laws/executive-acts/pdf-section-content/{{$order_by_section->act_title}}/{{$order_by_section->section_id}}" class="btn btn-sm btn-outline-secondary">
             <i class="fa fa-cloud-download" aria-hidden="true"></i>
         </a>
 

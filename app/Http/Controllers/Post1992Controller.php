@@ -1076,7 +1076,7 @@ class Post1992Controller extends Controller
                 return [
                     'title' => $act->title,
                     'year'  => $act->year,
-                    'url'   => '/post-1992-legislation/table-of-content/' . $act->post_group . '/' . $act->title . '/' . $act->id,
+                    'url'   => '/new-laws/table-of-content/' . $act->post_group . '/' . $act->title . '/' . $act->id,
                 ];
             }));
         }
@@ -1087,7 +1087,7 @@ class Post1992Controller extends Controller
                 return [
                     'title' => $act->title,
                     'year'  => $act->year,
-                    'url'   => '/post-1992-legislation/constitutional-acts-table-of-content/' . $act->constitutional_group . '/' . $act->title . '/' . $act->id,
+                    'url'   => '/new-laws/constitutional-acts-table-of-content/' . $act->constitutional_group . '/' . $act->title . '/' . $act->id,
                 ];
             }));
         }
@@ -1098,7 +1098,7 @@ class Post1992Controller extends Controller
                 return [
                     'title' => $act->title,
                     'year'  => $act->year,
-                    'url'   => '/post-1992-legislation/table-of-content/' . $act->executive_group . '/' . $act->title . '/' . $act->id,
+                    'url'   => '/new-laws/table-of-content/' . $act->executive_group . '/' . $act->title . '/' . $act->id,
                 ];
             }));
         }
@@ -1109,7 +1109,7 @@ class Post1992Controller extends Controller
                 return [
                     'title' => $act->title,
                     'year'  => $act->year,
-                    'url'   => '/post_1992_legislation/regulation_acts_table_of_content/' . $act->act_category . '/' . $act->title . '/' . $act->id,
+                    'url'   => '/new-laws/regulation_acts_table_of_content/' . $act->act_category . '/' . $act->title . '/' . $act->id,
                 ];
             }));
         }
@@ -1121,7 +1121,7 @@ class Post1992Controller extends Controller
                 return [
                     'title' => $act->title,
                     'year'  => $act->year,
-                    'url'   => '/post_1992_legislation/amended_acts_table_of_content/' . $act->post_category . '/' . $act->title . '/' . $act->id,
+                    'url'   => '/new-laws/amended_acts_table_of_content/' . $act->post_category . '/' . $act->title . '/' . $act->id,
                 ];
             }));
 
@@ -1131,7 +1131,7 @@ class Post1992Controller extends Controller
                 return [
                     'title' => $act->title,
                     'year'  => $act->year,
-                    'url'   => '/post_1992_legislation/amended_regulation_acts_table_of_content/' . $act->act_category . '/' . $act->title . '/' . $act->id,
+                    'url'   => '/new-laws/amended_regulation_acts_table_of_content/' . $act->act_category . '/' . $act->title . '/' . $act->id,
                 ];
             }));
         }

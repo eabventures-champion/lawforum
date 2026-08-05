@@ -29,7 +29,7 @@
                 <span>Related Acts</span>
               </a>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <li><a class="all_amendments_link dropdown-item" id="all_amendments_link_toggle"  href="/post_1992_legislation/{{$regulationAct['act_category']}}/all_amended_regulation_acts/{{$regulationAct['title']}}/{{ $regulationAct['id'] }}"><center>Amendments</center></a></li>
+                <li><a class="all_amendments_link dropdown-item" id="all_amendments_link_toggle"  href="/new-laws/{{$regulationAct['act_category']}}/all_amended_regulation_acts/{{$regulationAct['title']}}/{{ $regulationAct['id'] }}"><center>Amendments</center></a></li>
               </div>
             </div>
             
@@ -46,7 +46,7 @@
           </a>
         
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink-2">
-            <li><a class="expanded_link dropdown-item toggle_expanded_view" href="/post_1992_legislation/regulation/expanded_view/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{$regulationAct['id']}}"><center>Expanded View</center></a></li>
+            <li><a class="expanded_link dropdown-item toggle_expanded_view" href="/new-laws/regulation/expanded_view/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{$regulationAct['id']}}"><center>Expanded View</center></a></li>
             
             @if (Route::has('login'))
               @auth
@@ -62,7 +62,7 @@
                   
                       @else
                       {{-- View Plain View --}}
-                        <li><a class="dropdown-item" href="/post_1992_legislation/plain/regulation/expanded/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{ $regulationAct['id'] }}" target="_blank"><center>Plain View</center></a></li>
+                        <li><a class="dropdown-item" href="/new-laws/plain/regulation/expanded/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{ $regulationAct['id'] }}" target="_blank"><center>Plain View</center></a></li>
                     @endif
                   @else
                 {{-- Create Account --}}

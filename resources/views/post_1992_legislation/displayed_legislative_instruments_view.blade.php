@@ -50,7 +50,7 @@
                         @foreach($legislativeInstruments as $legislativeInstrument)
                             <tr>
                                 <td>
-                                    <a href="/post_1992_legislation/regulation_table_of_content/{{$legislativeInstrument->post_group}}/{{ $legislativeInstrument->title }}/{{ $legislativeInstrument->id}}"><li style="list-style: none;">{{ $legislativeInstrument->title }}</li></a>
+                                    <a href="/new-laws/regulation_table_of_content/{{$legislativeInstrument->post_group}}/{{ $legislativeInstrument->title }}/{{ $legislativeInstrument->id}}"><li style="list-style: none;">{{ $legislativeInstrument->title }}</li></a>
                                 </td> 
                                 <td>{{ $legislativeInstrument->year }}</td>
                             </tr>

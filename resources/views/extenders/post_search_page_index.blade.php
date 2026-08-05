@@ -394,7 +394,7 @@
             @foreach ($posts as $post)
             <div class="search-well">
               <h5 style="color:blue;"><b>{{ $post->post_act }}</b></h5>
-              <a href="/post_1992_legislation/content/{{$post->id}}" target="_blank"><b>{{ $post->section }}</b></a>
+              <a href="/new-laws/content/{{$post->id}}" target="_blank"><b>{{ $post->section }}</b></a>
               <br><br>
               {!! $post->content !!}
             </div>
@@ -417,7 +417,7 @@
 
 {{-- @foreach ($regulations as $regulation)
                 <h5 style="color:blue;"><b>{{ $regulation->regulation_title }}</b></h5>
-                <a href="/post_1992_legislation/regulation_act/content/{{$regulation->id}}" target="_blank"><b>{{ $regulation->section }}</b></a>
+                <a href="/new-laws/regulation_act/content/{{$regulation->id}}" target="_blank"><b>{{ $regulation->section }}</b></a>
                 <br><br>
                 {{ Str::limit($regulation->content, 470, '...') }}
                 <hr>
@@ -425,7 +425,7 @@
 
             @foreach ($amends as $amend)
                 <h5 style="color:blue;"><b>{{ $amend->act_title }}</b></h5>
-                <a href="/post_1992_legislation/amended_acts/content/{{$amend->id}}" target="_blank"><b>{{ $amend->section }}</b></a>
+                <a href="/new-laws/amended_acts/content/{{$amend->id}}" target="_blank"><b>{{ $amend->section }}</b></a>
                 <br><br>
                 {{ Str::limit($amend->content, 470, '...') }}
                 <hr>
@@ -433,7 +433,7 @@
 
             @foreach ($amends_regs as $amends_reg)
                 <h5 style="color:blue;"><b>{{ $amends_reg->title }}</b></h5>
-                <a href="/post_1992_legislation/amended_regulation_acts/content/{{$amends_reg->id}}" target="_blank"><b>{{ $amends_reg->section }}</b></a>
+                <a href="/new-laws/amended_regulation_acts/content/{{$amends_reg->id}}" target="_blank"><b>{{ $amends_reg->section }}</b></a>
                 <br><br>
                 {{ Str::limit($amends_reg->content, 470, '...') }}
             @endforeach --}}

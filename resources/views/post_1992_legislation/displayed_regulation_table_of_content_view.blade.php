@@ -216,7 +216,7 @@
                               <div class="col-md-9">
                                   {{--<h5><b>{{ $regulationAct['title'] }}</b></h5>--}}
                                   <br>
-                                <a class="preamble_link" id="preamble_link_toggle" href="/post_1992_legislation/regulation/preamble/{{ $regulationAct['id'] }}">
+                                <a class="preamble_link" id="preamble_link_toggle" href="/new-laws/regulation/preamble/{{ $regulationAct['id'] }}">
                                  
                                   @if($regulationAct['preamble'] != null)
                                     <p class="preamble_hide">Introductory Text</p>

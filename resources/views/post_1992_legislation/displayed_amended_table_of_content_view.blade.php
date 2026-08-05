@@ -205,7 +205,7 @@
                           <div class="col-md-9">
                               {{--<h5><b>{{ $amendedAct['title'] }}</b></h5>--}}
                               <br>
-                            <a class="preamble_link" id="preamble_link_toggle" href="/post_1992_legislation/amended_acts/preamble/{{ $amendedAct['id'] }}"><p>Introductory Text</p></a>
+                            <a class="preamble_link" id="preamble_link_toggle" href="/new-laws/amended_acts/preamble/{{ $amendedAct['id'] }}"><p>Introductory Text</p></a>
                             
                                   <div class="accordion-content">
                                       @include('post_1992_legislation.displayed_amended_parts_sections')

@@ -205,7 +205,7 @@
                           <div class="col-md-9">
                               {{--<h5><b>{{ $amendedAct['title'] }}</b></h5>--}}
                               <br>
-                            <a class="preamble_link" id="preamble_link_toggle" href="/post-1992-legislation/constitutional-acts/preamble/{{ $allConstitutionalAct['id'] }}">
+                            <a class="preamble_link" id="preamble_link_toggle" href="/new-laws/constitutional-acts/preamble/{{ $allConstitutionalAct['id'] }}">
                                 
                                 @if($allConstitutionalAct['preamble'] != null)
                                     <p class="preamble_hide">Introductory Text</p>

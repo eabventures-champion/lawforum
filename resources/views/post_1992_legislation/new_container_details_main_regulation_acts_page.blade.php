@@ -87,7 +87,7 @@
                 <i class="fa-solid fa-images"></i> View Options
             </button>
             <div class="dropdown-menu dropdown-menu-premium" aria-labelledby="sidebarViewOptions" style="width: 100%;">
-                <a class="dropdown-item dropdown-item-premium expanded_link toggle_expanded_view" href="/post_1992_legislation/regulation/expanded_view/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{$regulationAct['id']}}" onclick="selectViewMode('expanded'); event.stopImmediatePropagation(); return false;">
+                <a class="dropdown-item dropdown-item-premium expanded_link toggle_expanded_view" href="/new-laws/regulation/expanded_view/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{$regulationAct['id']}}" onclick="selectViewMode('expanded'); event.stopImmediatePropagation(); return false;">
                     <i class="fa-solid fa-expand"></i> Expanded View
                 </a>
                 <a class="dropdown-item dropdown-item-premium" href="#" onclick="triggerSplitView('horizontal')">

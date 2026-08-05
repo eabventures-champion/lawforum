@@ -342,12 +342,12 @@
                   <div class="pt_for_content">
                      <div class="nav-scroller bg-header-color rounded shadow-sm">
                         <nav class="nav nav-underline">
-                           <a class="nav-link active text-white" href="/post-1992-legislation">All 4th Republic Laws</a>
-                           <a class="nav-link text-white" href="/post-1992-legislation/1/Acts of Parliament">Acts of Parliament</a>
-                           <a class="nav-link text-white" href="/post-1992-legislation/only-regulations">Legislative Instruments</a>
-                           <a class="nav-link text-white" href="/post-1992-legislation/Constitutional-Intruments">Constitutional Instruments</a>
-                           <a class="nav-link text-white" href="/post-1992-legislation/Executive-Intruments">Executive Instruments</a>
-                           <a class="nav-link text-white" href="/post-1992-legislation/only-amendments">Amendments</a>
+                           <a class="nav-link active text-white" href="/new-laws">All 4th Republic Laws</a>
+                           <a class="nav-link text-white" href="/new-laws/1/Acts of Parliament">Acts of Parliament</a>
+                           <a class="nav-link text-white" href="/new-laws/only-regulations">Legislative Instruments</a>
+                           <a class="nav-link text-white" href="/new-laws/Constitutional-Intruments">Constitutional Instruments</a>
+                           <a class="nav-link text-white" href="/new-laws/Executive-Intruments">Executive Instruments</a>
+                           <a class="nav-link text-white" href="/new-laws/only-amendments">Amendments</a>
                         </nav>
                      </div>
                   </div>
@@ -397,7 +397,7 @@
                               <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                                  <div class="row">
                                     <div class="col-md-9">
-                                       <a class="regulation_preamble_link" href="/post_1992_legislation/regulation/preamble/{{ $regulationAct['id'] }}">
+                                       <a class="regulation_preamble_link" href="/new-laws/regulation/preamble/{{ $regulationAct['id'] }}">
                                           @if($regulationAct['preamble'] != null)
                                           <span style="color: blue;" class="preamble_hide">Introductory Text</span>
                                           <hr>
@@ -436,13 +436,13 @@
                                               </a>
                                               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                                   <li>
-                                                    <a class="all_amendments_link dropdown-item" id="all_amendments_link_toggle"  href="/post_1992_legislation/{{$regulationAct['act_category']}}/all_amended_regulation_acts/{{$regulationAct['title']}}/{{ $regulationAct['id'] }}">
+                                                    <a class="all_amendments_link dropdown-item" id="all_amendments_link_toggle"  href="/new-laws/{{$regulationAct['act_category']}}/all_amended_regulation_acts/{{$regulationAct['title']}}/{{ $regulationAct['id'] }}">
                                                         <center>Amendments</center>
                                                     </a>
                                                   </li>
                                                   {{-- 
                                                   <li>
-                                                    <a class="all_regulations_link dropdown-item" id="all_regulations_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_regulations_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
+                                                    <a class="all_regulations_link dropdown-item" id="all_regulations_link_toggle" href="/new-laws/{{$allPost1992Act['post_group']}}/all_regulations_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
                                                         <center>Regulations</center>
                                                     </a>
                                                   </li>
@@ -452,8 +452,8 @@
                                             @else
                                             <div class="d-none"></div>
                                             @endif
-                                            <a class="btn btn-outline-dark btn-sm expanded_link toggle_expanded_view btn-customised" href="/post_1992_legislation/regulation/expanded_view/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{$regulationAct['id']}}"  role="button">Expanded View</a>
-                                            {{-- <a class="" id="expanded_link_toggle_all_pre1992_preview_1" href="/post_1992_legislation/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/expanded-view/{{ $allPost1992Act['id'] }}" role="button">Expanded View</a> --}}
+                                            <a class="btn btn-outline-dark btn-sm expanded_link toggle_expanded_view btn-customised" href="/new-laws/regulation/expanded_view/{{$regulationAct['act_category']}}/{{$regulationAct['title']}}/{{$regulationAct['id']}}"  role="button">Expanded View</a>
+                                            {{-- <a class="" id="expanded_link_toggle_all_pre1992_preview_1" href="/new-laws/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/expanded-view/{{ $allPost1992Act['id'] }}" role="button">Expanded View</a> --}}
                                             @if (Route::has('login'))
                                             @auth
                                             {{-- No Subscription --}}
@@ -467,7 +467,7 @@
                                             <a class="btn btn-outline-dark btn-sm" href="" data-toggle="modal" data-target="#maximumDownloadReachedplain">Plain View</a>
                                             @else
                                             {{-- View Plain View --}}
-                                            {{-- <a class="btn btn-outline-dark btn-sm" href="/post_1992_legislation/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/plain_view/{{ $allPost1992Act['id'] }}" target="_blank">Plain View</a> --}}
+                                            {{-- <a class="btn btn-outline-dark btn-sm" href="/new-laws/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/plain_view/{{ $allPost1992Act['id'] }}" target="_blank">Plain View</a> --}}
                                             @endif
                                             @else
                                             {{-- Create Account --}}
@@ -511,7 +511,7 @@
                                                    <a data-scroll-to="body"
                                                       data-scroll-focus="body"
                                                       data-scroll-speed="400"
-                                                      data-scroll-offset="-60" class="regulation_view_all_section_link_with_prev_next dropdown-item" sid="{{$allRegulationArticle->id}}" href="/post_1992_legislation/regulation_act/content/{{ $allRegulationArticle->id }}">{{$allRegulationArticle->section }}
+                                                      data-scroll-offset="-60" class="regulation_view_all_section_link_with_prev_next dropdown-item" sid="{{$allRegulationArticle->id}}" href="/new-laws/regulation_act/content/{{ $allRegulationArticle->id }}">{{$allRegulationArticle->section }}
                                                    </a>
                                                    {{-- regulation_view_all_section_link_with_prev_next --}}
                                                    @endforeach              
@@ -627,7 +627,7 @@
                                     @foreach($allRegulations as $allRegulation)
                                     <tr>
                                        <td>
-                                          <a href="/post_1992_legislation/regulation_acts_table_of_content/{{$allRegulation->group}}/{{ $allRegulation->title }}/{{ $allRegulation->id}}">
+                                          <a href="/new-laws/regulation_acts_table_of_content/{{$allRegulation->group}}/{{ $allRegulation->title }}/{{ $allRegulation->id}}">
                                              <li style="list-style: none;">{{ $allRegulation->title }}</li>
                                           </a>
                                        </td>

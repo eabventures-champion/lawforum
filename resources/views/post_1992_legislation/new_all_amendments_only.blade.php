@@ -237,12 +237,12 @@
                 <div class="pt_for_content_container">
                     <div class="nav-scroller bg-header-color rounded shadow-sm">
                         <nav class="nav nav-underline">
-                            <a class="nav-link active text-white" href="/post-1992-legislation">All 4th Republic Laws</a>
-                            <a class="nav-link text-white" href="/post-1992-legislation/1/Acts of Parliament">Acts of Parliament</a>
-                            <a class="nav-link text-white" href="/post-1992-legislation/only-regulations">Legislative Instruments</a>
-                            <a class="nav-link text-white" href="/post-1992-legislation/Constitutional-Intruments">Constitutional Instruments</a>
-                            <a class="nav-link text-white" href="/post-1992-legislation/Executive-Intruments">Executive Instruments</a>
-                            <a class="nav-link text-white" href="/post-1992-legislation/only-amendments">Amendments</a>
+                            <a class="nav-link active text-white" href="/new-laws">All 4th Republic Laws</a>
+                            <a class="nav-link text-white" href="/new-laws/1/Acts of Parliament">Acts of Parliament</a>
+                            <a class="nav-link text-white" href="/new-laws/only-regulations">Legislative Instruments</a>
+                            <a class="nav-link text-white" href="/new-laws/Constitutional-Intruments">Constitutional Instruments</a>
+                            <a class="nav-link text-white" href="/new-laws/Executive-Intruments">Executive Instruments</a>
+                            <a class="nav-link text-white" href="/new-laws/only-amendments">Amendments</a>
 
                             {{-- <form action="{{ url('cases_index_search') }}" method="GET" class="form-inline my-2 my-lg-0 justify-content-center">
                               {{ csrf_field() }}
@@ -267,7 +267,7 @@
                                         @foreach($allAmendments as $allAmendment)
                                             <tr>
                                                 <td>
-                                                    <a href="/post_1992_legislation/amended_acts_table_of_content/{{$allAmendment->post_category}}/{{ $allAmendment->title }}/{{ $allAmendment->id}}"><li style="list-style: none;">{{ $allAmendment->title }}</li></a>
+                                                    <a href="/new-laws/amended_acts_table_of_content/{{$allAmendment->post_category}}/{{ $allAmendment->title }}/{{ $allAmendment->id}}"><li style="list-style: none;">{{ $allAmendment->title }}</li></a>
                                                 </td> 
                                                 <td>{{ $allAmendment->year }}</td>
                                             </tr>
@@ -277,7 +277,7 @@
                                         @foreach($allAmendmentsForRegulations as $allAmendmentsForRegulation)
                                             <tr>
                                                 <td>
-                                                    <a href="/post_1992_legislation/amended_regulation_acts_table_of_content/{{$allAmendmentsForRegulation->act_category}}/{{ $allAmendmentsForRegulation->title }}/{{ $allAmendmentsForRegulation->id}}"><li style="list-style: none;">{{ $allAmendmentsForRegulation->title }}</li></a>
+                                                    <a href="/new-laws/amended_regulation_acts_table_of_content/{{$allAmendmentsForRegulation->act_category}}/{{ $allAmendmentsForRegulation->title }}/{{ $allAmendmentsForRegulation->id}}"><li style="list-style: none;">{{ $allAmendmentsForRegulation->title }}</li></a>
                                                 </td> 
                                                 <td>{{ $allAmendmentsForRegulation->year }}</td>
                                             </tr>

@@ -2573,17 +2573,17 @@
                                 @if($activeAct['preamble'] != null)
                                     <div class="preamble-card">
                                         @if($documentType === 'post_1992_legislation')
-                                            <a class="post_preamble_content_link" sid="preamble" href="/post_1992_legislation/preamble/{{ $activeAct['id'] }}">
+                                            <a class="post_preamble_content_link" sid="preamble" href="/new-laws/preamble/{{ $activeAct['id'] }}">
                                         @elseif($documentType === 'regulation')
-                                            <a class="regulation_preamble_link" sid="preamble" href="/post_1992_legislation/regulation/preamble/{{ $activeAct['id'] }}">
+                                            <a class="regulation_preamble_link" sid="preamble" href="/new-laws/regulation/preamble/{{ $activeAct['id'] }}">
                                         @elseif($documentType === 'constitutional')
-                                            <a class="preamble_link" sid="preamble" href="/post-1992-legislation/constitutional-acts/preamble/{{ $activeAct['id'] }}">
+                                            <a class="preamble_link" sid="preamble" href="/new-laws/constitutional-acts/preamble/{{ $activeAct['id'] }}">
                                         @elseif($documentType === 'executive')
-                                            <a class="preamble_link" sid="preamble" href="/post-1992-legislation/executive-acts/preamble/{{ $activeAct['id'] }}">
+                                            <a class="preamble_link" sid="preamble" href="/new-laws/executive-acts/preamble/{{ $activeAct['id'] }}">
                                         @elseif($documentType === 'amendment_act')
-                                            <a class="preamble_link" sid="preamble" href="/post_1992_legislation/amended_preamble/{{ $activeAct['id'] }}">
+                                            <a class="preamble_link" sid="preamble" href="/new-laws/amended_preamble/{{ $activeAct['id'] }}">
                                         @elseif($documentType === 'amendment_regulation')
-                                            <a class="preamble_link" sid="preamble" href="/post_1992_legislation/amended_regulation_acts/preamble/{{ $activeAct['id'] }}">
+                                            <a class="preamble_link" sid="preamble" href="/new-laws/amended_regulation_acts/preamble/{{ $activeAct['id'] }}">
                                         @endif
                                             <i class="fa-solid fa-scroll mr-2 text-warning"></i> Read Act Preamble / Introductory Text
                                         </a>
@@ -2640,32 +2640,32 @@
                                             <option value="">-- Load Section --</option>
                                             @if($activeAct['preamble'] != null)
                                                 @if($documentType === 'post_1992_legislation')
-                                                    <option value="/post_1992_legislation/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
+                                                    <option value="/new-laws/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
                                                 @elseif($documentType === 'regulation')
-                                                    <option value="/post_1992_legislation/regulation/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
+                                                    <option value="/new-laws/regulation/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
                                                 @elseif($documentType === 'constitutional')
-                                                    <option value="/post-1992-legislation/constitutional-acts/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
+                                                    <option value="/new-laws/constitutional-acts/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
                                                 @elseif($documentType === 'executive')
-                                                    <option value="/post-1992-legislation/executive-acts/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
+                                                    <option value="/new-laws/executive-acts/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
                                                 @elseif($documentType === 'amendment_act')
-                                                    <option value="/post_1992_legislation/amended_preamble/{{ $activeAct['id'] }}">Introductory Text</option>
+                                                    <option value="/new-laws/amended_preamble/{{ $activeAct['id'] }}">Introductory Text</option>
                                                 @elseif($documentType === 'amendment_regulation')
-                                                    <option value="/post_1992_legislation/amended_regulation_acts/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
+                                                    <option value="/new-laws/amended_regulation_acts/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
                                                 @endif
                                             @endif
                                             @foreach($activeArticles as $art)
                                                 @if($documentType === 'post_1992_legislation')
-                                                    <option value="/post_1992_legislation/content/{{ $art->id }}">{{ $art->section }}</option>
+                                                    <option value="/new-laws/content/{{ $art->id }}">{{ $art->section }}</option>
                                                 @elseif($documentType === 'regulation')
-                                                    <option value="/post_1992_legislation/regulation_act/content/{{ $art->id }}">{{ $art->section }}</option>
+                                                    <option value="/new-laws/regulation_act/content/{{ $art->id }}">{{ $art->section }}</option>
                                                 @elseif($documentType === 'constitutional')
-                                                    <option value="/post-1992-legislation/constitutional-acts/content/{{ $art->id }}">{{ $art->section }}</option>
+                                                    <option value="/new-laws/constitutional-acts/content/{{ $art->id }}">{{ $art->section }}</option>
                                                 @elseif($documentType === 'executive')
-                                                    <option value="/post-1992-legislation/executive-acts/content/{{ $art->id }}">{{ $art->section }}</option>
+                                                    <option value="/new-laws/executive-acts/content/{{ $art->id }}">{{ $art->section }}</option>
                                                 @elseif($documentType === 'amendment_act')
-                                                    <option value="/post_1992_legislation/amended_act_content/{{ $art->id }}">{{ $art->section }}</option>
+                                                    <option value="/new-laws/amended_act_content/{{ $art->id }}">{{ $art->section }}</option>
                                                 @elseif($documentType === 'amendment_regulation')
-                                                    <option value="/post_1992_legislation/amended_regulation_acts/content/{{ $art->id }}">{{ $art->section }}</option>
+                                                    <option value="/new-laws/amended_regulation_acts/content/{{ $art->id }}">{{ $art->section }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -2699,32 +2699,32 @@
                                             <option value="">-- Load Section --</option>
                                             @if($activeAct['preamble'] != null)
                                                 @if($documentType === 'post_1992_legislation')
-                                                    <option value="/post_1992_legislation/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
+                                                    <option value="/new-laws/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
                                                 @elseif($documentType === 'regulation')
-                                                    <option value="/post_1992_legislation/regulation/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
+                                                    <option value="/new-laws/regulation/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
                                                 @elseif($documentType === 'constitutional')
-                                                    <option value="/post-1992-legislation/constitutional-acts/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
+                                                    <option value="/new-laws/constitutional-acts/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
                                                 @elseif($documentType === 'executive')
-                                                    <option value="/post-1992-legislation/executive-acts/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
+                                                    <option value="/new-laws/executive-acts/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
                                                 @elseif($documentType === 'amendment_act')
-                                                    <option value="/post_1992_legislation/amended_preamble/{{ $activeAct['id'] }}">Introductory Text</option>
+                                                    <option value="/new-laws/amended_preamble/{{ $activeAct['id'] }}">Introductory Text</option>
                                                 @elseif($documentType === 'amendment_regulation')
-                                                    <option value="/post_1992_legislation/amended_regulation_acts/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
+                                                    <option value="/new-laws/amended_regulation_acts/preamble/{{ $activeAct['id'] }}">Introductory Text</option>
                                                 @endif
                                             @endif
                                             @foreach($activeArticles as $art)
                                                 @if($documentType === 'post_1992_legislation')
-                                                    <option value="/post_1992_legislation/content/{{ $art->id }}">{{ $art->section }}</option>
+                                                    <option value="/new-laws/content/{{ $art->id }}">{{ $art->section }}</option>
                                                 @elseif($documentType === 'regulation')
-                                                    <option value="/post_1992_legislation/regulation_act/content/{{ $art->id }}">{{ $art->section }}</option>
+                                                    <option value="/new-laws/regulation_act/content/{{ $art->id }}">{{ $art->section }}</option>
                                                 @elseif($documentType === 'constitutional')
-                                                    <option value="/post-1992-legislation/constitutional-acts/content/{{ $art->id }}">{{ $art->section }}</option>
+                                                    <option value="/new-laws/constitutional-acts/content/{{ $art->id }}">{{ $art->section }}</option>
                                                 @elseif($documentType === 'executive')
-                                                    <option value="/post-1992-legislation/executive-acts/content/{{ $art->id }}">{{ $art->section }}</option>
+                                                    <option value="/new-laws/executive-acts/content/{{ $art->id }}">{{ $art->section }}</option>
                                                 @elseif($documentType === 'amendment_act')
-                                                    <option value="/post_1992_legislation/amended_act_content/{{ $art->id }}">{{ $art->section }}</option>
+                                                    <option value="/new-laws/amended_act_content/{{ $art->id }}">{{ $art->section }}</option>
                                                 @elseif($documentType === 'amendment_regulation')
-                                                    <option value="/post_1992_legislation/amended_regulation_acts/content/{{ $art->id }}">{{ $art->section }}</option>
+                                                    <option value="/new-laws/amended_regulation_acts/content/{{ $art->id }}">{{ $art->section }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -2930,17 +2930,17 @@
                                 <tr>
                                     <td>
                                         @if($documentType === 'post_1992_legislation')
-                                            <a href="/post-1992-legislation/table-of-content/{{$actItem->post_group}}/{{ $actItem->title }}/{{ $actItem->id}}">{{ $actItem->title }}</a>
+                                            <a href="/new-laws/table-of-content/{{$actItem->post_group}}/{{ $actItem->title }}/{{ $actItem->id}}">{{ $actItem->title }}</a>
                                         @elseif($documentType === 'regulation')
-                                            <a href="/post_1992_legislation/regulation_acts_table_of_content/{{$actItem->act_category}}/{{ $actItem->title }}/{{ $actItem->id}}">{{ $actItem->title }}</a>
+                                            <a href="/new-laws/regulation_acts_table_of_content/{{$actItem->act_category}}/{{ $actItem->title }}/{{ $actItem->id}}">{{ $actItem->title }}</a>
                                         @elseif($documentType === 'constitutional')
-                                            <a href="/post-1992-legislation/constitutional-acts-table-of-content/{{$actItem->constitutional_group}}/{{ $actItem->title }}/{{ $actItem->id}}">{{ $actItem->title }}</a>
+                                            <a href="/new-laws/constitutional-acts-table-of-content/{{$actItem->constitutional_group}}/{{ $actItem->title }}/{{ $actItem->id}}">{{ $actItem->title }}</a>
                                         @elseif($documentType === 'executive')
-                                            <a href="/post-1992-legislation/executive-acts-table-of-content/{{$actItem->executive_group}}/{{ $actItem->title }}/{{ $actItem->id}}">{{ $actItem->title }}</a>
+                                            <a href="/new-laws/executive-acts-table-of-content/{{$actItem->executive_group}}/{{ $actItem->title }}/{{ $actItem->id}}">{{ $actItem->title }}</a>
                                         @elseif($documentType === 'amendment_act')
-                                            <a href="/post_1992_legislation/amended_acts_table_of_content/{{$actItem->post_category}}/{{ $actItem->title }}/{{ $actItem->id}}">{{ $actItem->title }}</a>
+                                            <a href="/new-laws/amended_acts_table_of_content/{{$actItem->post_category}}/{{ $actItem->title }}/{{ $actItem->id}}">{{ $actItem->title }}</a>
                                         @elseif($documentType === 'amendment_regulation')
-                                            <a href="/post_1992_legislation/amended_regulation_acts_table_of_content/{{$actItem->act_category}}/{{ $actItem->title }}/{{ $actItem->id}}">{{ $actItem->title }}</a>
+                                            <a href="/new-laws/amended_regulation_acts_table_of_content/{{$actItem->act_category}}/{{ $actItem->title }}/{{ $actItem->id}}">{{ $actItem->title }}</a>
                                         @endif
                                     </td>
                                     <td>{{ $actItem->year }}</td>
@@ -3471,23 +3471,23 @@
         const pre1992Title = @json($activeAct['title']);
         const activeDocumentType = @json($documentType);
 
-        let contentBaseUrl = '/post_1992_legislation/content';
-        let preambleBaseUrl = '/post_1992_legislation/preamble';
+        let contentBaseUrl = '/new-laws/content';
+        let preambleBaseUrl = '/new-laws/preamble';
         if (activeDocumentType === 'regulation') {
-            contentBaseUrl = '/post_1992_legislation/regulation_act/content';
-            preambleBaseUrl = '/post_1992_legislation/regulation/preamble';
+            contentBaseUrl = '/new-laws/regulation_act/content';
+            preambleBaseUrl = '/new-laws/regulation/preamble';
         } else if (activeDocumentType === 'constitutional') {
-            contentBaseUrl = '/post-1992-legislation/constitutional-acts/content';
-            preambleBaseUrl = '/post-1992-legislation/constitutional-acts/preamble';
+            contentBaseUrl = '/new-laws/constitutional-acts/content';
+            preambleBaseUrl = '/new-laws/constitutional-acts/preamble';
         } else if (activeDocumentType === 'executive') {
-            contentBaseUrl = '/post-1992-legislation/executive-acts/content';
-            preambleBaseUrl = '/post-1992-legislation/executive-acts/preamble';
+            contentBaseUrl = '/new-laws/executive-acts/content';
+            preambleBaseUrl = '/new-laws/executive-acts/preamble';
         } else if (activeDocumentType === 'amendment_act') {
-            contentBaseUrl = '/post_1992_legislation/amended_acts/content';
-            preambleBaseUrl = '/post_1992_legislation/amended_acts/preamble';
+            contentBaseUrl = '/new-laws/amended_acts/content';
+            preambleBaseUrl = '/new-laws/amended_acts/preamble';
         } else if (activeDocumentType === 'amendment_regulation') {
-            contentBaseUrl = '/post_1992_legislation/amended_regulation_act/content';
-            preambleBaseUrl = '/post_1992_legislation/amended_regulation_act/preamble';
+            contentBaseUrl = '/new-laws/amended_regulation_act/content';
+            preambleBaseUrl = '/new-laws/amended_regulation_act/preamble';
         }
 
         let voices = [];
@@ -4456,17 +4456,17 @@
                     const encodedTitle = encodeURIComponent(pre1992Title);
                     
                     if (activeDocumentType === 'post_1992_legislation') {
-                        expandedUrl = `/post_1992_legislation/1/${encodedGroup}/${encodedTitle}/expanded-view/${pre1992ActId}`;
+                        expandedUrl = `/new-laws/1/${encodedGroup}/${encodedTitle}/expanded-view/${pre1992ActId}`;
                     } else if (activeDocumentType === 'regulation') {
-                        expandedUrl = `/post_1992_legislation/regulation/expanded_view/${encodedGroup}/${encodedTitle}/${pre1992ActId}`;
+                        expandedUrl = `/new-laws/regulation/expanded_view/${encodedGroup}/${encodedTitle}/${pre1992ActId}`;
                     } else if (activeDocumentType === 'constitutional') {
-                        expandedUrl = `/post-1992-legislation/constitutional-acts/expanded-view/${encodedGroup}/${encodedTitle}/${pre1992ActId}`;
+                        expandedUrl = `/new-laws/constitutional-acts/expanded-view/${encodedGroup}/${encodedTitle}/${pre1992ActId}`;
                     } else if (activeDocumentType === 'executive') {
-                        expandedUrl = `/post-1992-legislation/executive-acts/expanded-view/${encodedGroup}/${encodedTitle}/${pre1992ActId}`;
+                        expandedUrl = `/new-laws/executive-acts/expanded-view/${encodedGroup}/${encodedTitle}/${pre1992ActId}`;
                     } else if (activeDocumentType === 'amendment_act') {
-                        expandedUrl = `/post_1992_legislation/amended_acts/expanded_view/${encodedGroup}/${encodedTitle}/${pre1992ActId}`;
+                        expandedUrl = `/new-laws/amended_acts/expanded_view/${encodedGroup}/${encodedTitle}/${pre1992ActId}`;
                     } else if (activeDocumentType === 'amendment_regulation') {
-                        expandedUrl = `/post_1992_legislation/amended_regulation_acts/expanded_view/${encodedGroup}/${encodedTitle}/${pre1992ActId}`;
+                        expandedUrl = `/new-laws/amended_regulation_acts/expanded_view/${encodedGroup}/${encodedTitle}/${pre1992ActId}`;
                     }
                     
                     const startTime = Date.now();

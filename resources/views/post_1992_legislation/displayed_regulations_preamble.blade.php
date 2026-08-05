@@ -12,14 +12,14 @@
             @if (Route::has('login'))
                 @auth
 
-                     <a href="/post_1992_legislation/pdf_regulation_act/preamble_content/{{$regulationsPreamble['title']}}/{{ $regulationsPreamble['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
-                     <a href="/post_1992_legislation/plain_regulation_act/preamble_content/{{ $regulationsPreamble['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp;
-                     <a href="/post_1992_legislation/print_regulation_act/preamble_content/{{ $regulationsPreamble['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                     <a href="/new-laws/pdf_regulation_act/preamble_content/{{$regulationsPreamble['title']}}/{{ $regulationsPreamble['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
+                     <a href="/new-laws/plain_regulation_act/preamble_content/{{ $regulationsPreamble['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp;
+                     <a href="/new-laws/print_regulation_act/preamble_content/{{ $regulationsPreamble['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                      
                      @else
 
                      <a href="" data-toggle="modal" data-target="#myModalrp"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
-                     <a href="/post_1992_legislation/plain_regulation_act/preamble_content/{{ $regulationsPreamble['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp;
+                     <a href="/new-laws/plain_regulation_act/preamble_content/{{ $regulationsPreamble['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp;
                      <a href="" data-toggle="modal" data-target="#myModalrp"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
          
                      <div class="modal fade" id="myModalrp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

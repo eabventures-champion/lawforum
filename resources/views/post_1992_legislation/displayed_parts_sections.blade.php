@@ -32,7 +32,7 @@
                                     <a data-scroll-to="body"
                                     data-scroll-focus="body"
                                     data-scroll-speed="400"
-                                    data-scroll-offset="-60" class="content_link" sid="{{ $allPost1992Article->id }}"  href="/post_1992_legislation/content/{{ $allPost1992Article->id }}">
+                                    data-scroll-offset="-60" class="content_link" sid="{{ $allPost1992Article->id }}"  href="/new-laws/content/{{ $allPost1992Article->id }}">
                                     <span style="color:black;">{{ $allPost1992Article->section }}</span>
                                     </a>
                                  </li>

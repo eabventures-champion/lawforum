@@ -24,7 +24,7 @@
                         @foreach($amendedActs as $amendedAct)
                             <tr>
                                 <td>
-                                    <a href="/post_1992_legislation/general_table_of_content/{{$amendedAct->post_group}}/{{ $amendedAct->title }}/{{ $amendedAct->id}}"><li style="list-style: none;">{{ $amendedAct->title }}</li></a>
+                                    <a href="/new-laws/general_table_of_content/{{$amendedAct->post_group}}/{{ $amendedAct->title }}/{{ $amendedAct->id}}"><li style="list-style: none;">{{ $amendedAct->title }}</li></a>
                                 </td> 
                                 <td>{{ $amendedAct->year }}</td>
                             </tr>

@@ -123,7 +123,7 @@
         <div class="search-well">
             <h4><b>{!! $ghana_article->chapter !!}</b></h4>
             <h5 style="color:blue;"><b>{!! $ghana_article->section !!}</b></h5>
-          {{-- <a href="/post_1992_legislation/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
+          {{-- <a href="/new-laws/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
           <br><br>
         {!! $ghana_article->articles !!}
         </div>

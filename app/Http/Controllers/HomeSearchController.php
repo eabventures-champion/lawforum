@@ -195,7 +195,7 @@ class HomeSearchController extends Controller
                         'parent_title' => $row->post_act,
                         'subtitle' => $row->part . ' | ' . $row->section,
                         'content' => $row->content,
-                        'link' => "/post_1992_legislation/content/{$row->id}",
+                        'link' => "/new-laws/content/{$row->id}",
                         'priority' => $row->priority ?? 999,
                         'year' => null
                     ];
@@ -217,7 +217,7 @@ class HomeSearchController extends Controller
                         'parent_title' => $row->regulation_title,
                         'subtitle' => $row->part . ' | ' . $row->section,
                         'content' => $row->content,
-                        'link' => "/post_1992_legislation/content/{$row->id}",
+                        'link' => "/new-laws/content/{$row->id}",
                         'priority' => $row->priority ?? 999,
                         'year' => null
                     ];
@@ -239,7 +239,7 @@ class HomeSearchController extends Controller
                         'parent_title' => $row->constitutional_act,
                         'subtitle' => $row->part . ' | ' . $row->section,
                         'content' => $row->content,
-                        'link' => "/post_1992_legislation/content/{$row->id}",
+                        'link' => "/new-laws/content/{$row->id}",
                         'priority' => $row->priority ?? 999,
                         'year' => null
                     ];
@@ -261,7 +261,7 @@ class HomeSearchController extends Controller
                         'parent_title' => $row->executive_act,
                         'subtitle' => $row->part . ' | ' . $row->section,
                         'content' => $row->content,
-                        'link' => "/post_1992_legislation/content/{$row->id}",
+                        'link' => "/new-laws/content/{$row->id}",
                         'priority' => $row->priority ?? 999,
                         'year' => null
                     ];
@@ -282,7 +282,7 @@ class HomeSearchController extends Controller
                         'parent_title' => $row->act_title,
                         'subtitle' => $row->section,
                         'content' => $row->content,
-                        'link' => "/post_1992_legislation/amended_acts/content/{$row->id}",
+                        'link' => "/new-laws/amended_acts/content/{$row->id}",
                         'priority' => $row->priority ?? 999,
                         'year' => null
                     ];
@@ -304,7 +304,7 @@ class HomeSearchController extends Controller
                         'parent_title' => $row->title,
                         'subtitle' => $row->part . ' | ' . $row->section,
                         'content' => $row->content,
-                        'link' => "/post_1992_legislation/amended_regulation_acts/content/{$row->id}",
+                        'link' => "/new-laws/amended_regulation_acts/content/{$row->id}",
                         'priority' => $row->priority ?? 999,
                         'year' => null
                     ];

@@ -16,7 +16,7 @@
                       <a data-scroll-to="body"
                       data-scroll-focus="body"
                       data-scroll-speed="400"
-                      data-scroll-offset="-60" class="executive_view_all_section_link_with_prev_next" sid="{{$allExecutiveArticle->id}}" href="/post-1992-legislation/executive-acts/content/{{ $allExecutiveArticle->id }}">{{$allExecutiveArticle->section }}
+                      data-scroll-offset="-60" class="executive_view_all_section_link_with_prev_next" sid="{{$allExecutiveArticle->id}}" href="/new-laws/executive-acts/content/{{ $allExecutiveArticle->id }}">{{$allExecutiveArticle->section }}
                       </a>
                     </li>
                   @endforeach
@@ -53,7 +53,7 @@
         <hr>
         <br>
         <center>
-            <button class="btn btn-sm btn-default expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/post-1992-legislation/executive-acts/expanded-view/{{$allExecutiveAct['executive_group']}}/{{$allExecutiveAct['title']}}/{{$allExecutiveAct['id']}}"><li style="list-style:none;">Expanded View</li>
+            <button class="btn btn-sm btn-default expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/new-laws/executive-acts/expanded-view/{{$allExecutiveAct['executive_group']}}/{{$allExecutiveAct['title']}}/{{$allExecutiveAct['id']}}"><li style="list-style:none;">Expanded View</li>
             </button>
         </center> 
         {{-- @include('extenders.case_law_main_search') --}}

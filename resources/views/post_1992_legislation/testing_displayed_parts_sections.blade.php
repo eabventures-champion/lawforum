@@ -31,7 +31,7 @@
                                 <a data-scroll-to="body"
                                 data-scroll-focus="body"
                                 data-scroll-speed="400"
-                                data-scroll-offset="-60" class="content_link list-group-item" style="white-space:normal; line-height: 0.4cm;" sid="{{ $allPost1992Article->id }}"  href="/post_1992_legislation/content/{{ $allPost1992Article->id }}">
+                                data-scroll-offset="-60" class="content_link list-group-item" style="white-space:normal; line-height: 0.4cm;" sid="{{ $allPost1992Article->id }}"  href="/new-laws/content/{{ $allPost1992Article->id }}">
                                 {{ $allPost1992Article->section }}
                                 </a>
                                            

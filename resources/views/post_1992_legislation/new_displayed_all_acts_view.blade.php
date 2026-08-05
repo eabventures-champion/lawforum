@@ -541,7 +541,7 @@
                                @foreach($allPost1992Acts as $allPost1992Act)
                                <tr>
                                   <td>
-                                     <a href="/post-1992-legislation/table-of-content/{{$allPost1992Act->post_group}}/{{ $allPost1992Act->title }}/{{ $allPost1992Act->id}}">{{ $allPost1992Act->title }}</a>
+                                     <a href="/new-laws/table-of-content/{{$allPost1992Act->post_group}}/{{ $allPost1992Act->title }}/{{ $allPost1992Act->id}}">{{ $allPost1992Act->title }}</a>
                                   </td>
                                   <td>{{ $allPost1992Act->year }}</td>
                                 </tr>
@@ -550,7 +550,7 @@
                                @foreach($allConstitutionalActs as $allConstitutionalAct)
                                <tr>
                                   <td>
-                                     <a href="/post-1992-legislation/constitutional-acts-table-of-content/{{$allConstitutionalAct->constitutional_group}}/{{ $allConstitutionalAct->title }}/{{ $allConstitutionalAct->id}}">{{ $allConstitutionalAct->title }}</a>
+                                     <a href="/new-laws/constitutional-acts-table-of-content/{{$allConstitutionalAct->constitutional_group}}/{{ $allConstitutionalAct->title }}/{{ $allConstitutionalAct->id}}">{{ $allConstitutionalAct->title }}</a>
                                   </td>
                                   <td>{{ $allConstitutionalAct->year }}</td>
                                </tr>
@@ -559,7 +559,7 @@
                                @foreach($allExecutiveActs as $allExecutiveAct)
                                <tr>
                                   <td>
-                                     <a href="/post-1992-legislation/table-of-content/{{$allExecutiveAct->executive_group}}/{{ $allExecutiveAct->title }}/{{ $allExecutiveAct->id}}">{{ $allExecutiveAct->title }}</a>
+                                     <a href="/new-laws/table-of-content/{{$allExecutiveAct->executive_group}}/{{ $allExecutiveAct->title }}/{{ $allExecutiveAct->id}}">{{ $allExecutiveAct->title }}</a>
                                   </td>
                                   <td>{{ $allExecutiveAct->year }}</td>
                                </tr>
@@ -568,7 +568,7 @@
                                @foreach($allPostRegulations as $allPostRegulation)
                                <tr>
                                   <td>
-                                     <a href="/post_1992_legislation/regulation_acts_table_of_content/{{$allPostRegulation->act_category}}/{{ $allPostRegulation->title }}/{{ $allPostRegulation->id}}">{{ $allPostRegulation->title }}</a>
+                                     <a href="/new-laws/regulation_acts_table_of_content/{{$allPostRegulation->act_category}}/{{ $allPostRegulation->title }}/{{ $allPostRegulation->id}}">{{ $allPostRegulation->title }}</a>
                                   </td>
                                   <td>{{ $allPostRegulation->year }}</td>
                                </tr>
@@ -577,7 +577,7 @@
                                @foreach($allPostsAmends as $allPostsAmend)
                                <tr>
                                   <td>
-                                     <a href="/post_1992_legislation/amended_acts_table_of_content/{{$allPostsAmend->post_category}}/{{ $allPostsAmend->title }}/{{ $allPostsAmend->id}}">{{ $allPostsAmend->title }}</a>
+                                     <a href="/new-laws/amended_acts_table_of_content/{{$allPostsAmend->post_category}}/{{ $allPostsAmend->title }}/{{ $allPostsAmend->id}}">{{ $allPostsAmend->title }}</a>
                                   </td>
                                   <td>{{ $allPostsAmend->year }}</td>
                                </tr>
@@ -586,7 +586,7 @@
                                @foreach($allPostsAmendsOnRegulations as $allPostsAmendsOnRegulation)
                                <tr>
                                   <td>
-                                     <a href="/post_1992_legislation/amended_regulation_acts_table_of_content/{{$allPostsAmendsOnRegulation->act_category}}/{{ $allPostsAmendsOnRegulation->title }}/{{ $allPostsAmendsOnRegulation->id}}">{{ $allPostsAmendsOnRegulation->title }}</a>
+                                     <a href="/new-laws/amended_regulation_acts_table_of_content/{{$allPostsAmendsOnRegulation->act_category}}/{{ $allPostsAmendsOnRegulation->title }}/{{ $allPostsAmendsOnRegulation->id}}">{{ $allPostsAmendsOnRegulation->title }}</a>
                                   </td>
                                   <td>{{ $allPostsAmendsOnRegulation->year }}</td>
                                </tr>
@@ -662,7 +662,7 @@
 
                 // Fetch data via AJAX
                 $.ajax({
-                    url: '/post_1992_legislation/ajax-data',
+                    url: '/new-laws/ajax-data',
                     data: { group: group },
                     dataType: 'json',
                     success: function(response) {
@@ -680,12 +680,12 @@
 
                         // Update browser URL without reload
                         var urlMap = {
-                            'all': '/post-1992-legislation',
-                            'acts_of_parliament': '/post-1992-legislation/1/Acts of Parliament',
-                            'legislative_instruments': '/post-1992-legislation/only-regulations',
-                            'constitutional_instruments': '/post-1992-legislation/Constitutional-Intruments',
-                            'executive_instruments': '/post-1992-legislation/Executive-Intruments',
-                            'amendments': '/post-1992-legislation/only-amendments'
+                            'all': '/new-laws',
+                            'acts_of_parliament': '/new-laws/1/Acts of Parliament',
+                            'legislative_instruments': '/new-laws/only-regulations',
+                            'constitutional_instruments': '/new-laws/Constitutional-Intruments',
+                            'executive_instruments': '/new-laws/Executive-Intruments',
+                            'amendments': '/new-laws/only-amendments'
                         };
                         if (urlMap[group]) {
                             history.pushState({ group: group }, '', urlMap[group]);

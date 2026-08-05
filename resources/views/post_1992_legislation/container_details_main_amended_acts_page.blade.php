@@ -12,7 +12,7 @@
               </button>
               <ul class="dropdown-menu table-wrapper-scroll-view" style="width: 520px;">
                   @foreach($allAmendedArticles as $allAmendedArticle)
-                  <li><a class="amendments_view_all_section_link_with_prev_next" sid={{$allAmendedArticle->id}} href="/post_1992_legislation/amended_acts/content/{{ $allAmendedArticle->id }}">{{$allAmendedArticle->section }}</a></li>
+                  <li><a class="amendments_view_all_section_link_with_prev_next" sid={{$allAmendedArticle->id}} href="/new-laws/amended_acts/content/{{ $allAmendedArticle->id }}">{{$allAmendedArticle->section }}</a></li>
                   @endforeach   
               </ul>
         </div>
@@ -47,7 +47,7 @@
         <hr>
         <br>
         <center>
-            <button class="btn btn-sm btn-default expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/post_1992_legislation/amended_acts/expanded_view/{{$amendedAct['post_category']}}/{{$amendedAct['title']}}/{{$amendedAct['id']}}"><li style="list-style:none;">Expanded View</li>
+            <button class="btn btn-sm btn-default expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/new-laws/amended_acts/expanded_view/{{$amendedAct['post_category']}}/{{$amendedAct['title']}}/{{$amendedAct['id']}}"><li style="list-style:none;">Expanded View</li>
             </button>
         </center> 
         {{-- @include('extenders.case_law_main_search') --}}

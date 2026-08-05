@@ -37,7 +37,7 @@
                                 @foreach($actsOfParliaments as $actsOfParliaments)
                                     <tr>
                                         <td>
-                                            <a href="/post-1992-legislation/table-of-content/{{$actsOfParliaments->post_group}}/{{ $actsOfParliaments->title }}/{{ $actsOfParliaments->id}}"><li style="list-style: none;">{{ $actsOfParliaments->title }}</li></a>
+                                            <a href="/new-laws/table-of-content/{{$actsOfParliaments->post_group}}/{{ $actsOfParliaments->title }}/{{ $actsOfParliaments->id}}"><li style="list-style: none;">{{ $actsOfParliaments->title }}</li></a>
                                         </td> 
                                         <td>{{ $actsOfParliaments->year }}</td>
                                     </tr>

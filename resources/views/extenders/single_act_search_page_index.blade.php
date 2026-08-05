@@ -177,7 +177,7 @@ color: green;
                 <h4><b>{!! $single_post_act->post_act !!}</b></h4>
                 <h5 style="color:blue;"><b>{!! $single_post_act->part !!}</b></h5>
               <b>{!! $single_post_act->section !!}</b>
-              {{-- <a href="/post_1992_legislation/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
+              {{-- <a href="/new-laws/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
               <br><br>
 
                 {{-- {!! strrpos($post->content, $query) !!} --}}
@@ -205,7 +205,7 @@ color: green;
             {{-- @foreach ($regulations as $regulation)
               <div class="search-well only_regulation">
                 <h5 style="color:blue;"><b>{!! $regulation->regulation_title !!}</b></h5>
-                <a href="/post_1992_legislation/content/{{$regulation->id}}" target="_blank"><b>{!! $regulation->section !!}</b></a>
+                <a href="/new-laws/content/{{$regulation->id}}" target="_blank"><b>{!! $regulation->section !!}</b></a>
                 <br><br>
                 {!! $regulation->content !!}
               </div>
@@ -215,7 +215,7 @@ color: green;
             @foreach ($amends as $amend)
             <div class="search-well only_amend_acts">
               <h5 style="color:blue;"><b>{{ $amend->act_title }}</b></h5>
-              <a href="/post_1992_legislation/amended_acts/content/{{$amend->id}}" target="_blank"><b>{!! $amend->section !!}</b></a>
+              <a href="/new-laws/amended_acts/content/{{$amend->id}}" target="_blank"><b>{!! $amend->section !!}</b></a>
               <br><br>
               {!! $amend->content !!}
             </div>
@@ -225,7 +225,7 @@ color: green;
             @foreach ($amends_regs as $amends_reg)
             <div class="search-well only_amend_reg">
               <h5 style="color:blue;"><b>{!! $amends_reg->title !!}</b></h5>
-              <a href="/post_1992_legislation/amended_regulation_acts/content/{{$amends_reg->id}}" target="_blank"><b>{!! $amends_reg->section !!}</b></a>
+              <a href="/new-laws/amended_regulation_acts/content/{{$amends_reg->id}}" target="_blank"><b>{!! $amends_reg->section !!}</b></a>
               <br><br>
               {!! $amends_reg->content !!}
             </div>

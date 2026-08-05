@@ -32,7 +32,7 @@
                         <a data-scroll-to="body"
                         data-scroll-focus="body"
                         data-scroll-speed="400"
-                        data-scroll-offset="-60" class="amendments_content_link" sid="{{ $allAmendedArticle->id }}"  href="/post_1992_legislation/amended_acts/content/{{ $allAmendedArticle->id }}">
+                        data-scroll-offset="-60" class="amendments_content_link" sid="{{ $allAmendedArticle->id }}"  href="/new-laws/amended_acts/content/{{ $allAmendedArticle->id }}">
                         <span style="color:black;">{{ $allAmendedArticle->section }}</span>
                         </a>
                     </li>

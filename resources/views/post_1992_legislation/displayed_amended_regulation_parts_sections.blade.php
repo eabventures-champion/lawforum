@@ -28,7 +28,7 @@
                         <a data-scroll-to="body"
                         data-scroll-focus="body"
                         data-scroll-speed="400"
-                        data-scroll-offset="-60" class="amended_regulation_content_link list-group-item" style="white-space:normal; line-height: 0.4cm;" sid="{{ $allAmendedRegulationArticle->id }}"  href="/post_1992_legislation/amended_regulation_acts/content/{{ $allAmendedRegulationArticle->id }}">
+                        data-scroll-offset="-60" class="amended_regulation_content_link list-group-item" style="white-space:normal; line-height: 0.4cm;" sid="{{ $allAmendedRegulationArticle->id }}"  href="/new-laws/amended_regulation_acts/content/{{ $allAmendedRegulationArticle->id }}">
                         <li style="list-style: none;">{{ $allAmendedRegulationArticle->section }}</li>
                         </a>      
                     

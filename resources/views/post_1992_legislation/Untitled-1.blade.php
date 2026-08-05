@@ -18,7 +18,7 @@
                       <li><a data-scroll-to="body"
                         data-scroll-focus="body"
                         data-scroll-speed="400"
-                        data-scroll-offset="-60" class="view_all_section_link_with_prev_next" sid="{{$allPost1992Article->id}}" href="/post_1992_legislation/content/{{ $allPost1992Article->id }}">{{$allPost1992Article->section }}</a></li>
+                        data-scroll-offset="-60" class="view_all_section_link_with_prev_next" sid="{{$allPost1992Article->id}}" href="/new-laws/content/{{ $allPost1992Article->id }}">{{$allPost1992Article->section }}</a></li>
                   @endforeach  
               </ul>
         </div>
@@ -39,13 +39,13 @@
         <hr>
         <br>
         <center>
-        <button class="btn btn-sm btn-default expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/post_1992_legislation/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/expanded-view/{{ $allPost1992Act['id'] }}"><li style="list-style:none;">Expanded View</li>
+        <button class="btn btn-sm btn-default expanded_link" id="expanded_link_toggle_all_pre1992_preview_2" href="/new-laws/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/expanded-view/{{ $allPost1992Act['id'] }}"><li style="list-style:none;">Expanded View</li>
         </button>
 
 
-        {{-- <a href="/post_1992_legislation/plain_content/{{ $allPost1992Article['post_act'] }}/{{ $allPost1992Article['id'] }}" target="_blank">Sections Plain View</a>
+        {{-- <a href="/new-laws/plain_content/{{ $allPost1992Article['post_act'] }}/{{ $allPost1992Article['id'] }}" target="_blank">Sections Plain View</a>
         <a class="trigger_plain_view" href="#"><li>Plain View</li></a>
-        <a href="/post_1992_legislation/plain_content/{{ $allPost1992Article->id }}"><li>Plain View</li></a> --}}
+        <a href="/new-laws/plain_content/{{ $allPost1992Article->id }}"><li>Plain View</li></a> --}}
         </center>
         
         <!--<br>-->

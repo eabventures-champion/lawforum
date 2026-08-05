@@ -124,7 +124,7 @@
             <span>Related Acts</span>
         </a>
         <div class="dropdown-menu dropdown-menu-premium" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item dropdown-item-premium all_amendments_link" id="all_amendments_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
+            <a class="dropdown-item dropdown-item-premium all_amendments_link" id="all_amendments_link_toggle" href="/new-laws/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
                 <i class="fa-solid fa-file-pen"></i> Amendments
             </a>
         </div>
@@ -135,7 +135,7 @@
             <span>View Related Acts</span>
         </a>
         <div class="dropdown-menu dropdown-menu-premium" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item dropdown-item-premium all_amendments_link" id="all_amendments_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
+            <a class="dropdown-item dropdown-item-premium all_amendments_link" id="all_amendments_link_toggle" href="/new-laws/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}">
                 <i class="fa-solid fa-file-pen"></i> Amendments
             </a>
         </div>
@@ -149,7 +149,7 @@
         </a>
         
         <div class="dropdown-menu dropdown-menu-premium" aria-labelledby="dropdownMenuLink-2">
-            <a class="dropdown-item dropdown-item-premium expanded_link toggle_expanded_view" href="/post_1992_legislation/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/expanded-view/{{ $allPost1992Act['id'] }}" onclick="selectViewMode('expanded'); event.stopImmediatePropagation(); return false;">
+            <a class="dropdown-item dropdown-item-premium expanded_link toggle_expanded_view" href="/new-laws/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/expanded-view/{{ $allPost1992Act['id'] }}" onclick="selectViewMode('expanded'); event.stopImmediatePropagation(); return false;">
                 <i class="fa-solid fa-expand"></i> Expanded View
             </a>
             <a class="dropdown-item dropdown-item-premium" href="#" onclick="triggerSplitView('horizontal')">

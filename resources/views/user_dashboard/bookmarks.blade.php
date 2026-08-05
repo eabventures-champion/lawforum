@@ -34,15 +34,15 @@
                         // Determine the correct route link
                         $url = '#';
                         if ($bookmark->act_group == 'Judiciary') {
-                            $url = "/post-1992-legislation/constitutional-acts-table-of-content/{$bookmark->act_group}/{$bookmark->act_title}/{$bookmark->act_id}";
+                            $url = "/new-laws/constitutional-acts-table-of-content/{$bookmark->act_group}/{$bookmark->act_title}/{$bookmark->act_id}";
                         } elseif ($bookmark->act_group == 'Acts of Parliament') {
-                            $url = "/post-1992-legislation/table-of-content/{$bookmark->act_group}/{$bookmark->act_title}/{$bookmark->act_id}";
+                            $url = "/new-laws/table-of-content/{$bookmark->act_group}/{$bookmark->act_title}/{$bookmark->act_id}";
                         } elseif ($bookmark->act_group == 'Legislative Instruments') {
-                            $url = "/post_1992_legislation/regulation_acts_table_of_content/{$bookmark->act_group}/{$bookmark->act_title}/{$bookmark->act_id}";
+                            $url = "/new-laws/regulation_acts_table_of_content/{$bookmark->act_group}/{$bookmark->act_title}/{$bookmark->act_id}";
                         } elseif (in_array($bookmark->act_group, ['First Republic', 'Second Republic', 'Third Republic', 'NLC Decree', 'NRC Decree', 'SMC Decree', 'AFRC Decree'])) {
                             $url = "/existing-laws/{$bookmark->act_group}/{$bookmark->act_title}/{$bookmark->act_id}";
                         } else {
-                            $url = "/post-1992-legislation/executive-acts-table-of-content/{$bookmark->act_group}/{$bookmark->act_title}/{$bookmark->act_id}";
+                            $url = "/new-laws/executive-acts-table-of-content/{$bookmark->act_group}/{$bookmark->act_title}/{$bookmark->act_id}";
                         }
                     @endphp
                     <tr>

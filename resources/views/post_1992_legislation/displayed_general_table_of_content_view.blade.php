@@ -90,7 +90,7 @@
                 <div class="col-md-7">
                    <h5><b>{{ $allPost1992Act['title'] }}</b></h5>
                    <hr>
-                   <a class="preamble_link" id="preamble_link_toggle" href="/post_1992_legislation/preamble/{{ $allPost1992Act['id'] }}">
+                   <a class="preamble_link" id="preamble_link_toggle" href="/new-laws/preamble/{{ $allPost1992Act['id'] }}">
                       <p>Introductory Text</p>
                    </a>
                    

@@ -27,20 +27,20 @@
           
           {{--
           @if($amendedcount > 0 && $regulationcount > 0)
-                <a class="all_amendments_link" id="all_amendments_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><li style="list-style:none;">View Amendments</li>
+                <a class="all_amendments_link" id="all_amendments_link_toggle" href="/new-laws/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><li style="list-style:none;">View Amendments</li>
                 </a>
                 
-                <a class="all_regulations_link" id="all_regulations_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_regulations_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><li style="list-style:none;">View Regulations</li>
+                <a class="all_regulations_link" id="all_regulations_link_toggle" href="/new-laws/{{$allPost1992Act['post_group']}}/all_regulations_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><li style="list-style:none;">View Regulations</li>
                 </a>
                 <br>
 
             @elseif($amendedcount > 0)
-                <a class="all_amendments_link" id="all_amendments_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><li style="list-style:none;">View Amendments</li>
+                <a class="all_amendments_link" id="all_amendments_link_toggle" href="/new-laws/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><li style="list-style:none;">View Amendments</li>
                 </a>
                 <br>
 
             @elseif($regulationcount > 0)
-                <a class="all_regulations_link" id="all_regulations_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_regulations_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><li style="list-style:none;">View Regulations</li>
+                <a class="all_regulations_link" id="all_regulations_link_toggle" href="/new-laws/{{$allPost1992Act['post_group']}}/all_regulations_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><li style="list-style:none;">View Regulations</li>
                 </a>
                 <br>
                 
@@ -60,16 +60,16 @@
               <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                   <!-- 1. both are true -->
                   @if($amendedcount > 0 && $regulationcount > 0)
-                      <li><a class="all_amendments_link" id="all_amendments_link_toggle"  href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><span class="small"><center>Amendments</center></span></a></li>
-                      <li><a class="all_regulations_link" id="all_regulations_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_regulations_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><span class="small"><center>Regulations</center></span></a></li>
+                      <li><a class="all_amendments_link" id="all_amendments_link_toggle"  href="/new-laws/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><span class="small"><center>Amendments</center></span></a></li>
+                      <li><a class="all_regulations_link" id="all_regulations_link_toggle" href="/new-laws/{{$allPost1992Act['post_group']}}/all_regulations_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><span class="small"><center>Regulations</center></span></a></li>
                       
                       <!-- 2. only amendments -->
                       @elseif($amendedcount > 0)
-                        <li><a class="all_amendments_link" id="all_amendments_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><span class="small"><center>Amendments</center></span></a></li>
+                        <li><a class="all_amendments_link" id="all_amendments_link_toggle" href="/new-laws/{{$allPost1992Act['post_group']}}/all_amended_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><span class="small"><center>Amendments</center></span></a></li>
                       
                       <!-- 3. only regulations -->
                       @elseif($regulationcount > 0)
-                        <li><a class="all_regulations_link" id="all_regulations_link_toggle" href="/post_1992_legislation/{{$allPost1992Act['post_group']}}/all_regulations_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><span class="small"><center>Regulations</center></span></a></li>
+                        <li><a class="all_regulations_link" id="all_regulations_link_toggle" href="/new-laws/{{$allPost1992Act['post_group']}}/all_regulations_acts/{{$allPost1992Act['title']}}/{{ $allPost1992Act['id'] }}"><span class="small"><center>Regulations</center></span></a></li>
                   
                       @else
                       <!--None-->
@@ -93,7 +93,7 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                <li><a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_1" href="/post_1992_legislation/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/expanded-view/{{ $allPost1992Act['id'] }}"><span class="small"><center>Expanded View</center></span></a></li>
+                <li><a class="expanded_link" id="expanded_link_toggle_all_pre1992_preview_1" href="/new-laws/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/expanded-view/{{ $allPost1992Act['id'] }}"><span class="small"><center>Expanded View</center></span></a></li>
                 
                 @if (Route::has('login'))
                   @auth
@@ -109,7 +109,7 @@
                       
                           @else
                           {{-- View Plain View --}}
-                            <li><a href="/post_1992_legislation/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/plain_view/{{ $allPost1992Act['id'] }}" target="_blank"><span class="small"><center>Plain View</center></span></a></li>
+                            <li><a href="/new-laws/1/{{$allPost1992Act['post_group']}}/{{$allPost1992Act['title']}}/plain_view/{{ $allPost1992Act['id'] }}" target="_blank"><span class="small"><center>Plain View</center></span></a></li>
                         @endif
                       @else
                     {{-- Create Account --}}

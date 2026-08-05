@@ -152,7 +152,7 @@ color: green;
             <div class="search-well">
                 <h5 style="color:blue;"><b>{!! $executive->executive_act !!}</b></h4>
                 <b>{!! $executive->section !!}</b>
-              {{-- <a href="/post_1992_legislation/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
+              {{-- <a href="/new-laws/content/{{$single_post_act->id}}" target="_blank"><b>{!! $single_post_act->section !!}</b></a> --}}
               <br><br>
             {!! $executive->content !!}
             </div>
