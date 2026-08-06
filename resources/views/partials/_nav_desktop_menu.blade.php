@@ -1,58 +1,46 @@
 {{-- Desktop Navigation Menu Links --}}
-{{-- Renders the headerMenus with support for sub-dropdowns (3-level nesting) and active state --}}
+{{-- Renders the headerMenus with support for sub-dropdowns (3-level nesting) and exclusive section active state --}}
 @php
     $currentPath = trim(request()->path(), '/');
+
+    // 1. Identify primary section from current URL route
+    $activeSection = '';
+    if (strpos($currentPath, 'constitution') === 0) {
+        $activeSection = 'constitution';
+    } elseif (strpos($currentPath, 'judgement') === 0 || strpos($currentPath, 'case') === 0) {
+        $activeSection = 'case_laws';
+    } elseif (strpos($currentPath, 'existing-laws') === 0 || strpos($currentPath, 'pre_1992') === 0 || strpos($currentPath, 'pre-1992') === 0) {
+        $activeSection = 'existing_laws';
+    } elseif (strpos($currentPath, 'post_1992') === 0 || strpos($currentPath, 'post-1992') === 0 || strpos($currentPath, 'new-laws') === 0) {
+        $activeSection = 'new_laws';
+    }
 @endphp
 
 @foreach($headerMenus as $menu)
     @php
+        $titleLower = strtolower(trim($menu->title));
         $menuUrl = $menu->custom_content ? route('dynamic.page', $menu->slug) : ($menu->url ?? '#');
         $menuPath = trim(parse_url($menuUrl, PHP_URL_PATH) ?? '', '/');
         
         $isMenuActive = false;
-        
-        // 1. Direct path comparison
-        if (!empty($menuPath) && $menuPath !== '#' && $menuPath !== '/') {
-            if ($currentPath === $menuPath || strpos($currentPath, $menuPath . '/') === 0) {
+
+        if ($activeSection !== '') {
+            // High-priority section matching: exclusively activates ONE top menu
+            if ($activeSection === 'constitution' && $titleLower === 'constitution') {
+                $isMenuActive = true;
+            } elseif ($activeSection === 'case_laws' && ($titleLower === 'case laws' || $titleLower === 'case-laws' || $titleLower === 'judgement')) {
+                $isMenuActive = true;
+            } elseif ($activeSection === 'existing_laws' && (strpos($titleLower, 'existing') !== false || strpos($titleLower, 'pre-1992') !== false || strpos($titleLower, 'pre 1992') !== false)) {
+                $isMenuActive = true;
+            } elseif ($activeSection === 'new_laws' && (strpos($titleLower, 'new') !== false || strpos($titleLower, 'post-1992') !== false || strpos($titleLower, 'post 1992') !== false)) {
                 $isMenuActive = true;
             }
-        }
-        
-        // 2. Check dropdown children/grandchildren
-        if (!$isMenuActive && $menu->is_dropdown && isset($menu->children)) {
-            foreach ($menu->children as $child) {
-                $childUrl = $child->custom_content ? route('dynamic.page', $child->slug) : ($child->url ?? '');
-                $childPath = trim(parse_url($childUrl, PHP_URL_PATH) ?? '', '/');
-                if (!empty($childPath) && $childPath !== '#' && $childPath !== '/') {
-                    if ($currentPath === $childPath || strpos($currentPath, $childPath . '/') === 0) {
-                        $isMenuActive = true;
-                        break;
-                    }
+        } else {
+            // Fallback path matching for custom pages or homepage
+            if (!empty($menuPath) && $menuPath !== '#' && $menuPath !== '/') {
+                if ($currentPath === $menuPath || strpos($currentPath, $menuPath . '/') === 0) {
+                    $isMenuActive = true;
                 }
-                if (isset($child->children)) {
-                    foreach ($child->children as $grandchild) {
-                        $gcUrl = $grandchild->custom_content ? route('dynamic.page', $grandchild->slug) : ($grandchild->url ?? '');
-                        $gcPath = trim(parse_url($gcUrl, PHP_URL_PATH) ?? '', '/');
-                        if (!empty($gcPath) && $gcPath !== '#' && $gcPath !== '/') {
-                            if ($currentPath === $gcPath || strpos($currentPath, $gcPath . '/') === 0) {
-                                $isMenuActive = true;
-                                break 2;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        // 3. Section keyword fallbacks (Constitution, Case Laws, Existing Laws, New Laws)
-        if (!$isMenuActive) {
-            $titleLower = strtolower(trim($menu->title));
-            if ($titleLower === 'constitution' && strpos($currentPath, 'constitution') === 0) {
-                $isMenuActive = true;
-            } elseif (($titleLower === 'case laws' || $titleLower === 'case-laws' || $titleLower === 'judgement') && strpos($currentPath, 'judgement') === 0) {
-                $isMenuActive = true;
-            } elseif (($titleLower === 'existing laws' || $titleLower === 'new laws' || $titleLower === 'legislation') && (strpos($currentPath, 'legislation') !== false || strpos($currentPath, 'acts') !== false)) {
-                $isMenuActive = true;
             }
         }
     @endphp
