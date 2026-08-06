@@ -579,7 +579,7 @@
     </style>
     @include('partials._nav_subdropdown_styles')
   </head>
-  <body>
+  <body class="has-scrollable-wrapper">
       
     <!-- ====== PREMIUM NAVIGATION ====== -->
     <nav class="nav-wrap" id="mainNav">
@@ -601,7 +601,7 @@
                 @guest
                     <a href="{{ route('login') }}" class="btn-login">Log In</a>
                     @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn-signup">Sign Up</a>
+                        <a href="{{ route('register') }}" class="btn-signup">Sign Up Free</a>
                     @endif
                 @else
                     <div class="nav-user-dropdown" id="userDropdown">
@@ -664,8 +664,10 @@
         @endguest
     </div>
 
-    <!-- ====== MAIN PORTAL AREA ====== -->
-    <div class="container-fluid px-md-5 mt-4">
+    <!-- ====== MAIN SCROLLABLE WRAPPER ====== -->
+    <div class="main-wrapper-scrollable">
+        <!-- ====== MAIN PORTAL AREA ====== -->
+        <div class="container-fluid px-md-5 mt-4">
         
         <div class="row">
             
@@ -898,5 +900,7 @@
             });
         });
     </script>
+    </div>
+    <!-- End Main Scrollable Wrapper -->
   </body>
 </html>

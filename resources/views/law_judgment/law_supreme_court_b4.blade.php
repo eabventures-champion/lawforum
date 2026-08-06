@@ -85,8 +85,9 @@
         ::-webkit-scrollbar-track { background: var(--bg-primary); }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
-        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none !important; transition: transform 0.3s ease; }
-        .nav-logo:hover { transform: scale(1.03); }
+        .nav-logo, .nav-logo:hover, .nav-logo:focus, .nav-logo:active, .nav-logo:visited { display: flex; align-items: center; gap: 10px; text-decoration: none !important; transition: transform 0.3s ease; }
+        .nav-logo:hover, .nav-logo:focus, .nav-logo:active { transform: scale(1.03); text-decoration: none !important; }
+        .nav-logo *, .nav-logo-text { text-decoration: none !important; }
         .nav-logo-text { display: inline-block; font-size: 22px; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(to right, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.3; }
         .nav-mobile-toggle { display: none; background: none; border: none; color: var(--text-primary); font-size: 22px; cursor: pointer; padding: 8px; }
         .mobile-nav-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(6, 10, 19, 0.98); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 999999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; opacity: 0; visibility: hidden; transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s; }

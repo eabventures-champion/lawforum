@@ -100,7 +100,7 @@
                         &nbsp;<a class="btn btn-sm bg-header-color text-white" href="{{ route('login') }}">Login</a>&nbsp;
 
                             @if (Route::has('register'))
-                                <a class="btn btn-sm bg-header-color text-white" href="{{ route('register') }}">Sign Up</a>
+                                <a class="btn btn-sm bg-header-color text-white" href="{{ route('register') }}">Sign Up Free</a>
                             @endif
                             
                         @else

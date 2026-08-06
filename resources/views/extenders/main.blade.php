@@ -282,7 +282,7 @@
                                                 <a class="btn btn-sm btn-primarys" href="{{ route('login') }}">Login</a>
 
                                                 @if (Route::has('register'))
-                                                    <a class="btn btn-sm btn-primarys" href="{{ route('register') }}">Register</a>
+                                                    <a class="btn btn-sm btn-primarys" href="{{ route('register') }}">Sign Up Free</a>
                                                 @endif
                                         @endauth
                                     </div>

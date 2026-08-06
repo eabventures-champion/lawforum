@@ -105,7 +105,11 @@
             line-height: 1;
         }
 
-        .nav-logo {
+        .nav-logo,
+        .nav-logo:hover,
+        .nav-logo:focus,
+        .nav-logo:active,
+        .nav-logo:visited {
             display: flex;
             align-items: center;
             gap: 10px;
@@ -113,8 +117,16 @@
             transition: transform 0.3s ease;
         }
 
-        .nav-logo:hover {
+        .nav-logo:hover,
+        .nav-logo:focus,
+        .nav-logo:active {
             transform: scale(1.03);
+            text-decoration: none !important;
+        }
+
+        .nav-logo *,
+        .nav-logo-text {
+            text-decoration: none !important;
         }
 
         .nav-logo-text {

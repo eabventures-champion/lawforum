@@ -169,21 +169,22 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 70px;
             z-index: 1000;
             background: rgba(6, 10, 19, 0.88);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .nav-inner {
-            max-width: 1440px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 16px 24px;
+            padding: 18px 40px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            line-height: 1;
         }
 
         .nav-logo img {
@@ -365,10 +366,10 @@
            ============================================ */
         .workspace-wrapper {
             display: flex;
-            height: calc(100vh - 82px);
+            height: calc(100vh - 70px);
             width: 100vw;
             position: fixed;
-            top: 74px;
+            top: 70px;
             left: 0;
             overflow: hidden;
             background: var(--bg-primary);
@@ -2349,7 +2350,7 @@
                 @guest
                     <a href="{{ route('login') }}" class="btn-login">Log In</a>
                     @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn-signup">Sign Up</a>
+                        <a href="{{ route('register') }}" class="btn-signup">Sign Up Free</a>
                     @endif
                 @else
                     <div class="nav-user-dropdown" id="userDropdown">

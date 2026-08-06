@@ -296,10 +296,10 @@
            ============================================ */
         .workspace-wrapper {
             display: flex;
-            height: calc(100vh - 82px);
+            height: calc(100vh - 70px);
             width: 100vw;
             position: fixed;
-            top: 74px;
+            top: 70px;
             left: 0;
             overflow: hidden;
             background: var(--bg-primary);
@@ -511,12 +511,15 @@
             height: 56px;
             min-height: 56px;
             border-bottom: 1px solid var(--border-color);
-            background: rgba(12, 18, 32, 0.4);
+            background: rgba(7, 10, 19, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 24px;
             flex-wrap: nowrap !important;
+            z-index: 100;
         }
 
         .nav-tabs-premium {
@@ -1088,6 +1091,16 @@
             position: sticky !important;
             top: 0 !important;
             z-index: 50 !important;
+        }
+
+        #display_content .nav-links::before, #acts_expanded_view .nav-links::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -8px;
+            right: -8px;
+            height: 20px;
+            background: var(--bg-primary);
         }
 
         #display_content .nav-links span, #acts_expanded_view .nav-links span {
@@ -2551,7 +2564,7 @@
                 @guest
                     <a href="{{ route('login') }}" class="btn-login">Log In</a>
                     @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn-signup">Sign Up</a>
+                        <a href="{{ route('register') }}" class="btn-signup">Sign Up Free</a>
                     @endif
                 @else
                     <div class="nav-user-dropdown" id="userDropdown">

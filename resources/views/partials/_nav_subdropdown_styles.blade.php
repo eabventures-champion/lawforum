@@ -1,4 +1,5 @@
 {{-- Sub-dropdown CSS styles for nested menu items --}}
+@include('partials._nav_master_styles')
 <style>
     /* Sub-dropdown within a dropdown menu */
     .nav-sub-dropdown {

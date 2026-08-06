@@ -45,7 +45,7 @@
 
         .sidebar-sticky-wrap {
             position: sticky;
-            top: 75px;
+            top: 20px;
             z-index: 10;
         }
 
@@ -59,7 +59,20 @@
             font-family: 'Inter', sans-serif;
             background: radial-gradient(circle at 50% 0%, var(--bg-secondary) 0%, var(--bg-primary) 100%);
             color: var(--text-primary);
+            height: 100vh;
             min-height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-wrapper-scrollable {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
             overflow-x: hidden;
         }
 
@@ -87,16 +100,28 @@
             line-height: 1;
         }
 
-        .nav-logo {
+        .nav-logo,
+        .nav-logo:hover,
+        .nav-logo:focus,
+        .nav-logo:active,
+        .nav-logo:visited {
             display: flex;
             align-items: center;
             gap: 10px;
-            text-decoration: none;
+            text-decoration: none !important;
             transition: transform 0.3s ease;
         }
 
-        .nav-logo:hover {
+        .nav-logo:hover,
+        .nav-logo:focus,
+        .nav-logo:active {
             transform: scale(1.03);
+            text-decoration: none !important;
+        }
+
+        .nav-logo *,
+        .nav-logo-text {
+            text-decoration: none !important;
         }
 
         .nav-logo img {
@@ -189,6 +214,8 @@
             color: var(--text-primary);
             text-decoration: none !important;
             padding: 8px 16px;
+            border: none;
+            background: transparent;
             transition: color 0.2s;
         }
 
@@ -250,16 +277,17 @@
             gap: 6px;
             overflow-x: auto;
             padding: 8px;
-            background: rgba(148, 163, 184, 0.08) !important;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(7, 10, 19, 0.98) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(148, 163, 184, 0.25) !important;
             border-radius: 12px;
-            margin-bottom: 24px;
+            margin-bottom: 0;
+            margin-top: 0;
             flex-wrap: nowrap !important;
             position: sticky;
-            top: 62px;
-            z-index: 99;
+            top: 0;
+            z-index: 100;
         }
 
         .nav-link-premium {
@@ -342,6 +370,12 @@
         /* ============================================
            MODAL & TABLE CUSTOMIZATION
            ============================================ */
+        .modal {
+            z-index: 100050 !important;
+        }
+        .modal-backdrop {
+            z-index: 100040 !important;
+        }
         .modal-content {
             background: #0f172a !important; /* Premium dark background */
             border: 1px solid var(--border-color) !important;
@@ -1075,6 +1109,33 @@
             display: none !important;
         }
 
+        .floating-word-finder-pill {
+            position: fixed !important;
+            bottom: 24px !important;
+            left: 24px !important;
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 50% !important;
+            background: rgba(15, 23, 42, 0.98) !important;
+            border: 1px solid var(--accent-light) !important;
+            color: var(--accent-light) !important;
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 16px !important;
+            cursor: pointer !important;
+            z-index: 1015 !important;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+            outline: none !important;
+        }
+
+        .floating-word-finder-pill:hover {
+            transform: scale(1.1) translateY(-2px) !important;
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.75) !important;
+            color: #fff !important;
+        }
+
         .case-meta-box {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border-color);
@@ -1278,7 +1339,7 @@
                 @guest
                     <a href="{{ route('login') }}" class="btn-login">Log In</a>
                     @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn-signup">Sign Up</a>
+                        <a href="{{ route('register') }}" class="btn-signup">Sign Up Free</a>
                     @endif
                 @else
                     <div class="nav-user-dropdown" id="userDropdown">
@@ -1331,8 +1392,9 @@
         @endguest
     </div>
 
-    <!-- ====== MAIN CONTAINER ====== -->
-    <div class="main-container">
+    <!-- ====== MAIN SCROLLABLE WRAPPER ====== -->
+    <div class="main-wrapper-scrollable">
+        <div class="main-container">
         <div class="row">
             <!-- Left Sidebar: Notes & Reading Progress -->
             <div class="col-lg-3 transition-width" id="left-sidebar-col">
@@ -1438,7 +1500,7 @@
                     $groupName = $allGhanaLaw['gh_law_judgment_group_name'] ?? '';
                 @endphp
                 <div class="nav-underline-premium">
-                    <a class="nav-link-premium" href="/judgement/Ghana">
+                    <a class="nav-link-premium {{ empty($groupName) || strtolower($groupName) === 'ghana' ? 'active' : '' }}" href="/judgement/Ghana">
                         <i class="fa-solid fa-gavel mr-2"></i> Case Laws
                     </a>
                     <a class="nav-link-premium {{ strtolower($groupName) === 'supreme-court' ? 'active' : '' }}" href="/judgement/1/Supreme-Court">
@@ -1451,93 +1513,22 @@
                         <i class="fa-solid fa-building-columns mr-2"></i> High Court
                     </a>
                 </div>
+                <div style="height: 20px;"></div>
 
-                <div class="premium-card">
-                    <!-- Action Headers -->
-                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-                        <div class="reading-header-premium">
-                            <span class="continent-badge">{{ str_replace('-', ' ', strtoupper($allGhanaLaw['gh_law_judgment_group_name'])) }}</span>
-                            <h2>{{ $allGhanaLaw['case_title'] }}</h2>
-                            @if(!empty($allGhanaLaw['date']))
-                                <span class="year-badge"><i class="fa-regular fa-calendar-check mr-1"></i> {{ $allGhanaLaw['date'] }}</span>
-                            @endif
-                        </div>
-
-                        <div class="d-flex align-items-center">
-                            <button type="button" class="btn btn-custom-outline" data-toggle="modal" data-target="#viewCases">
-                                <i class="fa-solid fa-scale-balanced mr-1"></i> View {{ $allGhanaLaw['gh_law_judgment_group_name'] }} Cases
-                            </button>
-                            <button type="button" class="btn btn-custom-outline ml-2" id="btnMaximizeWorkspace" onclick="toggleMaximizeWorkspace()" title="Maximize View (Toggle Header)" style="margin-left: 10px;">
-                                <i class="fa-solid fa-expand" id="maximizeIcon"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Preamble & Document Text Body -->
-                    <div class="judgement_display">
-                        <div class="content" id="constitution-reading-content">  
-                            <!-- Court Name -->
-                            <center class="mb-4">
-                                <h5 style="color: var(--text-primary); font-weight: 800; letter-spacing: 0.5px;"><b>{!! $allGhanaLaw['court_name'] !!}</b></h5>
-                            </center>
-                            
-                            <!-- Case Title Parties -->
-                            <center class="mb-4">
-                                <h6 style="color: var(--accent-light); font-size: 1.1rem; font-weight: 700;"><b>{!! $allGhanaLaw['case_title_1'] !!}</b></h6>
-                                <label style="color: var(--gold); font-weight: 800; margin: 4px 0;">vs.</label>
-                                <h6 style="color: var(--accent-light); font-size: 1.1rem; font-weight: 700;"><b>{!! $allGhanaLaw['case_title_2'] !!}</b></h6>
-                            </center>
-
-                            <!-- Case Metadata Box -->
-                            <div class="case-meta-box">
-                                <div class="case-meta-item">
-                                    <span class="case-meta-label">DATE:</span>
-                                    <span class="case-meta-val">{{ $allGhanaLaw['date'] }}</span>
-                                </div>
-                                <div class="case-meta-item">
-                                    <span class="case-meta-label">{{ $allGhanaLaw['case_type_name'] }}:</span>
-                                    <span class="case-meta-val">{{ $allGhanaLaw['reference_number'] }}</span>
-                                </div>
-                                <div class="case-meta-item">
-                                    <span class="case-meta-label">JUDGES:</span>
-                                    <span class="case-meta-val">{{ $allGhanaLaw['coram'] }}</span>
-                                </div>
-                                <div class="case-meta-item">
-                                    <span class="case-meta-label">LAWYERS:</span>
-                                    <span class="case-meta-val">{!! $allGhanaLaw['counsellors'] !!}</span>
-                                </div>
-                            </div>
-                            
-                            <center class="mb-4">
-                                <h6 class="alignment" style="color: var(--accent-light); font-weight: 800; letter-spacing: 1px;"><b>{{ $allGhanaLaw['judgement_type'] }}</b></h6>
-                            </center>
-                            <hr style="border-color: var(--border-color); margin-bottom: 24px;">
-                            
-                            <!-- Main Judgement Content HTML -->
-                            <div class="judgement-body-content">
-                                {!! $allGhanaLaw['content'] !!}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Sidebar: Search & Advertisements -->
-            <div class="col-lg-3 transition-width" id="right-sidebar-col">
-                <div class="sidebar-sticky-wrap">
-                    <!-- Premium Word Finder Card -->
-                    <div class="premium-card mb-4" id="word-search-card" style="padding: 20px;">
-                        <div class="card-header-styled" style="margin-bottom: 15px; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
-                            <h5 style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px;">
+                <!-- Floating Word Finder Panel (Hidden by default, toggled by pill) -->
+                <div class="floating-word-finder-wrap mb-3" id="word-search-card" style="display: none; position: sticky; top: 125px; z-index: 1010;">
+                    <div class="premium-card p-3" style="margin-bottom: 0; background: rgba(11, 15, 23, 0.95); backdrop-filter: blur(16px); border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                        <div class="card-header-styled mb-2 pb-2" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
+                            <h5 style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px;">
                                 <i class="fa-solid fa-magnifying-glass text-primary"></i> Word Finder
                             </h5>
-                            <button type="button" class="sidebar-collapse-btn" onclick="toggleRightSidebar()" title="Collapse Right Sidebar">
-                                <i class="fa-solid fa-chevron-right"></i>
+                            <button type="button" onclick="toggleWordSearchCard()" title="Close Word Finder" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 14px; padding: 2px 6px; outline: none;">
+                                <i class="fa-solid fa-xmark"></i>
                             </button>
                         </div>
                         <div class="search-box-premium-wrap">
                             <div class="input-group" style="display: flex; width: 100%;">
-                                <input type="text" id="document-search-input" class="form-control" placeholder="Find word..." style="
+                                <input type="text" id="document-search-input" class="form-control" placeholder="Find word in document..." style="
                                     background: rgba(11, 15, 23, 0.6);
                                     border: 1px solid var(--border-color);
                                     color: var(--text-primary);
@@ -1611,22 +1602,90 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Advertisement Module -->
-                    <div class="premium-card p-0" style="overflow: hidden;">
-                        @include('ads.small_ads_image_main_page')
+                </div>
+
+                <div class="premium-card">
+                    <!-- Action Headers -->
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                        <div class="reading-header-premium">
+                            <span class="continent-badge">{{ str_replace('-', ' ', strtoupper($allGhanaLaw['gh_law_judgment_group_name'])) }}</span>
+                            <h2>{{ $allGhanaLaw['case_title'] }}</h2>
+                            @if(!empty($allGhanaLaw['date']))
+                                <span class="year-badge"><i class="fa-regular fa-calendar-check mr-1"></i> {{ $allGhanaLaw['date'] }}</span>
+                            @endif
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <button type="button" class="btn btn-custom-outline" data-toggle="modal" data-target="#viewCases">
+                                <i class="fa-solid fa-scale-balanced mr-1"></i> View {{ $allGhanaLaw['gh_law_judgment_group_name'] }} Cases
+                            </button>
+                            <button type="button" class="btn btn-custom-outline ml-2" id="btnMaximizeWorkspace" onclick="toggleMaximizeWorkspace()" title="Maximize View (Toggle Header)" style="margin-left: 10px;">
+                                <i class="fa-solid fa-expand" id="maximizeIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Preamble & Document Text Body -->
+                    <div class="judgement_display">
+                        <div class="content" id="constitution-reading-content">  
+                            <!-- Court Name -->
+                            <center class="mb-4">
+                                <h5 style="color: var(--text-primary); font-weight: 800; letter-spacing: 0.5px;"><b>{!! $allGhanaLaw['court_name'] !!}</b></h5>
+                            </center>
+                            
+                            <!-- Case Title Parties -->
+                            <center class="mb-4">
+                                <h6 style="color: var(--accent-light); font-size: 1.1rem; font-weight: 700;"><b>{!! $allGhanaLaw['case_title_1'] !!}</b></h6>
+                                <label style="color: var(--gold); font-weight: 800; margin: 4px 0;">vs.</label>
+                                <h6 style="color: var(--accent-light); font-size: 1.1rem; font-weight: 700;"><b>{!! $allGhanaLaw['case_title_2'] !!}</b></h6>
+                            </center>
+
+                            <!-- Case Metadata Box -->
+                            <div class="case-meta-box">
+                                <div class="case-meta-item">
+                                    <span class="case-meta-label">DATE:</span>
+                                    <span class="case-meta-val">{{ $allGhanaLaw['date'] }}</span>
+                                </div>
+                                <div class="case-meta-item">
+                                    <span class="case-meta-label">{{ $allGhanaLaw['case_type_name'] }}:</span>
+                                    <span class="case-meta-val">{{ $allGhanaLaw['reference_number'] }}</span>
+                                </div>
+                                <div class="case-meta-item">
+                                    <span class="case-meta-label">JUDGES:</span>
+                                    <span class="case-meta-val">{{ $allGhanaLaw['coram'] }}</span>
+                                </div>
+                                <div class="case-meta-item">
+                                    <span class="case-meta-label">LAWYERS:</span>
+                                    <span class="case-meta-val">{!! $allGhanaLaw['counsellors'] !!}</span>
+                                </div>
+                            </div>
+                            
+                            <center class="mb-4">
+                                <h6 class="alignment" style="color: var(--accent-light); font-weight: 800; letter-spacing: 1px;"><b>{{ $allGhanaLaw['judgement_type'] }}</b></h6>
+                            </center>
+                            <hr style="border-color: var(--border-color); margin-bottom: 24px;">
+                            
+                            <!-- Main Judgement Content HTML -->
+                            <div class="judgement-body-content">
+                                {!! $allGhanaLaw['content'] !!}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Floating Expand Buttons -->
-        <button class="floating-expand-btn" id="expand-left-btn" onclick="toggleLeftSidebar()" title="Expand Left Sidebar">
-            <i class="fa-solid fa-chevron-right"></i>
-        </button>
-        <button class="floating-expand-btn" id="expand-right-btn" onclick="toggleRightSidebar()" title="Expand Right Sidebar">
-            <i class="fa-solid fa-chevron-left"></i>
-        </button>
+            <!-- Right Sidebar: Advertisements -->
+            <div class="col-lg-3 transition-width" id="right-sidebar-col">
+                <div class="sidebar-sticky-wrap">
+                    <!-- Advertisement Module -->
+                    <div class="premium-card p-0" style="overflow: hidden;">
+                        @include('ads.small_ads_image_main_page')
+            </div>
+        </div>
     </div>
+    </div>
+    </div>
+    <!-- End Main Scrollable Wrapper -->
 
     <!-- Case Selector Modal -->
     <div class="modal fade" id="viewCases" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1666,6 +1725,11 @@
         </div>
     </div>
 
+    <!-- Floating Word Finder Pill Button -->
+    <button type="button" class="floating-word-finder-pill" id="word-search-trigger" onclick="toggleWordSearchCard()" title="Word Finder (Click to open)">
+        <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+
     <!-- Back to top floating button -->
     <a id="back-to-top" href="#" class="back-to-top">
         <i class="fa-solid fa-arrow-up"></i>
@@ -1681,6 +1745,7 @@
 
     <script>
         $(document).ready(function(){
+            $('#viewCases').appendTo('body');
             $('#datatable').DataTable({
                 "pageLength": 10,
                 "ordering": true,
@@ -1688,11 +1753,16 @@
             });
 
             // back-to-top scroll animation
-            $('#back-to-top').click(function (e) {
+            $(document).on('click', '#back-to-top', function (e) {
                 e.preventDefault();
-                $('body,html').animate({
-                    scrollTop: 0
-                }, 400);
+                var mainScrollable = document.querySelector('.main-wrapper-scrollable');
+                if (mainScrollable) {
+                    mainScrollable.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+                document.body.scrollTo({ top: 0, behavior: 'smooth' });
+                $('body,html,.main-wrapper-scrollable').animate({ scrollTop: 0 }, 400);
             });
 
             // Disable copy paste on document body
@@ -1923,10 +1993,30 @@
         });
         @endauth
 
-        window.addEventListener('scroll', function() {
-            var scrollTop = window.scrollY || document.documentElement.scrollTop;
-            var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            var progress = scrollHeight > 0 ? Math.round((scrollTop / scrollHeight) * 100) : 0;
+        function updateScrollProgress() {
+            var containers = document.querySelectorAll('.main-wrapper-scrollable, .workspace-body, .split-panel-body, #display_content, .reader-container, body, html');
+            var scrollTop = 0;
+            var scrollHeight = 0;
+            var clientHeight = 0;
+
+            containers.forEach(function(el) {
+                if (el.scrollHeight > el.clientHeight && el.clientHeight > 0) {
+                    if (el.scrollTop > scrollTop || scrollTop === 0) {
+                        scrollTop = el.scrollTop;
+                        scrollHeight = el.scrollHeight;
+                        clientHeight = el.clientHeight;
+                    }
+                }
+            });
+
+            if (scrollHeight === 0 || clientHeight === 0) {
+                scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                clientHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+                scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight || 0;
+            }
+
+            var maxScroll = scrollHeight - clientHeight;
+            var progress = maxScroll > 0 ? Math.round((scrollTop / maxScroll) * 100) : 0;
             progress = Math.min(100, Math.max(0, progress));
 
             var progressFill = document.getElementById('progressFill');
@@ -1936,13 +2026,14 @@
 
             var backToTopBtn = document.getElementById('back-to-top');
             if (backToTopBtn) {
-                if (scrollTop > 300) {
-                    backToTopBtn.style.display = 'flex';
-                } else {
-                    backToTopBtn.style.display = 'none';
-                }
+                backToTopBtn.style.display = (scrollTop > 100) ? 'flex' : 'none';
             }
-        });
+        }
+
+        window.addEventListener('scroll', updateScrollProgress, true);
+        document.addEventListener('scroll', updateScrollProgress, true);
+        setInterval(updateScrollProgress, 250);
+        updateScrollProgress();
     });
 
     function createNoteCardElement(note) {
@@ -2116,41 +2207,61 @@
         setTimeout(function() { toast.style.display = 'none'; }, 3000);
     }
 
-    var leftSidebarCollapsed = false;
-    var rightSidebarCollapsed = false;
+    function toggleWordSearchCard() {
+        var searchCard = document.getElementById('word-search-card');
+        var searchTrigger = document.getElementById('word-search-trigger');
+        if (!searchCard) return;
+        if (searchCard.style.display === 'none' || getComputedStyle(searchCard).display === 'none') {
+            searchCard.style.display = 'block';
+            if (searchTrigger) searchTrigger.style.display = 'none';
+            var input = document.getElementById('document-search-input');
+            if (input) input.focus();
+        } else {
+            searchCard.style.display = 'none';
+            if (searchTrigger) searchTrigger.style.display = 'flex';
+        }
+    }
 
-    function toggleLeftSidebar() {
+    window.leftSidebarCollapsed = false;
+    window.rightSidebarCollapsed = false;
+
+    window.toggleLeftSidebar = function() {
         leftSidebarCollapsed = !leftSidebarCollapsed;
         var sidebar = document.getElementById('left-sidebar-col');
         var expandBtn = document.getElementById('expand-left-btn');
         
-        if (leftSidebarCollapsed) {
-            sidebar.classList.add('collapsed-sidebar');
-            expandBtn.style.display = 'flex';
-        } else {
-            sidebar.classList.remove('collapsed-sidebar');
-            expandBtn.style.display = 'none';
+        if (sidebar) {
+            if (leftSidebarCollapsed) {
+                sidebar.classList.add('collapsed-sidebar');
+                if (expandBtn) expandBtn.style.display = 'flex';
+            } else {
+                sidebar.classList.remove('collapsed-sidebar');
+                if (expandBtn) expandBtn.style.display = 'none';
+            }
         }
         updateMiddleColumnWidth();
-    }
+    };
 
-    function toggleRightSidebar() {
+    window.toggleRightSidebar = function() {
         rightSidebarCollapsed = !rightSidebarCollapsed;
         var sidebar = document.getElementById('right-sidebar-col');
         var expandBtn = document.getElementById('expand-right-btn');
         
-        if (rightSidebarCollapsed) {
-            sidebar.classList.add('collapsed-sidebar');
-            expandBtn.style.display = 'flex';
-        } else {
-            sidebar.classList.remove('collapsed-sidebar');
-            expandBtn.style.display = 'none';
+        if (sidebar) {
+            if (rightSidebarCollapsed) {
+                sidebar.classList.add('collapsed-sidebar');
+                if (expandBtn) expandBtn.style.display = 'flex';
+            } else {
+                sidebar.classList.remove('collapsed-sidebar');
+                if (expandBtn) expandBtn.style.display = 'none';
+            }
         }
         updateMiddleColumnWidth();
-    }
+    };
 
-    function updateMiddleColumnWidth() {
+    window.updateMiddleColumnWidth = function() {
         var middleCol = document.getElementById('middle-content-col');
+        if (!middleCol) return;
         middleCol.classList.remove('col-lg-6', 'col-lg-9', 'col-lg-12');
         
         var leftWidth = leftSidebarCollapsed ? 0 : 3;
@@ -2158,7 +2269,7 @@
         var middleWidth = 12 - leftWidth - rightWidth;
         
         middleCol.classList.add('col-lg-' + middleWidth);
-    }
+    };
 
     function toggleMaximizeWorkspace() {
         const body = document.body;
@@ -2198,6 +2309,14 @@
         }
     });
     </script>
+
+    <!-- Floating Expand Buttons -->
+    <button class="floating-expand-btn" id="expand-left-btn" onclick="toggleLeftSidebar()" title="Expand Left Sidebar">
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
+    <button class="floating-expand-btn" id="expand-right-btn" onclick="toggleRightSidebar()" title="Expand Right Sidebar">
+        <i class="fa-solid fa-chevron-left"></i>
+    </button>
 
     <!-- Floating Text Selection Tooltip -->
     <div class="text-select-tooltip" id="textSelectTooltip">

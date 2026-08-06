@@ -575,7 +575,7 @@
                 @guest
                     <a href="{{ route('login') }}" class="btn-login">Log In</a>
                     @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn-signup">Sign Up</a>
+                        <a href="{{ route('register') }}" class="btn-signup">Sign Up Free</a>
                     @endif
                 @else
                     <div class="nav-user-dropdown" id="userDropdown">
@@ -664,7 +664,7 @@
                                 <a class="vertical-nav-link decree-sub-link " data-group="8" data-label="AFRC Decree" href="javascript:void(0)"><i class="fa-solid fa-signature mr-3" style="width: 16px; text-align: center;"></i> AFRCD</a>
                             </div>
                         </div>
-                        <a class="vertical-nav-link " data-group="4" data-label="PNDC Laws" href="javascript:void(0)"><i class="fa-solid fa-book mr-3" style="width: 16px; text-align: center;"></i> PNDC</a>
+                        <a class="vertical-nav-link " data-group="4" data-label="PNDC Laws" href="javascript:void(0)"><i class="fa-solid fa-book mr-3" style="width: 16px; text-align: center;"></i> PNDC Law</a>
                     </div>
                 </div>
             </div>

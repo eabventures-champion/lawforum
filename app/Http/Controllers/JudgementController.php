@@ -119,11 +119,11 @@ class JudgementController extends Controller
     //------------------------------------------------------------------------------------------
     //SUPREME COURT
     public function supreme_court($name){
-        $supremeCourts = GhLawJudgment::where(['gh_law_judgment_group_name' => $name])->get();
-        $supremecategories   = GhLawJudgmentCategory::all();
-        $footer_notes           = FooterNote::all();
-        // return view('law_judgment.law_supreme_court', compact('footer_notes','supremeCourts', 'supremecategories'));
-        return view('law_judgment.law_supreme_court_b4', compact('footer_notes','supremeCourts', 'supremecategories'));
+        $ghlawjudgments = GhLawJudgment::where(['gh_law_judgment_group_name' => $name])->get();
+        $ghcategories   = GhLawJudgmentCategory::all();
+        $footer_notes   = FooterNote::all();
+        $groupName      = $name;
+        return view('layouts.app_main_header', compact('footer_notes','ghlawjudgments', 'ghcategories', 'groupName'));
     }
 
     //SUPREME COURT FILTERING
@@ -142,9 +142,11 @@ class JudgementController extends Controller
             $bool = true;
         }
 
-         $supremeCourts       = ($bool)?GhLawJudgment::where($where)->where(['gh_law_judgment_group_name' => $name])->get():GhLawJudgment::all();
-         $supremecategories   = GhLawJudgmentCategory::all();
-         return view('law_judgment.law_supreme_court', compact('supremeCourts', 'supremecategories'));
+         $ghlawjudgments       = ($bool)?GhLawJudgment::where($where)->where(['gh_law_judgment_group_name' => $name])->get():GhLawJudgment::where(['gh_law_judgment_group_name' => $name])->get();
+         $ghcategories   = GhLawJudgmentCategory::all();
+         $footer_notes   = FooterNote::all();
+         $groupName      = $name;
+         return view('layouts.app_main_header', compact('footer_notes', 'ghlawjudgments', 'ghcategories', 'groupName'));
     }
 
     public function supreme_court_cases($id, $name){
@@ -168,11 +170,11 @@ class JudgementController extends Controller
     //-------------------------------------------------------------------------------------------
     //HIGH COURT
     public function high_court($name){
-        $highCourts = GhLawJudgment::where(['gh_law_judgment_group_name' => $name])->get();
-        $highcategories   = GhLawJudgmentCategory::all();
-        $footer_notes           = FooterNote::all();
-        // return view('law_judgment.law_high_court', compact('footer_notes','highCourts', 'highcategories'));
-        return view('law_judgment.law_high_court_b4', compact('footer_notes','highCourts', 'highcategories'));
+        $ghlawjudgments = GhLawJudgment::where(['gh_law_judgment_group_name' => $name])->get();
+        $ghcategories   = GhLawJudgmentCategory::all();
+        $footer_notes   = FooterNote::all();
+        $groupName      = $name;
+        return view('layouts.app_main_header', compact('footer_notes','ghlawjudgments', 'ghcategories', 'groupName'));
     }
 
     //HIGH COURT FILTERING
@@ -191,9 +193,11 @@ class JudgementController extends Controller
            $bool = true;
        }
 
-        $highCourts       = ($bool)?GhLawJudgment::where($where)->where(['gh_law_judgment_group_name' => $name])->get():GhLawJudgment::all();
-        $highcategories   = GhLawJudgmentCategory::all();
-        return view('law_judgment.law_high_court', compact('highCourts', 'highcategories'));
+        $ghlawjudgments   = ($bool)?GhLawJudgment::where($where)->where(['gh_law_judgment_group_name' => $name])->get():GhLawJudgment::where(['gh_law_judgment_group_name' => $name])->get();
+        $ghcategories     = GhLawJudgmentCategory::all();
+        $footer_notes     = FooterNote::all();
+        $groupName        = $name;
+        return view('layouts.app_main_header', compact('footer_notes', 'ghlawjudgments', 'ghcategories', 'groupName'));
        }
 
     public function high_court_cases($id, $name){
@@ -217,11 +221,11 @@ class JudgementController extends Controller
     //--------------------------------------------------------------------------------------------------
     //COURT OF APPEAL
     public function court_of_appeal($name){
-        $courtOfAppeals = GhLawJudgment::where(['gh_law_judgment_group_name' => $name])->get();
-        $courtOfAppealcategories   = GhLawJudgmentCategory::all();
-        $footer_notes           = FooterNote::all();
-        // return view('law_judgment.law_court_of_appeal', compact('footer_notes','courtOfAppeals', 'courtOfAppealcategories'));
-        return view('law_judgment.law_court_of_appeal_b4', compact('footer_notes','courtOfAppeals', 'courtOfAppealcategories'));
+        $ghlawjudgments = GhLawJudgment::where(['gh_law_judgment_group_name' => $name])->get();
+        $ghcategories   = GhLawJudgmentCategory::all();
+        $footer_notes   = FooterNote::all();
+        $groupName      = $name;
+        return view('layouts.app_main_header', compact('footer_notes','ghlawjudgments', 'ghcategories', 'groupName'));
     }
 
     //COURT OF APPEAL FILTERING

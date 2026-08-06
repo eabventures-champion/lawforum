@@ -80,16 +80,28 @@
             line-height: 1;
         }
 
-        .nav-logo {
+        .nav-logo,
+        .nav-logo:hover,
+        .nav-logo:focus,
+        .nav-logo:active,
+        .nav-logo:visited {
             display: flex;
             align-items: center;
             gap: 10px;
-            text-decoration: none;
+            text-decoration: none !important;
             transition: transform 0.3s ease;
         }
 
-        .nav-logo:hover {
+        .nav-logo:hover,
+        .nav-logo:focus,
+        .nav-logo:active {
             transform: scale(1.03);
+            text-decoration: none !important;
+        }
+
+        .nav-logo *,
+        .nav-logo-text {
+            text-decoration: none !important;
         }
 
         .nav-logo img {
@@ -605,9 +617,10 @@
             }
         }
     </style>
+    @include('partials._nav_master_styles')
     @include('partials._nav_subdropdown_styles')
   </head>
-  <body>
+  <body class="has-scrollable-wrapper">
       
     <!-- ====== PREMIUM NAVIGATION (Homepage Standard) ====== -->
     <nav class="nav-wrap" id="mainNav">
@@ -679,32 +692,51 @@
         @endguest
     </div>
 
-    <!-- ====== MAIN PORTAL AREA ====== -->
-    <div class="container-fluid px-md-5 mt-4">
+    <!-- ====== MAIN SCROLLABLE WRAPPER ====== -->
+    <div class="main-wrapper-scrollable">
+        <!-- ====== MAIN PORTAL AREA ====== -->
+        <div class="container-fluid px-md-5 mt-4">
         
         <div class="row">
             
             <!-- Left Main Column -->
             <div class="col-md-9">
 
+                @php
+                    $currentGroup = $groupName ?? (request()->route('name') ?? '');
+                    if (strtolower($currentGroup) === 'supreme-court') {
+                        $pageTitle = 'Supreme Court';
+                        $pageSubtitle = 'Browse and search Ghana Supreme Court case laws and judgements.';
+                    } elseif (strtolower($currentGroup) === 'court-of-appeal') {
+                        $pageTitle = 'Court of Appeal';
+                        $pageSubtitle = 'Browse and search Ghana Court of Appeal case laws and judgements.';
+                    } elseif (strtolower($currentGroup) === 'high-court') {
+                        $pageTitle = 'High Court';
+                        $pageSubtitle = 'Browse and search Ghana High Court case laws and judgements.';
+                    } else {
+                        $pageTitle = 'Ghana Case Laws';
+                        $pageSubtitle = 'Browse and search Ghana case laws including Supreme Court, Court of Appeal, and High Court judgements.';
+                    }
+                @endphp
+
                 <!-- Header Text Block -->
                 <div class="mb-4">
-                    <h1 class="page-title" style="font-size: 2.2rem; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Ghana Case Laws</h1>
-                    <p class="page-subtitle" style="font-size: 15px; color: var(--text-secondary); line-height: 1.6;">Browse and search Ghana case laws including Supreme Court, Court of Appeal, and High Court judgements.</p>
+                    <h1 class="page-title" style="font-size: 2.2rem; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ $pageTitle }}</h1>
+                    <p class="page-subtitle" style="font-size: 15px; color: var(--text-secondary); line-height: 1.6;">{{ $pageSubtitle }}</p>
                 </div>
 
                 <!-- Premium Court Category Tabs -->
                 <div class="nav-underline-premium">
-                    <a class="nav-link-premium active" href="/judgement/Ghana">
+                    <a class="nav-link-premium {{ empty($currentGroup) || strtolower($currentGroup) === 'ghana' ? 'active' : '' }}" href="/judgement/Ghana">
                         <i class="fa-solid fa-gavel mr-2"></i> Case Laws
                     </a>
-                    <a class="nav-link-premium" href="/judgement/1/Supreme-Court">
+                    <a class="nav-link-premium {{ strtolower($currentGroup) === 'supreme-court' ? 'active' : '' }}" href="/judgement/1/Supreme-Court">
                         <i class="fa-solid fa-landmark mr-2"></i> Supreme Court
                     </a>
-                    <a class="nav-link-premium" href="/judgement/3/Court-of-Appeal">
+                    <a class="nav-link-premium {{ strtolower($currentGroup) === 'court-of-appeal' ? 'active' : '' }}" href="/judgement/3/Court-of-Appeal">
                         <i class="fa-solid fa-scale-balanced mr-2"></i> Court of Appeal
                     </a>
-                    <a class="nav-link-premium" href="/judgement/2/High-Court">
+                    <a class="nav-link-premium {{ strtolower($currentGroup) === 'high-court' ? 'active' : '' }}" href="/judgement/2/High-Court">
                         <i class="fa-solid fa-building-columns mr-2"></i> High Court
                     </a>
                 </div>
@@ -824,6 +856,10 @@
                     document.title = headerMap[court].h1 + ' - Legals Forum';
                 }
 
+                if (window.history && window.history.pushState) {
+                    window.history.pushState(null, '', href);
+                }
+
                 // Fetch data via AJAX
                 $.ajax({
                     url: '/judgement/ajax-data',
@@ -883,6 +919,9 @@
             });
         });
     </script>
+
+    </div>
+    <!-- End Main Scrollable Wrapper -->
 
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-174662621-1"></script>

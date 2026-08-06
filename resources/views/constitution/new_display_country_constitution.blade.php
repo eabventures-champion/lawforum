@@ -45,7 +45,7 @@
 
         .sidebar-sticky-wrap {
             position: sticky;
-            top: 75px;
+            top: 20px;
             z-index: 10;
         }
 
@@ -61,6 +61,24 @@
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
+        }
+
+        body.has-scrollable-wrapper {
+            height: 100vh !important;
+            min-height: 100vh !important;
+            overflow: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .main-wrapper-scrollable {
+            position: fixed !important;
+            top: 70px !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: calc(100vh - 70px) !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
         }
 
         /* ====== PREMIUM NAVIGATION ====== */
@@ -250,17 +268,17 @@
             gap: 6px;
             overflow-x: auto;
             padding: 8px;
-            background: rgba(148, 163, 184, 0.08) !important;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(7, 10, 19, 0.98) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(148, 163, 184, 0.25) !important;
             border-radius: 12px;
             margin-top: 0 !important;
-            margin-bottom: 24px;
+            margin-bottom: 0;
             flex-wrap: nowrap !important;
             position: sticky;
-            top: 62px;
-            z-index: 99;
+            top: 0;
+            z-index: 100;
             scrollbar-width: none !important;
             -ms-overflow-style: none !important;
         }
@@ -351,6 +369,12 @@
         /* ============================================
            MODAL & TABLE CUSTOMIZATION
            ============================================ */
+        .modal {
+            z-index: 100050 !important;
+        }
+        .modal-backdrop {
+            z-index: 100040 !important;
+        }
         .modal-content {
             background: #0f172a !important; /* Premium dark background */
             border: 1px solid var(--border-color) !important;
@@ -1347,7 +1371,7 @@
     </style>
     @include('partials._nav_subdropdown_styles')
   </head>
-  <body>
+  <body class="has-scrollable-wrapper">
 
     <!-- ====== PREMIUM NAVIGATION ====== -->
     <nav class="nav-wrap" id="mainNav">
@@ -1369,7 +1393,7 @@
                 @guest
                     <a href="{{ route('login') }}" class="btn-login">Log In</a>
                     @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn-signup">Sign Up</a>
+                        <a href="{{ route('register') }}" class="btn-signup">Sign Up Free</a>
                     @endif
                 @else
                     <div class="nav-user-dropdown" id="userDropdown">
@@ -1400,6 +1424,9 @@
             </div>
         </div>
     </nav>
+
+    <!-- Main Scrollable Wrapper -->
+    <div class="main-wrapper-scrollable">
 
     <!-- Mobile Nav Panel (Image 2 Standard) -->
     <div class="mobile-nav-panel" id="mobileNav">
@@ -1525,12 +1552,13 @@
                 <!-- Premium Continent Tabs Menu -->
                 <div class="nav-underline-premium">
                     <a class="nav-link-premium {{ request()->is('constitution/all_countries') ? 'active' : '' }}" href="/constitution/all_countries"><i class="fa-solid fa-globe mr-2"></i> All Countries</a>
-                    <a class="nav-link-premium {{ request()->is('constitution/display_only_african_countries') ? 'active' : '' }}" href="/constitution/display_only_african_countries"><i class="fa-solid fa-earth-africa mr-2"></i> Africa</a>
-                    <a class="nav-link-premium {{ request()->is('constitution/display_only_asia_countries') ? 'active' : '' }}" href="/constitution/display_only_asia_countries"><i class="fa-solid fa-earth-asia mr-2"></i> Asia</a>
-                    <a class="nav-link-premium {{ request()->is('constitution/display_only_europe_countries') ? 'active' : '' }}" href="/constitution/display_only_europe_countries"><i class="fa-solid fa-earth-europe mr-2"></i> Europe</a>
-                    <a class="nav-link-premium {{ request()->is('constitution/display_only_north_america_countries') ? 'active' : '' }}" href="/constitution/display_only_north_america_countries"><i class="fa-solid fa-earth-americas mr-2"></i> North America</a>
-                    <a class="nav-link-premium {{ request()->is('constitution/display_only_south_america_countries') ? 'active' : '' }}" href="/constitution/display_only_south_america_countries"><i class="fa-solid fa-earth-americas mr-2"></i> South America</a>
+                    <a class="nav-link-premium {{ request()->is('constitution/all-countries/1/*') || request()->is('constitution/1/Africa/*') ? 'active' : '' }}" href="/constitution/all-countries/1/Africa"><i class="fa-solid fa-earth-africa mr-2"></i> Africa</a>
+                    <a class="nav-link-premium {{ request()->is('constitution/all-countries/2/*') || request()->is('constitution/1/Asia/*') ? 'active' : '' }}" href="/constitution/all-countries/2/Asia"><i class="fa-solid fa-earth-asia mr-2"></i> Asia</a>
+                    <a class="nav-link-premium {{ request()->is('constitution/all-countries/3/*') || request()->is('constitution/1/Europe/*') ? 'active' : '' }}" href="/constitution/all-countries/3/Europe"><i class="fa-solid fa-earth-europe mr-2"></i> Europe</a>
+                    <a class="nav-link-premium {{ request()->is('constitution/all-countries/4/*') || request()->is('constitution/1/North_America/*') ? 'active' : '' }}" href="/constitution/all-countries/4/North_America"><i class="fa-solid fa-earth-americas mr-2"></i> North America</a>
+                    <a class="nav-link-premium {{ request()->is('constitution/all-countries/5/*') || request()->is('constitution/1/South_America/*') ? 'active' : '' }}" href="/constitution/all-countries/5/South_America"><i class="fa-solid fa-earth-americas mr-2"></i> South America</a>
                 </div>
+                <div style="height: 20px;"></div>
 
                 <!-- Floating Word Finder Panel (Hidden by default) -->
                 <div class="floating-word-finder-wrap mb-3" id="word-search-card" style="display: none; position: sticky; top: 125px; z-index: 1010;">
@@ -1769,16 +1797,9 @@
         <button type="button" class="floating-word-finder-pill" id="word-search-trigger" onclick="toggleWordSearchCard()" title="Word Finder (Click to open)">
             <i class="fa-solid fa-magnifying-glass"></i>
         </button>
-
-        <!-- Floating Expand Buttons -->
-        <button class="floating-expand-btn" id="expand-left-btn" onclick="toggleLeftSidebar()" title="Expand Left Sidebar">
-            <i class="fa-solid fa-chevron-right"></i>
-        </button>
-        <button class="sidebar-restore-btn right-restore" id="expand-right-btn" onclick="toggleRightSidebar()" title="Reader Tools & Notes (Click to open)">
-            <i class="fa-solid fa-feather-pointed" style="font-size: 11px;"></i>
-            <span style="font-size: 9px; font-weight: 800; letter-spacing: 1px; writing-mode: vertical-rl; transform: rotate(180deg);">NOTES</span>
-        </button>
     </div>
+    </div>
+    <!-- End Main Scrollable Wrapper -->
 
     <!-- Country Selector Modal -->
     <div class="modal fade" id="viewCases" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1833,6 +1854,7 @@
 
     <script>
         $(document).ready(function(){
+            $('#viewCases').appendTo('body');
             $('#datatable').DataTable({
                 "pageLength": 10,
                 "ordering": true,
@@ -1842,7 +1864,7 @@
             // back-to-top scroll animation
             $('#back-to-top').click(function (e) {
                 e.preventDefault();
-                $('body,html').animate({
+                $('body,html,.main-wrapper-scrollable').animate({
                     scrollTop: 0
                 }, 400);
             });
@@ -2088,10 +2110,10 @@
         });
         @endauth
 
-        // Reading progress tracker & back-to-top toggle
-        window.addEventListener('scroll', function() {
-            var scrollTop = window.scrollY || document.documentElement.scrollTop;
-            var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        function updateScrollProgress() {
+            var scrollEl = document.querySelector('.main-wrapper-scrollable') || document.documentElement;
+            var scrollTop = scrollEl.scrollTop || window.scrollY || 0;
+            var scrollHeight = (scrollEl.scrollHeight || document.documentElement.scrollHeight) - (scrollEl.clientHeight || document.documentElement.clientHeight);
             var progress = scrollHeight > 0 ? Math.round((scrollTop / scrollHeight) * 100) : 0;
             progress = Math.min(100, Math.max(0, progress));
 
@@ -2100,16 +2122,22 @@
             if (progressFill) progressFill.style.width = progress + '%';
             if (progressPercent) progressPercent.textContent = progress + '%';
 
-            // Show/hide back to top button when scrolled down (hidden if right sidebar panel is open on mobile)
+            // Show/hide back to top button when scrolled down
             var backToTopBtn = document.getElementById('back-to-top');
             if (backToTopBtn) {
-                if (scrollTop > 300 && (window.innerWidth > 991 || rightSidebarCollapsed)) {
+                if (scrollTop > 150 && (window.innerWidth > 991 || typeof rightSidebarCollapsed === 'undefined' || rightSidebarCollapsed)) {
                     backToTopBtn.style.display = 'flex';
                 } else {
                     backToTopBtn.style.display = 'none';
                 }
             }
-        });
+        }
+
+        window.addEventListener('scroll', updateScrollProgress, true);
+        var mainScrollable = document.querySelector('.main-wrapper-scrollable');
+        if (mainScrollable) {
+            mainScrollable.addEventListener('scroll', updateScrollProgress);
+        }
     });
 
     // ============================================
@@ -2342,7 +2370,10 @@
         }
     }
 
-    function toggleLeftSidebar() {
+    window.leftSidebarCollapsed = false;
+    window.rightSidebarCollapsed = false;
+
+    window.toggleLeftSidebar = function() {
         leftSidebarCollapsed = !leftSidebarCollapsed;
         var sidebar = document.getElementById('left-sidebar-col');
         var expandBtn = document.getElementById('expand-left-btn');
@@ -2355,9 +2386,9 @@
             if (expandBtn) expandBtn.style.display = 'none';
         }
         updateMiddleColumnWidth();
-    }
+    };
 
-    function toggleRightSidebar() {
+    window.toggleRightSidebar = function() {
         rightSidebarCollapsed = !rightSidebarCollapsed;
         var sidebar = document.getElementById('right-sidebar-col');
         var expandBtn = document.getElementById('expand-right-btn');
@@ -2442,6 +2473,15 @@
         }
     });
     </script>
+
+    <!-- Floating Expand Buttons -->
+    <button class="floating-expand-btn" id="expand-left-btn" onclick="toggleLeftSidebar()" title="Expand Left Sidebar">
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
+    <button class="sidebar-restore-btn right-restore" id="expand-right-btn" onclick="toggleRightSidebar()" title="Reader Tools & Notes (Click to open)">
+        <i class="fa-solid fa-feather-pointed" style="font-size: 11px;"></i>
+        <span style="font-size: 9px; font-weight: 800; letter-spacing: 1px; writing-mode: vertical-rl; transform: rotate(180deg);">NOTES</span>
+    </button>
 
     <!-- Floating Text Selection Tooltip (outside sidebars to prevent d-none conflicts) -->
     <div class="text-select-tooltip" id="textSelectTooltip">

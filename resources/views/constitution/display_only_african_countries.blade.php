@@ -596,18 +596,12 @@
             <div class="nav-menu-links-premium">
                 @include('partials._nav_desktop_menu')
             </div>
-                        </div>
-                    @else
-                        <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}" class="nav-link-btn" style="text-decoration:none !important;">{{ $menu->title }}</a>
-                    @endif
-                @endforeach
-            </div>
 
             <div class="nav-auth">
                 @guest
                     <a href="{{ route('login') }}" class="btn-login">Log In</a>
                     @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn-signup">Sign Up</a>
+                        <a href="{{ route('register') }}" class="btn-signup">Sign Up Free</a>
                     @endif
                 @else
                     <div class="nav-user-dropdown" id="userDropdown">
