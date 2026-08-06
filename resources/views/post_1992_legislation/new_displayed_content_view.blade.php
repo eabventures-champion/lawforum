@@ -60,7 +60,6 @@
             animation: fadeIn 0.4s ease both;
         }
 
-        /* Header / Nav-links Styling */
         #display_content .premium-article-container .nav-links,
         #acts_expanded_view .premium-article-container .nav-links,
         .premium-article-container .nav-links {
@@ -78,6 +77,18 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
             margin-bottom: 8px !important;
             color: #fff !important;
+        }
+
+        #display_content .premium-article-container .nav-links::before,
+        #acts_expanded_view .premium-article-container .nav-links::before,
+        .premium-article-container .nav-links::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -8px;
+            right: -8px;
+            height: 20px;
+            background: var(--bg-primary);
         }
 
         .premium-article-container .nav-links span {

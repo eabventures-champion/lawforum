@@ -154,6 +154,26 @@
         background: rgba(255, 255, 255, 0.05) !important;
     }
 
+    .nav-link-btn.active,
+    .nav-link-dropdown.active > .nav-link-btn {
+        color: #ffffff !important;
+        background: rgba(59, 130, 246, 0.15) !important;
+        border: 1px solid rgba(59, 130, 246, 0.3) !important;
+        font-weight: 600 !important;
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.2) !important;
+    }
+
+    .nav-link-btn.active i,
+    .nav-link-dropdown.active > .nav-link-btn i {
+        color: var(--accent-light, #60a5fa) !important;
+    }
+
+    .nav-dropdown-menu a.active {
+        color: var(--accent-light, #60a5fa) !important;
+        background: rgba(59, 130, 246, 0.12) !important;
+        font-weight: 600 !important;
+    }
+
     .nav-link-btn i {
         font-size: 10px !important;
         color: var(--text-muted, #64748b) !important;

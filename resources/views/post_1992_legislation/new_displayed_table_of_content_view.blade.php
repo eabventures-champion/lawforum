@@ -1234,6 +1234,16 @@
             z-index: 50 !important;
         }
 
+        #display_content .nav-links::before, #acts_expanded_view .nav-links::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -8px;
+            right: -8px;
+            height: 20px;
+            background: var(--bg-primary);
+        }
+
         #display_content .nav-links span, #acts_expanded_view .nav-links span {
             font-size: 12px !important;
             gap: 8px !important;
