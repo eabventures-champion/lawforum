@@ -236,6 +236,38 @@
             background: rgba(255, 255, 255, 0.08);
         }
 
+        @keyframes searchShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+        .search-input-wrap.error-shake {
+            animation: searchShake 0.4s ease-in-out !important;
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 16px rgba(239, 68, 68, 0.4) !important;
+        }
+        .header-search-form {
+            position: relative;
+        }
+        .search-empty-prompt-toast {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: rgba(239, 68, 68, 0.95);
+            color: #ffffff;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.25s ease;
+        }
+
         .header-actions {
             display: flex;
             align-items: center;
@@ -1281,9 +1313,13 @@
             </a>
 
             <div class="header-search-form">
-                <div class="search-input-wrap">
+                <div class="search-input-wrap" id="header-search-wrap">
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
                     <input type="text" id="main-search-input" value="{{ $query }}" placeholder="Search any law or case in Ghana...">
+                </div>
+                <div class="search-empty-prompt-toast" id="header-search-prompt" style="display:none;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>Search query cannot be empty. Please enter a keyword to search.</span>
                 </div>
             </div>
 
@@ -1899,16 +1935,48 @@
             }
         });
 
+        function showEmptySearchPrompt() {
+            const wrap = document.getElementById('header-search-wrap');
+            const prompt = document.getElementById('header-search-prompt');
+            if (wrap) {
+                wrap.classList.remove('error-shake');
+                void wrap.offsetWidth;
+                wrap.classList.add('error-shake');
+                setTimeout(() => wrap.classList.remove('error-shake'), 800);
+            }
+            if (prompt) {
+                prompt.style.display = 'flex';
+                setTimeout(() => {
+                    if (prompt) prompt.style.display = 'none';
+                }, 4000);
+            }
+            if (elements.searchInput) elements.searchInput.focus();
+        }
+
         // Immediate search on Enter keypress
         elements.searchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 clearTimeout(debounceTimer);
                 const val = e.target.value.trim();
+                if (!val) {
+                    e.preventDefault();
+                    showEmptySearchPrompt();
+                    return;
+                }
+                const prompt = document.getElementById('header-search-prompt');
+                if (prompt) prompt.style.display = 'none';
                 state.query = val;
                 state.page = 1;
                 state.subcategory = 'All';
                 state.year = 'All';
                 performSearch();
+            }
+        });
+
+        elements.searchInput.addEventListener('input', (e) => {
+            const prompt = document.getElementById('header-search-prompt');
+            if (prompt && e.target.value.trim()) {
+                prompt.style.display = 'none';
             }
         });
 

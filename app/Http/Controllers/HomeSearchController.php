@@ -15,6 +15,7 @@ use App\GhanaArticle;
 use App\GhAmendedArticle;
 use App\GhLawJudgment;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class HomeSearchController extends Controller
 {
@@ -34,36 +35,17 @@ class HomeSearchController extends Controller
         
         $footer_notes = FooterNote::all();
 
-        // If it's a standard non-AJAX request, just render the SPA shell view.
+        // If it's a standard non-AJAX request, immediately render SPA shell view for instant mobile page loading
         if (!$request->ajax() && !$request->wantsJson()) {
-            $all_total_count = 0;
-            $total_constitution_articles_count = 0;
-            $total_constitution_countries = 0;
-            $pre_total_count = 0;
-            $posts_total_count = 0;
-            $cases_total = 0;
-            $cases_total_count = 0;
-            
-            // If query is present, we bootstrap counts so sidebar is populated on initial page load
-            if (!empty($originalQuery)) {
-                $counts = $this->calculateCounts($query);
-                $all_total_count = $counts['all_total_count'];
-                $total_constitution_articles_count = $counts['constitution_ghana_total'];
-                $total_constitution_countries = $counts['constitution_others_total'];
-                $pre_total_count = $counts['pre_4th_total'];
-                $posts_total_count = $counts['post_4th_total'];
-                $cases_total_count = $counts['cases_total'];
-            }
-
             return view('extenders.home_search_page_index', [
                 'query' => $originalQuery,
                 'footer_notes' => $footer_notes,
-                'all_total_count' => $all_total_count,
-                'total_constitution_articles_count' => $total_constitution_articles_count,
-                'total_constitution_countries' => $total_constitution_countries,
-                'pre_total_count' => $pre_total_count,
-                'posts_total_count' => $posts_total_count,
-                'cases_total_count' => $cases_total_count
+                'all_total_count' => 0,
+                'total_constitution_articles_count' => 0,
+                'total_constitution_countries' => 0,
+                'pre_total_count' => 0,
+                'posts_total_count' => 0,
+                'cases_total_count' => 0
             ]);
         }
 
@@ -447,91 +429,85 @@ class HomeSearchController extends Controller
     }
 
     /**
-     * Helper to compute table counts efficiently
+     * Helper to compute table counts efficiently (Cached for 5 minutes)
      */
     private function calculateCounts($query)
     {
-        $lastQuery = session()->get('last_search_query');
-        if ($lastQuery === $query && session()->has('last_search_counts')) {
-            return session()->get('last_search_counts');
-        }
+        $cacheKey = 'search_counts_v2_' . md5($query);
 
-        $ghana_const_count = GhanaArticle::where('articles', 'LIKE', "%$query%")->count();
-        $ghana_const_amended_count = GhAmendedArticle::where('articles', 'LIKE', "%$query%")->count();
-        $constitution_ghana_total = $ghana_const_count + $ghana_const_amended_count;
+        return Cache::remember($cacheKey, 300, function() use ($query) {
+            $ghana_const_count = GhanaArticle::where('articles', 'LIKE', "%$query%")->count();
+            $ghana_const_amended_count = GhAmendedArticle::where('articles', 'LIKE', "%$query%")->count();
+            $constitution_ghana_total = $ghana_const_count + $ghana_const_amended_count;
 
-        $constitution_others_total = AllConstitution::where('content', 'LIKE', "%$query%")->count();
+            $constitution_others_total = AllConstitution::where('content', 'LIKE', "%$query%")->count();
 
-        $pre_4th_total = DB::table('pre1992_legislation_articles')
-            ->where('content', 'LIKE', "%$query%")
-            ->count();
+            $pre_4th_total = DB::table('pre1992_legislation_articles')
+                ->where('content', 'LIKE', "%$query%")
+                ->count();
 
-        $post1992_count = Post1992Article::where(function($q) use ($query) {
-            $q->where('part', 'LIKE', "%$query%")
-              ->orWhere('section', 'LIKE', "%$query%")
-              ->orWhere('content', 'LIKE', "%$query%")
-              ->orWhere('post_act', 'LIKE', "%$query%");
-        })->count();
+            $post1992_count = Post1992Article::where(function($q) use ($query) {
+                $q->where('part', 'LIKE', "%$query%")
+                  ->orWhere('section', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('post_act', 'LIKE', "%$query%");
+            })->count();
 
-        $regulation_count = RegulationArticle::where(function($q) use ($query) {
-            $q->where('part', 'LIKE', "%$query%")
-              ->orWhere('section', 'LIKE', "%$query%")
-              ->orWhere('content', 'LIKE', "%$query%")
-              ->orWhere('regulation_title', 'LIKE', "%$query%");
-        })->count();
+            $regulation_count = RegulationArticle::where(function($q) use ($query) {
+                $q->where('part', 'LIKE', "%$query%")
+                  ->orWhere('section', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('regulation_title', 'LIKE', "%$query%");
+            })->count();
 
-        $constitutional_count = ConstitutionalArticle::where(function($q) use ($query) {
-            $q->where('part', 'LIKE', "%$query%")
-              ->orWhere('section', 'LIKE', "%$query%")
-              ->orWhere('content', 'LIKE', "%$query%")
-              ->orWhere('constitutional_act', 'LIKE', "%$query%");
-        })->count();
+            $constitutional_count = ConstitutionalArticle::where(function($q) use ($query) {
+                $q->where('part', 'LIKE', "%$query%")
+                  ->orWhere('section', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('constitutional_act', 'LIKE', "%$query%");
+            })->count();
 
-        $executive_count = ExecutiveArticle::where(function($q) use ($query) {
-            $q->where('part', 'LIKE', "%$query%")
-              ->orWhere('section', 'LIKE', "%$query%")
-              ->orWhere('content', 'LIKE', "%$query%")
-              ->orWhere('executive_act', 'LIKE', "%$query%");
-        })->count();
+            $executive_count = ExecutiveArticle::where(function($q) use ($query) {
+                $q->where('part', 'LIKE', "%$query%")
+                  ->orWhere('section', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('executive_act', 'LIKE', "%$query%");
+            })->count();
 
-        $amends_count = AmendedArticle::where(function($q) use ($query) {
-            $q->where('section', 'LIKE', "%$query%")
-              ->orWhere('content', 'LIKE', "%$query%")
-              ->orWhere('act_title', 'LIKE', "%$query%");
-        })->count();
+            $amends_count = AmendedArticle::where(function($q) use ($query) {
+                $q->where('section', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('act_title', 'LIKE', "%$query%");
+            })->count();
 
-        $amends_regs_count = AmendRegulationArticle::where(function($q) use ($query) {
-            $q->where('part', 'LIKE', "%$query%")
-              ->orWhere('section', 'LIKE', "%$query%")
-              ->orWhere('content', 'LIKE', "%$query%")
-              ->orWhere('title', 'LIKE', "%$query%");
-        })->count();
+            $amends_regs_count = AmendRegulationArticle::where(function($q) use ($query) {
+                $q->where('part', 'LIKE', "%$query%")
+                  ->orWhere('section', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('title', 'LIKE', "%$query%");
+            })->count();
 
-        $post_4th_total = $post1992_count + $regulation_count + $constitutional_count + $executive_count + $amends_count + $amends_regs_count;
+            $post_4th_total = $post1992_count + $regulation_count + $constitutional_count + $executive_count + $amends_count + $amends_regs_count;
 
-        $cases_total = GhLawJudgment::where('content', 'LIKE', "%$query%")->count();
+            $cases_total = GhLawJudgment::where('content', 'LIKE', "%$query%")->count();
 
-        $all_total_count = $constitution_ghana_total + $constitution_others_total + $pre_4th_total + $post_4th_total + $cases_total;
+            $all_total_count = $constitution_ghana_total + $constitution_others_total + $pre_4th_total + $post_4th_total + $cases_total;
 
-        $counts = [
-            'constitution_ghana_total' => $constitution_ghana_total,
-            'constitution_others_total' => $constitution_others_total,
-            'pre_4th_total' => $pre_4th_total,
-            'post1992_count' => $post1992_count,
-            'regulation_count' => $regulation_count,
-            'constitutional_count' => $constitutional_count,
-            'executive_count' => $executive_count,
-            'amends_count' => $amends_count,
-            'amends_regs_count' => $amends_regs_count,
-            'post_4th_total' => $post_4th_total,
-            'cases_total' => $cases_total,
-            'all_total_count' => $all_total_count
-        ];
-
-        session()->put('last_search_query', $query);
-        session()->put('last_search_counts', $counts);
-
-        return $counts;
+            return [
+                'constitution_ghana_total' => $constitution_ghana_total,
+                'constitution_others_total' => $constitution_others_total,
+                'pre_4th_total' => $pre_4th_total,
+                'post1992_count' => $post1992_count,
+                'regulation_count' => $regulation_count,
+                'constitutional_count' => $constitutional_count,
+                'executive_count' => $executive_count,
+                'amends_count' => $amends_count,
+                'amends_regs_count' => $amends_regs_count,
+                'post_4th_total' => $post_4th_total,
+                'cases_total' => $cases_total,
+                'all_total_count' => $all_total_count
+            ];
+        });
     }
 
     /**

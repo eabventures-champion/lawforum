@@ -570,6 +570,41 @@
             box-shadow: 0 0 0 3px var(--accent-glow), 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
+        @keyframes searchShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        .search-container.error-shake {
+            animation: searchShake 0.4s ease-in-out !important;
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 16px rgba(239, 68, 68, 0.4) !important;
+        }
+
+        .search-empty-prompt {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            color: #f87171;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            margin: 12px auto 0;
+            max-width: 640px;
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .search-empty-prompt i {
+            font-size: 14px;
+            color: #f87171;
+        }
+
         .search-icon {
             padding: 0 4px 0 16px;
             color: var(--text-muted);
@@ -2002,12 +2037,16 @@
             </p>
 
             <div class="hero-search">
-                <form action="{{ url('main_home_search') }}" method="GET">
+                <form action="{{ url('main_home_search') }}" method="GET" id="hero-search-form">
                     {{ csrf_field() }}
-                    <div class="search-container">
+                    <div class="search-container" id="hero-search-container">
                         <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        <input type="text" name="search_text" placeholder="{{ homepage_setting('slide_0_search_placeholder', 'Search any law, case, or legal document...') }}" autocomplete="off">
+                        <input type="text" name="search_text" id="hero-search-input" placeholder="{{ homepage_setting('slide_0_search_placeholder', 'Search any law, case, or legal document...') }}" autocomplete="off">
                         <button type="submit" class="search-btn">{{ homepage_setting('slide_0_search_btn', 'Search') }}</button>
+                    </div>
+                    <div class="search-empty-prompt" id="hero-search-prompt" style="display: none;">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>Search query cannot be empty. Please enter a keyword to search.</span>
                     </div>
                 </form>
             </div>
@@ -2703,15 +2742,41 @@
             startAutoSlide();
         }
 
-        // Add focus/blur event listeners to the search input
-        const searchInput = document.querySelector('input[name="search_text"]');
-        if (searchInput) {
-            searchInput.addEventListener('focus', () => {
-                clearTimeout(autoSlideTimeout);
+        // Empty search validation prompt
+        const heroSearchForm = document.getElementById('hero-search-form');
+        if (heroSearchForm) {
+            heroSearchForm.addEventListener('submit', (e) => {
+                const input = document.getElementById('hero-search-input');
+                const container = document.getElementById('hero-search-container');
+                const prompt = document.getElementById('hero-search-prompt');
+
+                if (!input || !input.value.trim()) {
+                    e.preventDefault();
+
+                    if (container) {
+                        container.classList.remove('error-shake');
+                        void container.offsetWidth;
+                        container.classList.add('error-shake');
+                        setTimeout(() => container.classList.remove('error-shake'), 800);
+                    }
+
+                    if (prompt) {
+                        prompt.style.display = 'flex';
+                    }
+
+                    if (input) input.focus();
+                }
             });
-            searchInput.addEventListener('blur', () => {
-                resetAutoSlide();
-            });
+
+            const heroInput = document.getElementById('hero-search-input');
+            if (heroInput) {
+                heroInput.addEventListener('input', () => {
+                    const prompt = document.getElementById('hero-search-prompt');
+                    if (prompt && heroInput.value.trim()) {
+                        prompt.style.display = 'none';
+                    }
+                });
+            }
         }
 
         // Initialize slider
