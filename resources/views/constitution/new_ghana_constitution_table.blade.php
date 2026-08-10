@@ -790,7 +790,7 @@
         .toc-welcome {
             text-align: center;
             max-width: 500px;
-            margin: 0 auto;
+            margin: 60px auto 0;
             color: var(--text-secondary);
         }
 
@@ -2381,18 +2381,14 @@
             .mobile-workspace-backdrop.active {
                 display: block !important;
             }
-        /* Sidebar View Mode & Audio Module: Only visible in mobile view */
-        .sidebar-view-modes,
+        /* Sidebar View Mode & Audio Module */
         .sidebar-audio-controls,
-        .sidebar-view-modes-divider,
         .sidebar-audio-controls-divider {
             display: none !important;
         }
 
         @media (max-width: 991px) {
-            .sidebar-view-modes,
             .sidebar-audio-controls,
-            .sidebar-view-modes-divider,
             .sidebar-audio-controls-divider {
                 display: block !important;
             }
@@ -2971,6 +2967,11 @@
 
 
 
+                    <div class="sidebar-divider"></div>
+
+                    <div class="toc-sidebar-module">
+                        @include('constitution.new_container_plain')
+                    </div>
                     <div class="content-sidebar-module" style="display:none;">
                         @include('constitution.new_container_details_constitution')
                     </div>
@@ -3120,9 +3121,15 @@
                     $('.content-search-box').css('visibility', 'hidden');
                     $('.font-adjuster').css('visibility', 'hidden');
                     $('#readerArticleNav').hide();
+                    if (window.innerWidth <= 991) {
+                        $('.reading-toolbar').hide();
+                    } else {
+                        $('.reading-toolbar').css('display', 'flex');
+                    }
                 } else {
                     $('.content-search-box').css('visibility', 'visible');
                     $('.font-adjuster').css('visibility', 'visible');
+                    $('.reading-toolbar').css('display', 'flex');
                     if ($('#v-pills-profile-tab').hasClass('active')) {
                         $('#readerArticleNav').css('display', 'flex');
                     } else {
@@ -3502,6 +3509,11 @@
             const restoreBtn = document.getElementById(side + 'RestoreBtn');
             if (!sidebar) return;
             
+            // On mobile screen sizes (<= 991px), do not automatically expand sidebars on section/AJAX load
+            if (window.innerWidth <= 991 && !collapsed && side === 'right') {
+                collapsed = true;
+            }
+
             if (collapsed) {
                 sidebar.classList.add('collapsed');
                 sidebar.classList.remove('open');

@@ -2596,7 +2596,7 @@
                                         @elseif($documentType === 'amendment_regulation')
                                             <a class="preamble_link" sid="preamble" href="/new-laws/amended_regulation_acts/preamble/{{ $activeAct['id'] }}">
                                         @endif
-                                            <i class="fa-solid fa-scroll mr-2 text-warning"></i> Read Act Preamble / Introductory Text
+                                            <i class="fa-solid fa-scroll mr-2 text-warning"></i> Read Act Preamble Introductory Text
                                         </a>
                                     </div>
                                 @endif

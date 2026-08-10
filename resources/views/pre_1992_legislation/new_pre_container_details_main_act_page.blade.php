@@ -73,6 +73,12 @@
         position: relative !important;
         z-index: 1 !important;
     }
+
+    @media (max-width: 991px) {
+        .premium-details-card {
+            display: none !important;
+        }
+    }
 </style>
 
 <div class="premium-details-card">

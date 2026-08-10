@@ -110,31 +110,15 @@
        border-color: rgba(255, 255, 255, 0.15);
        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
    }
+
+   @media (max-width: 991px) {
+       .premium-filter-card {
+           display: none !important;
+       }
+   }
 </style>
 
-<div class="premium-filter-card">
-    <div class="filter-header-title">
-        <i class="fa-solid fa-filter"></i> Filter
-    </div>
-    
-    <div class="dropdown">
-        <a class="dropdown-btn-premium dropdown-toggle" href="#" role="button" id="dropdownMenuLink-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span>View Options</span>
-        </a>
-        
-        <div class="dropdown-menu dropdown-menu-premium" aria-labelledby="dropdownMenuLink-2">
-            <a class="dropdown-item dropdown-item-premium expanded_link toggle_expanded_view" href="/existing-laws/1/{{$allPre1992Act['pre_1992_group']}}/{{$allPre1992Act['title']}}/expanded-view/{{ $allPre1992Act['id'] }}" onclick="selectViewMode('expanded'); event.stopImmediatePropagation(); return false;">
-                <i class="fa-solid fa-expand"></i> Expanded View
-            </a>
-            <a class="dropdown-item dropdown-item-premium" href="#" onclick="triggerSplitView('horizontal')">
-                <i class="fa-solid fa-columns"></i> Horizontal Split
-            </a>
-            <a class="dropdown-item dropdown-item-premium" href="#" onclick="triggerSplitView('vertical')">
-                <i class="fa-solid fa-window-maximize" style="transform: rotate(90deg); font-size: 10px;"></i> Vertical Split
-            </a>
-        </div>
-    </div>
-</div>
+
 
 <div class="premium-ad-card">
     @include('ads.small_ads_image_main_page')
