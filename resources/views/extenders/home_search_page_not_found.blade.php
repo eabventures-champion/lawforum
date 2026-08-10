@@ -126,7 +126,7 @@
             </div>
 
             <div class="custom-radio mb-2">
-              <input type="radio" class="4th_rep1" id="4th_rep" name="act-type" value="4th_Republic">&nbsp;4th Republic Laws&nbsp;<span class="badge badge-secondary">{{$posts_total_count}}</span>
+              <input type="radio" class="4th_rep1" id="4th_rep" name="act-type" value="4th_Republic">&nbsp;New Laws&nbsp;<span class="badge badge-secondary">{{$posts_total_count}}</span>
             </div>
 
             <div class="custom-radio mb-2">

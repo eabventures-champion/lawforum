@@ -237,7 +237,7 @@
                 <div class="pt_for_content_container">
                     <div class="nav-scroller bg-header-color rounded shadow-sm">
                         <nav class="nav nav-underline">
-                            <a class="nav-link active text-white" href="/new-laws">All 4th Republic Laws</a>
+                            <a class="nav-link active text-white" href="/new-laws">All New Laws</a>
                             <a class="nav-link text-white" href="/new-laws/1/Acts of Parliament">Acts of Parliament</a>
                             <a class="nav-link text-white" href="/new-laws/only-regulations">Legislative Instruments</a>
                             <a class="nav-link text-white" href="/new-laws/Constitutional-Intruments">Constitutional Instruments</a>

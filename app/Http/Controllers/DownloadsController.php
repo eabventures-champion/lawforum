@@ -31,7 +31,7 @@ class DownloadsController extends Controller
     }
 
 
-    // FOR CASES AND 4TH REPUBLIC LAWS------------------------------------------------------------------------------------------------------------------------------------------
+    // FOR CASES AND New Laws------------------------------------------------------------------------------------------------------------------------------------------
 
     public function save_download_section($act_title, $section, $section_id, $user_name, $user_id, $user_section, $act_group, $act_id){
         

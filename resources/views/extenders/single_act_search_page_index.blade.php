@@ -142,7 +142,7 @@ color: green;
             {{-- <p style="color:blue;">Temporary Side bar</p>
             <div class="custom-control custom-radio">
               <input type="radio" class="custom-control-input all1" id="defaultChecked" name="act-type" value="All" checked>
-              <label class="custom-control-label" for="defaultChecked">All 4th Republic Laws</label>&nbsp;<span class="badge">{{$total_count}}</span>
+              <label class="custom-control-label" for="defaultChecked">All New Laws</label>&nbsp;<span class="badge">{{$total_count}}</span>
             </div>
             <br>
             <div class="custom-control custom-radio">

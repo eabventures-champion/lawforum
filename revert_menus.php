@@ -8,8 +8,8 @@ $kernel->bootstrap();
 use App\NavigationMenu;
 
 NavigationMenu::whereIn('title', [
-    'Pre-4th Republic Laws',
-    '4th Republic Laws',
+    'Pre-New Laws',
+    'New Laws',
     'Case Laws',
     'News'
 ])->update(['is_active' => false]);

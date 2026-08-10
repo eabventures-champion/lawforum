@@ -790,7 +790,7 @@
         .toc-welcome {
             text-align: center;
             max-width: 500px;
-            margin: 60px auto 0;
+            margin: 80px auto 0;
             color: var(--text-secondary);
         }
 
@@ -2344,6 +2344,10 @@
                 flex: 1 0 100% !important;
             }
 
+            .workspace-main:has(.toc-welcome) .reading-toolbar {
+                display: none !important;
+            }
+
             .reading-toolbar {
                 padding: 0 10px !important;
                 height: 52px !important;
@@ -2489,8 +2493,8 @@
             }
             /* Increase content card width on mobile by reducing padding */
             .workspace-body {
-                padding-left: 32px !important;
-                padding-right: 32px !important;
+                padding-left: 40px !important;
+                padding-right: 40px !important;
             }
             .article-card {
                 padding: 24px 16px !important;
@@ -2730,7 +2734,7 @@
                             <div id="display_content">
                                 <div class="preamble-card">
                                     <a class="constitution_preamble_link" sid="preamble" href="/constitution/Republic/constitution_preamble/{{ $ghana_act['id'] }}">
-                                        <i class="fa-solid fa-scroll mr-2 text-warning"></i> Read Constitution Introductory Text
+                                        <i class="fa-solid fa-scroll mr-2 text-warning"></i> Read Introductory Text
                                     </a>
                                 </div>
                                 <div class="toc-welcome">
@@ -4816,6 +4820,10 @@
                 $('#audioPlayerBanner').css('display', 'flex');
             }
             
+            if (window.innerWidth <= 991) {
+                closeMobileSidebars();
+            }
+
             // Trigger bootstrap tab switch
             if (tabId) {
                 $(tabId).trigger('click');

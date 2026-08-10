@@ -25,16 +25,18 @@
         color: #f59e0b;
     }
     
+    .mobile-sidebar-toggle-btn {
+        z-index: 1040 !important;
+    }
+
     .mobile-sidebar-backdrop {
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        z-index: 1045;
+        background: rgba(0, 0, 0, 0.75);
+        z-index: 1045 !important;
         opacity: 0;
         visibility: hidden;
         transition: all 0.3s ease;

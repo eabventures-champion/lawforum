@@ -1,6 +1,6 @@
 @extends('extenders.main')
 
-@section('title', '4th Republic Laws')
+@section('title', 'New Laws')
 
 @section('assets')
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">

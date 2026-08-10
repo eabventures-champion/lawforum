@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Explore post-1992 legislation laws on Legals Forum.">
-    <title>4th Republic Laws - Legals Forum</title>
+    <title>New Laws - Legals Forum</title>
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -423,6 +423,7 @@
         }
     </style>
     @include('partials._nav_subdropdown_styles')
+    @include('partials._mobile_sidebar_drawer_styles')
   </head>
   <body class="has-scrollable-wrapper">
       
@@ -495,16 +496,27 @@
 
     <!-- ====== MAIN SCROLLABLE WRAPPER ====== -->
     <div class="main-wrapper-scrollable">
+        <!-- Mobile Sidebar Backdrop & Toggle Button -->
+        <div class="mobile-sidebar-backdrop" id="mobileSidebarBackdrop" onclick="closeMobileSidebarCard()"></div>
+        <button class="mobile-sidebar-toggle-btn" id="mobileSidebarToggleBtn" onclick="toggleMobileSidebarCard()" title="New Laws Menu">
+            <i class="fa-solid fa-chevron-right" id="mobileSidebarToggleIcon"></i>
+        </button>
+
+        <!-- ====== 3-COLUMN PORTAL AREA ====== -->
         <!-- ====== 3-COLUMN PORTAL AREA ====== -->
         <div class="container-fluid px-md-4 mt-4">
         <div class="row">
             
             <!-- Left Column: Vertical Menu -->
-            <div class="col-lg-3 col-md-4">
+            <div class="col-lg-3 col-md-4 mobile-sidebar-drawer" id="leftSidebarCol">
+                <div class="mobile-sidebar-close-header">
+                    <span><i class="fa-solid fa-folder-open text-primary mr-2"></i> 4th Republic Laws</span>
+                    <button class="mobile-sidebar-close-btn" onclick="closeMobileSidebarCard()">&times;</button>
+                </div>
                 <div class="premium-sidebar-card p-0" style="overflow: hidden; position: sticky; top: 90px;">
                     <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
                         <h5 style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px;">
-                            <i class="fa-solid fa-folder-open text-primary"></i> 4th Republic Laws
+                            <i class="fa-solid fa-folder-open text-primary"></i> New Laws
                         </h5>
                     </div>
                     <div class="vertical-nav-group" id="sidebarNav">
@@ -655,6 +667,10 @@
                 // Update active state
                 $('#sidebarNav .vertical-nav-link').removeClass('active');
                 $link.addClass('active');
+
+                if (window.innerWidth <= 991) {
+                    closeMobileSidebarCard();
+                }
 
                 // Show loading overlay
                 $('#tableLoader').addClass('show');

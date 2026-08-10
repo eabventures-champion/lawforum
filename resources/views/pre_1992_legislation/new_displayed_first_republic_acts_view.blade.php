@@ -559,7 +559,7 @@
     @include('partials._nav_subdropdown_styles')
     @include('partials._mobile_sidebar_drawer_styles')
   </head>
-  <body>
+  <body class="has-scrollable-wrapper">
       
     <!-- ====== PREMIUM NAVIGATION ====== -->
     <nav class="nav-wrap" id="mainNav">
@@ -628,14 +628,16 @@
         @endguest
     </div>
 
-    <!-- Mobile Sidebar Backdrop & Toggle Button -->
-    <div class="mobile-sidebar-backdrop" id="mobileSidebarBackdrop" onclick="closeMobileSidebarCard()"></div>
-    <button class="mobile-sidebar-toggle-btn" id="mobileSidebarToggleBtn" onclick="toggleMobileSidebarCard()" title="Existing Laws Menu">
-        <i class="fa-solid fa-chevron-right" id="mobileSidebarToggleIcon"></i>
-    </button>
+    <!-- ====== MAIN SCROLLABLE WRAPPER ====== -->
+    <div class="main-wrapper-scrollable">
+        <!-- Mobile Sidebar Backdrop & Toggle Button -->
+        <div class="mobile-sidebar-backdrop" id="mobileSidebarBackdrop" onclick="closeMobileSidebarCard()"></div>
+        <button class="mobile-sidebar-toggle-btn" id="mobileSidebarToggleBtn" onclick="toggleMobileSidebarCard()" title="Existing Laws Menu">
+            <i class="fa-solid fa-chevron-right" id="mobileSidebarToggleIcon"></i>
+        </button>
 
-    <!-- ====== 3-COLUMN PORTAL AREA ====== -->
-    <div class="container-fluid px-md-4 mt-4">
+        <!-- ====== 3-COLUMN PORTAL AREA ====== -->
+        <div class="container-fluid px-md-4 mt-4">
         <div class="row">
             
             <!-- Left Column: Vertical Menu -->
@@ -819,5 +821,7 @@
             });
         });
     </script>
+    </div>
+    <!-- End Main Scrollable Wrapper -->
   </body>
 </html>

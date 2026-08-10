@@ -26,58 +26,9 @@
 
 <div class="col-md-3 mobile-filter-hide">
   <div class="sidebar">
-    <div class="card border-secondary" style="max-width: 18rem;">
-      <div class="card-header" style="padding: .25rem 1.25rem;">Filter</div>
-      <div class="card-body text-dark">
-        
-        <center>
-            <div class="dropdown mb-3">
-              <a class="btn btn-outline-dark dropdown-toggle btn-customised" href="#" role="button" id="dropdownMenuLink-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span>Sections</span>
-              </a>
-              <div class="dropdown-menu scroll-view" aria-labelledby="dropdownMenuLink-3">
-                @foreach($allAmendedArticles as $allAmendedArticle)
-                    <a data-scroll-to="body"
-                    data-scroll-focus="body"
-                    data-scroll-speed="400"
-                    data-scroll-offset="-60" class="amendments_view_all_section_link_with_prev_next dropdown-item" sid="{{$allAmendedArticle->id}}" href="/new-laws/amended_acts/content/{{ $allAmendedArticle->id }}">{{$allAmendedArticle->section }}
-                    </a>
-                @endforeach              
-              </div>
-            </div>
-
-            
-        <div class="mb-2  preamble_hide_pre_next">
-            <button a data-scroll-to="body"
-            data-scroll-focus="body"
-            data-scroll-speed="400"
-            data-scroll-offset="-60" type="button" class="btn btn-outline-dark btn-sm previous_content_amendments btn-customised">
-            &laquo;&nbsp;Previous
-            </button>
-            <button a data-scroll-to="body"
-            data-scroll-focus="body"
-            data-scroll-speed="400"
-            data-scroll-offset="-60" type="button" class="btn btn-outline-dark btn-sm next_content_amendments btn-customised">
-            Next&nbsp;&raquo;
-            </button>
-        </div>
-        <hr>
-        <div class="mt-5">
-          <button a data-scroll-to="body"
-              data-scroll-focus="body"
-              data-scroll-speed="400"
-              data-scroll-offset="-60" type="button" class="btn btn-outline-dark btn-sm expanded_link toggle_expanded_view btn-customised" href="/new-laws/amended_acts/expanded_view/{{$amendedAct['post_category']}}/{{$amendedAct['title']}}/{{$amendedAct['id']}}">
-              Expanded View
-          </button>
-        <div>
-          
-        </center>
-          
-
-
-          
-
-          
+    <div class="premium-ad-card" style="margin-bottom: 20px;">
+        @include('ads.placeholder_advertise')
+    </div>      
                 
       </div>
     </div>

@@ -43,7 +43,7 @@ return new class extends Migration
         ]);
 
         $pre1992Id = DB::table('navigation_menus')->insertGetId([
-            'title' => 'Pre-4th Republic Laws',
+            'title' => 'Pre-New Laws',
             'order' => 2,
             'is_dropdown' => true,
             'created_at' => $now,
@@ -51,7 +51,7 @@ return new class extends Migration
         ]);
 
         $post1992Id = DB::table('navigation_menus')->insertGetId([
-            'title' => '4th Republic Laws',
+            'title' => 'New Laws',
             'order' => 3,
             'is_dropdown' => true,
             'created_at' => $now,

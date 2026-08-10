@@ -762,7 +762,7 @@
         .toc-welcome {
             text-align: center;
             max-width: 500px;
-            margin: 60px auto 0;
+            margin: 80px auto 0;
             color: var(--text-secondary);
         }
 
@@ -2331,6 +2331,10 @@
                 flex: 1 0 100% !important;
             }
 
+            .workspace-main:has(.toc-welcome) .reading-toolbar {
+                display: none !important;
+            }
+
             .reading-toolbar {
                 padding: 0 10px !important;
                 height: 52px !important;
@@ -2482,8 +2486,8 @@
             }
             /* Increase content card width on mobile by reducing padding */
             .workspace-body {
-                padding-left: 32px !important;
-                padding-right: 32px !important;
+                padding-left: 40px !important;
+                padding-right: 40px !important;
             }
             .article-card {
                 padding: 24px 16px !important;

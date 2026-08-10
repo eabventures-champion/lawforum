@@ -654,14 +654,15 @@
         @endguest
     </div>
 
-    <!-- Mobile Sidebar Backdrop & Toggle Button -->
-    <div class="mobile-sidebar-backdrop" id="mobileSidebarBackdrop" onclick="closeMobileSidebarCard()"></div>
-    <button class="mobile-sidebar-toggle-btn" id="mobileSidebarToggleBtn" onclick="toggleMobileSidebarCard()" title="Existing Laws Menu">
-        <i class="fa-solid fa-chevron-right" id="mobileSidebarToggleIcon"></i>
-    </button>
-
     <!-- ====== MAIN SCROLLABLE WRAPPER ====== -->
     <div class="main-wrapper-scrollable">
+        <!-- Mobile Sidebar Backdrop & Toggle Button -->
+        <div class="mobile-sidebar-backdrop" id="mobileSidebarBackdrop" onclick="closeMobileSidebarCard()"></div>
+        <button class="mobile-sidebar-toggle-btn" id="mobileSidebarToggleBtn" onclick="toggleMobileSidebarCard()" title="Existing Laws Menu">
+            <i class="fa-solid fa-chevron-right" id="mobileSidebarToggleIcon"></i>
+        </button>
+
+        <!-- ====== 3-COLUMN PORTAL AREA ====== -->
         <!-- ====== 3-COLUMN PORTAL AREA ====== -->
         <div class="container-fluid px-md-4 mt-4">
         <div class="row">

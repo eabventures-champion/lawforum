@@ -1403,10 +1403,10 @@
                         <span class="filter-count" id="count-consti-ghana">{{ $total_constitution_articles_count }}</span>
                     </div>
 
-                    <!-- 4th Republic Laws -->
+                    <!-- New Laws -->
                     <div class="filter-option {{ $posts_total_count == 0 ? 'disabled' : '' }}" data-category="4th_Republic" id="filter-4th-rep">
                         <span class="filter-radio-dot"></span>
-                        <span class="filter-label">4th Republic Laws</span>
+                        <span class="filter-label">New Laws</span>
                         <span class="filter-count" id="count-4th-rep">{{ $posts_total_count }}</span>
                     </div>
 
