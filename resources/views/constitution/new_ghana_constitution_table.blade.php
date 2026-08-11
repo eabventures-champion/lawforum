@@ -794,6 +794,16 @@
             color: var(--text-secondary);
         }
 
+        .btn-all-countries-wrapper {
+            margin-top: 20px;
+        }
+
+        @media (max-width: 991px) {
+            .btn-all-countries-wrapper {
+                margin-top: 45px !important;
+            }
+        }
+
         .toc-welcome-arrow {
             display: inline-flex;
             align-items: center;
@@ -2743,8 +2753,8 @@
                                     </button>
                                     <h5>{{ $ghana_act['title'] }}</h5>
                                     <p>Select a chapter from the collapsible tree on the left panel to browse articles and read the content.</p>
-                                    <div style="margin-top: 20px;">
-                                        <a href="http://localhost:8000/constitution/all_countries" class="btn btn-all-countries" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--accent-gradient); border: 1px solid var(--accent); border-radius: 24px; color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 18px var(--accent-glow); transition: all 0.25s ease;" onmouseover="this.style.transform='translateY(-2px) scale(1.02)';" onmouseout="this.style.transform='none';">
+                                    <div class="btn-all-countries-wrapper">
+                                        <a href="/constitution/all_countries" class="btn btn-all-countries" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--accent-gradient); border: 1px solid var(--accent); border-radius: 24px; color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 18px var(--accent-glow); transition: all 0.25s ease;" onmouseover="this.style.transform='translateY(-2px) scale(1.02)';" onmouseout="this.style.transform='none';">
                                             <i class="fa-solid fa-globe"></i> Explore All Countries
                                             <i class="fa-solid fa-arrow-right ml-1" style="font-size: 11px;"></i>
                                         </a>
