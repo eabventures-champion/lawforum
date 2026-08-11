@@ -2373,6 +2373,12 @@
                 justify-content: center !important;
             }
 
+            /* Hide article navigation (< and >) when in expanded view or split view */
+            .workspace-main:has(#v-pills-messages.active) #readerArticleNav,
+            .workspace-main:has(#v-pills-split.active) #readerArticleNav {
+                display: none !important;
+            }
+
             .toolbar-center {
                 flex: 1 1 100% !important;
                 max-width: 100% !important;
@@ -3617,6 +3623,7 @@
             $('.content-search-box').css('visibility', 'visible');
             $('.font-adjuster').css('visibility', 'visible');
             $('#audioPlayerBanner').css('display', 'flex');
+            $('#readerArticleNav').hide();
             $('#v-pills-messages-tab').trigger('click');
         });
 
@@ -4919,6 +4926,7 @@
                 $('.content-search-box').css('visibility', 'visible');
                 $('.font-adjuster').css('visibility', 'visible');
                 $('#audioPlayerBanner').css('display', 'flex');
+                $('#readerArticleNav').hide();
             }
             
             if (window.innerWidth <= 991) {
