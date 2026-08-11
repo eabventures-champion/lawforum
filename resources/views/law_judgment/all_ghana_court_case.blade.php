@@ -2,7 +2,7 @@
 <html lang="en" style="background-color:#070a13;">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>{{ ucwords(strtolower($allGhanaLaw['case_title'])) }} - Legals Forum</title>
 
     <!-- Google Fonts & Stylesheets -->
@@ -1149,6 +1149,9 @@
             }
             #expand-right-btn span {
                 display: none !important;
+            }
+            #document-search-input {
+                font-size: 16px !important; /* Prevents mobile browser auto-zoom on input focus */
             }
         }
         .collapsed-sidebar {
@@ -2403,8 +2406,10 @@
         if (searchCard.style.display === 'none' || getComputedStyle(searchCard).display === 'none') {
             searchCard.style.display = 'block';
             if (searchTrigger) searchTrigger.style.display = 'none';
-            var input = document.getElementById('document-search-input');
-            if (input) input.focus();
+            if (window.innerWidth > 991) {
+                var input = document.getElementById('document-search-input');
+                if (input) input.focus();
+            }
         } else {
             searchCard.style.display = 'none';
             if (searchTrigger) searchTrigger.style.display = 'flex';
