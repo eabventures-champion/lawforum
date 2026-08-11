@@ -441,20 +441,27 @@
             box-shadow: 0 4px 12px var(--accent-glow) !important;
         }
 
-        /* Scrollbars styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        .nav-logo-text {
+            display: inline-block;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(to right, #3b82f6, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Inter', sans-serif !important;
+            margin: 0;
+            line-height: 1.3;
         }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--border-hover);
+
+        @media (max-width: 768px) {
+            .nav-logo i {
+                font-size: 18px !important;
+            }
+            .nav-logo-text {
+                font-size: 18px !important;
+                letter-spacing: 0.2px !important;
+            }
         }
     </style>
       @include('partials._nav_subdropdown_styles')
@@ -464,9 +471,9 @@
     <!-- ====== PREMIUM NAVIGATION ====== -->
     <nav class="nav-wrap" id="mainNav">
         <div class="nav-inner">
-            <a href="/" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; padding-left: 0px; padding-top: 5px; padding-bottom: 5px; transition: transform 0.2s ease; vertical-align: middle;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+            <a href="/" class="nav-logo">
                 <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; font-size: 22px; margin: 0; line-height: 1;"></i>
-                <span style="font-size: 22px; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(to right, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.3;">Legals Forum</span>
+                <span class="nav-logo-text">Legals Forum</span>
             </a>
 
             <div class="nav-menu-links-premium">

@@ -53,27 +53,37 @@
             border: 1px solid var(--border-color);
             background: var(--card-bg);
             border-radius: 16px;
+            top: 0px !important;
+        }
+
+        .floating-word-finder-wrap .premium-card {
+            padding: 12px 16px !important;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background: radial-gradient(circle at 50% 0%, var(--bg-secondary) 0%, var(--bg-primary) 100%);
             color: var(--text-primary);
-            height: 100vh;
             min-height: 100vh;
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
+            overflow-x: hidden;
+        }
+
+        body.has-scrollable-wrapper {
+            height: 100vh !important;
+            min-height: 100vh !important;
+            overflow: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         .main-wrapper-scrollable {
-            position: fixed;
-            top: 70px;
-            left: 0;
-            width: 100%;
-            height: calc(100vh - 70px);
-            overflow-y: auto;
-            overflow-x: hidden;
+            position: fixed !important;
+            top: 70px !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: calc(100vh - 70px) !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
         }
 
         /* ====== PREMIUM NAVIGATION ====== */
@@ -288,6 +298,14 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
+
+        .nav-underline-premium::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
         }
 
         .nav-link-premium {
@@ -319,7 +337,7 @@
         /* ====== MAIN CONTENT & LAYOUT ====== */
         .main-container {
             max-width: 1400px;
-            margin: 40px auto 80px;
+            margin: 24px auto 80px;
             padding: 0 24px;
         }
 
@@ -612,26 +630,34 @@
         }
 
         .back-to-top {
-            position: fixed;
-            bottom: 40px;
-            right: calc(25% + 20px);
-            background: var(--accent-gradient);
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
+            position: fixed !important;
+            bottom: 24px !important;
+            right: 24px !important;
+            background: var(--accent-gradient) !important;
+            border-radius: 50% !important;
+            width: 44px !important;
+            height: 44px !important;
             display: none;
-            align-items: center;
-            justify-content: center;
+            align-items: center !important;
+            justify-content: center !important;
             color: #fff !important;
-            box-shadow: 0 4px 16px var(--accent-glow);
-            transition: all 0.2s ease;
-            z-index: 99;
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5) !important;
+            transition: all 0.2s ease !important;
+            z-index: 1015 !important;
             text-decoration: none !important;
         }
 
         .back-to-top:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+            transform: scale(1.1) translateY(-2px) !important;
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.75) !important;
+        }
+
+        /* Desktop: Align Back-to-Top inside Column 2 reading content */
+        @media (min-width: 992px) {
+            .back-to-top {
+                right: calc(25% + 30px) !important;
+                bottom: 30px !important;
+            }
         }
 
         /* ====== DATATABLES PREMIUM OVERRIDES ====== */
@@ -1099,11 +1125,31 @@
             left: 0;
             border-radius: 0 8px 8px 0;
             border-left: none;
+            display: none;
         }
-        #expand-right-btn {
-            right: 0;
-            border-radius: 8px 0 0 8px;
-            border-right: none;
+        @media (min-width: 992px) {
+            #expand-right-btn {
+                position: fixed;
+                top: 50%;
+                right: 0;
+                transform: translateY(-50%);
+                width: 32px;
+                height: 48px;
+                background: rgba(15, 23, 42, 0.9);
+                border: 1px solid var(--border-color);
+                border-right: none;
+                border-radius: 8px 0 0 8px;
+                color: var(--text-primary);
+                display: none;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                z-index: 9999;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            }
+            #expand-right-btn span {
+                display: none !important;
+            }
         }
         .collapsed-sidebar {
             display: none !important;
@@ -1293,6 +1339,52 @@
             .nav-menu-links-premium { display: none !important; }
             .nav-mobile-toggle { display: block !important; }
             .nav-auth { display: none !important; }
+
+            #left-sidebar-col { display: none !important; }
+
+            /* Right sidebar off-canvas collapse on mobile (Image 2 style) */
+            #right-sidebar-col {
+                position: fixed !important;
+                top: 70px !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 85vw !important;
+                max-width: 340px !important;
+                z-index: 1000 !important;
+                background: #0b0f17 !important;
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8) !important;
+                overflow-y: auto !important;
+                padding: 16px !important;
+                transition: transform 0.3s ease !important;
+                transform: translateX(calc(100% + 30px)) !important;
+            }
+
+            #right-sidebar-col.open,
+            #right-sidebar-col:not(.collapsed-sidebar) {
+                transform: translateX(0) !important;
+            }
+
+            #expand-right-btn {
+                position: fixed !important;
+                right: 0 !important;
+                top: 150px !important;
+                height: 70px !important;
+                width: 24px !important;
+                z-index: 95 !important;
+                display: flex !important;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                padding: 8px 0;
+                background: rgba(12, 18, 32, 0.9);
+                border: 1px solid var(--border-color);
+                border-right: none;
+                border-radius: 8px 0 0 8px;
+                color: var(--accent-light);
+                cursor: pointer;
+                box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+            }
         }
 
         @media (max-width: 768px) {
@@ -1321,7 +1413,7 @@
     </style>
     @include('partials._nav_subdropdown_styles')
   </head>
-  <body>
+  <body class="has-scrollable-wrapper">
 
     <!-- ====== PREMIUM NAVIGATION ====== -->
     <nav class="nav-wrap" id="mainNav">
@@ -1374,7 +1466,10 @@
         </div>
     </nav>
 
-    <!-- Mobile Nav Panel (Image 1 Standard) -->
+    <!-- Main Scrollable Wrapper -->
+    <div class="main-wrapper-scrollable">
+
+    <!-- Mobile Nav Panel (Image 2 Standard) -->
     <div class="mobile-nav-panel" id="mobileNav">
         <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')">
             <i class="fa-solid fa-xmark"></i>
@@ -1392,9 +1487,8 @@
         @endguest
     </div>
 
-    <!-- ====== MAIN SCROLLABLE WRAPPER ====== -->
-    <div class="main-wrapper-scrollable">
-        <div class="main-container">
+    <!-- ====== MAIN CONTAINER ====== -->
+    <div class="main-container">
         <div class="row">
             <!-- Left Sidebar: Notes & Reading Progress -->
             <div class="col-lg-3 transition-width" id="left-sidebar-col">
@@ -1495,6 +1589,61 @@
 
             <!-- Main Content: Reading Panel -->
             <div class="col-lg-6 transition-width" id="middle-content-col">
+                <!-- Floating Word Finder Panel (Hidden by default, toggled by pill) -->
+                <div class="floating-word-finder-wrap mb-3" id="word-search-card" style="display: none; position: sticky; top: 0px; z-index: 1010;">
+                    <div class="premium-card p-3" style="margin-bottom: 0; background: rgba(11, 15, 23, 0.95); backdrop-filter: blur(16px); border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                        <div class="card-header-styled mb-2 pb-2" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
+                            <h5 style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-magnifying-glass text-primary"></i> Word Finder
+                            </h5>
+                            <button type="button" onclick="toggleWordSearchCard()" title="Close Word Finder" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 14px; padding: 2px 6px; outline: none;">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                        <div class="search-box-premium-wrap">
+                            <div class="input-group" style="display: flex; width: 100%;">
+                                <input type="text" id="document-search-input" class="form-control" placeholder="Find word in document..." style="
+                                    background: rgba(11, 15, 23, 0.6);
+                                    border: 1px solid var(--border-color);
+                                    color: var(--text-primary);
+                                    border-radius: 8px 0 0 8px;
+                                    height: 38px;
+                                    font-size: 13px;
+                                    font-weight: 500;
+                                    padding: 8px 12px;
+                                    flex: 1;
+                                    outline: none;
+                                ">
+                                <button type="button" id="search-clear-btn" title="Clear search" style="
+                                    background: rgba(255, 255, 255, 0.05);
+                                    border: 1px solid var(--border-color);
+                                    border-left: none;
+                                    border-right: none;
+                                    color: var(--text-muted);
+                                    height: 38px;
+                                    width: 30px;
+                                    cursor: pointer;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    outline: none;
+                                ">
+                                    <i class="fa-solid fa-xmark" style="font-size: 11px;"></i>
+                                </button>
+                                <div class="search-nav-controls" style="display: flex; align-items: center; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); border-left: none; border-radius: 0 8px 8px 0; padding: 0 6px;">
+                                    <span id="search-count-badge" style="font-size: 11px; font-weight: 600; color: var(--text-muted); margin-right: 6px; min-width: 24px; text-align: center;">0/0</span>
+                                    <button type="button" id="search-prev-btn" title="Previous match" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px; outline: none;">
+                                        <i class="fa-solid fa-chevron-up" style="font-size: 10px;"></i>
+                                    </button>
+                                    <button type="button" id="search-next-btn" title="Next match" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px; outline: none;">
+                                        <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Premium Court Category Tabs Menu -->
                 @php
                     $groupName = $allGhanaLaw['gh_law_judgment_group_name'] ?? '';
@@ -1516,7 +1665,7 @@
                 <div style="height: 20px;"></div>
 
                 <!-- Floating Word Finder Panel (Hidden by default, toggled by pill) -->
-                <div class="floating-word-finder-wrap mb-3" id="word-search-card" style="display: none; position: sticky; top: 125px; z-index: 1010;">
+                <div class="floating-word-finder-wrap mb-3" id="word-search-card" style="display: none; position: sticky; top: 0px; z-index: 1010;">
                     <div class="premium-card p-3" style="margin-bottom: 0; background: rgba(11, 15, 23, 0.95); backdrop-filter: blur(16px); border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                         <div class="card-header-styled mb-2 pb-2" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
                             <h5 style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px;">
@@ -1674,15 +1823,125 @@
                 </div>
             </div>
 
-            <!-- Right Sidebar: Advertisements -->
-            <div class="col-lg-3 transition-width" id="right-sidebar-col">
+            <!-- Right Sidebar: Advertisements, Search & Mobile Notes -->
+            <div class="col-lg-3 transition-width collapsed-sidebar" id="right-sidebar-col">
                 <div class="sidebar-sticky-wrap">
+                    <!-- Mobile Drawer Close Header -->
+                    <div class="mobile-drawer-header d-flex justify-content-between align-items-center mb-3 pb-2 d-lg-none" style="border-bottom: 1px solid var(--border-color);">
+                        <span style="font-size: 14px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-sliders text-primary"></i> Reader Tools & Notes
+                        </span>
+                        <button type="button" onclick="toggleRightSidebar()" title="Collapse Panel" style="background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border-color); color: var(--text-primary); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; outline: none;">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- My Notes Panel & Reading Progress (SECOND - Mobile Only) -->
+                    <div class="notes-card-sidebar mb-4 d-block d-lg-none" style="margin-top: 0;">
+                        <!-- Reading Progress -->
+                        <div class="reading-progress-wrap">
+                            <div class="reading-progress-label">
+                                Reading Progress <span id="progressPercent">0%</span>
+                            </div>
+                            <div class="reading-progress-track">
+                                <div class="reading-progress-fill" id="progressFill"></div>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-divider"></div>
+
+                        <!-- Notes Section Header -->
+                        <div class="notes-section-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <i class="fa-solid fa-pen-to-square"></i> MY NOTES
+                                <span class="notes-count-badge" id="notesCountBadge">0</span>
+                            </div>
+                            <button type="button" class="sidebar-collapse-btn" onclick="toggleRightSidebar()" title="Collapse Right Sidebar">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Highlighted text preview -->
+                        <div class="highlighted-text-preview" id="highlightedTextPreview" style="display: none;">
+                            <span class="close-highlight" onclick="clearHighlightPreview()">&times;</span>
+                            <span id="highlightedTextContent"></span>
+                        </div>
+
+                        <!-- Note textarea -->
+                        <textarea class="note-textarea" id="noteTextarea" placeholder="Write your note here... Select text in the document and click 'Add Note' to attach it."></textarea>
+
+                        <!-- Color picker -->
+                        <div class="note-color-picker">
+                            <label>Label</label>
+                            <div class="color-dot active" data-color="yellow" onclick="selectNoteColor(this)"></div>
+                            <div class="color-dot" data-color="blue" onclick="selectNoteColor(this)"></div>
+                            <div class="color-dot" data-color="green" onclick="selectNoteColor(this)"></div>
+                            <div class="color-dot" data-color="pink" onclick="selectNoteColor(this)"></div>
+                            <div class="color-dot" data-color="purple" onclick="selectNoteColor(this)"></div>
+                        </div>
+
+                        <!-- Action buttons -->
+                        <div class="note-actions">
+                            <button class="btn-save-note" id="btnSaveNote" onclick="saveNote()">
+                                <i class="fa-solid fa-check mr-1"></i> Save Note
+                            </button>
+                            <button class="btn-clear-note" onclick="clearNoteForm()">Clear</button>
+                        </div>
+
+                        <!-- Login prompt (shown for guests on save attempt) -->
+                        <div class="notes-login-prompt" id="notesLoginPrompt">
+                            <p><i class="fa-solid fa-lock" style="margin-right:4px;"></i> Create an account to save your notes to your dashboard</p>
+                            <a href="{{ route('login') }}" class="btn-login-prompt">Log In</a>
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="btn-signup-prompt">Sign Up</a>
+                            @endif
+                        </div>
+
+                        <div class="sidebar-divider"></div>
+
+                        <!-- Saved notes list -->
+                        <div class="notes-list" id="notesList">
+                            <div class="notes-list-header">Saved Notes</div>
+
+                            <!-- Search notes -->
+                            <div class="notes-search-wrap">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" class="notes-search-sidebar" id="sidebarNotesSearch" placeholder="Search saved notes..." oninput="filterSidebarNotes()">
+                            </div>
+
+                            <!-- Filter by color -->
+                            <div class="notes-filter-tabs">
+                                <div class="notes-filter-tag active" data-filter="all" onclick="filterSidebarColor('all', this)">All</div>
+                                <div class="notes-filter-tag" data-filter="yellow" onclick="filterSidebarColor('yellow', this)">Yellow</div>
+                                <div class="notes-filter-tag" data-filter="blue" onclick="filterSidebarColor('blue', this)">Blue</div>
+                                <div class="notes-filter-tag" data-filter="green" onclick="filterSidebarColor('green', this)">Green</div>
+                                <div class="notes-filter-tag" data-filter="pink" onclick="filterSidebarColor('pink', this)">Pink</div>
+                                <div class="notes-filter-tag" data-filter="purple" onclick="filterSidebarColor('purple', this)">Purple</div>
+                            </div>
+
+                            <!-- Scroll viewport -->
+                            <div class="notes-container-scroll">
+                                <div id="notesContainer">
+                                    <!-- Notes loaded via AJAX -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Advertisement Module -->
                     <div class="premium-card p-0" style="overflow: hidden;">
                         @include('ads.small_ads_image_main_page')
+                </div>
             </div>
         </div>
-    </div>
+
+        <!-- Mobile Right Sidebar Backdrop -->
+        <div id="right-sidebar-backdrop" onclick="toggleRightSidebar()" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 999;"></div>
+
+        <!-- Floating Word Finder Pill Button -->
+        <button type="button" class="floating-word-finder-pill" id="word-search-trigger" onclick="toggleWordSearchCard()" title="Word Finder (Click to open)">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
     </div>
     </div>
     <!-- End Main Scrollable Wrapper -->
@@ -1725,10 +1984,7 @@
         </div>
     </div>
 
-    <!-- Floating Word Finder Pill Button -->
-    <button type="button" class="floating-word-finder-pill" id="word-search-trigger" onclick="toggleWordSearchCard()" title="Word Finder (Click to open)">
-        <i class="fa-solid fa-magnifying-glass"></i>
-    </button>
+
 
     <!-- Back to top floating button -->
     <a id="back-to-top" href="#" class="back-to-top">
@@ -2019,10 +2275,12 @@
             var progress = maxScroll > 0 ? Math.round((scrollTop / maxScroll) * 100) : 0;
             progress = Math.min(100, Math.max(0, progress));
 
-            var progressFill = document.getElementById('progressFill');
-            var progressPercent = document.getElementById('progressPercent');
-            if (progressFill) progressFill.style.width = progress + '%';
-            if (progressPercent) progressPercent.textContent = progress + '%';
+            document.querySelectorAll('[id="progressFill"]').forEach(function(el) {
+                el.style.width = progress + '%';
+            });
+            document.querySelectorAll('[id="progressPercent"]').forEach(function(el) {
+                el.textContent = progress + '%';
+            });
 
             var backToTopBtn = document.getElementById('back-to-top');
             if (backToTopBtn) {
@@ -2157,6 +2415,9 @@
 
     function addNoteFromSelection() {
         if (!currentSelection) return;
+        if (window.innerWidth <= 991 && rightSidebarCollapsed) {
+            toggleRightSidebar();
+        }
         document.getElementById('highlightedTextContent').textContent = currentSelection.substring(0, 500);
         document.getElementById('highlightedTextPreview').style.display = 'block';
         document.getElementById('noteTextarea').focus();
@@ -2164,50 +2425,7 @@
         document.querySelector('.notes-card-sidebar').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    function copySelection() {
-        if (!currentSelection) return;
-        navigator.clipboard.writeText(currentSelection);
-        document.getElementById('textSelectTooltip').style.display = 'none';
-        showToast('Text copied!', 'success');
-    }
-
-    function citeSelection() {
-        if (!currentSelection) return;
-        var documentTitle = '{{ $allGhanaLaw["case_title"] }}';
-        var cite = currentSelection + '\n\n— ' + documentTitle + ' (Legals Forum)';
-        navigator.clipboard.writeText(cite);
-        document.getElementById('textSelectTooltip').style.display = 'none';
-        showToast('Citation copied!', 'success');
-    }
-
-    function clearNoteForm() {
-        document.getElementById('noteTextarea').value = '';
-        clearHighlightPreview();
-    }
-
-    function clearHighlightPreview() {
-        document.getElementById('highlightedTextPreview').style.display = 'none';
-        document.getElementById('highlightedTextContent').textContent = '';
-    }
-
-    function escapeHtml(text) {
-        var div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    function showToast(message, type) {
-        var toast = document.getElementById('toastNotification');
-        var toastText = document.getElementById('toastText');
-        var toastIcon = toast.querySelector('.toast-icon');
-        toastText.textContent = message;
-        toast.className = 'toast-notification ' + type;
-        toastIcon.className = 'toast-icon fa-solid ' + (type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-xmark' : 'fa-circle-info');
-        toast.style.display = 'block';
-        setTimeout(function() { toast.style.display = 'none'; }, 3000);
-    }
-
-    function toggleWordSearchCard() {
+    window.toggleWordSearchCard = function() {
         var searchCard = document.getElementById('word-search-card');
         var searchTrigger = document.getElementById('word-search-trigger');
         if (!searchCard) return;
@@ -2220,10 +2438,32 @@
             searchCard.style.display = 'none';
             if (searchTrigger) searchTrigger.style.display = 'flex';
         }
-    }
+    };
 
-    window.leftSidebarCollapsed = false;
-    window.rightSidebarCollapsed = false;
+    var leftSidebarCollapsed = false;
+    var rightSidebarCollapsed = false;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.innerWidth <= 991) {
+            rightSidebarCollapsed = true;
+            var sidebar = document.getElementById('right-sidebar-col');
+            var expandBtn = document.getElementById('expand-right-btn');
+            if (sidebar) {
+                sidebar.classList.add('collapsed-sidebar');
+                sidebar.classList.remove('open');
+            }
+            if (expandBtn) expandBtn.style.display = 'flex';
+        } else {
+            rightSidebarCollapsed = false;
+            var sidebar = document.getElementById('right-sidebar-col');
+            var expandBtn = document.getElementById('expand-right-btn');
+            if (sidebar) {
+                sidebar.classList.remove('collapsed-sidebar', 'open');
+            }
+            if (expandBtn) expandBtn.style.display = 'none';
+        }
+        updateMiddleColumnWidth();
+    });
 
     window.toggleLeftSidebar = function() {
         leftSidebarCollapsed = !leftSidebarCollapsed;
@@ -2246,15 +2486,33 @@
         rightSidebarCollapsed = !rightSidebarCollapsed;
         var sidebar = document.getElementById('right-sidebar-col');
         var expandBtn = document.getElementById('expand-right-btn');
+        var backdrop = document.getElementById('right-sidebar-backdrop');
+        var searchTrigger = document.getElementById('word-search-trigger');
+        var backToTopBtn = document.getElementById('back-to-top');
         
-        if (sidebar) {
-            if (rightSidebarCollapsed) {
+        if (rightSidebarCollapsed) {
+            if (sidebar) {
                 sidebar.classList.add('collapsed-sidebar');
-                if (expandBtn) expandBtn.style.display = 'flex';
-            } else {
-                sidebar.classList.remove('collapsed-sidebar');
-                if (expandBtn) expandBtn.style.display = 'none';
+                sidebar.classList.remove('open');
             }
+            if (expandBtn) expandBtn.style.display = 'flex';
+            if (backdrop) backdrop.style.display = 'none';
+            var searchCard = document.getElementById('word-search-card');
+            if (searchTrigger && (!searchCard || searchCard.style.display === 'none' || getComputedStyle(searchCard).display === 'none')) {
+                searchTrigger.style.display = 'flex';
+            }
+            if (backToTopBtn && window.scrollY > 300) {
+                backToTopBtn.style.display = 'flex';
+            }
+        } else {
+            if (sidebar) {
+                sidebar.classList.remove('collapsed-sidebar');
+                sidebar.classList.add('open');
+            }
+            if (expandBtn) expandBtn.style.display = 'none';
+            if (backdrop && window.innerWidth <= 991) backdrop.style.display = 'block';
+            if (searchTrigger) searchTrigger.style.display = 'none';
+            if (backToTopBtn && window.innerWidth <= 991) backToTopBtn.style.display = 'none';
         }
         updateMiddleColumnWidth();
     };
@@ -2314,8 +2572,9 @@
     <button class="floating-expand-btn" id="expand-left-btn" onclick="toggleLeftSidebar()" title="Expand Left Sidebar">
         <i class="fa-solid fa-chevron-right"></i>
     </button>
-    <button class="floating-expand-btn" id="expand-right-btn" onclick="toggleRightSidebar()" title="Expand Right Sidebar">
-        <i class="fa-solid fa-chevron-left"></i>
+    <button class="sidebar-restore-btn right-restore" id="expand-right-btn" onclick="toggleRightSidebar()" title="Reader Tools & Notes (Click to open)">
+        <i class="fa-solid fa-feather-pointed" style="font-size: 11px;"></i>
+        <span style="font-size: 9px; font-weight: 800; letter-spacing: 1px; writing-mode: vertical-rl; transform: rotate(180deg);">NOTES</span>
     </button>
 
     <!-- Floating Text Selection Tooltip -->

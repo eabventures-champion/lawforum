@@ -53,6 +53,11 @@
             border: 1px solid var(--border-color);
             background: var(--card-bg);
             border-radius: 16px;
+            top: 0px !important;
+        }
+
+        .floating-word-finder-wrap .premium-card {
+            padding: 12px 16px !important;
         }
 
         body {
@@ -1548,6 +1553,61 @@
 
             <!-- Main Content: Reading Panel -->
             <div class="col-lg-6 transition-width" id="middle-content-col">
+                <!-- Floating Word Finder Panel (Hidden by default) -->
+                <div class="floating-word-finder-wrap mb-3" id="word-search-card" style="display: none; position: sticky; top: 0px; z-index: 1010;">
+                    <div class="premium-card p-3" style="margin-bottom: 0; background: rgba(11, 15, 23, 0.95); backdrop-filter: blur(16px); border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                        <div class="card-header-styled mb-2 pb-2" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
+                            <h5 style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-magnifying-glass text-primary"></i> Word Finder
+                            </h5>
+                            <button type="button" onclick="toggleWordSearchCard()" title="Close Word Finder" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 14px; padding: 2px 6px; outline: none;">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                        <div class="search-box-premium-wrap">
+                            <div class="input-group" style="display: flex; width: 100%;">
+                                <input type="text" id="document-search-input" class="form-control" placeholder="Find word in document..." style="
+                                    background: rgba(11, 15, 23, 0.6);
+                                    border: 1px solid var(--border-color);
+                                    color: var(--text-primary);
+                                    border-radius: 8px 0 0 8px;
+                                    height: 38px;
+                                    font-size: 13px;
+                                    font-weight: 500;
+                                    padding: 8px 12px;
+                                    flex: 1;
+                                    outline: none;
+                                ">
+                                <button type="button" id="search-clear-btn" title="Clear search" style="
+                                    background: rgba(255, 255, 255, 0.05);
+                                    border: 1px solid var(--border-color);
+                                    border-left: none;
+                                    border-right: none;
+                                    color: var(--text-muted);
+                                    height: 38px;
+                                    width: 30px;
+                                    cursor: pointer;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    outline: none;
+                                ">
+                                    <i class="fa-solid fa-xmark" style="font-size: 11px;"></i>
+                                </button>
+                                <div class="search-nav-controls" style="display: flex; align-items: center; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); border-left: none; border-radius: 0 8px 8px 0; padding: 0 6px;">
+                                    <span id="search-count-badge" style="font-size: 11px; font-weight: 600; color: var(--text-muted); margin-right: 6px; min-width: 24px; text-align: center;">0/0</span>
+                                    <button type="button" id="search-prev-btn" title="Previous match" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px; outline: none;">
+                                        <i class="fa-solid fa-chevron-up" style="font-size: 10px;"></i>
+                                    </button>
+                                    <button type="button" id="search-next-btn" title="Next match" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px; outline: none;">
+                                        <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Search bar across all laws -->
                 <!-- Premium Continent Tabs Menu -->
                 <div class="nav-underline-premium">
@@ -1561,7 +1621,7 @@
                 <div style="height: 20px;"></div>
 
                 <!-- Floating Word Finder Panel (Hidden by default) -->
-                <div class="floating-word-finder-wrap mb-3" id="word-search-card" style="display: none; position: sticky; top: 125px; z-index: 1010;">
+                <div class="floating-word-finder-wrap mb-3" id="word-search-card" style="display: none; position: sticky; top: 0px; z-index: 1010;">
                     <div class="premium-card p-3" style="margin-bottom: 0; background: rgba(11, 15, 23, 0.95); backdrop-filter: blur(16px); border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                         <div class="card-header-styled mb-2 pb-2" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
                             <h5 style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px;">
@@ -2117,10 +2177,12 @@
             var progress = scrollHeight > 0 ? Math.round((scrollTop / scrollHeight) * 100) : 0;
             progress = Math.min(100, Math.max(0, progress));
 
-            var progressFill = document.getElementById('progressFill');
-            var progressPercent = document.getElementById('progressPercent');
-            if (progressFill) progressFill.style.width = progress + '%';
-            if (progressPercent) progressPercent.textContent = progress + '%';
+            document.querySelectorAll('[id="progressFill"]').forEach(function(el) {
+                el.style.width = progress + '%';
+            });
+            document.querySelectorAll('[id="progressPercent"]').forEach(function(el) {
+                el.textContent = progress + '%';
+            });
 
             // Show/hide back to top button when scrolled down
             var backToTopBtn = document.getElementById('back-to-top');
@@ -2134,10 +2196,13 @@
         }
 
         window.addEventListener('scroll', updateScrollProgress, true);
+        document.addEventListener('scroll', updateScrollProgress, true);
         var mainScrollable = document.querySelector('.main-wrapper-scrollable');
         if (mainScrollable) {
             mainScrollable.addEventListener('scroll', updateScrollProgress);
         }
+        setInterval(updateScrollProgress, 250);
+        updateScrollProgress();
     });
 
     // ============================================
@@ -2355,7 +2420,7 @@
         updateMiddleColumnWidth();
     });
 
-    function toggleWordSearchCard() {
+    window.toggleWordSearchCard = function() {
         var searchCard = document.getElementById('word-search-card');
         var searchTrigger = document.getElementById('word-search-trigger');
         if (!searchCard) return;
@@ -2368,7 +2433,7 @@
             searchCard.style.display = 'none';
             if (searchTrigger) searchTrigger.style.display = 'flex';
         }
-    }
+    };
 
     window.leftSidebarCollapsed = false;
     window.rightSidebarCollapsed = false;

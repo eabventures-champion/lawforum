@@ -328,6 +328,14 @@
             position: relative !important;
             top: auto !important;
             z-index: auto !important;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
+
+        .nav-underline-premium::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
         }
 
         .nav-link-premium {

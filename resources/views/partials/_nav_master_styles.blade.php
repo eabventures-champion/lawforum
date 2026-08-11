@@ -418,6 +418,8 @@
         .nav-mobile-toggle { display: block !important; }
         .nav-auth { display: none !important; }
         .nav-underline-premium { position: relative !important; top: auto !important; }
+        .nav-logo i { font-size: 18px !important; }
+        .nav-logo-text { font-size: 18px !important; letter-spacing: 0.2px !important; }
     }
 
     @media (max-width: 768px) {
