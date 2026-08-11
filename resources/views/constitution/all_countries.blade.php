@@ -283,9 +283,9 @@
             border-radius: 12px;
             margin-bottom: 24px;
             flex-wrap: nowrap !important;
-            position: sticky;
-            top: 62px;
-            z-index: 99;
+            position: relative !important;
+            top: auto !important;
+            z-index: auto !important;
         }
 
         .nav-link-premium {

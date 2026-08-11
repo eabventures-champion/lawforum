@@ -405,12 +405,19 @@
         transform: rotate(0) scale(1) !important;
     }
 
+    .nav-underline-premium {
+        position: relative !important;
+        top: auto !important;
+        z-index: auto !important;
+        background: rgba(148, 163, 184, 0.08) !important;
+    }
+
     @media (max-width: 991px) {
         .nav-inner { padding: 0 20px !important; }
         .nav-menu-links-premium { display: none !important; }
         .nav-mobile-toggle { display: block !important; }
         .nav-auth { display: none !important; }
-        .nav-underline-premium { top: 70px !important; }
+        .nav-underline-premium { position: relative !important; top: auto !important; }
     }
 
     @media (max-width: 768px) {
