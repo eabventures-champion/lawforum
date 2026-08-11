@@ -2629,7 +2629,19 @@
         const sliderWrapper = document.getElementById('sliderWrapper');
         const indicatorItems = document.querySelectorAll('.premium-indicator-item');
 
+        // Helper to check if user is active in an input field
+        function isInputActive() {
+            const active = document.activeElement;
+            if (!active) return false;
+            const tag = active.tagName ? active.tagName.toLowerCase() : '';
+            return tag === 'input' || tag === 'textarea' || tag === 'select' || active.isContentEditable;
+        }
+
         function goToSlide(slideIndex) {
+            if (isInputActive()) {
+                clearTimeout(autoSlideTimeout);
+                return;
+            }
             if (slideIndex < 0 || slideIndex >= totalSlides || isTransitioning) return;
             
             isTransitioning = true;
@@ -2713,6 +2725,7 @@
         // Stagnant user interaction detection: resets auto-sliding when user moves cursor or interacts
         let lastMoveTime = 0;
         window.addEventListener('mousemove', () => {
+            if (isInputActive()) return;
             const now = performance.now();
             if (now - lastMoveTime > 300) { // Throttle updates
                 lastMoveTime = now;
@@ -2721,25 +2734,45 @@
         });
 
         window.addEventListener('touchmove', () => {
+            if (isInputActive()) return;
             resetAutoSlide();
+        });
+
+        // Focus & Blur listeners: pause slideshow completely while input is focused
+        document.addEventListener('focusin', (e) => {
+            if (isInputActive()) {
+                clearTimeout(autoSlideTimeout);
+            }
+        });
+
+        document.addEventListener('focusout', (e) => {
+            setTimeout(() => {
+                if (!isInputActive()) {
+                    resetAutoSlide();
+                }
+            }, 150);
         });
 
         // Automatic slideshow loop
         function startAutoSlide() {
-            // Do not start auto-slide if search input is focused
-            const searchInput = document.querySelector('input[name="search_text"]');
-            if (searchInput && document.activeElement === searchInput) {
+            // Do not start auto-slide if any search input is focused
+            if (isInputActive()) {
+                clearTimeout(autoSlideTimeout);
                 return;
             }
 
             autoSlideTimeout = setTimeout(() => {
-                goToSlide((currentSlide + 1) % totalSlides);
+                if (!isInputActive()) {
+                    goToSlide((currentSlide + 1) % totalSlides);
+                }
             }, 10000); // Only slide when page is stagnant for 10 seconds
         }
 
         function resetAutoSlide() {
             clearTimeout(autoSlideTimeout);
-            startAutoSlide();
+            if (!isInputActive()) {
+                startAutoSlide();
+            }
         }
 
         // Empty search validation prompt

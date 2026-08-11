@@ -2,7 +2,7 @@
 <html lang="en" style="background-color:#060a13;">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <meta name="description" content="Read and search the Pre-1992 Legislation {{ $allPre1992Act['title'] }} on Legals Forum.">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ucwords(strtolower($allPre1992Act['title']))}} — Legals Forum</title>
@@ -2372,6 +2372,10 @@
                 width: 100% !important;
                 max-width: calc(100vw - 32px) !important;
                 margin: 0 auto !important;
+            }
+
+            .content-search-box input {
+                font-size: 16px !important; /* Prevents mobile browser auto-zoom on input focus */
             }
 
             .toolbar-center:has(#readerArticleNav:not([style*="display: none"])) .content-search-box {
