@@ -2124,11 +2124,11 @@
 
         /* Floating Back to Top Button */
         .workspace-back-to-top {
-            position: absolute;
+            position: fixed;
             bottom: 30px;
             right: 30px;
-            width: 45px;
-            height: 45px;
+            width: 44px;
+            height: 44px;
             background: var(--accent-gradient);
             color: #fff !important;
             border: none;
@@ -2138,7 +2138,7 @@
             justify-content: center;
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
             cursor: pointer;
-            z-index: 100;
+            z-index: 1000;
             transition: all 0.3s ease;
             outline: none;
         }
@@ -2354,7 +2354,7 @@
                 flex: 1 0 100% !important;
             }
 
-            .workspace-main:has(.toc-welcome) .reading-toolbar {
+            .workspace-main:has(#v-pills-profile.active .toc-welcome) .reading-toolbar {
                 display: none !important;
             }
 
@@ -2368,10 +2368,28 @@
                 background: rgba(12, 18, 32, 0.95) !important;
                 backdrop-filter: blur(10px) !important;
                 -webkit-backdrop-filter: blur(10px) !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
             }
 
             .toolbar-center {
-                max-width: 100% !important;
+                flex: 1 1 auto !important;
+                max-width: none !important;
+                justify-content: flex-start !important;
+                margin-right: 8px !important;
+            }
+
+            .content-search-box {
+                width: 100% !important;
+                max-width: calc(100vw - 75px) !important;
+            }
+
+            .toolbar-right {
+                flex-shrink: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                margin-left: auto !important;
             }
 
             .sidebar-restore-btn.left-restore {
@@ -2395,6 +2413,7 @@
             .mobile-workspace-backdrop.active {
                 display: block !important;
             }
+        }
         /* Sidebar View Mode & Audio Module */
         .sidebar-audio-controls,
         .sidebar-audio-controls-divider {
@@ -2414,13 +2433,19 @@
             a[onclick*="'split'"] {
                 display: none !important;
             }
-            /* Move Back to Top button higher in mobile view above floating audio pill */
+            /* Move Back to Top button floating opposite audio icon on mobile */
             .workspace-back-to-top {
-                bottom: 104px !important;
+                position: fixed !important;
+                bottom: 48px !important;
+                bottom: calc(48px + env(safe-area-inset-bottom, 0px)) !important;
                 right: 16px !important;
-                width: 38px !important;
-                height: 38px !important;
-                z-index: 150 !important;
+                left: auto !important;
+                width: 44px !important;
+                height: 44px !important;
+                min-width: 44px !important;
+                border-radius: 50% !important;
+                z-index: 1000 !important;
+                box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5) !important;
             }
             /* Show audio player as floating pill elevated above mobile browser address/search bar */
             #audioPlayerBanner,
@@ -2755,7 +2780,7 @@
                                     <p>Select a chapter from the collapsible tree on the left panel to browse articles and read the content.</p>
                                     <div class="btn-all-countries-wrapper">
                                         <a href="/constitution/all_countries" class="btn btn-all-countries" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--accent-gradient); border: 1px solid var(--accent); border-radius: 24px; color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 18px var(--accent-glow); transition: all 0.25s ease;" onmouseover="this.style.transform='translateY(-2px) scale(1.02)';" onmouseout="this.style.transform='none';">
-                                            <i class="fa-solid fa-globe"></i> Explore All Countries
+                                            <i class="fa-solid fa-globe"></i> Explore Other Countries
                                             <i class="fa-solid fa-arrow-right ml-1" style="font-size: 11px;"></i>
                                         </a>
                                     </div>
@@ -3136,6 +3161,20 @@
 
             // Observer to dynamically hide/show search input and font size adjuster on welcome screen
             function checkWelcomeScreenState() {
+                const isExpandedOrSplit = (typeof window.currentViewMode !== 'undefined' && (window.currentViewMode === 'expanded' || window.currentViewMode === 'split')) ||
+                                          $('#v-pills-messages-tab').hasClass('active') ||
+                                          $('#v-pills-messages').hasClass('active') ||
+                                          $('#v-pills-split-tab').hasClass('active') ||
+                                          $('#v-pills-split').hasClass('active');
+                if (isExpandedOrSplit) {
+                    $('.tab-hidden-initially').removeClass('tab-hidden-initially');
+                    $('.content-search-box').css('visibility', 'visible');
+                    $('.font-adjuster').css('visibility', 'visible');
+                    $('.reading-toolbar').css('display', 'flex').show();
+                    $('#readerArticleNav').hide();
+                    return;
+                }
+
                 const hasWelcome = $('#display_content').find('.toc-welcome').length > 0;
                 if (hasWelcome) {
                     $('.content-search-box').css('visibility', 'hidden');
@@ -3555,7 +3594,9 @@
         $(document).on('click', '.toggle_expanded_view, .expanded_link', function(e) {
             e.preventDefault();
             // Reveal all toolbar elements that are hidden until first article load
+            window.currentViewMode = 'expanded';
             $('.tab-hidden-initially').removeClass('tab-hidden-initially');
+            $('.reading-toolbar').css('display', 'flex');
             $('.content-search-box').css('visibility', 'visible');
             $('.font-adjuster').css('visibility', 'visible');
             $('#audioPlayerBanner').css('display', 'flex');
@@ -3569,12 +3610,15 @@
             // Sync View Mode Selector dropdown button state
             $('#viewModeSelectorWrap .dropdown-item').removeClass('active');
             if (targetId === '#v-pills-profile') {
+                window.currentViewMode = 'reader';
                 $('#viewModeSelectorBtn').html(`<span><i class="fa-solid fa-book-open mr-2"></i> Reader</span>`);
                 $('#viewModeSelectorWrap .dropdown-item').eq(0).addClass('active');
             } else if (targetId === '#v-pills-messages') {
+                window.currentViewMode = 'expanded';
                 $('#viewModeSelectorBtn').html(`<span><i class="fa-solid fa-expand mr-2"></i> Expanded View</span>`);
                 $('#viewModeSelectorWrap .dropdown-item').eq(1).addClass('active');
             } else if (targetId === '#v-pills-split') {
+                window.currentViewMode = 'split';
                 $('#viewModeSelectorBtn').html(`<span><i class="fa-solid fa-columns mr-2"></i> Split View</span>`);
                 $('#viewModeSelectorWrap .dropdown-item').eq(2).addClass('active');
             }
@@ -3824,7 +3868,19 @@
             if (searchMatches.length > 0) {
                 currentMatchIndex = 0;
                 searchMatches[currentMatchIndex].classList.add('active-match');
-                searchMatches[currentMatchIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(function() {
+                    const activeMatch = searchMatches[currentMatchIndex];
+                    if (activeMatch) {
+                        activeMatch.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+                        const scrollContainer = document.querySelector('.main-wrapper-scrollable');
+                        if (scrollContainer && scrollContainer.scrollHeight > scrollContainer.clientHeight) {
+                            const containerRect = scrollContainer.getBoundingClientRect();
+                            const activeRect = activeMatch.getBoundingClientRect();
+                            const targetTop = scrollContainer.scrollTop + (activeRect.top - containerRect.top) - (containerRect.height / 2);
+                            scrollContainer.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+                        }
+                    }
+                }, 40);
             }
 
             updateSearchUI();
@@ -3847,8 +3903,18 @@
                 currentMatchIndex = (currentMatchIndex - 1 + searchMatches.length) % searchMatches.length;
             }
 
-            searchMatches[currentMatchIndex].classList.add('active-match');
-            searchMatches[currentMatchIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const activeMatch = searchMatches[currentMatchIndex];
+            if (activeMatch) {
+                activeMatch.classList.add('active-match');
+                activeMatch.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+                const scrollContainer = document.querySelector('.main-wrapper-scrollable');
+                if (scrollContainer && scrollContainer.scrollHeight > scrollContainer.clientHeight) {
+                    const containerRect = scrollContainer.getBoundingClientRect();
+                    const activeRect = activeMatch.getBoundingClientRect();
+                    const targetTop = scrollContainer.scrollTop + (activeRect.top - containerRect.top) - (containerRect.height / 2);
+                    scrollContainer.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+                }
+            }
             updateSearchUI();
         }
 
@@ -4747,6 +4813,7 @@
 
         // Toggle View modes programmatically from Dropdown Selector
         function selectViewMode(mode) {
+            window.currentViewMode = mode;
             $('.tab-hidden-initially').removeClass('tab-hidden-initially');
             $('#viewModeSelectorWrap .dropdown-item').removeClass('active');
 
@@ -4831,6 +4898,7 @@
             
             // Reveal toolbar elements that may still be hidden
             if (mode === 'expanded' || mode === 'split') {
+                $('.reading-toolbar').css('display', 'flex');
                 $('.content-search-box').css('visibility', 'visible');
                 $('.font-adjuster').css('visibility', 'visible');
                 $('#audioPlayerBanner').css('display', 'flex');

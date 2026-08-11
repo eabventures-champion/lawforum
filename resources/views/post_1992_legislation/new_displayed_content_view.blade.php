@@ -599,6 +599,28 @@
                     }
                 }
             });
+
+            setTimeout(function() {
+                const firstHighlight = contentContainer.querySelector('.search-highlight');
+                if (firstHighlight) {
+                    firstHighlight.classList.add('active-highlight');
+                    firstHighlight.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                        inline: 'nearest'
+                    });
+                    const scrollContainer = document.querySelector('.main-wrapper-scrollable');
+                    if (scrollContainer && scrollContainer.scrollHeight > scrollContainer.clientHeight) {
+                        const containerRect = scrollContainer.getBoundingClientRect();
+                        const activeRect = firstHighlight.getBoundingClientRect();
+                        const targetTop = scrollContainer.scrollTop + (activeRect.top - containerRect.top) - (containerRect.height / 2);
+                        scrollContainer.scrollTo({
+                            top: Math.max(0, targetTop),
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            }, 50);
         }
     </script>
 </body>

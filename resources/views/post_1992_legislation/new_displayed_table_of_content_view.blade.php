@@ -2298,11 +2298,11 @@
 
         /* Floating Back to Top Button */
         .workspace-back-to-top {
-            position: absolute;
+            position: fixed;
             bottom: 30px;
             right: 30px;
-            width: 45px;
-            height: 45px;
+            width: 44px;
+            height: 44px;
             background: var(--accent-gradient);
             color: #fff !important;
             border: none;
@@ -2312,7 +2312,7 @@
             justify-content: center;
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
             cursor: pointer;
-            z-index: 100;
+            z-index: 1000;
             transition: all 0.3s ease;
             outline: none;
         }
@@ -2446,7 +2446,7 @@
                 display: none !important;
             }
 
-            .workspace-main:has(.toc-welcome) .reading-toolbar {
+            .workspace-main:has(#v-pills-profile.active .toc-welcome) .reading-toolbar {
                 display: none !important;
             }
 
@@ -2460,10 +2460,28 @@
                 background: rgba(12, 18, 32, 0.95) !important;
                 backdrop-filter: blur(10px) !important;
                 -webkit-backdrop-filter: blur(10px) !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
             }
 
             .toolbar-center {
-                max-width: 100% !important;
+                flex: 1 1 auto !important;
+                max-width: none !important;
+                justify-content: flex-start !important;
+                margin-right: 8px !important;
+            }
+
+            .content-search-box {
+                width: 100% !important;
+                max-width: calc(100vw - 75px) !important;
+            }
+
+            .toolbar-right {
+                flex-shrink: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                margin-left: auto !important;
             }
 
             .sidebar-restore-btn.right-restore {
@@ -2484,6 +2502,20 @@
             }
             .font-adjuster {
                 display: none !important;
+            }
+            /* Move Back to Top button floating opposite audio icon on mobile */
+            .workspace-back-to-top {
+                position: fixed !important;
+                bottom: 48px !important;
+                bottom: calc(48px + env(safe-area-inset-bottom, 0px)) !important;
+                right: 16px !important;
+                left: auto !important;
+                width: 44px !important;
+                height: 44px !important;
+                min-width: 44px !important;
+                border-radius: 50% !important;
+                z-index: 1000 !important;
+                box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5) !important;
             }
             /* Show audio player as floating pill elevated above mobile browser address/search bar */
             #audioPlayerBanner,
@@ -3481,6 +3513,22 @@
 
             // Observer to dynamically hide/show search input and font size adjuster on welcome screen
             function checkWelcomeScreenState() {
+                const isExpandedOrSplit = (typeof window.currentViewMode !== 'undefined' && (window.currentViewMode === 'expanded' || window.currentViewMode === 'split')) ||
+                                          $('#v-pills-messages-tab').hasClass('active') ||
+                                          $('#v-pills-messages').hasClass('active') ||
+                                          $('#v-pills-split-tab').hasClass('active') ||
+                                          $('#v-pills-split').hasClass('active');
+                if (isExpandedOrSplit) {
+                    $('.tab-hidden-initially').removeClass('tab-hidden-initially');
+                    $('.reading-toolbar').css('display', 'flex').show();
+                    $('.content-search-box').css('visibility', 'visible');
+                    $('.font-adjuster').css('visibility', 'visible');
+                    $('#viewModeSelectorWrap').removeClass('tab-hidden-initially');
+                    $('#readerArticleNav').hide();
+                    $('#audioPlayerBanner').css('display', 'flex');
+                    return;
+                }
+
                 const hasWelcome = $('#display_content').find('.toc-welcome').length > 0;
                 if (hasWelcome) {
                     $('.content-search-box').css('visibility', 'hidden');
@@ -3551,7 +3599,9 @@
         $(document).on('click', '.toggle_expanded_view, .expanded_link', function(e) {
             e.preventDefault();
             // Reveal all toolbar elements that are hidden until first article load
+            window.currentViewMode = 'expanded';
             $('.tab-hidden-initially').removeClass('tab-hidden-initially');
+            $('.reading-toolbar').css('display', 'flex');
             $('.content-search-box').css('visibility', 'visible');
             $('.font-adjuster').css('visibility', 'visible');
             $('#audioPlayerBanner').css('display', 'flex');
@@ -3565,12 +3615,15 @@
             // Sync View Mode Selector dropdown button state
             $('#viewModeSelectorWrap .dropdown-item').removeClass('active');
             if (targetId === '#v-pills-profile') {
+                window.currentViewMode = 'reader';
                 $(`#viewModeSelectorWrap .dropdown-item[onclick*="selectViewMode('reader')"]`).addClass('active');
                 $('#viewModeSelectorBtn span').html('<i class="fa-solid fa-book-open mr-2"></i> Reader');
             } else if (targetId === '#v-pills-messages') {
+                window.currentViewMode = 'expanded';
                 $(`#viewModeSelectorWrap .dropdown-item[onclick*="selectViewMode('expanded')"]`).addClass('active');
                 $('#viewModeSelectorBtn span').html('<i class="fa-solid fa-expand mr-2"></i> Expanded View');
             } else if (targetId === '#v-pills-split') {
+                window.currentViewMode = 'split';
                 $(`#viewModeSelectorWrap .dropdown-item[onclick*="selectViewMode('split')"]`).addClass('active');
                 $('#viewModeSelectorBtn span').html('<i class="fa-solid fa-columns mr-2"></i> Split View');
             }
@@ -4836,6 +4889,7 @@
 
         // Toggle View modes programmatically from Dropdown Selector
         function selectViewMode(mode) {
+            window.currentViewMode = mode;
             $('.tab-hidden-initially').removeClass('tab-hidden-initially');
             $('#viewModeSelectorWrap .dropdown-item').removeClass('active');
             let tabId = '';
@@ -4912,6 +4966,7 @@
             
             // Reveal toolbar elements that may still be hidden
             if (mode === 'expanded' || mode === 'split') {
+                $('.reading-toolbar').css('display', 'flex');
                 $('.content-search-box').css('visibility', 'visible');
                 $('.font-adjuster').css('visibility', 'visible');
                 $('#audioPlayerBanner').css('display', 'flex');

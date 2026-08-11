@@ -1587,73 +1587,6 @@
                                     height: 38px;
                                     width: 30px;
                                     cursor: pointer;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    outline: none;
-                                ">
-                                    <i class="fa-solid fa-xmark" style="font-size: 11px;"></i>
-                                </button>
-                                <div class="search-nav-controls" style="display: flex; align-items: center; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); border-left: none; border-radius: 0 8px 8px 0; padding: 0 6px;">
-                                    <span id="search-count-badge" style="font-size: 11px; font-weight: 600; color: var(--text-muted); margin-right: 6px; min-width: 24px; text-align: center;">0/0</span>
-                                    <button type="button" id="search-prev-btn" title="Previous match" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px; outline: none;">
-                                        <i class="fa-solid fa-chevron-up" style="font-size: 10px;"></i>
-                                    </button>
-                                    <button type="button" id="search-next-btn" title="Next match" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px; outline: none;">
-                                        <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Search bar across all laws -->
-                <!-- Premium Continent Tabs Menu -->
-                <div class="nav-underline-premium">
-                    <a class="nav-link-premium {{ request()->is('constitution/all_countries') ? 'active' : '' }}" href="/constitution/all_countries"><i class="fa-solid fa-globe mr-2"></i> All Countries</a>
-                    <a class="nav-link-premium {{ request()->is('constitution/all-countries/1/*') || request()->is('constitution/1/Africa/*') ? 'active' : '' }}" href="/constitution/all-countries/1/Africa"><i class="fa-solid fa-earth-africa mr-2"></i> Africa</a>
-                    <a class="nav-link-premium {{ request()->is('constitution/all-countries/2/*') || request()->is('constitution/1/Asia/*') ? 'active' : '' }}" href="/constitution/all-countries/2/Asia"><i class="fa-solid fa-earth-asia mr-2"></i> Asia</a>
-                    <a class="nav-link-premium {{ request()->is('constitution/all-countries/3/*') || request()->is('constitution/1/Europe/*') ? 'active' : '' }}" href="/constitution/all-countries/3/Europe"><i class="fa-solid fa-earth-europe mr-2"></i> Europe</a>
-                    <a class="nav-link-premium {{ request()->is('constitution/all-countries/4/*') || request()->is('constitution/1/North_America/*') ? 'active' : '' }}" href="/constitution/all-countries/4/North_America"><i class="fa-solid fa-earth-americas mr-2"></i> North America</a>
-                    <a class="nav-link-premium {{ request()->is('constitution/all-countries/5/*') || request()->is('constitution/1/South_America/*') ? 'active' : '' }}" href="/constitution/all-countries/5/South_America"><i class="fa-solid fa-earth-americas mr-2"></i> South America</a>
-                </div>
-                <div style="height: 20px;"></div>
-
-                <!-- Floating Word Finder Panel (Hidden by default) -->
-                <div class="floating-word-finder-wrap mb-3" id="word-search-card" style="display: none; position: sticky; top: 0px; z-index: 1010;">
-                    <div class="premium-card p-3" style="margin-bottom: 0; background: rgba(11, 15, 23, 0.95); backdrop-filter: blur(16px); border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-                        <div class="card-header-styled mb-2 pb-2" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
-                            <h5 style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 8px;">
-                                <i class="fa-solid fa-magnifying-glass text-primary"></i> Word Finder
-                            </h5>
-                            <button type="button" onclick="toggleWordSearchCard()" title="Close Word Finder" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 14px; padding: 2px 6px; outline: none;">
-                                <i class="fa-solid fa-xmark"></i>
-                            </button>
-                        </div>
-                        <div class="search-box-premium-wrap">
-                            <div class="input-group" style="display: flex; width: 100%;">
-                                <input type="text" id="document-search-input" class="form-control" placeholder="Find word in document..." style="
-                                    background: rgba(11, 15, 23, 0.6);
-                                    border: 1px solid var(--border-color);
-                                    color: var(--text-primary);
-                                    border-radius: 8px 0 0 8px;
-                                    height: 38px;
-                                    font-size: 13px;
-                                    font-weight: 500;
-                                    padding: 8px 12px;
-                                    flex: 1;
-                                    outline: none;
-                                ">
-                                <button type="button" id="search-clear-btn" title="Clear search" style="
-                                    background: rgba(255, 255, 255, 0.05);
-                                    border: 1px solid var(--border-color);
-                                    border-left: none;
-                                    border-right: none;
-                                    color: var(--text-muted);
-                                    height: 38px;
-                                    width: 30px;
-                                    cursor: pointer;
                                     display: none;
                                     align-items: center;
                                     justify-content: center;
@@ -1708,6 +1641,18 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Search bar across all laws -->
+                <!-- Premium Continent Tabs Menu -->
+                <div class="nav-underline-premium">
+                    <a class="nav-link-premium {{ request()->is('constitution/all_countries') ? 'active' : '' }}" href="/constitution/all_countries"><i class="fa-solid fa-globe mr-2"></i> All Countries</a>
+                    <a class="nav-link-premium {{ request()->is('constitution/all-countries/1/*') || request()->is('constitution/1/Africa/*') ? 'active' : '' }}" href="/constitution/all-countries/1/Africa"><i class="fa-solid fa-earth-africa mr-2"></i> Africa</a>
+                    <a class="nav-link-premium {{ request()->is('constitution/all-countries/2/*') || request()->is('constitution/1/Asia/*') ? 'active' : '' }}" href="/constitution/all-countries/2/Asia"><i class="fa-solid fa-earth-asia mr-2"></i> Asia</a>
+                    <a class="nav-link-premium {{ request()->is('constitution/all-countries/3/*') || request()->is('constitution/1/Europe/*') ? 'active' : '' }}" href="/constitution/all-countries/3/Europe"><i class="fa-solid fa-earth-europe mr-2"></i> Europe</a>
+                    <a class="nav-link-premium {{ request()->is('constitution/all-countries/4/*') || request()->is('constitution/1/North_America/*') ? 'active' : '' }}" href="/constitution/all-countries/4/North_America"><i class="fa-solid fa-earth-americas mr-2"></i> North America</a>
+                    <a class="nav-link-premium {{ request()->is('constitution/all-countries/5/*') || request()->is('constitution/1/South_America/*') ? 'active' : '' }}" href="/constitution/all-countries/5/South_America"><i class="fa-solid fa-earth-americas mr-2"></i> South America</a>
+                </div>
+                <div style="height: 20px;"></div>
 
                 <div class="premium-card">
                     <!-- Action Headers -->
@@ -1965,6 +1910,17 @@
                         clearBtn.style.display = searchInput.value.length > 0 ? 'flex' : 'none';
                     }
                 });
+
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (e.shiftKey) {
+                            prevBtn.click();
+                        } else {
+                            nextBtn.click();
+                        }
+                    }
+                });
                 
                 // Clear button: reset input, remove highlights, hide self
                 if (clearBtn) {
@@ -2012,14 +1968,15 @@
                     nodes.push(walker.currentNode);
                 }
                 
-                const regex = new RegExp('(' + escapeRegExp(query) + ')', 'gi');
+                const searchRegex = new RegExp('(' + escapeRegExp(query) + ')', 'gi');
+                const testRegex = new RegExp(escapeRegExp(query), 'i');
                 
                 nodes.forEach(node => {
                     const text = node.nodeValue;
-                    if (text && regex.test(text)) {
+                    if (text && testRegex.test(text)) {
                         if (node.parentNode) {
                             const span = document.createElement('span');
-                            span.innerHTML = text.replace(regex, '<mark class="search-highlight">$1</mark>');
+                            span.innerHTML = text.replace(searchRegex, '<mark class="search-highlight">$1</mark>');
                             node.parentNode.replaceChild(span, node);
                         }
                     }
@@ -2059,10 +2016,24 @@
                     
                     countLabel.textContent = `${currentIndex + 1}/${highlights.length}`;
                     
-                    active.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                    });
+                    setTimeout(function() {
+                        active.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center',
+                            inline: 'nearest'
+                        });
+                        
+                        const scrollContainer = document.querySelector('.main-wrapper-scrollable');
+                        if (scrollContainer && scrollContainer.scrollHeight > scrollContainer.clientHeight) {
+                            const containerRect = scrollContainer.getBoundingClientRect();
+                            const activeRect = active.getBoundingClientRect();
+                            const targetTop = scrollContainer.scrollTop + (activeRect.top - containerRect.top) - (containerRect.height / 2);
+                            scrollContainer.scrollTo({
+                                top: Math.max(0, targetTop),
+                                behavior: 'smooth'
+                            });
+                        }
+                    }, 40);
                 }
             }
 
