@@ -2370,26 +2370,43 @@
                 -webkit-backdrop-filter: blur(10px) !important;
                 display: flex !important;
                 align-items: center !important;
-                justify-content: space-between !important;
+                justify-content: center !important;
             }
 
             .toolbar-center {
-                flex: 1 1 auto !important;
-                max-width: none !important;
-                justify-content: flex-start !important;
-                margin-right: 8px !important;
+                flex: 1 1 100% !important;
+                max-width: 100% !important;
+                justify-content: center !important;
+                align-items: center !important;
+                gap: 6px !important;
+                margin: 0 auto !important;
+                display: flex !important;
             }
 
             .content-search-box {
+                flex: 1 1 auto !important;
+                min-width: 0 !important;
                 width: 100% !important;
-                max-width: calc(100vw - 75px) !important;
+                max-width: calc(100vw - 32px) !important;
+                margin: 0 auto !important;
             }
 
-            .toolbar-right {
+            .toolbar-center:has(#readerArticleNav:not([style*="display: none"])) .content-search-box {
+                max-width: calc(100vw - 110px) !important;
+            }
+
+            #readerArticleNav {
                 flex-shrink: 0 !important;
                 display: flex !important;
                 align-items: center !important;
-                margin-left: auto !important;
+                gap: 4px !important;
+            }
+
+            #readerArticleNav .toolbar-icon-btn {
+                width: 32px !important;
+                height: 32px !important;
+                min-width: 32px !important;
+                flex-shrink: 0 !important;
             }
 
             .sidebar-restore-btn.left-restore {
