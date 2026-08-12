@@ -2513,12 +2513,13 @@
                 flex-shrink: 0 !important;
             }
 
-            .sidebar-restore-btn.right-restore {
+            #rightRestoreBtn {
+                position: fixed !important;
                 right: 0 !important;
                 top: 150px !important;
                 height: 70px !important;
                 width: 24px !important;
-                z-index: 95 !important;
+                z-index: 1005 !important;
                 display: flex !important;
             }
 

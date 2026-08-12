@@ -1340,7 +1340,7 @@
                 top: 150px !important;
                 height: 70px !important;
                 width: 24px !important;
-                z-index: 95 !important;
+                z-index: 1005 !important;
                 display: flex !important;
                 flex-direction: column;
                 align-items: center;
