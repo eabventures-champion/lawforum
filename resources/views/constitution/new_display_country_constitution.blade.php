@@ -1341,7 +1341,7 @@
                 height: 70px !important;
                 width: 24px !important;
                 z-index: 1005 !important;
-                display: flex !important;
+                display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
@@ -1354,6 +1354,11 @@
                 color: var(--accent-light);
                 cursor: pointer;
                 box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+            }
+
+            #right-sidebar-col.open ~ #expand-right-btn,
+            #right-sidebar-col:not(.collapsed-sidebar) ~ #expand-right-btn {
+                display: none !important;
             }
         }
         @media (max-width: 768px) {

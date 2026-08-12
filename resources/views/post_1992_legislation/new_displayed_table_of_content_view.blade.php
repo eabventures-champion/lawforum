@@ -2520,7 +2520,14 @@
                 height: 70px !important;
                 width: 24px !important;
                 z-index: 1005 !important;
-                display: flex !important;
+                display: flex;
+            }
+
+            .workspace-wrapper:has(#rightSidebar.open) #rightRestoreBtn,
+            .workspace-wrapper:has(#rightSidebar:not(.collapsed)) #rightRestoreBtn,
+            #rightSidebar.open ~ #rightRestoreBtn,
+            #rightSidebar:not(.collapsed) ~ #rightRestoreBtn {
+                display: none !important;
             }
 
             .nav-inner { padding: 14px 20px !important; }
