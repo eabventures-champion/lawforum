@@ -339,27 +339,47 @@
             }, 300);
         };
 
-        // Section Click Gate for Existing Laws & Legislation (Section 4+)
+        // Section Click Gate for Existing Laws, New Laws, Case Laws & Search Results (Section 4+)
         document.addEventListener('click', function(e) {
-            const link = e.target.closest('.pre_content_link, .content_link, .regulation_content_link, .constitutional_content_link, .executive_content_link');
-            if (link) {
+            const link = e.target.closest('a[href]');
+            if (!link) return;
+
+            const href = link.getAttribute('href') || '';
+            const isSectionLinkClass = link.matches('.pre_content_link, .content_link, .regulation_content_link, .constitutional_content_link, .executive_content_link, .amendments_content_link, .amended_regulation_content_link, .sinlge_amended_act_content_link, .sinlge_regulation_act_content_link');
+            const isSectionUrl = href.includes('/content/') || href.includes('/content_section/') || href.includes('/content?');
+
+            if (isSectionLinkClass || isSectionUrl) {
+                // Check 1: data-section-index attribute
                 const indexAttr = link.getAttribute('data-section-index');
                 let index = indexAttr ? parseInt(indexAttr, 10) : null;
 
-                if (index === null) {
-                    const allLinks = Array.from(document.querySelectorAll('.pre_content_link, .content_link'));
-                    const idx = allLinks.indexOf(link);
-                    if (idx !== -1) index = idx + 1;
-                }
+                // Check 2: Parse section/regulation/article number from link text
+                const linkText = (link.innerText || link.textContent || '').trim();
+                const sectionNumMatch = linkText.match(/(?:Section|Regulation|Article)\s*(\d+)/i);
+                
+                let isRestricted = false;
 
                 if (index !== null && index > 3) {
+                    isRestricted = true;
+                } else if (sectionNumMatch && parseInt(sectionNumMatch[1], 10) > 3) {
+                    isRestricted = true;
+                }
+
+                if (isRestricted) {
                     e.preventDefault();
                     e.stopPropagation();
                     e.stopImmediatePropagation();
 
+                    // Format full section title text
                     const sectionSpan = link.querySelector('span');
-                    let sectionTitle = sectionSpan ? sectionSpan.innerText.trim() : link.innerText.trim();
+                    let sectionTitle = sectionSpan ? sectionSpan.innerText.trim() : linkText;
                     sectionTitle = sectionTitle.replace(/\s+/g, ' ');
+
+                    // Clean up title if it contains pipes from search result subtitles
+                    if (sectionTitle.includes('|')) {
+                        const parts = sectionTitle.split('|');
+                        sectionTitle = parts[parts.length - 1].trim();
+                    }
 
                     openPremiumGateModal(
                         sectionTitle + ' is Locked for Guests',
