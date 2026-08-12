@@ -2732,77 +2732,6 @@
     <!-- ====== THREE PANEL SPLIT WORKSPACE ====== -->
     <div class="workspace-wrapper">
         <div class="mobile-workspace-backdrop" id="mobileWorkspaceBackdrop" onclick="closeMobileSidebars()"></div>
-        <!-- Integrated Audio Reader Panel -->
-        <div id="audioPlayerBanner" class="pill-minimized" style="display: none; align-items: center; gap: 8px; background: rgba(17, 24, 39, 0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 3px 8px; height: 36px; flex-shrink: 0;">
-            <!-- Left controls: Play / Pause / Stop -->
-            <div class="d-flex align-items-center" style="gap: 4px;">
-                <button id="audioPlayBtn" class="audio-player-btn play-btn" onclick="handleAudioPlay()" title="Play Speech" style="width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border: none; color: #fff; cursor: pointer;">
-                    <i class="fa-solid fa-play"></i>
-                </button>
-                <button id="audioPauseBtn" class="audio-player-btn play-btn" onclick="handleAudioPause()" title="Pause Speech" style="display:none; background: var(--accent-gradient); width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; border: none; color: #fff; cursor: pointer;">
-                    <i class="fa-solid fa-pause"></i>
-                </button>
-                <button id="audioStopBtn" class="audio-player-btn stop-btn" onclick="handleAudioStop()" title="Stop Speech" style="width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border: none; color: #fff; cursor: pointer;">
-                    <i class="fa-solid fa-stop"></i>
-                </button>
-            </div>
-            
-            <!-- Status text -->
-            <div class="audio-status-wrap" style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--text-secondary); display: flex; flex-direction: column; justify-content: center; line-height: 1.2;">
-                <span class="audio-status-label" id="audioStatusLabel" style="font-size: 10px; font-weight: 600;">Audio Off</span>
-                <span class="audio-playing-title" id="audioPlayingTitle" style="display:none; font-size: 9px; color: var(--text-muted);"></span>
-            </div>
-            
-            <!-- Mode selector dropdown -->
-            <div id="audioModeSelectorContainer" style="display: flex; align-items: center;">
-                <select class="form-control text-white bg-dark border-secondary" id="audioModeSelectDropdown" onchange="setAudioMode(this.value)" style="height: 26px; font-size: 11px; padding: 2px 5px; border-radius: 5px; width: 110px; background-color: rgba(17, 24, 39, 0.8) !important; color: #fff; border: 1px solid var(--border-color); outline: none;">
-                    <option value="current">Current Article</option>
-                    <option value="all">Read All</option>
-                </select>
-            </div>
-
-            <!-- Split Layout controls -->
-            <div id="splitLayoutControls" style="display: none; align-items: center; gap: 3px;">
-                <button class="mode-btn active split-layout-btn" id="btnSplitHorizontal" onclick="setSplitDirection('horizontal')" title="Side-by-Side" style="height: 26px; font-size: 10px; padding: 2px 8px; border-radius: 5px; margin: 0; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; cursor: pointer;">
-                    <i class="fa-solid fa-columns"></i> Side
-                </button>
-                <button class="mode-btn split-layout-btn" id="btnSplitVertical" onclick="setSplitDirection('vertical')" title="Stacked" style="height: 26px; font-size: 10px; padding: 2px 8px; border-radius: 5px; margin: 0; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; cursor: pointer;">
-                    <i class="fa-solid fa-window-maximize" style="transform: rotate(90deg); font-size: 9px;"></i> Stack
-                </button>
-            </div>
-            
-            <!-- Settings Popover/Dropdown (Volume / Rate) -->
-            <div class="dropdown">
-                <button class="btn btn-sm btn-dark text-muted border-0 p-0" type="button" id="audioSettingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: transparent; cursor: pointer;">
-                    <i class="fa-solid fa-sliders" style="font-size: 11px; color: var(--text-muted);"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right bg-dark border-secondary p-3" aria-labelledby="audioSettingsDropdown" onclick="event.stopPropagation()" style="width: 250px; border-radius: 8px; margin-top: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid var(--border-color); background-color: rgb(17, 24, 39) !important; z-index: 1050;">
-                    <h6 class="dropdown-header text-white px-0 pb-2 mb-2 border-bottom border-secondary" style="font-size: 12px; font-weight: 700; color: #fff !important; border-bottom: 1px solid rgba(255,255,255,0.1) !important;">Audio Settings</h6>
-                    
-                    <div class="form-group mb-2">
-                        <label class="text-muted mb-1" style="font-size: 10px; font-weight: 600; color: var(--text-secondary) !important;">Voice Engine</label>
-                        <select id="audioVoiceSelect" class="form-control text-white bg-dark border-secondary" onchange="VoicePlayer.stop()" style="font-size: 11px; height: 28px; padding: 2px; background-color: rgba(0,0,0,0.5) !important; color: #fff;"></select>
-                    </div>
-                    <div class="form-group mb-0">
-                        <label class="text-muted mb-1 d-flex justify-content-between" style="font-size: 10px; font-weight: 600; color: var(--text-secondary) !important;">
-                            <span>Reading Speed</span>
-                            <span class="text-warning" id="audioRateLabel">1.0x</span>
-                        </label>
-                        <input type="range" id="audioRateRange" class="w-100" min="0.5" max="2.0" step="0.1" value="1.0" onchange="updateRateLabel(this.value)" style="accent-color: var(--accent-light);">
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Restore Icon (Visible when minimized on mobile) -->
-            <div class="audio-pill-restore-icon" onclick="toggleAudioPillMinimize(event)" title="Restore Audio Panel">
-                <i class="fa-solid fa-headphones"></i>
-            </div>
-
-            <!-- Minimize Button (Visible on mobile) -->
-            <button class="audio-minimize-pill-btn" onclick="toggleAudioPillMinimize(event)" title="Minimize Audio Panel" type="button">
-                <i class="fa-solid fa-chevron-down"></i>
-            </button>
-        </div>
         <!-- Left Panel: Table of Contents -->
         <aside class="workspace-sidebar left-sidebar" id="leftSidebar">
             <div class="sidebar-header">
@@ -3270,6 +3199,77 @@
             <i class="fa-solid fa-angle-left" style="margin-top: 10px;"></i>
             <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; writing-mode: vertical-rl; transform: rotate(180deg); margin-top: 6px; letter-spacing: 1px; color: var(--text-secondary);">Notes</span>
         </button>
+        <!-- Integrated Audio Reader Panel -->
+        <div id="audioPlayerBanner" class="pill-minimized audio-floating-pane" style="display: none; align-items: center; gap: 8px; background: rgba(17, 24, 39, 0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 3px 8px; height: 36px; flex-shrink: 0;">
+            <!-- Left controls: Play / Pause / Stop -->
+            <div class="d-flex align-items-center" style="gap: 4px;">
+                <button id="audioPlayBtn" class="audio-player-btn play-btn" onclick="handleAudioPlay()" title="Play Speech" style="width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border: none; color: #fff; cursor: pointer;">
+                    <i class="fa-solid fa-play"></i>
+                </button>
+                <button id="audioPauseBtn" class="audio-player-btn play-btn" onclick="handleAudioPause()" title="Pause Speech" style="display:none; background: var(--accent-gradient); width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; border: none; color: #fff; cursor: pointer;">
+                    <i class="fa-solid fa-pause"></i>
+                </button>
+                <button id="audioStopBtn" class="audio-player-btn stop-btn" onclick="handleAudioStop()" title="Stop Speech" style="width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border: none; color: #fff; cursor: pointer;">
+                    <i class="fa-solid fa-stop"></i>
+                </button>
+            </div>
+            
+            <!-- Status text -->
+            <div class="audio-status-wrap" style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--text-secondary); display: flex; flex-direction: column; justify-content: center; line-height: 1.2;">
+                <span class="audio-status-label" id="audioStatusLabel" style="font-size: 10px; font-weight: 600;">Audio Off</span>
+                <span class="audio-playing-title" id="audioPlayingTitle" style="display:none; font-size: 9px; color: var(--text-muted);"></span>
+            </div>
+            
+            <!-- Mode selector dropdown -->
+            <div id="audioModeSelectorContainer" style="display: flex; align-items: center;">
+                <select class="form-control text-white bg-dark border-secondary" id="audioModeSelectDropdown" onchange="setAudioMode(this.value)" style="height: 26px; font-size: 11px; padding: 2px 5px; border-radius: 5px; width: 110px; background-color: rgba(17, 24, 39, 0.8) !important; color: #fff; border: 1px solid var(--border-color); outline: none;">
+                    <option value="current">Current Article</option>
+                    <option value="all">Read All</option>
+                </select>
+            </div>
+
+            <!-- Split Layout controls -->
+            <div id="splitLayoutControls" style="display: none; align-items: center; gap: 3px;">
+                <button class="mode-btn active split-layout-btn" id="btnSplitHorizontal" onclick="setSplitDirection('horizontal')" title="Side-by-Side" style="height: 26px; font-size: 10px; padding: 2px 8px; border-radius: 5px; margin: 0; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; cursor: pointer;">
+                    <i class="fa-solid fa-columns"></i> Side
+                </button>
+                <button class="mode-btn split-layout-btn" id="btnSplitVertical" onclick="setSplitDirection('vertical')" title="Stacked" style="height: 26px; font-size: 10px; padding: 2px 8px; border-radius: 5px; margin: 0; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; cursor: pointer;">
+                    <i class="fa-solid fa-window-maximize" style="transform: rotate(90deg); font-size: 9px;"></i> Stack
+                </button>
+            </div>
+            
+            <!-- Settings Popover/Dropdown (Volume / Rate) -->
+            <div class="dropdown">
+                <button class="btn btn-sm btn-dark text-muted border-0 p-0" type="button" id="audioSettingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: transparent; cursor: pointer;">
+                    <i class="fa-solid fa-sliders" style="font-size: 11px; color: var(--text-muted);"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right bg-dark border-secondary p-3" aria-labelledby="audioSettingsDropdown" onclick="event.stopPropagation()" style="width: 250px; border-radius: 8px; margin-top: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid var(--border-color); background-color: rgb(17, 24, 39) !important; z-index: 1050;">
+                    <h6 class="dropdown-header text-white px-0 pb-2 mb-2 border-bottom border-secondary" style="font-size: 12px; font-weight: 700; color: #fff !important; border-bottom: 1px solid rgba(255,255,255,0.1) !important;">Audio Settings</h6>
+                    
+                    <div class="form-group mb-2">
+                        <label class="text-muted mb-1" style="font-size: 10px; font-weight: 600; color: var(--text-secondary) !important;">Voice Engine</label>
+                        <select id="audioVoiceSelect" class="form-control text-white bg-dark border-secondary" onchange="VoicePlayer.stop()" style="font-size: 11px; height: 28px; padding: 2px; background-color: rgba(0,0,0,0.5) !important; color: #fff;"></select>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="text-muted mb-1 d-flex justify-content-between" style="font-size: 10px; font-weight: 600; color: var(--text-secondary) !important;">
+                            <span>Reading Speed</span>
+                            <span class="text-warning" id="audioRateLabel">1.0x</span>
+                        </label>
+                        <input type="range" id="audioRateRange" class="w-100" min="0.5" max="2.0" step="0.1" value="1.0" onchange="updateRateLabel(this.value)" style="accent-color: var(--accent-light);">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Restore Icon (Visible when minimized on mobile) -->
+            <div class="audio-pill-restore-icon" onclick="toggleAudioPillMinimize(event)" title="Restore Audio Panel">
+                <i class="fa-solid fa-headphones"></i>
+            </div>
+
+            <!-- Minimize Button (Visible on mobile) -->
+            <button class="audio-minimize-pill-btn" onclick="toggleAudioPillMinimize(event)" title="Minimize Audio Panel" type="button">
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+        </div>
     </div>
 
     <!-- Act Selection Modal -->
@@ -3499,6 +3499,7 @@
             }
             // Show audio player banner
             $('#audioPlayerBanner').css('display', 'flex');
+            syncAudioPlayerLayout();
         }
 
         // Attach click handlers as soon as jQuery is ready
