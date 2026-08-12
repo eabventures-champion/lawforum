@@ -290,7 +290,6 @@
             left: 0;
             overflow: hidden;
             background: var(--bg-primary);
-            transition: all 0.3s ease;
         }
 
         body.workspace-maximized .nav-wrap {
@@ -309,9 +308,12 @@
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             z-index: 10;
+        }
+
+        .workspace-sidebar.sidebar-animating {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .right-sidebar {
@@ -3232,6 +3234,7 @@
             const backdrop = document.getElementById('mobileWorkspaceBackdrop');
             if (!sidebar) return;
             
+            sidebar.classList.add('sidebar-animating');
             const isCurrentlyCollapsed = sidebar.classList.contains('collapsed') || (window.innerWidth <= 991 && !sidebar.classList.contains('open'));
 
             if (isCurrentlyCollapsed) {
@@ -3250,6 +3253,7 @@
                 }
             }
             
+            setTimeout(function() { sidebar.classList.remove('sidebar-animating'); }, 350);
             updateMobileAudioBannerClasses();
             
             if (side === 'right') {
@@ -3289,7 +3293,7 @@
             if (expanded) expanded.style.fontSize = currentSizeLevel + 'rem';
         }
 
-        function setSidebarState(side, collapsed) {
+        function setSidebarState(side, collapsed, animate) {
             const sidebar = document.getElementById(side + 'Sidebar');
             const restoreBtn = document.getElementById(side + 'RestoreBtn');
             if (!sidebar) return;
@@ -3297,6 +3301,11 @@
             // On mobile screen sizes (<= 991px), do not automatically expand sidebars on section/AJAX load
             if (window.innerWidth <= 991 && !collapsed && side === 'right') {
                 collapsed = true;
+            }
+
+            if (animate) {
+                sidebar.classList.add('sidebar-animating');
+                setTimeout(function() { sidebar.classList.remove('sidebar-animating'); }, 350);
             }
 
             if (collapsed) {
@@ -3426,9 +3435,10 @@
             
             const displayEl = document.getElementById('display_content');
             if (displayEl) {
-                welcomeObserver.observe(displayEl, { childList: true, subtree: true });
+                welcomeObserver.observe(displayEl, { childList: true });
                 checkWelcomeScreenState();
             }
+
         });
 
         // Close user dropdown on click outside
@@ -4388,10 +4398,11 @@
                         collapsePanel.addClass('show');
                     }
                     
-                    // Scroll target link into view within the sidebar
-                    const sidebarEl = document.querySelector('.workspace-sidebar .accordion-content') || document.querySelector('.workspace-sidebar');
-                    if (sidebarEl) {
-                        targetLink[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    // Scroll target link into view within the sidebar container (without moving parent page)
+                    const sidebarContent = targetLink.closest('.sidebar-content')[0] || document.querySelector('#leftSidebar .sidebar-content');
+                    if (sidebarContent && targetLink[0]) {
+                        const linkTop = targetLink[0].offsetTop;
+                        sidebarContent.scrollTop = Math.max(0, linkTop - 100);
                     }
                 } else {
                     console.log('[TOC-DEBUG] WARNING: No link found! All pre_content_links:', $('a.pre_content_link').length);

@@ -373,7 +373,6 @@
             left: 0;
             overflow: hidden;
             background: var(--bg-primary);
-            transition: all 0.3s ease;
         }
 
         body.workspace-maximized .nav-wrap {
@@ -392,9 +391,12 @@
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             z-index: 10;
+        }
+
+        .workspace-sidebar.sidebar-animating {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .right-sidebar {
@@ -2723,7 +2725,7 @@
     <div class="workspace-wrapper">
         <div class="mobile-workspace-backdrop" id="mobileWorkspaceBackdrop" onclick="closeMobileSidebars()"></div>
         <!-- Integrated Audio Reader Panel -->
-        <div id="audioPlayerBanner" class="pill-minimized" style="display: flex; align-items: center; gap: 8px; background: rgba(17, 24, 39, 0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 3px 8px; height: 36px; flex-shrink: 0;">
+        <div id="audioPlayerBanner" class="pill-minimized" style="display: none; align-items: center; gap: 8px; background: rgba(17, 24, 39, 0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 3px 8px; height: 36px; flex-shrink: 0;">
             <!-- Left controls: Play / Pause / Stop -->
             <div class="d-flex align-items-center" style="gap: 4px;">
                 <button id="audioPlayBtn" class="audio-player-btn play-btn" onclick="handleAudioPlay()" title="Play Speech" style="width: 26px; height: 26px; border-radius: 6px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border: none; color: #fff; cursor: pointer;">
@@ -3393,6 +3395,7 @@
             const backdrop = document.getElementById('mobileWorkspaceBackdrop');
             if (!sidebar) return;
             
+            sidebar.classList.add('sidebar-animating');
             const isCurrentlyCollapsed = sidebar.classList.contains('collapsed') || (window.innerWidth <= 991 && !sidebar.classList.contains('open'));
 
             if (isCurrentlyCollapsed) {
@@ -3411,6 +3414,7 @@
                 }
             }
             
+            setTimeout(function() { sidebar.classList.remove('sidebar-animating'); }, 350);
             updateMobileAudioBannerClasses();
             
             if (side === 'right') {
@@ -3426,13 +3430,18 @@
             updateMobileAudioBannerClasses();
         }
 
-        function setSidebarState(side, collapsed) {
+        function setSidebarState(side, collapsed, animate) {
             const sidebar = document.getElementById(side + 'Sidebar');
             const restoreBtn = document.getElementById(side + 'RestoreBtn');
             if (!sidebar) return;
             
             if (window.innerWidth <= 991 && !collapsed && side === 'right') {
                 collapsed = true;
+            }
+
+            if (animate) {
+                sidebar.classList.add('sidebar-animating');
+                setTimeout(function() { sidebar.classList.remove('sidebar-animating'); }, 350);
             }
 
             if (collapsed) {
@@ -3464,30 +3473,7 @@
             if (expanded) expanded.style.fontSize = currentSizeLevel + 'rem';
         }
 
-        function setSidebarState(side, collapsed) {
-            var sidebar = document.getElementById(side + 'Sidebar');
-            var restoreBtn = document.getElementById(side + 'RestoreBtn');
-            if (!sidebar) return;
-            
-            // On mobile screen sizes (<= 991px), do not automatically expand sidebars
-            if (window.innerWidth <= 991 && !collapsed) {
-                collapsed = true;
-            }
 
-            if (collapsed) {
-                sidebar.classList.add('collapsed');
-                sidebar.classList.remove('open');
-                if (restoreBtn) restoreBtn.style.display = 'flex';
-            } else {
-                sidebar.classList.remove('collapsed');
-                sidebar.classList.add('open');
-                if (restoreBtn) restoreBtn.style.display = 'none';
-            }
-            
-            if (side === 'right') {
-                syncAudioPlayerLayout();
-            }
-        }
 
         // Show all toolbar elements when content is loaded
         function showToolbarElements() {
@@ -3578,7 +3564,7 @@
                         $('#readerArticleNav').css('display', 'flex');
                         $('.toc-sidebar-module').hide();
                         $('.content-sidebar-module').show();
-                        setSidebarState('right', false);
+                        if (window.innerWidth > 991) setSidebarState('right', false);
                     } else {
                         $('#readerArticleNav').hide();
                     }
@@ -3589,21 +3575,25 @@
                 }
             }
 
+            $(window).on('resize', function() {
+                checkWelcomeScreenState();
+            });
+
             const welcomeObserver = new MutationObserver(function() {
                 checkWelcomeScreenState();
             });
             
             const displayEl = document.getElementById('display_content');
             if (displayEl) {
-                welcomeObserver.observe(displayEl, { childList: true, subtree: true });
+                welcomeObserver.observe(displayEl, { childList: true });
                 checkWelcomeScreenState();
-                $(window).on('resize', checkWelcomeScreenState);
             }
 
             if (window.innerWidth <= 991) {
                 setSidebarState('left', true);
                 setSidebarState('right', true);
             }
+            
         });
 
         // Close user dropdown on click outside
@@ -3655,43 +3645,42 @@
                 $(`#viewModeSelectorWrap .dropdown-item[onclick*="selectViewMode('split')"]`).addClass('active');
                 $('#viewModeSelectorBtn span').html('<i class="fa-solid fa-columns mr-2"></i> Split View');
             }
-            
-            // Switch sidebar sub-modules
+                      // Switch sidebar sub-modules
             if (targetId === '#v-pills-profile') {
-                if (window.innerWidth > 991) {
-                    setSidebarState('left', false);
-                } else {
-                    setSidebarState('left', true);
-                }
+                setSidebarState('left', true);
+                setSidebarState('right', true);
+                closeMobileSidebars();
+                
                 const hasWelcome = $('#display_content').find('.toc-welcome').length > 0;
                 if (hasWelcome) {
                     $('.toc-sidebar-module').show();
                     $('.content-sidebar-module').hide();
-                    setSidebarState('right', true);
                     $('#readerArticleNav').hide();
                 } else {
                     $('.toc-sidebar-module').hide();
                     $('.content-sidebar-module').show();
-                    setSidebarState('right', false);
+                    if (window.innerWidth > 991) setSidebarState('right', false);
                     $('#readerArticleNav').css('display', 'flex');
                 }
                 $('#splitLayoutControls').hide();
                 $('#audioModeSelectorContainer').show();
             } else if (targetId === '#v-pills-messages') {
+                setSidebarState('left', true);
+                setSidebarState('right', true);
+                closeMobileSidebars();
                 $('.toc-sidebar-module').hide();
                 $('.content-sidebar-module').hide();
-                setSidebarState('right', true); // Collapse right panel automatically
                 $('#splitLayoutControls').hide();
                 $('#audioModeSelectorContainer').hide();
-                $('#readerArticleNav').hide();
-                if (typeof setAudioMode === 'function') setAudioMode('current');
             } else if (targetId === '#v-pills-split') {
+                setSidebarState('left', true);
+                setSidebarState('right', true);
+                closeMobileSidebars();
                 $('.toc-sidebar-module').hide();
                 $('.content-sidebar-module').hide();
-                setSidebarState('right', true); // Collapse right panel automatically
                 $('#splitLayoutControls').css('display', 'flex');
                 $('#audioModeSelectorContainer').hide();
-                $('#readerArticleNav').hide();
+            }        $('#readerArticleNav').hide();
                 if (typeof setAudioMode === 'function') setAudioMode('current');
                 
                 // Trigger auto load of split A/B if empty
@@ -4586,10 +4575,11 @@
                         collapsePanel.addClass('show');
                     }
                     
-                    // Scroll target link into view within the sidebar
-                    const sidebarEl = document.querySelector('.workspace-sidebar .accordion-content') || document.querySelector('.workspace-sidebar');
-                    if (sidebarEl) {
-                        targetLink[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    // Scroll target link into view within the sidebar container (without moving parent page)
+                    const sidebarContent = targetLink.closest('.sidebar-content')[0] || document.querySelector('#leftSidebar .sidebar-content');
+                    if (sidebarContent && targetLink[0]) {
+                        const linkTop = targetLink[0].offsetTop;
+                        sidebarContent.scrollTop = Math.max(0, linkTop - 100);
                     }
                 } else {
                     console.log('[TOC-DEBUG] WARNING: No link found! All pre_content_links:', $('a.pre_content_link').length);

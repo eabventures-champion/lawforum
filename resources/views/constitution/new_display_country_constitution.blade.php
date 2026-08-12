@@ -1475,84 +1475,89 @@
                             </div>
                         </div>
 
-                        <div class="sidebar-divider"></div>
-
-                        <!-- Notes Section Header -->
-                        <div class="notes-section-header" style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <i class="fa-solid fa-pen-to-square"></i> MY NOTES
-                                <span class="notes-count-badge" id="notesCountBadge">0</span>
+                        @guest
+                            <div class="sidebar-divider"></div>
+                            <div class="guest-notes-teaser-card" onclick="if(typeof openNotesGateModal==='function'){ openNotesGateModal(); }" style="margin-top: 12px; padding: 18px 14px; background: rgba(15, 23, 42, 0.6); border: 1px dashed rgba(245, 158, 11, 0.35); border-radius: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(245, 158, 11, 0.12); color: #f59e0b; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 10px;">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </div>
+                                <h5 style="color: #fff; font-size: 13.5px; font-weight: 700; margin-bottom: 6px;">Personal Notes & Annotations</h5>
+                                <p style="color: #94a3b8; font-size: 11.5px; line-height: 1.5; margin-bottom: 14px;">
+                                    Highlight key legal ratios and attach personal notes directly to judgment text.
+                                </p>
+                                <button type="button" style="width: 100%; padding: 8px 12px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #070a13; font-weight: 700; font-size: 11.5px; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                    <i class="fa-solid fa-lock" style="font-size: 10px;"></i> Unlock Notes Feature
+                                </button>
                             </div>
-                            <button type="button" class="sidebar-collapse-btn" onclick="toggleLeftSidebar()" title="Collapse Left Sidebar">
-                                <i class="fa-solid fa-chevron-left"></i>
-                            </button>
-                        </div>
-
-                        <!-- Highlighted text preview -->
-                        <div class="highlighted-text-preview" id="highlightedTextPreview" style="display: none;">
-                            <span class="close-highlight" onclick="clearHighlightPreview()">&times;</span>
-                            <span id="highlightedTextContent"></span>
-                        </div>
-
-                        <!-- Note textarea -->
-                        <textarea class="note-textarea" id="noteTextarea" placeholder="Write your note here... Select text in the document and click 'Add Note' to attach it."></textarea>
-
-                        <!-- Color picker -->
-                        <div class="note-color-picker">
-                            <label>Label</label>
-                            <div class="color-dot active" data-color="yellow" onclick="selectNoteColor(this)"></div>
-                            <div class="color-dot" data-color="blue" onclick="selectNoteColor(this)"></div>
-                            <div class="color-dot" data-color="green" onclick="selectNoteColor(this)"></div>
-                            <div class="color-dot" data-color="pink" onclick="selectNoteColor(this)"></div>
-                            <div class="color-dot" data-color="purple" onclick="selectNoteColor(this)"></div>
-                        </div>
-
-                        <!-- Action buttons -->
-                        <div class="note-actions">
-                            <button class="btn-save-note" id="btnSaveNote" onclick="saveNote()">
-                                <i class="fa-solid fa-check mr-1"></i> Save Note
-                            </button>
-                            <button class="btn-clear-note" onclick="clearNoteForm()">Clear</button>
-                        </div>
-
-                        <!-- Login prompt (shown for guests on save attempt) -->
-                        <div class="notes-login-prompt" id="notesLoginPrompt">
-                            <p><i class="fa-solid fa-lock" style="margin-right:4px;"></i> Create an account to save your notes to your dashboard</p>
-                            <a href="{{ route('login') }}" class="btn-login-prompt">Log In</a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="btn-signup-prompt">Sign Up</a>
-                            @endif
-                        </div>
-
-                        <div class="sidebar-divider"></div>
-
-                        <!-- Saved notes list -->
-                        <div class="notes-list" id="notesList">
-                            <div class="notes-list-header">Saved Notes</div>
-
-                            <!-- Search notes -->
-                            <div class="notes-search-wrap">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                                <input type="text" class="notes-search-sidebar" id="sidebarNotesSearch" placeholder="Search saved notes..." oninput="filterSidebarNotes()">
+                        @else
+                            <!-- Notes Section Header -->
+                            <div class="notes-section-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <i class="fa-solid fa-pen-to-square"></i> MY NOTES
+                                    <span class="notes-count-badge" id="notesCountBadge">0</span>
+                                </div>
+                                <button type="button" class="sidebar-collapse-btn" onclick="toggleLeftSidebar()" title="Collapse Left Sidebar">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </button>
                             </div>
 
-                            <!-- Filter by color -->
-                            <div class="notes-filter-tabs">
-                                <div class="notes-filter-tag active" data-filter="all" onclick="filterSidebarColor('all', this)">All</div>
-                                <div class="notes-filter-tag" data-filter="yellow" onclick="filterSidebarColor('yellow', this)">Yellow</div>
-                                <div class="notes-filter-tag" data-filter="blue" onclick="filterSidebarColor('blue', this)">Blue</div>
-                                <div class="notes-filter-tag" data-filter="green" onclick="filterSidebarColor('green', this)">Green</div>
-                                <div class="notes-filter-tag" data-filter="pink" onclick="filterSidebarColor('pink', this)">Pink</div>
-                                <div class="notes-filter-tag" data-filter="purple" onclick="filterSidebarColor('purple', this)">Purple</div>
+                            <!-- Highlighted text preview -->
+                            <div class="highlighted-text-preview" id="highlightedTextPreview" style="display: none;">
+                                <span class="close-highlight" onclick="clearHighlightPreview()">&times;</span>
+                                <span id="highlightedTextContent"></span>
                             </div>
 
-                            <!-- Scroll viewport -->
-                            <div class="notes-container-scroll">
-                                <div id="notesContainer">
-                                    <!-- Notes loaded via AJAX -->
+                            <!-- Note textarea -->
+                            <textarea class="note-textarea" id="noteTextarea" placeholder="Write your note here... Select text in the document and click 'Add Note' to attach it."></textarea>
+
+                            <!-- Color picker -->
+                            <div class="note-color-picker">
+                                <label>Label</label>
+                                <div class="color-dot active" data-color="yellow" onclick="selectNoteColor(this)"></div>
+                                <div class="color-dot" data-color="blue" onclick="selectNoteColor(this)"></div>
+                                <div class="color-dot" data-color="green" onclick="selectNoteColor(this)"></div>
+                                <div class="color-dot" data-color="pink" onclick="selectNoteColor(this)"></div>
+                                <div class="color-dot" data-color="purple" onclick="selectNoteColor(this)"></div>
+                            </div>
+
+                            <!-- Action buttons -->
+                            <div class="note-actions">
+                                <button class="btn-save-note" id="btnSaveNote" onclick="saveNote()">
+                                    <i class="fa-solid fa-check mr-1"></i> Save Note
+                                </button>
+                                <button class="btn-clear-note" onclick="clearNoteForm()">Clear</button>
+                            </div>
+
+                            <div class="sidebar-divider"></div>
+
+                            <!-- Saved notes list -->
+                            <div class="notes-list" id="notesList">
+                                <div class="notes-list-header">Saved Notes</div>
+
+                                <!-- Search notes -->
+                                <div class="notes-search-wrap">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" class="notes-search-sidebar" id="sidebarNotesSearch" placeholder="Search saved notes..." oninput="filterSidebarNotes()">
+                                </div>
+
+                                <!-- Filter by color -->
+                                <div class="notes-filter-tabs">
+                                    <div class="notes-filter-tag active" data-filter="all" onclick="filterSidebarColor('all', this)">All</div>
+                                    <div class="notes-filter-tag" data-filter="yellow" onclick="filterSidebarColor('yellow', this)">Yellow</div>
+                                    <div class="notes-filter-tag" data-filter="blue" onclick="filterSidebarColor('blue', this)">Blue</div>
+                                    <div class="notes-filter-tag" data-filter="green" onclick="filterSidebarColor('green', this)">Green</div>
+                                    <div class="notes-filter-tag" data-filter="pink" onclick="filterSidebarColor('pink', this)">Pink</div>
+                                    <div class="notes-filter-tag" data-filter="purple" onclick="filterSidebarColor('purple', this)">Purple</div>
+                                </div>
+
+                                <!-- Scroll viewport -->
+                                <div class="notes-container-scroll">
+                                    <div id="notesContainer">
+                                        <!-- Notes loaded via AJAX -->
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endguest
                     </div>
                 </div>
             </div>
@@ -1714,84 +1719,89 @@
                             </div>
                         </div>
 
-                        <div class="sidebar-divider"></div>
-
-                        <!-- Notes Section Header -->
-                        <div class="notes-section-header" style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <i class="fa-solid fa-pen-to-square"></i> MY NOTES
-                                <span class="notes-count-badge" id="notesCountBadge">0</span>
+                        @guest
+                            <div class="sidebar-divider"></div>
+                            <div class="guest-notes-teaser-card" onclick="if(typeof openNotesGateModal==='function'){ openNotesGateModal(); }" style="margin-top: 12px; padding: 18px 14px; background: rgba(15, 23, 42, 0.6); border: 1px dashed rgba(245, 158, 11, 0.35); border-radius: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(245, 158, 11, 0.12); color: #f59e0b; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 10px;">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </div>
+                                <h5 style="color: #fff; font-size: 13.5px; font-weight: 700; margin-bottom: 6px;">Personal Notes & Annotations</h5>
+                                <p style="color: #94a3b8; font-size: 11.5px; line-height: 1.5; margin-bottom: 14px;">
+                                    Highlight key legal ratios and attach personal notes directly to judgment text.
+                                </p>
+                                <button type="button" style="width: 100%; padding: 8px 12px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #070a13; font-weight: 700; font-size: 11.5px; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                    <i class="fa-solid fa-lock" style="font-size: 10px;"></i> Unlock Notes Feature
+                                </button>
                             </div>
-                            <button type="button" class="sidebar-collapse-btn" onclick="toggleRightSidebar()" title="Collapse Right Sidebar">
-                                <i class="fa-solid fa-chevron-right"></i>
-                            </button>
-                        </div>
-
-                        <!-- Highlighted text preview -->
-                        <div class="highlighted-text-preview" id="highlightedTextPreview" style="display: none;">
-                            <span class="close-highlight" onclick="clearHighlightPreview()">&times;</span>
-                            <span id="highlightedTextContent"></span>
-                        </div>
-
-                        <!-- Note textarea -->
-                        <textarea class="note-textarea" id="noteTextarea" placeholder="Write your note here... Select text in the document and click 'Add Note' to attach it."></textarea>
-
-                        <!-- Color picker -->
-                        <div class="note-color-picker">
-                            <label>Label</label>
-                            <div class="color-dot active" data-color="yellow" onclick="selectNoteColor(this)"></div>
-                            <div class="color-dot" data-color="blue" onclick="selectNoteColor(this)"></div>
-                            <div class="color-dot" data-color="green" onclick="selectNoteColor(this)"></div>
-                            <div class="color-dot" data-color="pink" onclick="selectNoteColor(this)"></div>
-                            <div class="color-dot" data-color="purple" onclick="selectNoteColor(this)"></div>
-                        </div>
-
-                        <!-- Action buttons -->
-                        <div class="note-actions">
-                            <button class="btn-save-note" id="btnSaveNote" onclick="saveNote()">
-                                <i class="fa-solid fa-check mr-1"></i> Save Note
-                            </button>
-                            <button class="btn-clear-note" onclick="clearNoteForm()">Clear</button>
-                        </div>
-
-                        <!-- Login prompt (shown for guests on save attempt) -->
-                        <div class="notes-login-prompt" id="notesLoginPrompt">
-                            <p><i class="fa-solid fa-lock" style="margin-right:4px;"></i> Create an account to save your notes to your dashboard</p>
-                            <a href="{{ route('login') }}" class="btn-login-prompt">Log In</a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="btn-signup-prompt">Sign Up</a>
-                            @endif
-                        </div>
-
-                        <div class="sidebar-divider"></div>
-
-                        <!-- Saved notes list -->
-                        <div class="notes-list" id="notesList">
-                            <div class="notes-list-header">Saved Notes</div>
-
-                            <!-- Search notes -->
-                            <div class="notes-search-wrap">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                                <input type="text" class="notes-search-sidebar" id="sidebarNotesSearch" placeholder="Search saved notes..." oninput="filterSidebarNotes()">
+                        @else
+                            <!-- Notes Section Header -->
+                            <div class="notes-section-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <i class="fa-solid fa-pen-to-square"></i> MY NOTES
+                                    <span class="notes-count-badge" id="notesCountBadge">0</span>
+                                </div>
+                                <button type="button" class="sidebar-collapse-btn" onclick="toggleRightSidebar()" title="Collapse Right Sidebar">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </button>
                             </div>
 
-                            <!-- Filter by color -->
-                            <div class="notes-filter-tabs">
-                                <div class="notes-filter-tag active" data-filter="all" onclick="filterSidebarColor('all', this)">All</div>
-                                <div class="notes-filter-tag" data-filter="yellow" onclick="filterSidebarColor('yellow', this)">Yellow</div>
-                                <div class="notes-filter-tag" data-filter="blue" onclick="filterSidebarColor('blue', this)">Blue</div>
-                                <div class="notes-filter-tag" data-filter="green" onclick="filterSidebarColor('green', this)">Green</div>
-                                <div class="notes-filter-tag" data-filter="pink" onclick="filterSidebarColor('pink', this)">Pink</div>
-                                <div class="notes-filter-tag" data-filter="purple" onclick="filterSidebarColor('purple', this)">Purple</div>
+                            <!-- Highlighted text preview -->
+                            <div class="highlighted-text-preview" id="highlightedTextPreview" style="display: none;">
+                                <span class="close-highlight" onclick="clearHighlightPreview()">&times;</span>
+                                <span id="highlightedTextContent"></span>
                             </div>
 
-                            <!-- Scroll viewport -->
-                            <div class="notes-container-scroll">
-                                <div id="notesContainer">
-                                    <!-- Notes loaded via AJAX -->
+                            <!-- Note textarea -->
+                            <textarea class="note-textarea" id="noteTextarea" placeholder="Write your note here... Select text in the document and click 'Add Note' to attach it."></textarea>
+
+                            <!-- Color picker -->
+                            <div class="note-color-picker">
+                                <label>Label</label>
+                                <div class="color-dot active" data-color="yellow" onclick="selectNoteColor(this)"></div>
+                                <div class="color-dot" data-color="blue" onclick="selectNoteColor(this)"></div>
+                                <div class="color-dot" data-color="green" onclick="selectNoteColor(this)"></div>
+                                <div class="color-dot" data-color="pink" onclick="selectNoteColor(this)"></div>
+                                <div class="color-dot" data-color="purple" onclick="selectNoteColor(this)"></div>
+                            </div>
+
+                            <!-- Action buttons -->
+                            <div class="note-actions">
+                                <button class="btn-save-note" id="btnSaveNote" onclick="saveNote()">
+                                    <i class="fa-solid fa-check mr-1"></i> Save Note
+                                </button>
+                                <button class="btn-clear-note" onclick="clearNoteForm()">Clear</button>
+                            </div>
+
+                            <div class="sidebar-divider"></div>
+
+                            <!-- Saved notes list -->
+                            <div class="notes-list" id="notesList">
+                                <div class="notes-list-header">Saved Notes</div>
+
+                                <!-- Search notes -->
+                                <div class="notes-search-wrap">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" class="notes-search-sidebar" id="sidebarNotesSearch" placeholder="Search saved notes..." oninput="filterSidebarNotes()">
+                                </div>
+
+                                <!-- Filter by color -->
+                                <div class="notes-filter-tabs">
+                                    <div class="notes-filter-tag active" data-filter="all" onclick="filterSidebarColor('all', this)">All</div>
+                                    <div class="notes-filter-tag" data-filter="yellow" onclick="filterSidebarColor('yellow', this)">Yellow</div>
+                                    <div class="notes-filter-tag" data-filter="blue" onclick="filterSidebarColor('blue', this)">Blue</div>
+                                    <div class="notes-filter-tag" data-filter="green" onclick="filterSidebarColor('green', this)">Green</div>
+                                    <div class="notes-filter-tag" data-filter="pink" onclick="filterSidebarColor('pink', this)">Pink</div>
+                                    <div class="notes-filter-tag" data-filter="purple" onclick="filterSidebarColor('purple', this)">Purple</div>
+                                </div>
+
+                                <!-- Scroll viewport -->
+                                <div class="notes-container-scroll">
+                                    <div id="notesContainer">
+                                        <!-- Notes loaded via AJAX -->
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endguest
                     </div>
                     <!-- Advertisement Module -->
                     <div class="premium-card p-0" style="overflow: hidden;">

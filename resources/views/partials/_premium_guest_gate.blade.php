@@ -210,6 +210,91 @@
         user-select: none !important;
         transition: filter 0.5s ease-out, opacity 0.5s ease-out !important;
     }
+
+    /* Floating Unlock Notes Feature Widget for Guests */
+    .guest-floating-notes-pill {
+        position: fixed;
+        bottom: 30px;
+        right: 24px;
+        z-index: 9999;
+        display: none;
+        opacity: 0;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 16px;
+        background: rgba(15, 23, 42, 0.92);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(245, 158, 11, 0.45);
+        border-radius: 50px;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(245, 158, 11, 0.15);
+        cursor: pointer;
+        transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: guestPillFloat 3s infinite ease-in-out alternate;
+    }
+
+    @keyframes guestPillFloat {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-6px); }
+    }
+
+    .guest-floating-notes-pill:hover {
+        transform: translateY(-4px) scale(1.03) !important;
+        border-color: rgba(245, 158, 11, 0.8) !important;
+        box-shadow: 0 16px 40px rgba(245, 158, 11, 0.3) !important;
+    }
+
+    .guest-pill-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .guest-pill-icon {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(245, 158, 11, 0.18);
+        color: #f59e0b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+    }
+
+    .guest-pill-text {
+        color: #fff;
+        font-size: 12.5px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+    }
+
+    .guest-pill-lock {
+        color: #f59e0b;
+        font-size: 11px;
+    }
+
+    .guest-pill-close {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: #94a3b8;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        line-height: 1;
+        cursor: pointer;
+        margin-left: 4px;
+        transition: all 0.2s ease;
+    }
+
+    .guest-pill-close:hover {
+        color: #fff;
+        background: rgba(239, 68, 68, 0.85);
+    }
 </style>
 
 <div class="premium-gate-modal-backdrop" id="premiumGateModalBackdrop">
@@ -254,15 +339,55 @@
     </div>
 </div>
 
+@guest
+<div id="guestFloatingNotesWidget" class="guest-floating-notes-pill" style="display: none;">
+    <div class="guest-pill-content" onclick="if(typeof openNotesGateModal==='function'){ openNotesGateModal(); }">
+        <span class="guest-pill-icon"><i class="fa-solid fa-pen-to-square"></i></span>
+        <span class="guest-pill-text">Unlock Notes Feature</span>
+        <i class="fa-solid fa-lock guest-pill-lock"></i>
+    </div>
+    <button type="button" class="guest-pill-close" onclick="event.stopPropagation(); hideGuestFloatingNotes();" title="Hide Notes Feature Hint">&times;</button>
+</div>
+@endguest
+
 <script>
     (function() {
         let scrollLocked = false;
 
-        // Move modal backdrop directly to <body> on DOM load
+        window.hideGuestFloatingNotes = function() {
+            const pill = document.getElementById('guestFloatingNotesWidget');
+            if (pill) {
+                pill.style.opacity = '0';
+                pill.style.transform = 'scale(0.8)';
+                setTimeout(function() { pill.style.display = 'none'; }, 250);
+                sessionStorage.setItem('guestNotesPillDismissed', 'true');
+            }
+        };
+
+        // Move modal backdrop & floating notes widget directly to <body> on DOM load
         function moveModalToBody() {
             const backdrop = document.getElementById('premiumGateModalBackdrop');
             if (backdrop && backdrop.parentNode !== document.body) {
                 document.body.appendChild(backdrop);
+            }
+            const pill = document.getElementById('guestFloatingNotesWidget');
+            if (pill) {
+                if (pill.parentNode !== document.body) {
+                    document.body.appendChild(pill);
+                }
+                const currentPath = window.location.pathname;
+                const isTargetPage = currentPath.includes('/existing-laws') || currentPath.includes('/new-laws') || (currentPath.includes('/constitution') && !currentPath.includes('/constitution/1/'));
+                const isDismissed = sessionStorage.getItem('guestNotesPillDismissed') === 'true';
+
+                if (isTargetPage && !isDismissed) {
+                    pill.style.display = 'flex';
+                    requestAnimationFrame(function() {
+                        pill.style.opacity = '1';
+                    });
+                } else {
+                    pill.style.display = 'none';
+                    pill.style.opacity = '0';
+                }
             }
         }
         if (document.readyState === 'loading') {
@@ -310,6 +435,9 @@
         };
 
         window.returnToStartOfContent = function() {
+            scrollLocked = false;
+            ignoreGateUntil = Date.now() + 1000; // 1-second grace period while scrolling to top
+
             window.closePremiumGateModal();
 
             // Unblur content smoothly
@@ -318,25 +446,22 @@
                 el.classList.remove('content-blurred-by-gate');
             });
 
-            // Immediately scroll window to top
-            window.scrollTo(0, 0);
-
-            // Scroll all workspace/reader containers to top
-            const containers = document.querySelectorAll('.workspace-body, .split-panel-body, #display_content, .reader-container, #display_view_all_section, .reader-content-pane, [style*="overflow"]');
-            containers.forEach(function(el) {
-                el.scrollTop = 0;
-            });
-
-            // Reset progress text indicators if present
+            // Reset progress text indicators to 0%
             const progressEl = document.getElementById('progressPercent');
             const progressFill = document.getElementById('progressFill');
             if (progressEl) progressEl.textContent = '0%';
             if (progressFill) progressFill.style.width = '0%';
 
-            // Unlock gate so scrolling down to 10% AGAIN will trigger the modal AGAIN
-            setTimeout(function() {
-                scrollLocked = false;
-            }, 300);
+            // Immediately scroll window & document bodies to top
+            window.scrollTo(0, 0);
+            if (document.documentElement) document.documentElement.scrollTop = 0;
+            if (document.body) document.body.scrollTop = 0;
+
+            // Scroll all workspace/reader/case containers to top
+            const containers = document.querySelectorAll('.main-wrapper-scrollable, .workspace-body, .split-panel-body, #display_content, .reader-container, #display_view_all_section, .reader-content-pane, .judgement_display, #v-pills-messages');
+            containers.forEach(function(el) {
+                el.scrollTop = 0;
+            });
         };
 
         // Section Click Gate for Existing Laws, New Laws, Case Laws & Search Results (Section 4+)
@@ -392,19 +517,37 @@
 
         let ignoreGateUntil = 0;
 
+        window.openNotesGateModal = function() {
+            openPremiumGateModal(
+                'Personal Notes Locked for Guests',
+                'Personal case notes, annotations, and text highlights are available for registered users. Please sign up as a Student, Lawyer, or Researcher to save and organize notes.'
+            );
+        };
+
         function isExpandedViewActive() {
             const path = window.location.pathname;
+            if (path.includes('/judgement') || path.includes('/case-law') || path.includes('/case_law') || path.includes('/cases')) {
+                // Listing & category search pages (e.g. /judgement/Ghana, /judgement/all-countries) should NOT be restricted on scroll
+                const segments = path.split('/').filter(Boolean);
+                const lastSegment = segments[segments.length - 1] || '';
+                const isNumericCaseId = /^\d+$/.test(lastSegment);
+
+                if (!isNumericCaseId) {
+                    return false;
+                }
+                return true;
+            }
             if (path.includes('expanded') || path.includes('expanded-view') || path.includes('expanded_view')) {
                 return true;
             }
             if (typeof window.currentViewMode !== 'undefined' && window.currentViewMode === 'expanded') {
                 return true;
             }
-            const expandedTab = document.getElementById('v-pills-messages-tab');
+            const expandedTab = document.getElementById('v-pills-messages-tab') || document.querySelector('a[href="#expandedTab"]');
             if (expandedTab && (expandedTab.classList.contains('active') || expandedTab.getAttribute('aria-selected') === 'true')) {
                 return true;
             }
-            const expandedPane = document.getElementById('v-pills-messages');
+            const expandedPane = document.getElementById('v-pills-messages') || document.getElementById('expandedTab') || document.getElementById('acts_expanded_view');
             if (expandedPane && (expandedPane.classList.contains('active') || expandedPane.classList.contains('show'))) {
                 return true;
             }
@@ -430,7 +573,7 @@
 
             // Immediately scroll all containers to top
             window.scrollTo(0, 0);
-            const containers = document.querySelectorAll('.workspace-body, #v-pills-messages, #display_view_all_section, #display_content, .reader-container, .split-panel-body');
+            const containers = document.querySelectorAll('.workspace-body, #v-pills-messages, #display_view_all_section, #display_content, .reader-container, .split-panel-body, .main-wrapper-scrollable, #expandedTab, #acts_expanded_view, #display_country_constitution');
             containers.forEach(function(el) {
                 el.scrollTop = 0;
             });
@@ -438,7 +581,7 @@
 
         // Reset scroll gate synchronously when user clicks Expanded View or switches tabs
         document.addEventListener('click', function(e) {
-            const btn = e.target.closest('[onclick*="selectViewMode"], #v-pills-messages-tab, .toggle_expanded_view, .nav-tab-premium, .sidebar-view-btn, .dropdown-item');
+            const btn = e.target.closest('[onclick*="selectViewMode"], #v-pills-messages-tab, .toggle_expanded_view, .nav-tab-premium, .sidebar-view-btn, .dropdown-item, .bg-color-expanded, .expanded_link');
             if (btn) {
                 resetGateForExpandedView();
                 setTimeout(resetGateForExpandedView, 150);
@@ -448,20 +591,20 @@
 
         // Also listen to Bootstrap tab change events
         if (typeof $ !== 'undefined') {
-            $(document).on('show.bs.tab shown.bs.tab', '#v-pills-messages-tab, a[href="#v-pills-messages"]', function() {
+            $(document).on('show.bs.tab shown.bs.tab', '#v-pills-messages-tab, a[href="#v-pills-messages"], a[href="#expandedTab"]', function() {
                 resetGateForExpandedView();
             });
         }
 
-        // 10% Reading Progress Gate for Existing Laws, New Laws, and Case Laws (Expanded View Only)
-        if (!isConstitution && !isHomePage && !isPublicPage) {
+        // Reading Progress Gate for Existing Laws, New Laws, Case Laws, and Constitution (50% Constitution, 20% Case Laws, 10% Expanded View)
+        if (!isHomePage && !isPublicPage) {
             const checkReadingProgressGate = function() {
                 // If in grace period, do not evaluate gate
                 if (Date.now() < ignoreGateUntil) {
                     return;
                 }
 
-                // The 10% reading progress gate is ONLY applicable in Expanded View!
+                // The reading progress gate applies to Expanded View & Case Laws pages
                 if (!isExpandedViewActive()) {
                     if (scrollLocked) {
                         scrollLocked = false;
@@ -474,10 +617,21 @@
                     return;
                 }
 
+                const pathSegments = path.split('/').filter(Boolean);
+                const lastPathSegment = pathSegments[pathSegments.length - 1] || '';
+                const isCaseLawPage = (path.includes('/judgement') || path.includes('/case-law') || path.includes('/case_law') || path.includes('/cases')) && /^\d+$/.test(lastPathSegment);
+                
+                let targetThreshold = 10;
+                if (isConstitution) {
+                    targetThreshold = 50;
+                } else if (isCaseLawPage) {
+                    targetThreshold = 20;
+                }
+
                 let currentProgress = 0;
 
-                // Find active scroll container in Expanded View (.workspace-body or window)
-                const scrollEl = document.querySelector('.workspace-body') || document.querySelector('.main-wrapper-scrollable') || document.querySelector('#display_view_all_section');
+                // Find active scroll container
+                const scrollEl = document.querySelector('.main-wrapper-scrollable') || document.querySelector('.workspace-body') || document.querySelector('#display_view_all_section') || document.querySelector('.judgement_display') || document.querySelector('#expandedTab') || document.querySelector('#acts_expanded_view');
 
                 let scrollTop = 0;
                 let scrollHeight = 0;
@@ -501,32 +655,39 @@
                 // Update reading progress bar text if present
                 const progressEl = document.getElementById('progressPercent');
                 const progressFill = document.getElementById('progressFill');
-                if (progressEl && isExpandedViewActive()) {
+                if (progressEl) {
                     progressEl.textContent = currentProgress + '%';
                 }
-                if (progressFill && isExpandedViewActive()) {
+                if (progressFill) {
                     progressFill.style.width = currentProgress + '%';
                 }
 
-                // Automatically reset scrollLocked if user is at < 10%
-                if (currentProgress < 10) {
+                // Automatically reset scrollLocked if user is under target threshold
+                if (currentProgress < targetThreshold) {
                     scrollLocked = false;
                 }
 
-                if (currentProgress >= 10 && !scrollLocked) {
+                if (currentProgress >= targetThreshold && !scrollLocked) {
                     scrollLocked = true;
 
                     // Apply blur to reading containers smoothly
-                    const targetElements = document.querySelectorAll('.main-wrapper-scrollable, .container-fluid, .content-wrapper, main, .workspace-body, #display_view_all_section, .reader-container');
+                    const targetElements = document.querySelectorAll('.main-wrapper-scrollable, .container-fluid, .content-wrapper, main, .workspace-body, #display_view_all_section, .reader-container, .judgement_display, #display_country_constitution, #v-pills-messages, #expandedTab, #acts_expanded_view');
                     targetElements.forEach(function(target) {
                         target.classList.add('content-blurred-by-gate');
                     });
 
-                    openPremiumGateModal(
-                        'Reading Limit Reached (10%)',
-                        'You have reached 10% of this document. Sign up as a Student, Lawyer, or Researcher to continue reading full laws and case judgments.',
-                        true
-                    );
+                    let modalTitle = 'Reading Limit Reached (10%)';
+                    let modalDesc = 'You have reached 10% of this document. Sign up as a Student, Lawyer, or Researcher to continue reading full laws and case judgments.';
+
+                    if (isConstitution) {
+                        modalTitle = 'Reading Limit Reached (50%)';
+                        modalDesc = 'You have reached 50% of the Constitution document in Expanded View. Sign up as a Student, Lawyer, or Researcher to continue reading full constitutional texts and legal documents.';
+                    } else if (isCaseLawPage) {
+                        modalTitle = 'Reading Limit Reached (20%)';
+                        modalDesc = 'You have reached 20% of this case judgment. Sign up as a Student, Lawyer, or Researcher to continue reading full legal judgments and case laws.';
+                    }
+
+                    openPremiumGateModal(modalTitle, modalDesc, true);
                 }
             };
 
