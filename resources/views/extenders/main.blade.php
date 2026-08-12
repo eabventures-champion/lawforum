@@ -4,7 +4,7 @@
         
         <meta charset="utf-8">
         {{-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
-        <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+        <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no' name='viewport' />
         <meta name="description" content="@yield('meta_description')"/>
         
         <title> 

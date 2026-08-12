@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <meta name="description" content="Ghana's premier cloud-based legal research platform. Access thousands of laws, cases, and legal resources efficiently.">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -616,7 +616,7 @@
             border: none;
             outline: none;
             background: transparent;
-            font-size: 15px;
+            font-size: 16px;
             font-family: var(--font);
             color: var(--text-primary);
             padding: 14px 12px;
@@ -1547,6 +1547,7 @@
                 text-align: center;
                 color: var(--text-primary);
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                font-size: 16px !important;
             }
             .search-container input:focus {
                 border-color: var(--accent);
