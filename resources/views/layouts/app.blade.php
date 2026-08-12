@@ -97,10 +97,14 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
-                        &nbsp;<a class="btn btn-sm bg-header-color text-white" href="{{ route('login') }}">Login</a>&nbsp;
+                        &nbsp;<a class="btn btn-sm bg-header-color text-white" href="/">Why Choose Us</a>&nbsp;
 
-                            @if (Route::has('register'))
-                                <a class="btn btn-sm bg-header-color text-white" href="{{ route('register') }}">Sign Up Free</a>
+                            @if(request()->cookie('guest_access'))
+                                <a class="btn btn-sm bg-header-color text-white" href="/get-started">
+                                    <i class="fa-solid fa-user-secret"></i> Guest User
+                                </a>
+                            @elseif (Route::has('register'))
+                                <a class="btn btn-sm bg-header-color text-white" href="/get-started">Sign Up Free</a>
                             @endif
                             
                         @else
@@ -192,5 +196,6 @@
        
     @yield('scripts')
 
+@include('partials._premium_guest_gate')
 </body>
 </html>

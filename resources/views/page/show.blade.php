@@ -302,9 +302,9 @@
 
             <div class="nav-auth">
                 @guest
-                    <a href="{{ route('login') }}" class="btn-login">Log In</a>
+                    <a href="/" class="btn-login">Why Choose Us</a>
                     @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn-signup">Sign Up Free</a>
+                        @if(request()->cookie('guest_access'))<a href="/get-started" class="btn-signup" style="background: rgba(255,255,255,0.08); box-shadow: none;"><i class="fa-solid fa-user-secret" style="margin-right: 4px;"></i> Guest User</a>@else<a href="/get-started" class="btn-signup">Sign Up Free</a>@endif
                     @endif
                 @else
                     <div class="nav-user-dropdown">
@@ -323,7 +323,7 @@
                             <a href="#" class="logout-link" onclick="event.preventDefault(); document.getElementById('logout-form-dynamic').submit();" style="color: #ef4444;"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a>
                         </div>
                     </div>
-                @endguest
+                @endauth
             </div>
         </div>
     </nav>
@@ -347,5 +347,6 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-  </body>
+  @include('partials._premium_guest_gate')
+</body>
 </html>

@@ -528,6 +528,7 @@ The above copyright notice and this permission notice shall be included in all c
       });
     });
   </script>
+@include('partials._premium_guest_gate')
 </body>
 
 </html>

@@ -27,6 +27,7 @@
         @include('layouts.plain_create_account')
 </div>
 
+@include('partials._premium_guest_gate')
 </body>
 
 </html>

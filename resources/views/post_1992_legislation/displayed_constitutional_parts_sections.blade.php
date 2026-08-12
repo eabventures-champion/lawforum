@@ -25,8 +25,13 @@
                                 <a data-scroll-to="body"
                                 data-scroll-focus="body"
                                 data-scroll-speed="400"
-                                data-scroll-offset="-60" class="constitutional_content_link list-group-item" style="white-space:normal; line-height: 0.4cm;" sid="{{ $allConstitutionalArticle->id }}"  href="/new-laws/constitutional-acts/content/{{ $allConstitutionalArticle->id }}">
+                                data-scroll-offset="-60" class="constitutional_content_link list-group-item" style="white-space:normal; line-height: 0.4cm;" sid="{{ $allConstitutionalArticle->id }}" data-section-index="{{ $loop->iteration }}" href="/new-laws/constitutional-acts/content/{{ $allConstitutionalArticle->id }}">
                                 {{ $allConstitutionalArticle->section }}
+                                @guest
+                                    @if($loop->iteration > 3)
+                                        <i class="fa-solid fa-lock" style="font-size: 10px; margin-left: 6px; color: #f59e0b;" title="Locked for Guests"></i>
+                                    @endif
+                                @endguest
                                 </a>
                                            
             @endforeach 

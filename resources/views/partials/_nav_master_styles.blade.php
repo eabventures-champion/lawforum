@@ -412,10 +412,34 @@
         background: rgba(148, 163, 184, 0.08) !important;
     }
 
+    .mobile-nav-right {
+        display: none;
+        align-items: center;
+        gap: 10px;
+        margin-left: auto;
+    }
+
+    .mobile-user-role-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        font-size: 15px;
+        text-decoration: none !important;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+    .mobile-user-role-badge:hover {
+        transform: scale(1.08);
+    }
+
     @media (max-width: 991px) {
         .nav-inner { padding: 0 20px !important; }
         .nav-menu-links-premium { display: none !important; }
         .nav-mobile-toggle { display: block !important; }
+        .mobile-nav-right { display: flex !important; }
         .nav-auth { display: none !important; }
         .nav-underline-premium { position: relative !important; top: auto !important; }
         .nav-logo i { font-size: 18px !important; }

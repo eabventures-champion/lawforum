@@ -1325,9 +1325,15 @@
 
             <div class="header-actions">
                 @guest
-                    <a href="{{ route('login') }}" class="btn-header-login">Log In</a>
+                    <a href="/" class="btn-header-login">Why Choose Us</a>
                     @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn-header-signup">Sign Up Free</a>
+                        @if(request()->cookie('guest_access'))
+                            <a href="/get-started" class="btn-header-signup" style="background: rgba(255,255,255,0.08); box-shadow: none;">
+                                <i class="fa-solid fa-user-secret" style="margin-right: 4px;"></i> Guest User
+                            </a>
+                        @else
+                            <a href="/get-started" class="btn-header-signup">Sign Up Free</a>
+                        @endif
                     @endif
                 @else
                     <span class="user-greeting">Hi, {{ Auth::user()->name }}</span>
@@ -2127,5 +2133,6 @@
         }
     </script>
 
+@include('partials._premium_guest_gate')
 </body>
 </html>

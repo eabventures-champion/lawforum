@@ -29,8 +29,15 @@
                         <a data-scroll-to="body"
                         data-scroll-focus="body"
                         data-scroll-speed="400"
-                        data-scroll-offset="-60" class="amendments_content_link list-group-item" style="white-space:normal; line-height: 0.4cm;" sid="{{ $allAmendedArticle->id }}"  href="/new-laws/amended_acts/content/{{ $allAmendedArticle->id }}">
-                        <li style="list-style: none;">{{ $allAmendedArticle->section }}</li>
+                        data-scroll-offset="-60" class="amendments_content_link list-group-item" style="white-space:normal; line-height: 0.4cm;" sid="{{ $allAmendedArticle->id }}" data-section-index="{{ $loop->iteration }}" href="/new-laws/amended_acts/content/{{ $allAmendedArticle->id }}">
+                        <li style="list-style: none;">
+                            {{ $allAmendedArticle->section }}
+                            @guest
+                                @if($loop->iteration > 3)
+                                    <i class="fa-solid fa-lock" style="font-size: 10px; margin-left: 6px; color: #f59e0b;" title="Locked for Guests"></i>
+                                @endif
+                            @endguest
+                        </li>
                         </a>
                     
     @endforeach 

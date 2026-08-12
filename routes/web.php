@@ -12,6 +12,23 @@ if (env('APP_ENV') === 'production') {
 //WELCOME PAGE
 Route::get('/','WelcomePageController@index');
 
+// GATEWAY PAGE (Get Started / Role Selection)
+Route::get('/get-started', function () {
+    // If user is already authenticated, redirect to home
+    if (auth()->check()) {
+        return redirect('/');
+    }
+    // If guest already has access cookie, redirect to home
+    if (request()->cookie('guest_access')) {
+        return redirect('/');
+    }
+    return view('get-started');
+})->name('get-started');
+
+Route::post('/set-guest-access', function () {
+    return redirect('/')->withCookie(cookie('guest_access', '1', 60 * 24 * 30)); // 30 days
+})->name('set-guest-access');
+
 //----------------------------------------------------------------------------DASHBOARD------------------------------------------------------------------------------------------------------------
 Route::get('/accounts/dashboard','UserDashBoardController@dashboard');
 

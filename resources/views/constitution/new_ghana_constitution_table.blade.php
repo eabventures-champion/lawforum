@@ -2614,9 +2614,9 @@
                 <span class="nav-logo-text">Legals Forum</span>
             </a>
 
-            <button class="nav-mobile-toggle" onclick="document.getElementById('mobileNav').classList.add('open')">
+            <div class="mobile-nav-right">@include('partials._mobile_user_icon')<button class="nav-mobile-toggle" onclick="document.getElementById('mobileNav').classList.add('open')">
                 <i class="fa-solid fa-bars"></i>
-            </button>
+            </button></div>
 
             <div class="nav-menu-links-premium">
                 @include('partials._nav_desktop_menu')
@@ -2624,9 +2624,9 @@
 
             <div class="nav-auth">
                 @guest
-                    <a href="{{ route('login') }}" class="btn-login">Log In</a>
+                    <a href="/" class="btn-login">Why Choose Us</a>
                     @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn-signup">Sign Up Free</a>
+                        @if(request()->cookie('guest_access'))<a href="/get-started" class="btn-signup" style="background: rgba(255,255,255,0.08); box-shadow: none;"><i class="fa-solid fa-user-secret" style="margin-right: 4px;"></i> Guest User</a>@else<a href="/get-started" class="btn-signup">Sign Up Free</a>@endif
                     @endif
                 @else
                     <div class="nav-user-dropdown" id="userDropdown">
@@ -2649,7 +2649,7 @@
                                 <i class="fa-solid fa-power-off"></i> Sign Out
                         </div>
                     </div>
-                @endguest
+                @endauth
             </div>
         </div>
     </nav>
@@ -2662,9 +2662,9 @@
         @include('partials._nav_mobile_menu')
         <div style="height: 16px;"></div>
         @guest
-            <a href="{{ route('login') }}">Log In</a>
+            <a href="/">Why Choose Us</a>
             @if (Route::has('register'))
-                <a href="{{ route('register') }}" style="color: var(--accent-light);">Sign Up Free</a>
+                @if(request()->cookie('guest_access'))<a href="/get-started" style="color: var(--text-secondary);"><i class="fa-solid fa-user-secret"></i> Guest User</a>@else<a href="/get-started" style="color: var(--accent-light);">Sign Up Free</a>@endif
             @endif
         @else
             <a href="/home">Dashboard</a>
@@ -5557,5 +5557,6 @@
         return div.innerHTML;
     }
     </script>
-  </body>
+  @include('partials._premium_guest_gate')
+</body>
 </html>

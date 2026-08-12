@@ -79,7 +79,8 @@ class RegisterController extends Controller
             'country' => $data['country'],
             'email' => $data['email'],
             'phone' => $data['phone'],
-            'password' => Hash::make($data['password'])
+            'password' => Hash::make($data['password']),
+            'user_type' => $data['user_type'] ?? null,
         ]);
 
         \App\AdminNotification::create([

@@ -21,6 +21,7 @@
         </div>
                 
                 
+@include('partials._premium_guest_gate')
 </body>
 
 </html>

@@ -623,5 +623,6 @@
             }, 50);
         }
     </script>
+@include('partials._premium_guest_gate')
 </body>
 </html>

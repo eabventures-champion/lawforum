@@ -103,5 +103,6 @@
         
         @yield('scripts')
 
-    </body>
+    @include('partials._premium_guest_gate')
+</body>
 </html>

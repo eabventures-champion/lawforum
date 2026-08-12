@@ -1,5 +1,6 @@
 {{-- Mobile Navigation Menu Links --}}
 {{-- Renders the headerMenus for the mobile nav panel with sub-dropdown support --}}
+@if(auth()->check() || request()->cookie('guest_access'))
 @foreach($headerMenus as $menu)
     @if($menu->is_dropdown)
         @php
@@ -19,3 +20,4 @@
         <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}">{{ $menu->title }}</a>
     @endif
 @endforeach
+@endif

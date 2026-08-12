@@ -159,6 +159,7 @@
     });
 </script>
 
+@include('partials._premium_guest_gate')
 </body>
 
 </html>{{-- <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.0.min.js"></script> --}}
@@ -248,6 +249,7 @@
     });
 </script>
 
+@include('partials._premium_guest_gate')
 </body>
 
 </html>

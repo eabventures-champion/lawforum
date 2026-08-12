@@ -1,5 +1,6 @@
 {{-- Desktop Navigation Menu Links --}}
 {{-- Renders the headerMenus with support for sub-dropdowns (3-level nesting) and exclusive section active state --}}
+@if(auth()->check() || request()->cookie('guest_access'))
 @php
     $currentPath = trim(request()->path(), '/');
 
@@ -85,3 +86,4 @@
         <a href="{{ $menuUrl }}" class="nav-link-btn {{ $isMenuActive ? 'active' : '' }}" style="text-decoration:none !important;">{{ $menu->title }}</a>
     @endif
 @endforeach
+@endif

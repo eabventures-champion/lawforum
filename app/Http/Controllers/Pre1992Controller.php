@@ -126,6 +126,18 @@ class Pre1992Controller extends Controller
     //Display Content
      public function pre_1992_legislation_content($id){
         $allPre1992Article = Pre1992LegislationArticle::find(['id' => $id])->toArray()[0];
+
+        if (!\Illuminate\Support\Facades\Auth::check()) {
+            $allPreArticles = Pre1992LegislationArticle::where('pre_1992_act', $allPre1992Article['pre_1992_act'])->get();
+            $sortedArticles = $allPreArticles->sortBy('part')->sortBy('priority');
+            $actArticles = $sortedArticles->pluck('id')->map(function($v){ return (string) $v; })->values()->toArray();
+
+            $sectionIndex = array_search((string) $id, $actArticles);
+            if ($sectionIndex !== false && $sectionIndex >= 3) {
+                return view('pre_1992_legislation.displayed_locked_section_view', compact('allPre1992Article'));
+            }
+        }
+
         return view('pre_1992_legislation.displayed_content_view', compact('allPre1992Article'));
     }
 

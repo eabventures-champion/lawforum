@@ -124,12 +124,8 @@
                 @include('partials._nav_desktop_menu')
             </div>
             <div class="nav-auth">
-                @guest
-                    <a href="{{ route('login') }}" class="btn-login">Log In</a>
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn-signup">Sign Up Free</a>
-                    @endif
-                @else
+                @include('partials._nav_auth_buttons')
+                @auth
                     <div class="nav-user-dropdown" id="userDropdown">
                         <button class="nav-user-btn" onclick="document.getElementById('userDropdown').classList.toggle('active')">
                             <i class="fa-solid fa-circle-user"></i> {{ Auth::user()->name }} <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 2px;"></i>
@@ -149,9 +145,9 @@
                     </div>
                 @endguest
             </div>
-            <button class="nav-mobile-toggle" onclick="document.getElementById('mobileNav').classList.add('open')" title="Toggle Menu">
+            <div class="mobile-nav-right">@include('partials._mobile_user_icon')<button class="nav-mobile-toggle" onclick="document.getElementById('mobileNav').classList.add('open')" title="Toggle Menu">
                 <i class="fa-solid fa-bars"></i>
-            </button>
+            </button></div>
         </div>
     </nav>
     <div class="mobile-nav-panel" id="mobileNav">
@@ -159,8 +155,8 @@
         @include('partials._nav_mobile_menu')
         <div style="height: 16px;"></div>
         @guest
-            <a href="{{ route('login') }}">Log In</a>
-            @if (Route::has('register')) <a href="{{ route('register') }}" style="color: var(--accent-light);">Sign Up Free</a> @endif
+            <a href="/">Why Choose Us</a>
+            @if (Route::has('register')) @if(request()->cookie('guest_access'))<a href="/get-started" style="color: var(--text-secondary);"><i class="fa-solid fa-user-secret"></i> Guest User</a>@else<a href="/get-started" style="color: var(--accent-light);">Sign Up Free</a>@endif @endif
         @else
             <a href="/home">Dashboard</a>
             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="color: #f43f5e;">Sign Out</a>
@@ -218,5 +214,6 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-174662621-1"></script>
     <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'UA-174662621-1');</script>
     <script type="text/javascript">var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date(); (function(){ var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0]; s1.async=true; s1.src='https://embed.tawk.to/5e398d16298c395d1ce62ab4/default'; s1.charset='UTF-8'; s1.setAttribute('crossorigin','*'); s0.parentNode.insertBefore(s1,s0); })();</script>
-  </body>
+  @include('partials._premium_guest_gate')
+</body>
 </html>

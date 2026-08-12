@@ -31,8 +31,13 @@
                 <a data-scroll-to="body"
                 data-scroll-focus="body"
                 data-scroll-speed="400"
-                data-scroll-offset="-60" class="pre_content_link" sid="{{ $allPre1992Article->id }}"  href="/existing-laws/content/{{ $allPre1992Article->id }}">
+                data-scroll-offset="-60" class="pre_content_link" sid="{{ $allPre1992Article->id }}" data-section-index="{{ $loop->iteration }}" href="/existing-laws/content/{{ $allPre1992Article->id }}">
                 <span>{{ $allPre1992Article->section }}</span>
+                @guest
+                    @if($loop->iteration > 3)
+                        <i class="fa-solid fa-lock" style="font-size: 10px; margin-left: 6px; color: #f59e0b;" title="Locked for Guests"></i>
+                    @endif
+                @endguest
                 </a> 
                 </li>
             </ul>     
