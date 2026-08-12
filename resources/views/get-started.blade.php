@@ -42,6 +42,12 @@
             font-family: 'Inter', sans-serif;
         }
 
+        html, body {
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+            width: 100% !important;
+        }
+
         body {
             background-color: var(--bg-primary);
             color: var(--text-primary);
@@ -51,34 +57,36 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            overflow-x: hidden;
-            padding: 2rem;
+            padding: 2rem 1.5rem;
         }
 
         /* Ambient Background Blobs */
         .ambient-blob {
-            position: absolute;
+            position: fixed;
             border-radius: 50%;
-            filter: blur(120px);
+            filter: blur(100px);
             z-index: -1;
-            opacity: 0.4;
+            opacity: 0.35;
+            pointer-events: none;
+            max-width: 100vw;
+            max-height: 100vh;
             animation: float 20s infinite ease-in-out alternate;
         }
         
         .blob-1 {
-            width: 40vw;
-            height: 40vw;
+            width: 300px;
+            height: 300px;
             background: rgba(59, 130, 246, 0.2);
-            top: -10%;
-            left: -10%;
+            top: 0;
+            left: 0;
         }
 
         .blob-2 {
-            width: 35vw;
-            height: 35vw;
+            width: 300px;
+            height: 300px;
             background: rgba(139, 92, 246, 0.2);
-            bottom: -10%;
-            right: -10%;
+            bottom: 0;
+            right: 0;
             animation-delay: -10s;
         }
 
@@ -291,14 +299,28 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 1.5rem 1rem !important;
+            }
+            .container {
+                max-width: 100% !important;
+                width: 100% !important;
+                box-sizing: border-box;
+            }
             .options-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
             }
             .header h1 {
                 font-size: 1.35rem;
             }
+            .header p {
+                font-size: 0.95rem;
+            }
             .card {
-                padding: 1.5rem;
+                padding: 1.25rem 1.5rem;
+                width: 100%;
+                box-sizing: border-box;
             }
         }
     </style>
@@ -381,10 +403,6 @@
                 </div>
             </a>
 
-        </div>
-
-        <div class="footer-link">
-            Already have an account? <a href="{{ route('login') }}">Log in here</a>
         </div>
 
     </div>
