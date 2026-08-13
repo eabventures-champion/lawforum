@@ -352,6 +352,8 @@
         window._premiumGuestGateScriptLoaded = true;
 
         let scrollLocked = false;
+        window._sectionClickModalOpen = false;
+        let _userHasScrolledInExpandedView = false;
 
         window.hideGuestFloatingNotes = function() {
             try {
@@ -410,7 +412,7 @@
         const isHomePage = path === '/';
         const isPublicPage = path.startsWith('/login') || path.startsWith('/register') || path.startsWith('/get-started');
 
-        window.openPremiumGateModal = function(title, message, isScrollLock = false) {
+        window.openPremiumGateModal = function(title, message, isScrollLock = false, isSectionClick = false) {
             moveModalToBody();
             const backdrop = document.getElementById('premiumGateModalBackdrop');
             const titleEl = document.getElementById('premiumGateTitle');
@@ -426,12 +428,18 @@
                 closeBtn.style.display = 'flex';
             }
 
+            // Track section-click modals so scroll gate and view-mode resets don't close them
+            if (isSectionClick) {
+                window._sectionClickModalOpen = true;
+            }
+
             if (backdrop) backdrop.classList.add('active');
         };
 
         window.closePremiumGateModal = function() {
             const backdrop = document.getElementById('premiumGateModalBackdrop');
             if (backdrop) backdrop.classList.remove('active');
+            window._sectionClickModalOpen = false;
         };
 
         window.returnToStartOfContent = function() {
@@ -474,19 +482,28 @@
             const isSectionUrl = href.includes('/content/') || href.includes('/content_section/') || href.includes('/content?');
 
             if (isSectionLinkClass || isSectionUrl) {
-                // Check 1: data-section-index attribute
+                // Check 1: data-section-index attribute (position-based)
                 const indexAttr = link.getAttribute('data-section-index');
                 let index = indexAttr ? parseInt(indexAttr, 10) : null;
 
-                // Check 2: Parse section/regulation/article number from link text
-                const linkText = (link.innerText || link.textContent || '').trim();
-                const sectionNumMatch = linkText.match(/(?:Section|Regulation|Article)\s*(\d+)/i);
+                // Check 2: If no data-section-index, determine position among sibling section links
+                if (index === null) {
+                    const sectionLinkSelector = '.pre_content_link, .content_link, .regulation_content_link, .constitutional_content_link, .executive_content_link, .amendments_content_link, .amended_regulation_content_link, .sinlge_amended_act_content_link, .sinlge_regulation_act_content_link';
+                    const container = link.closest('.sidebar-content, .panel-body, #leftSidebar, .toc-tree, .toc-list, nav, ul, ol') || link.parentElement;
+                    if (container) {
+                        const allSectionLinks = container.querySelectorAll(sectionLinkSelector);
+                        for (let i = 0; i < allSectionLinks.length; i++) {
+                            if (allSectionLinks[i] === link) {
+                                index = i + 1; // 1-based position
+                                break;
+                            }
+                        }
+                    }
+                }
                 
                 let isRestricted = false;
 
                 if (index !== null && index > 3) {
-                    isRestricted = true;
-                } else if (sectionNumMatch && parseInt(sectionNumMatch[1], 10) > 3) {
                     isRestricted = true;
                 }
 
@@ -508,7 +525,9 @@
 
                     openPremiumGateModal(
                         sectionTitle + ' is Locked for Guests',
-                        'As a guest, you can access full content for the first 3 sections. Please sign up as a Student, Lawyer, or Researcher to view ' + sectionTitle + ' and all remaining sections.'
+                        'As a guest, you can access full content for the first 3 sections. Please sign up as a Student, Lawyer, or Researcher to view ' + sectionTitle + ' and all remaining sections.',
+                        false,
+                        true
                     );
                     return false;
                 }
@@ -520,7 +539,9 @@
         window.openNotesGateModal = function() {
             openPremiumGateModal(
                 'Personal Notes Locked for Guests',
-                'Personal case notes, annotations, and text highlights are available for registered users. Please sign up as a Student, Lawyer, or Researcher to save and organize notes.'
+                'Personal case notes, annotations, and text highlights are available for registered users. Please sign up as a Student, Lawyer, or Researcher to save and organize notes.',
+                false,
+                true
             );
         };
 
@@ -555,7 +576,11 @@
         }
 
         function resetGateForExpandedView() {
+            // Don't reset if a section-click restriction modal is currently open
+            if (window._sectionClickModalOpen) return;
+
             scrollLocked = false;
+            _userHasScrolledInExpandedView = false;
             ignoreGateUntil = Date.now() + 5000; // 5-second grace period while tab switches and renders
 
             // Unblur content
@@ -579,6 +604,29 @@
             });
         }
         window.resetGateForExpandedView = resetGateForExpandedView;
+
+        // Track genuine user scroll to enable the reading progress gate
+        // This prevents false-positive blur on initial expanded view load
+        (function() {
+            let scrollDebounce = null;
+            function onUserScroll() {
+                if (isExpandedViewActive() && !_userHasScrolledInExpandedView) {
+                    // Only count as genuine scroll if past grace period
+                    if (Date.now() >= ignoreGateUntil) {
+                        if (scrollDebounce) clearTimeout(scrollDebounce);
+                        scrollDebounce = setTimeout(function() {
+                            _userHasScrolledInExpandedView = true;
+                        }, 100);
+                    }
+                }
+            }
+            window.addEventListener('scroll', onUserScroll, true);
+            window.addEventListener('touchmove', function() {
+                if (isExpandedViewActive() && Date.now() >= ignoreGateUntil) {
+                    _userHasScrolledInExpandedView = true;
+                }
+            }, true);
+        })();
 
         // Reset scroll gate synchronously when user clicks Expanded View or switches tabs
         document.addEventListener('click', function(e) {
@@ -610,7 +658,7 @@
 
                 // The reading progress gate applies to Expanded View & Case Laws pages
                 if (!isExpandedViewActive()) {
-                    if (scrollLocked) {
+                    if (scrollLocked && !window._sectionClickModalOpen) {
                         scrollLocked = false;
                         const blurredElements = document.querySelectorAll('.content-blurred-by-gate');
                         blurredElements.forEach(function(el) {
@@ -667,7 +715,8 @@
                 }
 
                 // Automatically reset scrollLocked and unblur if user is under target threshold or at top of page
-                if (currentProgress < targetThreshold || scrollTop <= 50) {
+                // But never close a section-click restriction modal (only close scroll-gate modals)
+                if ((currentProgress < targetThreshold || scrollTop <= 50) && !window._sectionClickModalOpen) {
                     scrollLocked = false;
                     const blurredElements = document.querySelectorAll('.content-blurred-by-gate');
                     blurredElements.forEach(function(el) {
@@ -676,7 +725,7 @@
                     window.closePremiumGateModal();
                 }
 
-                if (currentProgress >= targetThreshold && !scrollLocked) {
+                if (currentProgress >= targetThreshold && !scrollLocked && _userHasScrolledInExpandedView) {
                     scrollLocked = true;
 
                     // Apply blur to reading containers smoothly

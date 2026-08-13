@@ -3577,6 +3577,9 @@
 
         // Toggle modules on left sidebar link clicks
         $(document).on('click', '.pre_content_link, .pre_preamble_content_link, .previous_content_pre_act, .next_content_pre_act', function() {
+            // Don't switch view mode or update TOC if a guest restriction modal is open
+            if (window._sectionClickModalOpen) return;
+
             if (window.currentViewMode === 'expanded') {
                 selectViewMode('reader');
             }
@@ -4826,26 +4829,11 @@
                     'border-color': 'var(--accent)',
                     'color': '#fff'
                 }).append('<i class="fa-solid fa-circle-check text-primary"></i>');
-                // Collapses sidebars for Expanded View on mobile, restores on desktop
-                if (window.innerWidth > 991) {
-                    setSidebarState('left', false);
-                    setSidebarState('right', false);
-                } else {
-                    setSidebarState('left', true);
-                    setSidebarState('right', true);
-                }
+                // Collapses sidebars for Expanded View
+                setSidebarState('left', true);
+                setSidebarState('right', true);
                 $('.toc-sidebar-module').hide();
-                if ($('#display_content').find('.toc-welcome').length > 0) {
-                    $('.toc-sidebar-module').show();
-                    $('.content-sidebar-module').hide();
-                } else {
-                    $('.toc-sidebar-module').hide();
-                    $('.content-sidebar-module').show();
-                }
-
-                if (typeof window.resetGateForExpandedView === 'function') {
-                    window.resetGateForExpandedView();
-                }
+                $('.content-sidebar-module').hide();
                 
                 // Fetch content if it's not loaded yet (still showing spinner)
                 const expandedContainer = $('#acts_expanded_view');
@@ -4861,6 +4849,9 @@
                             expandedContainer.removeAttr('data-loading');
                             if (typeof window.resetGateForExpandedView === 'function') {
                                 window.resetGateForExpandedView();
+                                // Additional delayed resets to cover browser reflow on mobile
+                                setTimeout(function() { window.resetGateForExpandedView(); }, 100);
+                                setTimeout(function() { window.resetGateForExpandedView(); }, 500);
                             }
                         }, delay);
                     }).fail(function() {
@@ -4890,6 +4881,10 @@
                 $('#readerArticleNav').hide();
             }
             
+            if (window.innerWidth <= 991) {
+                closeMobileSidebars();
+            }
+
             // Direct tab activation fallback to guarantee tab pane switching
             if (tabId) {
                 const paneId = tabId === '#v-pills-profile-tab' ? '#v-pills-profile' : (tabId === '#v-pills-messages-tab' ? '#v-pills-messages' : '#v-pills-split');

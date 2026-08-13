@@ -3722,6 +3722,9 @@
 
         // Toggle modules on left sidebar link clicks
         $(document).on('click', '.pre_content_link, .pre_preamble_content_link, .previous_content_pre_act, .next_content_pre_act, .content_link, .regulation_content_link, .constitution_content_link, .executive_content_link, .amendments_content_link, .amended_regulation_content_link, .post_preamble_content_link, .regulation_preamble_link, .preamble_link, .amendments_preamble_link, .previous_content_act, .next_content_act, .previous_constitutional_acts, .next_constitutional_acts, .previous_executive_acts, .next_executive_acts, .previous_content_regulation, .next_content_regulation, .previous_content_amendments, .next_content_amendments, .previous_amended_under_act, .next_amended_under_act, .previous_amendment_under_regulation, .next_amendment_under_regulation', function() {
+            // Don't switch view mode or update TOC if a guest restriction modal is open
+            if (window._sectionClickModalOpen) return;
+
             if (window.currentViewMode === 'expanded') {
                 selectViewMode('reader');
             }
@@ -5038,6 +5041,9 @@
                             expandedContainer.attr('data-loaded', 'true');
                             if (typeof window.resetGateForExpandedView === 'function') {
                                 window.resetGateForExpandedView();
+                                // Additional delayed resets to cover browser reflow on mobile
+                                setTimeout(function() { window.resetGateForExpandedView(); }, 100);
+                                setTimeout(function() { window.resetGateForExpandedView(); }, 500);
                             }
                         }, delay);
                     }).fail(function() {
