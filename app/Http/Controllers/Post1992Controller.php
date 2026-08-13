@@ -162,17 +162,22 @@ class Post1992Controller extends Controller
 
     //Display Expanded-View
     public function expanded_view($id, $title, $group){
-        $allPost1992Act              = Post1992Act::find(
-            [
-                'id' => $id,
-                'post_group' => $group
-            ])->toArray()[0];
-            
-        $allPostArticles1            = Post1992Article::where(['post_act' => $title])->get();
-        $unique                     = $allPostArticles1->unique()->sortBy('part')->sortBy('priority'); 
-        $allPost1992Articles         = $unique;
-        return view('post_1992_legislation.new_displayed_expandedView', compact('allPost1992Act','allPost1992Articles'));
-        // return view('post_1992_legislation.displayed_expandedView', compact('allPost1992Act','allPost1992Articles'));
+        $act_id = is_numeric($id) ? $id : (is_numeric($group) ? $group : null);
+        $allPost1992Act = null;
+        if ($act_id) {
+            $allPost1992Act = Post1992Act::find($act_id);
+        }
+        if (!$allPost1992Act) {
+            $allPost1992Act = Post1992Act::where('title', urldecode($title))->first();
+        }
+        $allPost1992Act = $allPost1992Act ? $allPost1992Act->toArray() : [];
+
+        $allPostArticles1 = Post1992Article::where('post_act', urldecode($title))->get();
+        if ($allPostArticles1->isEmpty() && isset($allPost1992Act['title'])) {
+            $allPostArticles1 = Post1992Article::where('post_act', $allPost1992Act['title'])->get();
+        }
+        $allPost1992Articles = $allPostArticles1->unique()->sortBy('part')->sortBy('priority'); 
+        return view('post_1992_legislation.displayed_expandedView', compact('allPost1992Act','allPost1992Articles'));
     }
 
     //Display Content
@@ -595,15 +600,21 @@ class Post1992Controller extends Controller
     
     //Amendment Act Expanded-View
     public function amended_act_expanded_view($id, $title, $category){
-        $amendedAct                 = AmendedTitle::find(
-            [
-                'id' => $id,
-                'post_category' =>$category
-            ])->toArray()[0];
+        $act_id = is_numeric($id) ? $id : (is_numeric($category) ? $category : null);
+        $amendedAct = null;
+        if ($act_id) {
+            $amendedAct = AmendedTitle::find($act_id);
+        }
+        if (!$amendedAct) {
+            $amendedAct = AmendedTitle::where('title', urldecode($title))->first();
+        }
+        $amendedAct = $amendedAct ? $amendedAct->toArray() : [];
 
-        $allAmendedArticles1        = AmendedArticle::where(['act_title' => $title])->get();
-        $unique                     = $allAmendedArticles1->unique()->sortBy('part')->sortBy('priority'); 
-        $allAmendedArticles         = $unique;
+        $allAmendedArticles1 = AmendedArticle::where('act_title', urldecode($title))->get();
+        if ($allAmendedArticles1->isEmpty() && isset($amendedAct['title'])) {
+            $allAmendedArticles1 = AmendedArticle::where('act_title', $amendedAct['title'])->get();
+        }
+        $allAmendedArticles = $allAmendedArticles1->unique()->sortBy('part')->sortBy('priority'); 
         return view('post_1992_legislation.displayed_amended_act_expanded_view', compact('amendedAct','allAmendedArticles'));
     }
 
@@ -844,15 +855,21 @@ class Post1992Controller extends Controller
 
     //Amendment Act Expanded-View
     public function amended_regulation_act_expanded_view($id, $title, $category){
-        $amendedRegulationAct                 = AmendRegulationAct::find(
-            [
-                'id' => $id,
-                'act_category' =>$category
-            ])->toArray()[0];
+        $act_id = is_numeric($id) ? $id : (is_numeric($category) ? $category : null);
+        $amendedRegulationAct = null;
+        if ($act_id) {
+            $amendedRegulationAct = AmendRegulationAct::find($act_id);
+        }
+        if (!$amendedRegulationAct) {
+            $amendedRegulationAct = AmendRegulationAct::where('title', urldecode($title))->first();
+        }
+        $amendedRegulationAct = $amendedRegulationAct ? $amendedRegulationAct->toArray() : [];
 
-        $allAmendedRegulationArticles1        = AmendRegulationArticle::where(['title' => $title])->get();
-        $unique                               = $allAmendedRegulationArticles1->unique()->sortBy('part')->sortBy('priority'); 
-        $allAmendedRegulationArticles         = $unique;
+        $allAmendedRegulationArticles1 = AmendRegulationArticle::where('title', urldecode($title))->get();
+        if ($allAmendedRegulationArticles1->isEmpty() && isset($amendedRegulationAct['title'])) {
+            $allAmendedRegulationArticles1 = AmendRegulationArticle::where('title', $amendedRegulationAct['title'])->get();
+        }
+        $allAmendedRegulationArticles = $allAmendedRegulationArticles1->unique()->sortBy('part')->sortBy('priority'); 
         return view('post_1992_legislation.displayed_amended_regulation_act_expanded_view', compact('amendedRegulationAct','allAmendedRegulationArticles'));
     }
 
@@ -946,15 +963,21 @@ class Post1992Controller extends Controller
 
     //Regulation Act Expanded-View
     public function regulation_act_expanded_view($id, $title, $category){
-        $regulationAct                 = RegulationTitle::find(
-            [
-                'id' => $id,
-                'act_category' =>$category
-            ])->toArray()[0];
+        $act_id = is_numeric($id) ? $id : (is_numeric($category) ? $category : null);
+        $regulationAct = null;
+        if ($act_id) {
+            $regulationAct = RegulationTitle::find($act_id);
+        }
+        if (!$regulationAct) {
+            $regulationAct = RegulationTitle::where('title', urldecode($title))->first();
+        }
+        $regulationAct = $regulationAct ? $regulationAct->toArray() : [];
 
-        $allRegulationArticles1        = RegulationArticle::where(['regulation_title' => $title])->get();
-        $unique                     = $allRegulationArticles1->unique()->sortBy('part')->sortBy('priority'); 
-        $allRegulationArticles         = $unique;
+        $allRegulationArticles1 = RegulationArticle::where('regulation_title', urldecode($title))->get();
+        if ($allRegulationArticles1->isEmpty() && isset($regulationAct['title'])) {
+            $allRegulationArticles1 = RegulationArticle::where('regulation_title', $regulationAct['title'])->get();
+        }
+        $allRegulationArticles = $allRegulationArticles1->unique()->sortBy('part')->sortBy('priority'); 
         return view('post_1992_legislation.displayed_regulation_act_expanded_view', compact('regulationAct','allRegulationArticles'));
     }
 

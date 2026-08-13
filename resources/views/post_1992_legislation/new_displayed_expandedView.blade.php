@@ -73,16 +73,15 @@
     </div>
 
     <div class="content">
-        
-        @if($allPost1992Act['preamble'] != null)
-                <p class="text-left" style="color: blue;">Introductory Text</p>
-                <span>{!! $allPost1992Act['preamble'] !!}</span><hr>
-            @else
-                <span></span>
+        @if(isset($allPost1992Act['preamble']) && $allPost1992Act['preamble'] != null)
+            <p class="text-left" style="color: blue;">Introductory Text</p>
+            <span>{!! $allPost1992Act['preamble'] !!}</span><hr>
+        @else
+            <span></span>
         @endif
 
         @foreach($allPost1992Articles as $allPost1992Article)
-            <span class="text-left" style="color: blue; font-size: 1rem;"><u>{{$allPost1992Article->section }}</u></span>
+            <span class="text-left" style="color: blue; font-size: 1rem;"><u>{!! $allPost1992Article->section !!}</u></span>
             <span>{!! $allPost1992Article->content !!}</span>
         @endforeach
     </div>

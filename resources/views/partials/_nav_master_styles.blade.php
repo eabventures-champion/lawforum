@@ -371,6 +371,14 @@
         text-decoration: none !important;
     }
 
+    .mobile-nav-panel a.active {
+        color: #ffffff !important;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(37, 99, 235, 0.35) 100%) !important;
+        border: 1px solid rgba(59, 130, 246, 0.45) !important;
+        font-weight: 700 !important;
+        box-shadow: 0 4px 20px rgba(59, 130, 246, 0.25) !important;
+    }
+
     .mobile-nav-panel.open a {
         transform: translateY(0) !important;
         opacity: 1 !important;

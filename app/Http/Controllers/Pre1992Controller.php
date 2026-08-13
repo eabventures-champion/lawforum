@@ -143,15 +143,21 @@ class Pre1992Controller extends Controller
 
     //Display Expanded-View
     public function expanded_view($id, $title, $group){
-        $allPre1992Act              = Pre1992LegislationAct::find(
-            [
-                'id' => $id,
-                'pre_1992_group' => $group
-            ])->toArray()[0];
-            
-        $allPreArticles1            = Pre1992LegislationArticle::where(['pre_1992_act' => $title])->get();
-        $unique                     = $allPreArticles1->unique()->sortBy('part')->sortBy('priority'); 
-        $allPre1992Articles         = $unique;
+        $act_id = is_numeric($id) ? $id : (is_numeric($group) ? $group : null);
+        $allPre1992Act = null;
+        if ($act_id) {
+            $allPre1992Act = Pre1992LegislationAct::find($act_id);
+        }
+        if (!$allPre1992Act) {
+            $allPre1992Act = Pre1992LegislationAct::where('title', urldecode($title))->first();
+        }
+        $allPre1992Act = $allPre1992Act ? $allPre1992Act->toArray() : [];
+
+        $allPreArticles1 = Pre1992LegislationArticle::where('pre_1992_act', urldecode($title))->get();
+        if ($allPreArticles1->isEmpty() && isset($allPre1992Act['title'])) {
+            $allPreArticles1 = Pre1992LegislationArticle::where('pre_1992_act', $allPre1992Act['title'])->get();
+        }
+        $allPre1992Articles = $allPreArticles1->unique()->sortBy('part')->sortBy('priority'); 
         return view('pre_1992_legislation.displayed_expandedView', compact('allPre1992Act','allPre1992Articles'));
     }
 

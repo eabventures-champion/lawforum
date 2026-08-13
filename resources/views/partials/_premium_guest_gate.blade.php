@@ -339,61 +339,61 @@
     </div>
 </div>
 
-@guest
-<div id="guestFloatingNotesWidget" class="guest-floating-notes-pill" style="display: none;">
-    <div class="guest-pill-content" onclick="if(typeof openNotesGateModal==='function'){ openNotesGateModal(); }">
-        <span class="guest-pill-icon"><i class="fa-solid fa-pen-to-square"></i></span>
-        <span class="guest-pill-text">Unlock Notes Feature</span>
-        <i class="fa-solid fa-lock guest-pill-lock"></i>
-    </div>
-    <button type="button" class="guest-pill-close" onclick="event.stopPropagation(); hideGuestFloatingNotes();" title="Hide Notes Feature Hint">&times;</button>
-</div>
-@endguest
+
 
 <script>
     (function() {
+        if (window._premiumGuestGateScriptLoaded) {
+            if (typeof window.resetGateForExpandedView === 'function') {
+                window.resetGateForExpandedView();
+            }
+            return;
+        }
+        window._premiumGuestGateScriptLoaded = true;
+
         let scrollLocked = false;
 
         window.hideGuestFloatingNotes = function() {
-            const pill = document.getElementById('guestFloatingNotesWidget');
-            if (pill) {
+            try {
+                sessionStorage.setItem('guestNotesPillDismissed', 'true');
+            } catch(e) {}
+            const pills = document.querySelectorAll('.guest-floating-notes-pill, #guestFloatingNotesWidget');
+            pills.forEach(function(pill) {
+                pill.setAttribute('data-dismissed-by-user', 'true');
                 pill.style.opacity = '0';
                 pill.style.transform = 'scale(0.8)';
                 setTimeout(function() { pill.style.display = 'none'; }, 250);
-                sessionStorage.setItem('guestNotesPillDismissed', 'true');
-            }
+            });
         };
 
         // Move modal backdrop & floating notes widget directly to <body> on DOM load
         function moveModalToBody() {
+            const backdrops = document.querySelectorAll('#premiumGateModalBackdrop');
+            if (backdrops.length > 1) {
+                for (let i = 1; i < backdrops.length; i++) {
+                    backdrops[i].remove();
+                }
+            }
             const backdrop = document.getElementById('premiumGateModalBackdrop');
             if (backdrop && backdrop.parentNode !== document.body) {
                 document.body.appendChild(backdrop);
             }
-            const pill = document.getElementById('guestFloatingNotesWidget');
-            if (pill) {
-                if (pill.parentNode !== document.body) {
-                    document.body.appendChild(pill);
-                }
-                const currentPath = window.location.pathname;
-                const isTargetPage = currentPath.includes('/existing-laws') || currentPath.includes('/new-laws') || (currentPath.includes('/constitution') && !currentPath.includes('/constitution/1/'));
-                const isDismissed = sessionStorage.getItem('guestNotesPillDismissed') === 'true';
 
-                if (isTargetPage && !isDismissed) {
-                    pill.style.display = 'flex';
-                    requestAnimationFrame(function() {
-                        pill.style.opacity = '1';
-                    });
-                } else {
-                    pill.style.display = 'none';
-                    pill.style.opacity = '0';
-                }
-            }
+            const pills = document.querySelectorAll('.guest-floating-notes-pill, #guestFloatingNotesWidget');
+            pills.forEach(function(pill) {
+                pill.remove();
+            });
         }
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', moveModalToBody);
         } else {
             moveModalToBody();
+        }
+
+        if (typeof $ !== 'undefined') {
+            $(document).ajaxComplete(function() {
+                moveModalToBody();
+            });
         }
 
         // Prevent wheel/touch scroll without hiding body scrollbar (zero layout shift)
@@ -556,7 +556,7 @@
 
         function resetGateForExpandedView() {
             scrollLocked = false;
-            ignoreGateUntil = Date.now() + 1000; // 1-second grace period while tab switches
+            ignoreGateUntil = Date.now() + 5000; // 5-second grace period while tab switches and renders
 
             // Unblur content
             const blurredElements = document.querySelectorAll('.content-blurred-by-gate');
@@ -578,6 +578,7 @@
                 el.scrollTop = 0;
             });
         }
+        window.resetGateForExpandedView = resetGateForExpandedView;
 
         // Reset scroll gate synchronously when user clicks Expanded View or switches tabs
         document.addEventListener('click', function(e) {
@@ -585,7 +586,8 @@
             if (btn) {
                 resetGateForExpandedView();
                 setTimeout(resetGateForExpandedView, 150);
-                setTimeout(resetGateForExpandedView, 400);
+                setTimeout(resetGateForExpandedView, 500);
+                setTimeout(resetGateForExpandedView, 1200);
             }
         }, true);
 
@@ -593,6 +595,8 @@
         if (typeof $ !== 'undefined') {
             $(document).on('show.bs.tab shown.bs.tab', '#v-pills-messages-tab, a[href="#v-pills-messages"], a[href="#expandedTab"]', function() {
                 resetGateForExpandedView();
+                setTimeout(resetGateForExpandedView, 300);
+                setTimeout(resetGateForExpandedView, 800);
             });
         }
 
@@ -662,9 +666,14 @@
                     progressFill.style.width = currentProgress + '%';
                 }
 
-                // Automatically reset scrollLocked if user is under target threshold
-                if (currentProgress < targetThreshold) {
+                // Automatically reset scrollLocked and unblur if user is under target threshold or at top of page
+                if (currentProgress < targetThreshold || scrollTop <= 50) {
                     scrollLocked = false;
+                    const blurredElements = document.querySelectorAll('.content-blurred-by-gate');
+                    blurredElements.forEach(function(el) {
+                        el.classList.remove('content-blurred-by-gate');
+                    });
+                    window.closePremiumGateModal();
                 }
 
                 if (currentProgress >= targetThreshold && !scrollLocked) {

@@ -2205,6 +2205,14 @@
             text-decoration: none !important;
         }
 
+        .mobile-nav-panel a.active {
+            color: #ffffff !important;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(37, 99, 235, 0.35) 100%) !important;
+            border: 1px solid rgba(59, 130, 246, 0.45) !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.25) !important;
+        }
+
         .mobile-nav-panel.open a {
             transform: translateY(0);
             opacity: 1;
@@ -2735,7 +2743,7 @@
             <div class="reading-toolbar">
                 <div class="toolbar-left">
                     <!-- Hidden actual Bootstrap tab anchors for trigger functionality -->
-                    <div id="tabs" class="nav" role="tablist" style="display: none !important;">
+                    <div id="tabs" class="nav" role="tablist" style="position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none; overflow: hidden;">
                         <a class="nav-tab-premium tabPanedHide_acts_content active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile">Reader</a>
                         <a class="nav-tab-premium tabPanedHide_expanded_view" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages">Expanded View</a>
                         <a class="nav-tab-premium tabPanedHide_split_view" id="v-pills-split-tab" data-toggle="pill" href="#v-pills-split">Split View</a>
@@ -2765,6 +2773,9 @@
                     <div class="content-search-box" style="flex-shrink: 0; visibility: hidden;">
                         <i class="fa-solid fa-magnifying-glass"></i>
                         <input type="text" id="keywordSearch" placeholder="Find in document...">
+                        <button id="searchClearBtn" onclick="clearKeywordSearch()" title="Clear search" style="display:none; background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 0 4px; font-size: 13px; line-height: 1; align-items: center; justify-content: center; outline: none !important;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-muted)'">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
                         <span class="search-matches-count" id="searchMatchCount" style="display:none;"></span>
                         <div class="search-navigation-arrows" id="searchNavArrows" style="display:none;">
                             <button id="searchPrevBtn" onclick="navigateMatches('prev')" title="Previous match"><i class="fa-solid fa-chevron-up"></i></button>
@@ -2972,80 +2983,86 @@
 
                     <div class="sidebar-divider"></div>
 
-                    <!-- Notes Section -->
-                    <div class="notes-section" id="notesSection">
-                        <div class="notes-section-header">
-                            <i class="fa-solid fa-pen-to-square"></i> My Notes
-                            <span class="notes-count-badge" id="notesCountBadge">0</span>
-                        </div>
-
-                        <!-- Highlighted text preview -->
-                        <div class="highlighted-text-preview" id="highlightedTextPreview" style="display:none;">
-                            <span class="close-highlight" onclick="clearHighlightedText()">&times;</span>
-                            <span id="highlightedTextContent"></span>
-                        </div>
-
-                        <!-- Note textarea -->
-                        <textarea class="note-textarea" id="noteTextarea" placeholder="Write your note here... Select text in the document and click 'Add Note' to attach it."></textarea>
-
-                        <!-- Color picker -->
-                        <div class="note-color-picker">
-                            <label>Label:</label>
-                            <div class="color-dot active" data-color="yellow" onclick="selectNoteColor(this)"></div>
-                            <div class="color-dot" data-color="blue" onclick="selectNoteColor(this)"></div>
-                            <div class="color-dot" data-color="green" onclick="selectNoteColor(this)"></div>
-                            <div class="color-dot" data-color="pink" onclick="selectNoteColor(this)"></div>
-                            <div class="color-dot" data-color="purple" onclick="selectNoteColor(this)"></div>
-                        </div>
-
-                        <!-- Action buttons -->
-                        <div class="note-actions">
-                            <button class="btn-save-note" id="btnSaveNote" onclick="saveNote()">
-                                <i class="fa-solid fa-check mr-1"></i> Save Note
+                    @guest
+                        <div class="guest-notes-teaser-card" onclick="if(typeof openNotesGateModal==='function'){ openNotesGateModal(); }" style="margin-top: 14px; margin-bottom: 20px; padding: 20px 16px; background: rgba(15, 23, 42, 0.6); border: 1px dashed rgba(245, 158, 11, 0.35); border-radius: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(245, 158, 11, 0.12); color: #f59e0b; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 10px;">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </div>
+                            <h5 style="color: #fff; font-size: 13.5px; font-weight: 700; margin-bottom: 6px;">Personal Notes & Annotations</h5>
+                            <p style="color: #94a3b8; font-size: 11.5px; line-height: 1.5; margin-bottom: 14px;">
+                                Highlight key legal ratios and attach personal notes directly to judgment text.
+                            </p>
+                            <button type="button" style="width: 100%; padding: 10px 12px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #070a13; font-weight: 700; font-size: 12px; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                <i class="fa-solid fa-lock" style="font-size: 10px;"></i> Unlock Notes Feature
                             </button>
-                            <button class="btn-clear-note" onclick="clearNoteForm()">Clear</button>
                         </div>
-
-                        <!-- Login prompt -->
-                        <div class="notes-login-prompt" id="notesLoginPrompt">
-                            <p><i class="fa-solid fa-lock" style="margin-right:4px;"></i> Create an account to save your notes to your dashboard</p>
-                            <a href="{{ route('login') }}" class="btn-login-prompt">Log In</a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="btn-signup-prompt">Sign Up</a>
-                            @endif
-                        </div>
-
-                        <!-- Saved notes list -->
-                        <div class="notes-list" id="notesList">
-                            <div class="notes-list-header">Saved Notes</div>
-
-                            <!-- Search notes inside sidebar -->
-                            <div class="notes-search-wrap">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                                <input type="text" class="notes-search-sidebar" id="sidebarNotesSearch" placeholder="Search saved notes..." oninput="filterSidebarNotes()">
+                    @else
+                        <!-- Notes Section -->
+                        <div class="notes-section" id="notesSection">
+                            <div class="notes-section-header">
+                                <i class="fa-solid fa-pen-to-square"></i> My Notes
+                                <span class="notes-count-badge" id="notesCountBadge">0</span>
                             </div>
 
-                            <!-- Filter by color tag inside sidebar -->
-                            <div class="notes-filter-tabs">
-                                <div class="notes-filter-tag active" data-filter="all" onclick="filterSidebarColor('all', this)">All</div>
-                                <div class="notes-filter-tag" data-filter="yellow" onclick="filterSidebarColor('yellow', this)">Yellow</div>
-                                <div class="notes-filter-tag" data-filter="blue" onclick="filterSidebarColor('blue', this)">Blue</div>
-                                <div class="notes-filter-tag" data-filter="green" onclick="filterSidebarColor('green', this)">Green</div>
-                                <div class="notes-filter-tag" data-filter="pink" onclick="filterSidebarColor('pink', this)">Pink</div>
-                                <div class="notes-filter-tag" data-filter="purple" onclick="filterSidebarColor('purple', this)">Purple</div>
+                            <!-- Highlighted text preview -->
+                            <div class="highlighted-text-preview" id="highlightedTextPreview" style="display:none;">
+                                <span class="close-highlight" onclick="clearHighlightedText()">&times;</span>
+                                <span id="highlightedTextContent"></span>
                             </div>
 
-                            <!-- Scroll viewport container -->
-                            <div class="notes-container-scroll">
-                                <div id="notesContainer">
-                                    <div style="text-align:center; padding:24px 16px; color: var(--text-muted); font-size:12px;">
-                                        <i class="fa-regular fa-note-sticky" style="font-size:28px; margin-bottom:10px; display:block; opacity:0.35;"></i>
-                                        No notes yet for this document
+                            <!-- Note textarea -->
+                            <textarea class="note-textarea" id="noteTextarea" placeholder="Write your note here... Select text in the document and click 'Add Note' to attach it."></textarea>
+
+                            <!-- Color picker -->
+                            <div class="note-color-picker">
+                                <label>Label:</label>
+                                <div class="color-dot active" data-color="yellow" onclick="selectNoteColor(this)"></div>
+                                <div class="color-dot" data-color="blue" onclick="selectNoteColor(this)"></div>
+                                <div class="color-dot" data-color="green" onclick="selectNoteColor(this)"></div>
+                                <div class="color-dot" data-color="pink" onclick="selectNoteColor(this)"></div>
+                                <div class="color-dot" data-color="purple" onclick="selectNoteColor(this)"></div>
+                            </div>
+
+                            <!-- Action buttons -->
+                            <div class="note-actions">
+                                <button class="btn-save-note" id="btnSaveNote" onclick="saveNote()">
+                                    <i class="fa-solid fa-check mr-1"></i> Save Note
+                                </button>
+                                <button class="btn-clear-note" onclick="clearNoteForm()">Clear</button>
+                            </div>
+
+                            <!-- Saved notes list -->
+                            <div class="notes-list" id="notesList">
+                                <div class="notes-list-header">Saved Notes</div>
+
+                                <!-- Search notes inside sidebar -->
+                                <div class="notes-search-wrap">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" class="notes-search-sidebar" id="sidebarNotesSearch" placeholder="Search saved notes..." oninput="filterSidebarNotes()">
+                                </div>
+
+                                <!-- Filter by color tag inside sidebar -->
+                                <div class="notes-filter-tabs">
+                                    <div class="notes-filter-tag active" data-filter="all" onclick="filterSidebarColor('all', this)">All</div>
+                                    <div class="notes-filter-tag" data-filter="yellow" onclick="filterSidebarColor('yellow', this)">Yellow</div>
+                                    <div class="notes-filter-tag" data-filter="blue" onclick="filterSidebarColor('blue', this)">Blue</div>
+                                    <div class="notes-filter-tag" data-filter="green" onclick="filterSidebarColor('green', this)">Green</div>
+                                    <div class="notes-filter-tag" data-filter="pink" onclick="filterSidebarColor('pink', this)">Pink</div>
+                                    <div class="notes-filter-tag" data-filter="purple" onclick="filterSidebarColor('purple', this)">Purple</div>
+                                </div>
+
+                                <!-- Scroll viewport container -->
+                                <div class="notes-container-scroll">
+                                    <div id="notesContainer">
+                                        <div style="text-align:center; padding:24px 16px; color: var(--text-muted); font-size:12px;">
+                                            <i class="fa-regular fa-note-sticky" style="font-size:28px; margin-bottom:10px; display:block; opacity:0.35;"></i>
+                                            No notes yet for this document
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endguest
 
                     <div class="sidebar-divider"></div>
 
@@ -3560,6 +3577,9 @@
 
         // Toggle modules on left sidebar link clicks
         $(document).on('click', '.pre_content_link, .pre_preamble_content_link, .previous_content_pre_act, .next_content_pre_act', function() {
+            if (window.currentViewMode === 'expanded') {
+                selectViewMode('reader');
+            }
             $('.toc-sidebar-module').hide();
             $('.content-sidebar-module').show();
             if (window.innerWidth <= 991) {
@@ -3630,13 +3650,24 @@
             highlightKeyword(query);
         });
 
-        // Trigger search on Enter keypress
+        // Trigger search on Enter keypress or clear on Escape
         $('#keywordSearch').on('keypress', function(e) {
             if (e.which === 13) {
                 e.preventDefault();
                 navigateMatches('next');
             }
+        }).on('keyup', function(e) {
+            if (e.key === 'Escape' || e.keyCode === 27) {
+                clearKeywordSearch();
+            }
         });
+
+        function clearKeywordSearch() {
+            $('#keywordSearch').val('').focus();
+            highlightKeyword('');
+            updateSearchUI();
+        }
+        window.clearKeywordSearch = clearKeywordSearch;
 
         function clearDOMHighlights(container) {
             if (!container) return;
@@ -3770,6 +3801,12 @@
         function updateSearchUI() {
             const countEl = document.getElementById('searchMatchCount');
             const navEl = document.getElementById('searchNavArrows');
+            const clearBtn = document.getElementById('searchClearBtn');
+            const query = $('#keywordSearch').val();
+
+            if (clearBtn) {
+                clearBtn.style.display = (query && query.length > 0) ? 'flex' : 'none';
+            }
 
             if (searchMatches.length > 0) {
                 countEl.textContent = (currentMatchIndex + 1) + ' / ' + searchMatches.length;
@@ -4750,6 +4787,20 @@
             }).find('.fa-circle-check').remove();
             let tabId = '';
             
+            // Sync the top-left toolbar dropdown button label
+            window.currentViewMode = mode;
+            $('#viewModeSelectorWrap .dropdown-item').removeClass('active');
+            if (mode === 'reader') {
+                $('#viewModeSelectorBtn span').html('<i class="fa-solid fa-book-open mr-2"></i> Reader');
+                $(`#viewModeSelectorWrap .dropdown-item[onclick*="selectViewMode('reader')"]`).addClass('active');
+            } else if (mode === 'expanded') {
+                $('#viewModeSelectorBtn span').html('<i class="fa-solid fa-expand mr-2"></i> Expanded View');
+                $(`#viewModeSelectorWrap .dropdown-item[onclick*="selectViewMode('expanded')"]`).addClass('active');
+            } else if (mode === 'split') {
+                $('#viewModeSelectorBtn span').html('<i class="fa-solid fa-columns mr-2"></i> Split View');
+                $(`#viewModeSelectorWrap .dropdown-item[onclick*="selectViewMode('split')"]`).addClass('active');
+            }
+
             if (mode === 'reader') {
                 tabId = '#v-pills-profile-tab';
                 $('#btnViewReader').css({
@@ -4775,11 +4826,26 @@
                     'border-color': 'var(--accent)',
                     'color': '#fff'
                 }).append('<i class="fa-solid fa-circle-check text-primary"></i>');
-                // Collapses sidebars for Expanded View
-                setSidebarState('left', true);
-                setSidebarState('right', true);
+                // Collapses sidebars for Expanded View on mobile, restores on desktop
+                if (window.innerWidth > 991) {
+                    setSidebarState('left', false);
+                    setSidebarState('right', false);
+                } else {
+                    setSidebarState('left', true);
+                    setSidebarState('right', true);
+                }
                 $('.toc-sidebar-module').hide();
-                $('.content-sidebar-module').hide();
+                if ($('#display_content').find('.toc-welcome').length > 0) {
+                    $('.toc-sidebar-module').show();
+                    $('.content-sidebar-module').hide();
+                } else {
+                    $('.toc-sidebar-module').hide();
+                    $('.content-sidebar-module').show();
+                }
+
+                if (typeof window.resetGateForExpandedView === 'function') {
+                    window.resetGateForExpandedView();
+                }
                 
                 // Fetch content if it's not loaded yet (still showing spinner)
                 const expandedContainer = $('#acts_expanded_view');
@@ -4793,6 +4859,9 @@
                         setTimeout(function() {
                             expandedContainer.html(response);
                             expandedContainer.removeAttr('data-loading');
+                            if (typeof window.resetGateForExpandedView === 'function') {
+                                window.resetGateForExpandedView();
+                            }
                         }, delay);
                     }).fail(function() {
                         expandedContainer.removeAttr('data-loading');
@@ -4821,8 +4890,16 @@
                 $('#readerArticleNav').hide();
             }
             
-            // Trigger bootstrap tab switch
+            // Direct tab activation fallback to guarantee tab pane switching
             if (tabId) {
+                const paneId = tabId === '#v-pills-profile-tab' ? '#v-pills-profile' : (tabId === '#v-pills-messages-tab' ? '#v-pills-messages' : '#v-pills-split');
+                
+                $('#tabs .nav-tab-premium').removeClass('active');
+                $(tabId).addClass('active');
+                
+                $('.workspace-main .tab-pane').removeClass('show active').css({'display': 'none', 'opacity': '0'});
+                $(paneId).addClass('show active').css({'display': 'block', 'opacity': '1'}).show();
+
                 $(tabId).trigger('click');
                 if (typeof $.fn.tab !== 'undefined') {
                     $(tabId).tab('show');
