@@ -213,7 +213,7 @@
     </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-174662621-1"></script>
     <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'UA-174662621-1');</script>
-    <script type="text/javascript">var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date(); (function(){ var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0]; s1.async=true; s1.src='https://embed.tawk.to/5e398d16298c395d1ce62ab4/default'; s1.charset='UTF-8'; s1.setAttribute('crossorigin','*'); s0.parentNode.insertBefore(s1,s0); })();</script>
+    <script type="text/javascript">var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date(); (function(){ var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0]; s1.async=true; s1.src='https://embed.tawk.to/6a7df4c6bc79881d4b22fbbc/1jvu08a2a'; s1.charset='UTF-8'; s1.setAttribute('crossorigin','*'); s0.parentNode.insertBefore(s1,s0); })();</script>
   @include('partials._premium_guest_gate')
 </body>
 </html>
