@@ -1,205 +1,60 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ asset('css/tooltipster.bundle.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('css/tooltipster-sideTip-borderless.min.css') }}" type="text/css">    
-    <style>
-        .nav-links{
-        background-color: #f5f5f5;
-        border: .1px solid #ddd;
-        border-radius: .25rem;
-        display: block;
-        padding: .1rem .9rem;
-        position: -webkit-sticky;
-        position: sticky;
-        top: 0%;
-        }
-    </style>  
 </head>
 
 <body>
 
     {{-- For the bookmark --}}
-    <div class="nav-links">
-        <span class="text-left">{{ $regulationAct['section'] }}
-            @if (Route::has('login'))
-                @auth                        
-                    <a class="bookmarking" href="javascript:;" rel="/bookmarks/{{$regulationAct['regulation_title']}}/{{$regulationAct['section']}}/{{$regulationAct['id']}}/{{ Auth::user()->name }}/{{ Auth::user()->id }}/{{ Auth::user()->id }}{{$regulationAct['section']}}/{{$regulationAct['act_group']}}/{{$regulationAct['act_id']}}">
-                        <i title="Bookmark this section" style="color:blue;" id="bookmarked" class="tooltips glyphicon glyphicon-bookmark pull-right"></i>
-                    </a>
-                    @else
-                    <i style="color:blue;" class="glyphicon glyphicon-bookmark hidden"></i>
-                @endauth
-            @endif
-        </span>  
+    <div class="header_only" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; margin-bottom: 12px;">
+        <span style="font-weight: 700; font-size: 15px; color: #60a5fa;">{{ $regulationAct['section'] }}</span>
+        @php
+            $isBookmarked = false;
+            if (auth()->check()) {
+                $isBookmarked = \App\UserBookmark::where('user_id', auth()->id())
+                    ->where(function($q) use ($regulationAct) {
+                        $q->where('section_id', $regulationAct['id'])
+                          ->orWhere('user_section', auth()->id() . '_legislation_' . $regulationAct['act_id'] . '_' . $regulationAct['id']);
+                    })->exists();
+            }
+        @endphp
+        <button type="button" 
+                class="btn-bookmark-toggle {{ $isBookmarked ? 'is-bookmarked' : '' }}" 
+                data-act-title="{{ $regulationAct['regulation_title'] }}" 
+                data-act-section="{{ $regulationAct['section'] }}" 
+                data-section-id="{{ $regulationAct['id'] }}" 
+                data-act-id="{{ $regulationAct['act_id'] }}" 
+                data-act-group="{{ $regulationAct['act_group'] ?? 'Legislative Instruments' }}" 
+                data-doc-type="legislation" 
+                data-page-url="/new-laws/regulation_acts_table_of_content/{{ $regulationAct['act_group'] }}/{{ $regulationAct['regulation_title'] }}/{{ $regulationAct['act_id'] }}"
+                title="{{ $isBookmarked ? 'Remove Bookmark' : 'Bookmark this section' }}"
+                onclick="toggleBookmark(this)">
+            <i class="{{ $isBookmarked ? 'fa-solid' : 'fa-regular' }} fa-bookmark"></i>
+        </button>
     </div>
 
-    {{-- For the bookmark --}}
-    {{-- <div class="header_only" style="border: .1px solid #ddd;">
-        <p style="padding-top: 7px; padding-bottom: .1px; padding-left: 16px; padding-right: 16px;"><b>{{ $regulationAct['section'] }}</b>
+    <div style="margin-bottom: 12px;">
+        <div class="menu_options" style="display: flex; gap: 12px; justify-content: flex-end; align-items: center;">
             @if (Route::has('login'))
-                @auth                        
-                        <a class="bookmarking" href="javascript:;" rel="/bookmarks/{{$regulationAct['regulation_title']}}/{{$regulationAct['section']}}/{{$regulationAct['id']}}/{{ Auth::user()->name }}/{{ Auth::user()->id }}/{{ Auth::user()->id }}{{$regulationAct['section']}}/{{$regulationAct['act_group']}}/{{$regulationAct['act_id']}}">
-                            <i title="Bookmark this section" style="color:blue;" id="bookmarked" class="tooltips glyphicon glyphicon-bookmark pull-right"></i>
-                        </a>
-                    @else
-                    <i style="color:blue;" class="glyphicon glyphicon-bookmark hidden"></i>
-                @endauth
-            @endif
-        </p>
-    </div> --}}
-            
-    <div style="margin-bottom: 5px;">
-        &nbsp;&nbsp;&nbsp;&nbsp;<a class="pull-right" id="print_options" href="#">Print Options</a>
-        <div class="menu_options pull-right" style="display: none;">
-            @if (Route::has('login'))
-                @auth 
-
-                    <a class="download_link" href="javascript:;" rel="/new-laws/pdf/regulation/content_section/{{$regulationAct['regulation_title']}}/{{ $regulationAct['id'] }}"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
-                    <a class="hidden section_id" href="javascript:;" rel="/section_downloads/{{$regulationAct['regulation_title']}}/{{$regulationAct['section']}}/{{$regulationAct['id']}}/{{ Auth::user()->name }}/{{ Auth::user()->id }}/{{ Auth::user()->id }}{{$regulationAct['section']}}/{{$regulationAct['act_group']}}/{{$regulationAct['act_id']}}">Testing</a>
-
-                    {{-- <a href="/new-laws/plain/regulation/content_section/{{ $regulationAct['id'] }}" target="_blank">Plain View</a>&nbsp;&nbsp;||&nbsp; --}}
-                    <a href="/new-laws/print/regulation/content_section/{{ $regulationAct['id'] }}" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                    @else
-
-                    <a href="" data-toggle="modal" data-target="#myModals"><img alt="Brand" src="{{ asset('/logo/pdf.png') }}" style="width:1.5em;">&nbsp;PDF</a>&nbsp;&nbsp;||&nbsp;
-                    <a href="" data-toggle="modal" data-target="#myModals"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;Print</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="myModals" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel"><b>Kindly Log In or Sign Up to Create An Account</b></h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            </div>
-                            <div class="modal-body">
-                                <a class="btn btn-sm bg-header-color text-white" href="{{ route('login') }}">Login</a>
-                                <a class="btn btn-sm bg-header-color text-white" href="{{ route('register') }}">Sign Up</a>
-                            </div>
-                        </div>
-                        </div>
-                    </div> 
-                    
+                @auth
+                    <a class="download_link" href="javascript:;" rel="/new-laws/regulation-acts/pdf-section-content/{{$regulationAct['regulation_title']}}/{{ $regulationAct['id'] }}" style="color: #60a5fa; text-decoration: none; font-size: 13px;"><img alt="PDF" src="{{ asset('/logo/pdf.png') }}" style="width:1.3em; vertical-align: middle;">&nbsp;PDF</a>
+                    <a href="/new-laws/regulation-acts/print_section_content/{{ $regulationAct['id'] }}" target="_blank" style="color: #60a5fa; text-decoration: none; font-size: 13px;"><i class="fa-solid fa-print"></i>&nbsp;Print</a>
+                @else
+                    <a href="javascript:;" onclick="openLoginModal()" style="color: #60a5fa; text-decoration: none; font-size: 13px;"><img alt="PDF" src="{{ asset('/logo/pdf.png') }}" style="width:1.3em; vertical-align: middle;">&nbsp;PDF</a>
+                    <a href="javascript:;" onclick="openLoginModal()" style="color: #60a5fa; text-decoration: none; font-size: 13px;"><i class="fa-solid fa-print"></i>&nbsp;Print</a>
                 @endauth
             @endif
         </div>
     </div>
 
-    <div class="content">
+    <div class="content">            
         <p>{!! $regulationAct['content'] !!}</p>
     </div>
 
-{{-- <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.0.min.js"></script> --}}
-{{-- <script src="{{ asset('js/tooltipster.bundle.min.js') }}"></script> --}}
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
-
-<script>
-    $(".section_id").click(function(e){
-        e.preventDefault();
-        var section_id = $(this).attr("rel");
-        console.log(section_id);
-
-        $.ajax({
-            url: section_id,
-            type: "GET",
-            success:function(response){
-            if(response.success){
-                  $("#bookmarked").notify(
-                      response.message,
-                { position:"left", className: "info", autoHideDelay: 900000}
-                );
-            }else{
-                $("#bookmarked").notify(
-               "Section to Download",
-                { position:"left", className: "success", autoHideDelay: 10000}
-                );
-              }
-            },
-            error:function (){
-                $("#bookmarked").notify(
-               "Issue with database entry",
-                { position:"left", className: "error" }
-                );
-            }
-        });
-
-    });
-    
-</script>
-
-<script>
-    $(".download_link").click(function(e){
-        e.preventDefault();
-        var download_link = $(this).attr("rel");
-        $('.section_id').trigger("click");
-       
-        $.ajax({
-            url: download_link,
-            type: "GET",
-        });
-    });  
-</script>
-
-<script>
-    $('.tooltips').tooltipster({
-        theme: 'tooltipster-borderless'
-    });
-</script>
-
-<script>
-    $('.bookmarking').click(function(e){
-    e.preventDefault();
-        var targetUrl = $(this).attr('rel');
-    $.ajax({
-            url: targetUrl,
-            type: "GET",
-            success:function(response){
-            if(response.success){
-                  $("#bookmarked").notify(
-                      response.message,
-                { position:"left", className: "info" }
-                );
-            }else{
-                $("#bookmarked").notify(
-               "Section bookmarked",
-                { position:"left", className: "success" }
-                );
-              }
-            },
-            error:function (){
-                $("#bookmarked").notify(
-               "Issue with database entry",
-                { position:"left", className: "error" }
-                );
-            }
-        });
-    });
-</script>
-
+@include('partials._bookmark_script')
 @include('partials._premium_guest_gate')
-
-<!--Start of Tawk.to Script-->
-<script type="text/javascript">
-   var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-   (function(){
-   var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-   s1.async=true;
-   s1.src='https://embed.tawk.to/6a7df4c6bc79881d4b22fbbc/1jvu08a2a';
-   s1.charset='UTF-8';
-   s1.setAttribute('crossorigin','*');
-   s0.parentNode.insertBefore(s1,s0);
-   })();
-</script>
-<!--End of Tawk.to Script-->
 </body>
-
 </html>
-
-
-   
-
-

@@ -5,9 +5,11 @@
     $roleColor = '#10b981';
     $roleBorder = 'rgba(16, 185, 129, 0.3)';
     $roleTitle = 'Guest User';
-    $roleLink = '/get-started';
+    $roleLink = 'javascript:void(0);';
+    $roleOnClick = 'onclick="openLoginModal()"';
 
     if (Auth::check()) {
+        $roleOnClick = '';
         $userType = Auth::user()->user_type;
         $roleLink = '/home';
         if ($userType === 'student') {
@@ -38,6 +40,6 @@
     }
 @endphp
 
-<a href="{{ $roleLink }}" class="mobile-user-role-badge" title="{{ $roleTitle }}" style="background: {{ $roleBg }}; color: {{ $roleColor }}; border: 1px solid {{ $roleBorder }};">
+<a href="{{ $roleLink }}" {!! $roleOnClick !!} class="mobile-user-role-badge" title="{{ $roleTitle }}" style="background: {{ $roleBg }}; color: {{ $roleColor }}; border: 1px solid {{ $roleBorder }}; cursor: pointer;">
     <i class="fa-solid {{ $roleIcon }}"></i>
 </a>

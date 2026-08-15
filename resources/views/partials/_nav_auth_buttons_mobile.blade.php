@@ -2,7 +2,7 @@
 @guest
     <a href="/">Why Choose Us</a>
     @if(request()->cookie('guest_access'))
-        <a href="/get-started" style="color: #10b981;"><i class="fa-solid fa-user-secret" style="margin-right: 6px;"></i> Guest User</a>
+        <a href="javascript:void(0)" onclick="openLoginModal(); if(document.getElementById('mobileNav')) document.getElementById('mobileNav').classList.remove('open');" style="color: #10b981; cursor: pointer;"><i class="fa-solid fa-user-secret" style="margin-right: 6px;"></i> Guest User</a>
     @else
         <a href="/get-started" style="color: var(--accent-light);">Sign Up Free</a>
     @endif

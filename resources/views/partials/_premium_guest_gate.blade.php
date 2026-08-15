@@ -307,10 +307,10 @@
             <i class="fa-solid fa-lock"></i>
         </div>
 
-        <h3 class="premium-gate-title" id="premiumGateTitle">Unlock Full Legal Access</h3>
+        <h3 class="premium-gate-title" id="premiumGateTitle">Create an Account of Your Choice</h3>
         
         <p class="premium-gate-desc" id="premiumGateDesc">
-            As a guest, access is limited. Please sign up to view section 4+ and read the full content of laws and case laws.
+            Please select your preferred account type below to create an account and enjoy full access tailored to your legal needs.
         </p>
 
         <div class="premium-gate-roles">
@@ -418,14 +418,30 @@
             const titleEl = document.getElementById('premiumGateTitle');
             const descEl = document.getElementById('premiumGateDesc');
             const closeBtn = document.getElementById('premiumGateCloseBtn');
+            const escapeBtn = document.getElementById('premiumEscapeBtn');
 
             if (title) titleEl.textContent = title;
             if (message) descEl.textContent = message;
 
-            if (isScrollLock && closeBtn) {
-                closeBtn.style.display = 'none';
-            } else if (closeBtn) {
-                closeBtn.style.display = 'flex';
+            if (isScrollLock) {
+                if (closeBtn) closeBtn.style.display = 'none';
+                if (escapeBtn) {
+                    escapeBtn.style.display = 'inline-flex';
+                    escapeBtn.innerHTML = '<i class="fa-solid fa-arrow-up"></i> Return to Start of Content';
+                    escapeBtn.onclick = function() { window.returnToStartOfContent(); };
+                }
+            } else {
+                if (closeBtn) closeBtn.style.display = 'flex';
+                if (escapeBtn) {
+                    escapeBtn.style.display = 'inline-flex';
+                    escapeBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i> Already have an account? Sign In';
+                    escapeBtn.onclick = function() {
+                        window.closePremiumGateModal();
+                        if (typeof window.openLoginModal === 'function') {
+                            window.openLoginModal();
+                        }
+                    };
+                }
             }
 
             // Track section-click modals so scroll gate and view-mode resets don't close them
@@ -440,6 +456,15 @@
             const backdrop = document.getElementById('premiumGateModalBackdrop');
             if (backdrop) backdrop.classList.remove('active');
             window._sectionClickModalOpen = false;
+        };
+
+        window.openSignUpOptionsModal = function(title, message) {
+            if (typeof window.closeLoginModal === 'function') {
+                window.closeLoginModal();
+            }
+            const modalTitle = title || 'Create an Account of Your Choice';
+            const modalDesc = message || 'Please select your preferred account type below to create an account and enjoy full access tailored to your legal needs.';
+            window.openPremiumGateModal(modalTitle, modalDesc, false, true);
         };
 
         window.returnToStartOfContent = function() {
@@ -538,8 +563,8 @@
 
         window.openNotesGateModal = function() {
             openPremiumGateModal(
-                'Personal Notes Locked for Guests',
-                'Personal case notes, annotations, and text highlights are available for registered users. Please sign up as a Student, Lawyer, or Researcher to save and organize notes.',
+                'Create an Account of Your Choice',
+                'Please select your preferred account type below as a Student, Lawyer, or Researcher to save personal notes, annotations, and organize your legal research.',
                 false,
                 true
             );
@@ -758,4 +783,6 @@
         }
     })();
 </script>
+@include('partials._login_modal')
 @endguest
+

@@ -100,7 +100,7 @@
                         &nbsp;<a class="btn btn-sm bg-header-color text-white" href="/">Why Choose Us</a>&nbsp;
 
                             @if(request()->cookie('guest_access'))
-                                <a class="btn btn-sm bg-header-color text-white" href="/get-started">
+                                <a class="btn btn-sm bg-header-color text-white" href="javascript:void(0)" onclick="openLoginModal()" style="cursor: pointer;">
                                     <i class="fa-solid fa-user-secret"></i> Guest User
                                 </a>
                             @elseif (Route::has('register'))

@@ -90,6 +90,30 @@
                     <span>Sidebar Ads</span>
                 </a>
             </li>
+            <li class="menu-item {{ Request::is('admin/researcher-types*') ? 'active' : '' }}">
+                <a href="{{ route('admin.researcher-types.index') }}">
+                    <i class="fa-solid fa-user-tag"></i>
+                    <span>Researcher Types</span>
+                </a>
+            </li>
+            <li class="menu-item {{ Request::is('admin/onboarding-tour*') ? 'active' : '' }}">
+                <a href="{{ route('admin.onboarding-tour.index') }}">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>Guided Tour Content</span>
+                </a>
+            </li>
+            <li class="menu-item {{ Request::is('admin/platform-updates*') ? 'active' : '' }}">
+                <a href="{{ route('admin.platform-updates.index') }}">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    <span>Feature Updates & Tours</span>
+                </a>
+            </li>
+            <li class="menu-item {{ Request::is('admin/demo-settings*') ? 'active' : '' }}">
+                <a href="{{ route('admin.demo-settings.index') }}">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span>Demo Settings</span>
+                </a>
+            </li>
             <li class="menu-item {{ Request::is('admin/maintenance-settings*') ? 'active' : '' }}">
                 <a href="{{ route('admin.maintenance-settings.index') }}">
                     <i class="fa-solid fa-shield-halved"></i>

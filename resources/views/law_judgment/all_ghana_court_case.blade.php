@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ ucwords(strtolower($allGhanaLaw['case_title'])) }} - Legals Forum</title>
 
     <!-- Google Fonts & Stylesheets -->
@@ -1726,6 +1727,30 @@
                             <button type="button" class="btn btn-custom-outline" data-toggle="modal" data-target="#viewCases">
                                 <i class="fa-solid fa-scale-balanced mr-1"></i> View {{ $allGhanaLaw['gh_law_judgment_group_name'] }} Cases
                             </button>
+                            @php
+                                $isCaseBookmarked = false;
+                                if (auth()->check()) {
+                                    $isCaseBookmarked = \App\UserBookmark::where('user_id', auth()->id())
+                                        ->where(function($q) use ($allGhanaLaw) {
+                                            $q->where('section_id', $allGhanaLaw['id'])
+                                              ->orWhere('user_section', auth()->id() . '_case_law_' . $allGhanaLaw['id'] . '_' . $allGhanaLaw['id']);
+                                        })->exists();
+                                }
+                            @endphp
+                            <button type="button" 
+                                    class="btn-bookmark-toggle ml-2 {{ $isCaseBookmarked ? 'is-bookmarked' : '' }}" 
+                                    data-act-title="{{ $allGhanaLaw['case_title'] }}" 
+                                    data-act-section="Full Judgment" 
+                                    data-section-id="{{ $allGhanaLaw['id'] }}" 
+                                    data-act-id="{{ $allGhanaLaw['id'] }}" 
+                                    data-act-group="Case Law" 
+                                    data-doc-type="case_law" 
+                                    data-page-url="/all_court_cases/{{ $allGhanaLaw['gh_law_judgment_group_name'] }}/{{ $allGhanaLaw['id'] }}"
+                                    title="{{ $isCaseBookmarked ? 'Remove Bookmark' : 'Bookmark this case' }}"
+                                    onclick="toggleBookmark(this)"
+                                    style="margin-left: 10px;">
+                                <i class="{{ $isCaseBookmarked ? 'fa-solid' : 'fa-regular' }} fa-bookmark"></i>
+                            </button>
                             <button type="button" class="btn btn-custom-outline ml-2" id="btnMaximizeWorkspace" onclick="toggleMaximizeWorkspace()" title="Maximize View (Toggle Header)" style="margin-left: 10px;">
                                 <i class="fa-solid fa-expand" id="maximizeIcon"></i>
                             </button>
@@ -2183,51 +2208,117 @@
         selectedNoteColor = el.getAttribute('data-color');
     }
 
+    // ============================================
+    // SAVE NOTE
+    // ============================================
     function saveNote() {
-        var noteContent = document.getElementById('noteTextarea').value.trim();
-        if (!noteContent) { showToast('Please write a note first.', 'error'); return; }
+        var noteTextarea = document.getElementById('noteTextarea');
+        var noteContent = noteTextarea ? noteTextarea.value.trim() : '';
+        if (!noteContent) {
+            showToast('Please write a note first.', 'error');
+            if (noteTextarea) noteTextarea.focus();
+            return;
+        }
+
+        var btn = document.getElementById('btnSaveNote');
+        if (btn && btn.disabled) return;
+        
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saving...';
+        }
 
         var highlightedText = '';
         var previewEl = document.getElementById('highlightedTextPreview');
-        if (previewEl.style.display !== 'none') {
-            highlightedText = document.getElementById('highlightedTextContent').textContent;
+        if (previewEl && previewEl.style.display !== 'none') {
+            var contentEl = document.getElementById('highlightedTextContent');
+            highlightedText = contentEl ? contentEl.textContent : '';
         }
 
-        var documentTitle = '{{ $allGhanaLaw["case_title"] }}';
-        var sectionText = '{{ $allGhanaLaw["gh_law_judgment_group_name"] }}';
-
+        var documentTitle = '{{ $allGhanaLaw["case_title"] ?? "Case Law" }}';
+        var sectionText = '{{ $allGhanaLaw["gh_law_judgment_group_name"] ?? "" }}';
         $.ajax({
-            url: '/notes',
+            url: '/notes/save',
             type: 'POST',
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            timeout: 8000,
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') || '{{ csrf_token() }}' },
             data: {
-                document_type: 'judgement',
+                _token: $('meta[name="csrf-token"]').attr('content') || '{{ csrf_token() }}',
+                document_type: 'case_law',
                 document_id: '{{ $allGhanaLaw["id"] ?? 0 }}',
                 document_title: documentTitle,
                 highlighted_text: highlightedText,
                 note_content: noteContent,
                 note_color: selectedNoteColor,
                 article_section: sectionText,
-                page_url: window.location.href
+                page_url: window.location.pathname + window.location.hash
             },
             success: function(response) {
-                if (response.success) {
-                    var container = document.getElementById('notesContainer');
-                    var card = createNoteCardElement(response.note);
-                    container.insertBefore(card, container.firstChild);
-                    clearNoteForm();
-                    updateNotesCount(1);
+                if (response && response.success) {
+                    try {
+                        var container = document.getElementById('notesContainer');
+                        if (container && response.note) {
+                            var card = createNoteCardElement(response.note);
+                            container.insertBefore(card, container.firstChild);
+                        }
+                        clearNoteForm();
+                        updateNotesCount(1);
+                    } catch (e) {
+                        console.error('Error updating notes UI:', e);
+                    }
                     showToast('Note saved!', 'success');
+                    if (btn) {
+                        btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Saved!';
+                        setTimeout(function() {
+                            btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Save Note';
+                            btn.disabled = false;
+                        }, 1200);
+                    }
+                } else {
+                    showToast(response ? response.message : 'Failed to save note.', 'error');
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Save Note';
+                    }
                 }
             },
-            error: function(xhr) {
-                if (xhr.status === 401) {
-                    document.getElementById('notesLoginPrompt').style.display = 'block';
+            error: function(xhr, status, error) {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Save Note';
+                }
+                if (status === 'timeout') {
+                    showToast('Request timed out. Please try again.', 'error');
+                } else if (xhr && xhr.status === 401) {
+                    showToast('Please log in to save notes.', 'info');
+                } else if (xhr && xhr.status === 422) {
+                    showToast('Please fill in all required fields.', 'error');
                 } else {
                     showToast('Failed to save note.', 'error');
                 }
+            },
+            complete: function() {
+                setTimeout(function() {
+                    if (btn && btn.disabled && btn.innerHTML.indexOf('Saving') !== -1) {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Save Note';
+                    }
+                }, 1500);
             }
         });
+    }
+
+    function clearNoteForm() {
+        var textarea = document.getElementById('noteTextarea');
+        if (textarea) textarea.value = '';
+        clearHighlightPreview();
+    }
+
+    function clearHighlightPreview() {
+        var preview = document.getElementById('highlightedTextPreview');
+        if (preview) preview.style.display = 'none';
+        var content = document.getElementById('highlightedTextContent');
+        if (content) content.textContent = '';
     }
 
     $(document).ready(function() {
@@ -2388,43 +2479,319 @@
 
     var currentSelection = '';
 
-    document.addEventListener('mouseup', function(e) {
+    function checkTextSelection(e) {
         var tooltip = document.getElementById('textSelectTooltip');
-        var readingPane = document.querySelector('.judgement_display');
+        if (!tooltip) return;
 
-        if (!readingPane || !readingPane.contains(e.target)) {
-            if (tooltip && !tooltip.contains(e.target)) { tooltip.style.display = 'none'; }
-            return;
+        // If clicking inside tooltip buttons, do not process hide logic
+        if (e && e.target) {
+            var targetEl = (e.target.nodeType === 3) ? e.target.parentElement : e.target;
+            if (targetEl && tooltip.contains(targetEl)) {
+                return;
+            }
         }
 
         setTimeout(function() {
             var sel = window.getSelection();
+            if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
+                tooltip.style.display = 'none';
+                return;
+            }
+
             var text = sel.toString().trim();
-            if (text.length > 3) {
-                currentSelection = text;
+            if (text.length < 2) {
+                tooltip.style.display = 'none';
+                return;
+            }
+
+            var targetNode = sel.anchorNode || sel.focusNode;
+            if (!targetNode) {
+                tooltip.style.display = 'none';
+                return;
+            }
+
+            var anchorEl = (targetNode.nodeType === 3) ? targetNode.parentElement : targetNode;
+            if (!anchorEl) {
+                tooltip.style.display = 'none';
+                return;
+            }
+
+            // Container matching - match reading pane or article element
+            var container = anchorEl.closest('.judgement_display, #display_content, .workspace-main, .article-card, .content, .reader-container, .main-content-area, .judgment-content, #middle-content-col');
+            var isIgnored = anchorEl.closest('input, textarea, select, .toc-sidebar, .notes-card-sidebar, .right-sidebar, #right-sidebar-col, #left-sidebar-col');
+
+            if (!container || isIgnored) {
+                tooltip.style.display = 'none';
+                return;
+            }
+
+            currentSelection = text;
+            try {
                 var range = sel.getRangeAt(0);
-                var rect = range.getBoundingClientRect();
-                tooltip.style.top = (rect.top - 50 + window.scrollY) + 'px';
-                tooltip.style.left = (rect.left + rect.width / 2 - 100) + 'px';
-                tooltip.style.display = 'flex';
-            } else {
-                if (tooltip) tooltip.style.display = 'none';
+                var clientRects = range.getClientRects();
+                var rect = (clientRects && clientRects.length > 0) ? clientRects[0] : range.getBoundingClientRect();
+
+                if (rect && (rect.width > 0 || rect.height > 0)) {
+                    var topPos = Math.round(rect.top - 48);
+                    if (topPos < 10) topPos = Math.round(rect.bottom + 8);
+                    
+                    var leftPos = Math.max(10, Math.min(Math.round(rect.left + (rect.width / 2) - 100), window.innerWidth - 230));
+
+                    tooltip.style.position = 'fixed';
+                    tooltip.style.top = topPos + 'px';
+                    tooltip.style.left = leftPos + 'px';
+                    tooltip.style.display = 'flex';
+                    tooltip.style.zIndex = '999999';
+                } else {
+                    tooltip.style.display = 'none';
+                }
+            } catch (err) {
+                tooltip.style.display = 'none';
             }
         }, 10);
-    });
+    }
+
+    document.addEventListener('mouseup', checkTextSelection);
+    document.addEventListener('keyup', checkTextSelection);
+    document.addEventListener('touchend', checkTextSelection);
+
+    // Hide tooltip on scroll, re-evaluate when scroll stops
+    var scrollHideTimer = null;
+    document.addEventListener('scroll', function() {
+        var tooltip = document.getElementById('textSelectTooltip');
+        if (tooltip && tooltip.style.display !== 'none') {
+            tooltip.style.display = 'none';
+            clearTimeout(scrollHideTimer);
+            scrollHideTimer = setTimeout(function() {
+                checkTextSelection();
+            }, 150);
+        }
+    }, true);
 
     function addNoteFromSelection() {
         if (!currentSelection) return;
         if (window.innerWidth <= 991 && rightSidebarCollapsed) {
             toggleRightSidebar();
         }
-        document.getElementById('highlightedTextContent').textContent = currentSelection.substring(0, 500);
-        document.getElementById('highlightedTextPreview').style.display = 'block';
-        document.getElementById('noteTextarea').focus();
-        document.getElementById('textSelectTooltip').style.display = 'none';
-        document.querySelector('.notes-card-sidebar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        var contentEl = document.getElementById('highlightedTextContent');
+        if (contentEl) contentEl.textContent = currentSelection.substring(0, 500);
+        var previewEl = document.getElementById('highlightedTextPreview');
+        if (previewEl) previewEl.style.display = 'block';
+        var noteTextarea = document.getElementById('noteTextarea');
+        if (noteTextarea) noteTextarea.focus();
+        var tooltip = document.getElementById('textSelectTooltip');
+        if (tooltip) tooltip.style.display = 'none';
+        var sidebar = document.querySelector('.notes-card-sidebar');
+        if (sidebar) sidebar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        showToast('Text attached to note!', 'info');
     }
 
+    function copySelection() {
+        if (!currentSelection) return;
+        navigator.clipboard.writeText(currentSelection);
+        var tooltip = document.getElementById('textSelectTooltip');
+        if (tooltip) tooltip.style.display = 'none';
+        showToast('Text copied!', 'success');
+    }
+
+    function citeSelection() {
+        if (!currentSelection) return;
+        var documentTitle = '{{ $allGhanaLaw["case_title"] ?? "Case Law" }}';
+        var cite = currentSelection + '\n\n— ' + documentTitle + ' (Legals Forum)';
+        navigator.clipboard.writeText(cite);
+        var tooltip = document.getElementById('textSelectTooltip');
+        if (tooltip) tooltip.style.display = 'none';
+        showToast('Citation copied!', 'success');
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    var toastTimeout;
+    function showToast(message, type) {
+        var toast = document.getElementById('toastNotification');
+        if (!toast) return;
+        var toastText = document.getElementById('toastText');
+        var toastIcon = toast.querySelector('.toast-icon');
+        if (toastText) toastText.textContent = message;
+        if (toastIcon) {
+            toastIcon.className = 'toast-icon fa-solid ' + (type === 'error' ? 'fa-circle-xmark text-danger' : (type === 'info' ? 'fa-circle-info text-info' : 'fa-check-circle text-success'));
+        }
+        toast.classList.add('show');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(function() {
+            toast.classList.remove('show');
+        }, 2500);
+    }
+
+    window.toggleWordSearchCard = function() {
+        var searchCard = document.getElementById('word-search-card');
+        var searchTrigger = document.getElementById('word-search-trigger');
+        if (!searchCard) return;
+        if (searchCard.style.display === 'none' || getComputedStyle(searchCard).display === 'none') {
+            searchCard.style.display = 'block';
+            if (searchTrigger) searchTrigger.style.display = 'none';
+            if (window.innerWidth > 991) {
+                var input = document.getElementById('document-search-input');
+                if (input) input.focus();
+            }
+        } else {
+            searchCard.style.display = 'none';
+            if (searchTrigger) searchTrigger.style.display = 'flex';
+        }
+    };
+
+    var leftSidebarCollapsed = false;
+    var rightSidebarCollapsed = false;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.innerWidth <= 991) {
+            rightSidebarCollapsed = true;
+            var sidebar = document.getElementById('right-sidebar-col');
+            var expandBtn = document.getElementById('expand-right-btn');
+            if (sidebar) {
+                sidebar.classList.add('collapsed-sidebar');
+                sidebar.classList.remove('open');
+            }
+            if (expandBtn) expandBtn.style.display = 'flex';
+        } else {
+            rightSidebarCollapsed = false;
+            var sidebar = document.getElementById('right-sidebar-col');
+            var expandBtn = document.getElementById('expand-right-btn');
+            if (sidebar) {
+                sidebar.classList.remove('collapsed-sidebar', 'open');
+            }
+            if (expandBtn) expandBtn.style.display = 'none';
+        }
+        updateMiddleColumnWidth();
+    });
+
+    window.toggleLeftSidebar = function() {
+        leftSidebarCollapsed = !leftSidebarCollapsed;
+        var sidebar = document.getElementById('left-sidebar-col');
+        var expandBtn = document.getElementById('expand-left-btn');
+        
+        if (sidebar) {
+            if (leftSidebarCollapsed) {
+                sidebar.classList.add('collapsed-sidebar');
+                if (expandBtn) expandBtn.style.display = 'flex';
+            } else {
+                sidebar.classList.remove('collapsed-sidebar');
+                if (expandBtn) expandBtn.style.display = 'none';
+            }
+        }
+        updateMiddleColumnWidth();
+    };
+
+    window.toggleRightSidebar = function() {
+        rightSidebarCollapsed = !rightSidebarCollapsed;
+        var sidebar = document.getElementById('right-sidebar-col');
+        var expandBtn = document.getElementById('expand-right-btn');
+        var backdrop = document.getElementById('right-sidebar-backdrop');
+        var searchTrigger = document.getElementById('word-search-trigger');
+        var backToTopBtn = document.getElementById('back-to-top');
+        
+        if (rightSidebarCollapsed) {
+            if (sidebar) {
+                sidebar.classList.add('collapsed-sidebar');
+                sidebar.classList.remove('open');
+            }
+            if (expandBtn) expandBtn.style.display = 'flex';
+            if (backdrop) backdrop.style.display = 'none';
+            var searchCard = document.getElementById('word-search-card');
+            if (searchTrigger && (!searchCard || searchCard.style.display === 'none' || getComputedStyle(searchCard).display === 'none')) {
+                searchTrigger.style.display = 'flex';
+            }
+            if (backToTopBtn && window.scrollY > 300) {
+                backToTopBtn.style.display = 'flex';
+            }
+        } else {
+            if (sidebar) {
+                sidebar.classList.remove('collapsed-sidebar');
+                sidebar.classList.add('open');
+            }
+            if (expandBtn) expandBtn.style.display = 'none';
+            if (backdrop && window.innerWidth <= 991) backdrop.style.display = 'block';
+            if (searchTrigger) searchTrigger.style.display = 'none';
+            if (backToTopBtn && window.innerWidth <= 991) backToTopBtn.style.display = 'none';
+        }
+        updateMiddleColumnWidth();
+    };
+
+    window.updateMiddleColumnWidth = function() {
+        var middleCol = document.getElementById('middle-content-col');
+        if (!middleCol) return;
+        middleCol.classList.remove('col-lg-6', 'col-lg-9', 'col-lg-12');
+        
+        var leftWidth = leftSidebarCollapsed ? 0 : 3;
+        var rightWidth = rightSidebarCollapsed ? 0 : 3;
+        var middleWidth = 12 - leftWidth - rightWidth;
+        
+        middleCol.classList.add('col-lg-' + middleWidth);
+    };
+
+    function toggleMaximizeWorkspace() {
+        const body = document.body;
+        body.classList.toggle('workspace-maximized');
+        
+        const btn = document.getElementById('btnMaximizeWorkspace');
+        if (btn) {
+            if (body.classList.contains('workspace-maximized')) {
+                btn.innerHTML = `<i class="fa-solid fa-compress" id="maximizeIcon"></i>`;
+                btn.classList.add('active');
+            } else {
+                btn.innerHTML = `<i class="fa-solid fa-expand" id="maximizeIcon"></i>`;
+                btn.classList.remove('active');
+            }
+        }
+
+        if (body.classList.contains('workspace-maximized')) {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            }
+        } else {
+            if (document.exitFullscreen && document.fullscreenElement) {
+                document.exitFullscreen().catch(() => {});
+            }
+        }
+    }
+
+    document.addEventListener('fullscreenchange', () => {
+        const body = document.body;
+        const btn = document.getElementById('btnMaximizeWorkspace');
+        if (!document.fullscreenElement) {
+            body.classList.remove('workspace-maximized');
+            if (btn) {
+                btn.innerHTML = `<i class="fa-solid fa-expand" id="maximizeIcon"></i>`;
+                btn.classList.remove('active');
+            }
+        }
+    });
+    </script>
+
+    <!-- Floating Expand Buttons -->
+    <button class="floating-expand-btn" id="expand-left-btn" onclick="toggleLeftSidebar()" title="Expand Left Sidebar">
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
+    <button class="sidebar-restore-btn right-restore" id="expand-right-btn" onclick="toggleRightSidebar()" title="Reader Tools & Notes (Click to open)">
+        <i class="fa-solid fa-feather-pointed" style="font-size: 11px;"></i>
+        <span style="font-size: 9px; font-weight: 800; letter-spacing: 1px; writing-mode: vertical-rl; transform: rotate(180deg);">NOTES</span>
+    </button>
+
+    <!-- Floating Text Selection Tooltip -->
+    <div class="text-select-tooltip" id="textSelectTooltip">
+        <button onclick="addNoteFromSelection()"><i class="fa-solid fa-pen"></i> Note</button>
+        <span class="tooltip-divider"></span>
+        <button onclick="copySelection()"><i class="fa-regular fa-copy"></i> Copy</button>
+        <span class="tooltip-divider"></span>
+        <button onclick="citeSelection()"><i class="fa-solid fa-quote-left"></i> Cite</button>
+    </div>
+
+    <!-- Toast Notification -->
     window.toggleWordSearchCard = function() {
         var searchCard = document.getElementById('word-search-card');
         var searchTrigger = document.getElementById('word-search-trigger');
@@ -2595,6 +2962,7 @@
             <span class="toast-text" id="toastText"></span>
         </div>
     </div>
+    @include('partials._bookmark_script')
   @include('partials._premium_guest_gate')
 
 <!--Start of Tawk.to Script-->

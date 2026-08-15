@@ -311,6 +311,13 @@
     <div class="ambient-blob-1"></div>
     <div class="ambient-blob-2"></div>
 
+    @if (session('demo_expiry_warning'))
+        <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; gap: 12px; align-items: center; max-width: 460px; width: 100%; z-index: 10; position: relative;">
+            <i class="fa-solid fa-clock" style="color: #f59e0b; font-size: 18px;"></i>
+            <span style="font-size: 13.5px; color: #fbbf24; font-weight: 500;">{{ session('demo_expiry_warning') }}</span>
+        </div>
+    @endif
+
     <div class="auth-container">
         <!-- Icon Header -->
         <div class="verify-header">
@@ -321,8 +328,16 @@
             </a>
             <h1 class="verify-title">Verify Your Email</h1>
             <p class="verify-description">
-                Before proceeding, please check your email inbox for a verification link to confirm your account.
+                Hi <strong>{{ auth()->user()->name }}</strong>, please confirm your email address (<strong>{{ auth()->user()->email }}</strong>) to activate your dashboard.
             </p>
+
+            @if(auth()->user()->user_type)
+                <div style="margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; font-size: 12px;">
+                    <span style="color: var(--text-secondary);">Selected Workspace:</span>
+                    <span style="color: #60a5fa; font-weight: 700; text-transform: capitalize;">{{ auth()->user()->user_type }}</span>
+                    <a href="{{ route('account.upgrade.role') }}" style="color: #94a3b8; text-decoration: underline; margin-left: 4px; font-size: 11.5px;">Change</a>
+                </div>
+            @endif
         </div>
 
         <!-- Verification Link Sent Banner -->
@@ -330,7 +345,7 @@
             <div class="success-alert">
                 <i class="fa-solid fa-circle-check success-icon"></i>
                 <div class="success-message">
-                    A fresh verification link has been sent to the email address you registered with.
+                    A fresh verification link has been sent to your email address ({{ auth()->user()->email }}).
                 </div>
             </div>
         @endif
@@ -348,12 +363,42 @@
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
             @csrf
         </form>
-        <a href="#" class="logout-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-        </a>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 13px;">
+            <a href="/" style="color: var(--text-secondary); text-decoration: none;">
+                <i class="fa-solid fa-house mr-1"></i> Public Library
+            </a>
+            <a href="#" class="logout-link" style="margin: 0;" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+            </a>
+        </div>
     </div>
 
-    @if (session('new_registration'))
+    @if (session('demo_activated'))
+        <div class="modal-overlay active" id="welcomeModal">
+            <div class="modal-card">
+                <div class="modal-badge" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.25);">
+                    <i class="fa-solid fa-rocket" style="color: #10b981;"></i>
+                </div>
+                <h2 class="modal-title">Demo Mode Activated!</h2>
+                <p class="modal-message">
+                    Your free demo has been activated! You now have full access to Legals Forum for 60 days. Please verify your email to get started.
+                </p>
+                <button type="button" class="btn-modal-close" onclick="closeWelcomeModal()">
+                    <span>Got It, Let's Go</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+        <script>
+            function closeWelcomeModal() {
+                const modal = document.getElementById('welcomeModal');
+                modal.classList.remove('active');
+                setTimeout(() => {
+                    modal.remove();
+                }, 400);
+            }
+        </script>
+    @elseif (session('new_registration'))
         <div class="modal-overlay active" id="welcomeModal">
             <div class="modal-card">
                 <div class="modal-badge">

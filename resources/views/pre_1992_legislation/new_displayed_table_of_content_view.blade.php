@@ -1069,39 +1069,34 @@
         }
 
         #display_content .nav-links, #acts_expanded_view .nav-links {
-            background: var(--bg-secondary) !important;
-            border: 1px solid rgba(59, 130, 246, 0.25) !important;
+            background: transparent !important;
+            border: none !important;
+            border-bottom: 1px solid var(--border-color) !important;
             color: var(--accent-light) !important;
-            border-radius: 8px !important;
-            padding: 8px 16px !important;
+            border-radius: 0 !important;
+            padding: 10px 0 !important;
             font-weight: 700 !important;
             font-size: 12px !important;
-            margin-bottom: 8px !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
-            display: block;
-            position: sticky !important;
-            top: 0 !important;
-            z-index: 50 !important;
+            margin-bottom: 24px !important;
+            box-shadow: none !important;
+            display: flex !important;
+            align-items: center !important;
+            position: relative !important;
+            top: auto !important;
+            z-index: 1 !important;
         }
 
         #display_content .nav-links::before, #acts_expanded_view .nav-links::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            left: -8px;
-            right: -8px;
-            height: 20px;
-            background: var(--bg-primary);
+            display: none !important;
         }
 
         #display_content .nav-links span, #acts_expanded_view .nav-links span {
-            font-size: 12px !important;
+            font-size: 13px !important;
             gap: 8px !important;
-            color: var(--gold) !important;
         }
 
         #display_content .nav-links span i, #acts_expanded_view .nav-links span i {
-            font-size: 13px !important;
+            font-size: 14px !important;
         }
 
         .split-panel-body .nav-links {
@@ -1339,16 +1334,17 @@
             background: rgba(17, 24, 39, 0.6);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 0 12px;
-            height: 36px;
-            width: 250px;
+            padding: 0 10px;
+            height: 34px;
+            width: 160px;
+            max-width: 170px;
             transition: all 0.3s ease;
         }
 
         .content-search-box:focus-within {
             border-color: var(--accent);
             box-shadow: 0 0 0 2px var(--accent-glow);
-            width: 320px;
+            width: 200px;
         }
 
         .content-search-box i {
@@ -2751,8 +2747,8 @@
                     
                     <!-- Premium View Mode Dropdown -->
                     <div class="dropdown tab-hidden-initially" id="viewModeSelectorWrap">
-                        <button class="nav-tab-premium dropdown-toggle" type="button" id="viewModeSelectorBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="min-width: 150px; justify-content: space-between !important; background: var(--accent-gradient) !important; color: #fff !important; border-color: var(--accent) !important; box-shadow: 0 4px 12px var(--accent-glow) !important; cursor: pointer; padding: 8px 16px !important;">
-                            <span><i class="fa-solid fa-book-open mr-2"></i> Reader</span>
+                        <button class="nav-tab-premium dropdown-toggle" type="button" id="viewModeSelectorBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="min-width: 90px; justify-content: space-between !important; background: var(--accent-gradient) !important; color: #fff !important; border-color: var(--accent) !important; box-shadow: 0 4px 12px var(--accent-glow) !important; cursor: pointer; padding: 6px 12px !important; font-size: 13px !important;">
+                            <span><i class="fa-solid fa-book-open mr-1"></i> Reader</span>
                         </button>
                         <div class="dropdown-menu bg-dark border-secondary" aria-labelledby="viewModeSelectorBtn" style="border-radius: 8px; margin-top: 5px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid var(--border-color); background-color: rgb(17, 24, 39) !important; z-index: 1050;">
                             <a class="dropdown-item text-white py-2 px-3 active" href="#" onclick="selectViewMode('reader')" style="font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; color: #fff !important; cursor: pointer;">
@@ -4949,16 +4945,20 @@
 
     // Clear the form
     function clearNoteForm() {
-        document.getElementById('noteTextarea').value = '';
+        var textarea = document.getElementById('noteTextarea');
+        if (textarea) textarea.value = '';
         clearHighlightedText();
-        document.getElementById('notesLoginPrompt').style.display = 'none';
+        var prompt = document.getElementById('notesLoginPrompt');
+        if (prompt) prompt.style.display = 'none';
     }
 
     // Clear highlighted text
     function clearHighlightedText() {
         selectedHighlightText = '';
-        document.getElementById('highlightedTextPreview').style.display = 'none';
-        document.getElementById('highlightedTextContent').textContent = '';
+        var preview = document.getElementById('highlightedTextPreview');
+        if (preview) preview.style.display = 'none';
+        var content = document.getElementById('highlightedTextContent');
+        if (content) content.textContent = '';
     }
 
     // Set highlighted text from selection
@@ -4966,58 +4966,99 @@
         if (!text || text.trim().length === 0) return;
         selectedHighlightText = text.trim().substring(0, 2000);
         var preview = document.getElementById('highlightedTextPreview');
-        document.getElementById('highlightedTextContent').textContent =
-            selectedHighlightText.length > 200 ? selectedHighlightText.substring(0, 200) + '...' : selectedHighlightText;
-        preview.style.display = 'block';
+        var content = document.getElementById('highlightedTextContent');
+        if (content) {
+            content.textContent = selectedHighlightText.length > 200 ? selectedHighlightText.substring(0, 200) + '...' : selectedHighlightText;
+        }
+        if (preview) preview.style.display = 'block';
     }
 
     // Save note via AJAX
     function saveNote() {
-        var noteContent = document.getElementById('noteTextarea').value.trim();
+        var noteTextarea = document.getElementById('noteTextarea');
+        var noteContent = noteTextarea ? noteTextarea.value.trim() : '';
         if (!noteContent) {
             showToast('Please write a note before saving.', 'error');
+            if (noteTextarea) noteTextarea.focus();
             return;
         }
 
         var btn = document.getElementById('btnSaveNote');
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saving...';
+        if (btn && btn.disabled) return;
+        
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saving...';
+        }
+
+        var postData = {
+            document_type: currentDocumentType,
+            document_id: currentDocumentId,
+            document_title: currentDocumentTitle,
+            note_content: noteContent,
+            note_color: selectedNoteColor,
+            highlighted_text: selectedHighlightText || null,
+            article_section: getCurrentArticleSection(),
+            page_url: window.location.pathname + window.location.hash
+        };
 
         $.ajax({
             url: '/notes/save',
             type: 'POST',
+            timeout: 8000,
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            data: {
-                document_type: currentDocumentType,
-                document_id: currentDocumentId,
-                document_title: currentDocumentTitle,
-                note_content: noteContent,
-                note_color: selectedNoteColor,
-                highlighted_text: selectedHighlightText || null,
-                article_section: getCurrentArticleSection(),
-                page_url: window.location.pathname + window.location.hash
-            },
+            data: postData,
             success: function(response) {
-                if (response.success) {
+                if (response && response.success) {
                     showToast('Note saved successfully!', 'success');
-                    clearNoteForm();
-                    prependNoteCard(response.note);
-                    updateNotesCount(1);
+                    try {
+                        clearNoteForm();
+                        if (response.note) {
+                            prependNoteCard(response.note);
+                            updateNotesCount(1);
+                        }
+                    } catch (e) {
+                        console.error('Error updating note UI:', e);
+                    }
+                    if (btn) {
+                        btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Saved!';
+                        setTimeout(function() {
+                            btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Save Note';
+                            btn.disabled = false;
+                        }, 1200);
+                    }
+                } else {
+                    showToast(response ? response.message : 'Failed to save note.', 'error');
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Save Note';
+                    }
                 }
             },
-            error: function(xhr) {
-                if (xhr.status === 401) {
-                    document.getElementById('notesLoginPrompt').style.display = 'block';
+            error: function(xhr, status, error) {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Save Note';
+                }
+                if (status === 'timeout') {
+                    showToast('Request timed out. Please try again.', 'error');
+                } else if (xhr && xhr.status === 401) {
+                    var prompt = document.getElementById('notesLoginPrompt');
+                    if (prompt) prompt.style.display = 'block';
                     showToast('Please log in to save notes.', 'info');
-                } else if (xhr.status === 422) {
+                } else if (xhr && xhr.status === 422) {
                     showToast('Please fill in all required fields.', 'error');
                 } else {
-                    showToast('Failed to save note. Please try again.', 'error');
+                    showToast('Failed to save note. Please check your connection.', 'error');
                 }
             },
             complete: function() {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Save Note';
+                setTimeout(function() {
+                    if (btn && btn.disabled && btn.innerHTML.indexOf('Saving') !== -1) {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Save Note';
+                    }
+                }, 1500);
             }
         });
     }

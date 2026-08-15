@@ -4,11 +4,11 @@
 
 <style>
     .news-feed-placeholder-ad {
-        margin-bottom: 24px !important;
+        margin-bottom: 0 !important;
     }
     @media (max-width: 991px) {
         .news-feed-placeholder-ad {
-            margin-bottom: 50px !important;
+            margin-bottom: 0 !important;
         }
     }
 </style>

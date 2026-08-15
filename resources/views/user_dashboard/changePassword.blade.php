@@ -60,9 +60,9 @@
                 </div>
             </div>
 
-            <div style="margin-top: 10px;">
+            <div style="margin-top: 24px;">
                 <button type="submit" class="btn-primary">
-                    <i class="fa-solid fa-key"></i>
+                    <i class="fa-solid fa-shield-halved"></i>
                     <span>Update Security Password</span>
                 </button>
             </div>

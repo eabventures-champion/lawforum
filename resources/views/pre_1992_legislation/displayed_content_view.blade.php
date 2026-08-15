@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -58,327 +59,72 @@
         }
 
         #display_content .premium-article-container .nav-links,
-        #acts_expanded_view .premium-article-container .nav-links,
-        .premium-article-container .nav-links {
-            background: var(--bg-secondary) !important;
-            border: 1px solid var(--border-color) !important;
-            border-radius: 16px !important;
+        #display_plain_content .premium-article-container .nav-links,
+        #display_expanded_view .premium-article-container .nav-links {
             display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            gap: 16px !important;
-            padding: 8px 16px !important;
-            position: sticky !important;
-            top: 0 !important;
-            z-index: 50 !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
-            margin-bottom: 8px !important;
-            color: #fff !important;
-        }
-
-        #display_content .premium-article-container .nav-links::before,
-        #acts_expanded_view .premium-article-container .nav-links::before,
-        .premium-article-container .nav-links::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            left: -8px;
-            right: -8px;
-            height: 20px;
-            background: var(--bg-primary);
+            justify-content: flex-start !important;
+            padding: 10px 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
         }
 
         .premium-article-container .nav-links span {
-            font-family: var(--font-ui) !important;
-            font-size: 12px !important;
-            font-weight: 700 !important;
-            color: var(--gold) !important;
-            display: flex !important;
-            align-items: center !important;
-            gap: 8px !important;
-            letter-spacing: -0.2px !important;
-            flex: 1 !important;
-            min-width: 0 !important;
-        }
-
-        .premium-article-container .nav-links span i {
-            color: var(--gold) !important;
-            font-size: 13px !important;
-            flex-shrink: 0 !important;
-        }
-
-        .premium-article-container .nav-links .nav-title-text {
-            white-space: normal !important;
-            word-break: break-word !important;
-            line-height: 1.4 !important;
-        }
-
-        /* Bookmark Button inside Nav-links */
-        .bookmarking {
-            color: var(--text-muted);
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            margin-left: 8px;
-        }
-
-        .bookmarking:hover {
-            color: var(--gold);
-            background: rgba(245, 158, 11, 0.1);
-            transform: scale(1.05);
-            text-decoration: none;
-        }
-
-        .bookmarking i {
-            font-size: 16px;
-        }
-
-        /* Actions Button & Menu Container */
-        .premium-article-container .actions-container {
-            position: relative !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            flex-shrink: 0 !important;
-            z-index: 1010 !important;
-        }
-
-        #display_content .premium-article-container #print_options,
-        #acts_expanded_view .premium-article-container #print_options,
-        .premium-article-container #print_options {
-            background: var(--accent-gradient) !important;
-            border: none !important;
-            color: #ffffff !important;
-            font-family: var(--font-ui) !important;
-            font-size: 13px !important;
-            font-weight: 600 !important;
-            padding: 8px 18px !important;
-            border-radius: 30px !important;
-            cursor: pointer !important;
-            transition: var(--transition) !important;
-            display: flex !important;
-            align-items: center !important;
-            gap: 8px !important;
-            box-shadow: 0 4px 12px var(--accent-glow) !important;
-            text-decoration: none !important;
-        }
-
-        #display_content .premium-article-container #print_options *,
-        #acts_expanded_view .premium-article-container #print_options *,
-        .premium-article-container #print_options * {
-            color: #ffffff !important;
-        }
-
-        #display_content .premium-article-container #print_options:hover,
-        #acts_expanded_view .premium-article-container #print_options:hover,
-        .premium-article-container #print_options:hover {
-            transform: translateY(-1px) !important;
-            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4) !important;
-            filter: brightness(1.1) !important;
-        }
-
-        .premium-article-container .menu_options {
-            position: absolute !important;
-            top: calc(100% + 8px) !important;
-            right: 0 !important;
-            background: #0f172a !important;
-            border: 1px solid var(--border-color) !important;
-            border-radius: 12px !important;
-            width: 200px !important;
-            padding: 8px !important;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45) !important;
-            backdrop-filter: blur(20px) !important;
-            z-index: 1020 !important;
-            display: none;
-            gap: 4px;
-        }
-
-        #display_content .premium-article-container .menu_options a,
-        #acts_expanded_view .premium-article-container .menu_options a,
-        .premium-article-container .menu_options a {
-            font-family: var(--font-ui) !important;
-            font-size: 13px !important;
-            font-weight: 500 !important;
-            color: #ffffff !important;
-            padding: 8px 12px !important;
-            border-radius: 8px !important;
-            display: flex !important;
-            align-items: center !important;
-            gap: 10px !important;
-            text-decoration: none !important;
-            transition: var(--transition) !important;
-        }
-
-        .menu_options a:hover {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.05);
-            text-decoration: none;
-        }
-
-        .menu_options a i {
-            font-size: 14px;
-            width: 18px;
-            text-align: center;
-        }
-
-        .menu_options a .text-red { color: #f43f5e; }
-        .menu_options a .text-blue { color: #3b82f6; }
-
-        /* Article content Card */
-        .article-card {
-            background: transparent !important;
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-            border: none !important;
-            border-radius: 0 !important;
-            padding: 20px 0 !important;
-            box-shadow: none !important;
-            position: relative;
-            overflow: visible;
-        }
-
-        .article-card::before {
-            display: none !important;
-        }
-
-        .article-card:hover {
-            border-color: transparent !important;
-        }
-
-        /* Content / Legal text styling */
-        .content {
-            font-family: var(--font-legal);
-            font-size: 17px;
-            line-height: 1.85;
-            color: #e2e8f0 !important;
-        }
-
-        /* Force light text on all children to override inline styles from stored HTML */
-        .content *:not(a) {
-            color: #e2e8f0 !important;
-        }
-
-        .content a {
-            color: var(--accent-light) !important;
-        }
-
-        /* Indentation and alignment of Legal clauses */
-        .content p {
-            margin-bottom: 22px;
-            text-align: justify;
-        }
-
-        /* If there are lists or tables, make sure they are styled */
-        .content ul, .content ol {
-            margin-left: 24px;
-            margin-bottom: 24px;
-        }
-
-        .content li {
-            margin-bottom: 12px;
-        }
-
-        /* Premium Modal Styling */
-        .premium-modal {
-            background: #0f172a !important;
-            border: 1px solid var(--border-color) !important;
-            border-radius: 20px !important;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
-            overflow: hidden;
-        }
-
-        .premium-modal .modal-header {
-            border-bottom: 1px solid var(--border-color) !important;
-            padding: 20px 24px !important;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .premium-modal .modal-title {
-            font-family: var(--font-ui) !important;
-            font-size: 16px !important;
-            font-weight: 700 !important;
-            color: #fff !important;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .premium-modal .modal-title i {
-            color: var(--gold);
-        }
-
-        .premium-modal .close-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 18px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .premium-modal .close-btn:hover {
-            color: #fff;
-        }
-
-        .premium-modal .modal-body {
-            padding: 28px 24px !important;
-            background: #090d16 !important;
-        }
-
-        .premium-modal .modal-desc {
-            font-family: var(--font-ui);
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 24px;
-            line-height: 1.5;
-        }
-
-        .premium-modal .modal-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-        }
-
-        .premium-modal .btn-auth {
-            font-family: var(--font-ui);
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: var(--accent-light);
+            padding: 6px 14px;
+            border-radius: 20px;
             font-size: 13px;
             font-weight: 600;
-            padding: 8px 20px;
-            border-radius: 30px;
-            text-decoration: none;
-            transition: var(--transition);
             display: inline-flex;
             align-items: center;
-            justify-content: center;
+            gap: 10px;
+            backdrop-filter: blur(8px);
         }
 
-        .premium-modal .btn-login {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
+        .premium-article-container .nav-links span i.fa-balance-scale {
+            color: var(--gold);
+        }
+
+        /* Article Card */
+        .article-card {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        /* Legal Content Typography */
+        .content {
+            font-family: var(--font-legal) !important;
+            font-size: 17px;
+            line-height: 1.85;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            word-spacing: 0.02em;
+        }
+
+        .content p {
+            margin-bottom: 1.5em;
+            color: #e2e8f0;
+        }
+
+        .content h1, .content h2, .content h3, .content h4 {
+            font-family: var(--font-ui) !important;
+            font-weight: 700;
             color: #fff;
+            margin-top: 1.8em;
+            margin-bottom: 0.8em;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
         }
 
-        .premium-modal .btn-login:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--border-hover);
-        }
-
-        .premium-modal .btn-signup {
-            background: var(--accent-gradient);
-            color: #fff;
-            box-shadow: 0 4px 12px var(--accent-glow);
-        }
-
-        .premium-modal .btn-signup:hover {
-            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
-            filter: brightness(1.1);
-        }
+        .content h2 { font-size: 22px; color: var(--accent-light); }
+        .content h3 { font-size: 18px; color: #cbd5e1; }
+        .content h4 { font-size: 16px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
 
         /* Animations */
         @keyframes fadeIn {
@@ -391,9 +137,6 @@
             .premium-article-container {
                 padding: 0 12px 40px;
             }
-            .article-card {
-                padding: 30px 24px;
-            }
             .content {
                 font-size: 15px;
             }
@@ -405,31 +148,49 @@
             color: #f59e0b;
             padding: 2px 6px;
             border-radius: 4px;
-            font-weight: 650;
             border: 1px solid rgba(245, 158, 11, 0.3);
             display: inline-block;
         }
-    
-        /* Unused nav styles removed to prevent style bleed into parent page */
-
     </style>
+    @include('partials._nav_subdropdown_styles')
 </head>
 
 <body class="standalone-view">
     <div class="premium-article-container" data-sid="{{ $allPre1992Article['id'] }}">
-        {{-- For the bookmark --}}
         <div class="nav-links">
-            <span>
+            <span style="display: inline-flex; align-items: center; gap: 10px;">
                 <i class="fa fa-balance-scale"></i>
                 <span class="nav-title-text">{{ $allPre1992Article['section'] }}</span>
                 
-                @if (Route::has('login'))
-                    @auth                        
-                        <a class="bookmarking" href="javascript:;" rel="/bookmarks/{{$allPre1992Article['pre_1992_act']}}/{{$allPre1992Article['section']}}/{{$allPre1992Article['id']}}/{{ Auth::user()->name }}/{{ Auth::user()->id }}/{{ Auth::user()->id }}{{$allPre1992Article['section']}}/{{$allPre1992Article['act_group']}}/{{$allPre1992Article['act_id']}}">
-                            <i title="Bookmark this section" id="bookmarked" class="tooltips fa-regular fa-bookmark"></i>
-                        </a>
-                    @endauth
-                @endif
+                @php
+                    $isBookmarked = false;
+                    $preAct = \App\Pre1992LegislationAct::where('title', $allPre1992Article['pre_1992_act'])->first();
+                    $preGroup = $preAct ? $preAct->pre_1992_group : ($allPre1992Article['act_group'] ?? 'Existing Laws');
+                    $preActId = $preAct ? $preAct->id : ($allPre1992Article['act_id'] ?? 1);
+                    $prePageUrl = "/existing-laws/" . rawurlencode($preGroup) . "/" . rawurlencode($allPre1992Article['pre_1992_act']) . "/" . $preActId . "#section-" . $allPre1992Article['id'];
+
+                    if (auth()->check()) {
+                        $isBookmarked = \App\UserBookmark::where('user_id', auth()->id())
+                            ->where(function($q) use ($allPre1992Article, $preActId) {
+                                $q->where('section_id', $allPre1992Article['id'])
+                                  ->orWhere('user_section', auth()->id() . '_pre_1992_' . $preActId . '_' . $allPre1992Article['id'])
+                                  ->orWhere('user_section', auth()->id() . '_pre_1992_' . $allPre1992Article['act_id'] . '_' . $allPre1992Article['id']);
+                            })->exists();
+                    }
+                @endphp
+                <button type="button" 
+                        class="btn-bookmark-toggle {{ $isBookmarked ? 'is-bookmarked' : '' }}" 
+                        data-act-title="{{ $allPre1992Article['pre_1992_act'] }}" 
+                        data-act-section="{{ $allPre1992Article['section'] }}" 
+                        data-section-id="{{ $allPre1992Article['id'] }}" 
+                        data-act-id="{{ $preActId }}" 
+                        data-act-group="{{ $preGroup }}" 
+                        data-doc-type="pre_1992" 
+                        data-page-url="{{ $prePageUrl }}" 
+                        title="{{ $isBookmarked ? 'Remove Bookmark' : 'Bookmark this section' }}"
+                        onclick="toggleBookmark(this)">
+                    <i class="{{ $isBookmarked ? 'fa-solid' : 'fa-regular' }} fa-bookmark"></i>
+                </button>
             </span>
         </div>
 
@@ -441,7 +202,9 @@
         </div>
     </div>
 
-    <!-- Scripts dynamically loaded only when missing (Prevents AJAX duplicates) -->
+    @include('partials._bookmark_script')
+
+    <!-- Scripts dynamically loaded only when missing -->
     <script>
         if (typeof jQuery === 'undefined') {
             document.write('<script src="https://code.jquery.com/jquery-3.6.0.min.js"><\/script>');
@@ -451,91 +214,6 @@
         if (typeof $.fn.modal === 'undefined') {
             document.write('<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"><\/script>');
         }
-    </script>
-
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
-
-    <script>
-        $(".section_id").click(function(e){
-            e.preventDefault();
-            var section_id = $(this).attr("rel");
-            console.log(section_id);
-
-            $.ajax({
-                url: section_id,
-                type: "GET",
-                success:function(response){
-                if(response.success){
-                      $("#bookmarked").notify(
-                          response.message,
-                    { position:"left", className: "info", autoHideDelay: 900000}
-                    );
-                }else{
-                    $("#bookmarked").notify(
-                   "Section to Download",
-                    { position:"left", className: "success", autoHideDelay: 10000}
-                    );
-                  }
-                },
-                error:function (){
-                    $("#bookmarked").notify(
-                   "Issue with database entry",
-                    { position:"left", className: "error" }
-                    );
-                }
-            });
-        });
-    </script>
-
-    <script>
-        $(".download_link").click(function(e){
-            e.preventDefault();
-            var download_link = $(this).attr("rel");
-            $('.section_id').trigger("click");
-           
-            $.ajax({
-                url: download_link,
-                type: "GET",
-            });
-        });  
-    </script>
-
-    <script>
-        if (typeof $.fn.tooltipster !== 'undefined') {
-            $('.tooltips').tooltipster({
-                theme: 'tooltipster-borderless'
-            });
-        }
-    </script>
-
-    <script>
-        $('.bookmarking').click(function(e){
-            e.preventDefault();
-            var targetUrl = $(this).attr('rel');
-            $.ajax({
-                url: targetUrl,
-                type: "GET",
-                success:function(response){
-                if(response.success){
-                      $("#bookmarked").notify(
-                          response.message,
-                    { position:"left", className: "info" }
-                    );
-                }else{
-                    $("#bookmarked").notify(
-                   "Section bookmarked",
-                    { position:"left", className: "success" }
-                    );
-                  }
-                },
-                error:function (){
-                    $("#bookmarked").notify(
-                   "Issue with database entry",
-                    { position:"left", className: "error" }
-                    );
-                }
-            });
-        });
     </script>
 
     <!-- Highlight keyword from search query parameter -->
@@ -553,12 +231,10 @@
             const contentContainer = document.querySelector('.content');
             if (!contentContainer) return;
             
-            // Clean/trim and escape word
             const cleanWord = word.trim();
             if (!cleanWord) return;
             
             const escapedWord = cleanWord.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-            // Treat spaces and hyphens interchangeably
             const regexPattern = escapedWord.replace(/(\\-| )/g, '[ \\-]');
             const regex = new RegExp(`(${regexPattern})`, 'gi');
             

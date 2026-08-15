@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ ucwords(strtolower($allCountriesConstitution['title'])) }} - Legals Forum</title>
 
     <!-- Google Fonts & Stylesheets -->
@@ -2093,24 +2094,40 @@
     // SAVE NOTE
     // ============================================
     function saveNote() {
-        var noteContent = document.getElementById('noteTextarea').value.trim();
-        if (!noteContent) { showToast('Please write a note first.', 'error'); return; }
+        var noteTextarea = document.getElementById('noteTextarea');
+        var noteContent = noteTextarea ? noteTextarea.value.trim() : '';
+        if (!noteContent) {
+            showToast('Please write a note first.', 'error');
+            if (noteTextarea) noteTextarea.focus();
+            return;
+        }
+
+        var btn = document.getElementById('btnSaveNote');
+        if (btn && btn.disabled) return;
+        
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saving...';
+        }
 
         var highlightedText = '';
         var previewEl = document.getElementById('highlightedTextPreview');
-        if (previewEl.style.display !== 'none') {
-            highlightedText = document.getElementById('highlightedTextContent').textContent;
+        if (previewEl && previewEl.style.display !== 'none') {
+            var contentEl = document.getElementById('highlightedTextContent');
+            highlightedText = contentEl ? contentEl.textContent : '';
         }
 
-        var documentTitle = '{{ $allCountriesConstitution["country"] }} Constitution';
+        var documentTitle = '{{ $allCountriesConstitution["country"] ?? "Country" }} Constitution';
         var articleSection = document.querySelector('.judgement_display h3, .judgement_display h4, .judgement_display h2');
         var sectionText = articleSection ? articleSection.textContent.trim().substring(0, 100) : '';
 
         $.ajax({
-            url: '/notes',
+            url: '/notes/save',
             type: 'POST',
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            timeout: 8000,
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') || '{{ csrf_token() }}' },
             data: {
+                _token: $('meta[name="csrf-token"]').attr('content') || '{{ csrf_token() }}',
                 document_type: 'constitution',
                 document_id: '{{ $allCountriesConstitution["id"] ?? 0 }}',
                 document_title: documentTitle,
@@ -2118,24 +2135,59 @@
                 note_content: noteContent,
                 note_color: selectedNoteColor,
                 article_section: sectionText,
-                page_url: window.location.href
+                page_url: window.location.pathname + window.location.hash
             },
             success: function(response) {
-                if (response.success) {
-                    var container = document.getElementById('notesContainer');
-                    var card = createNoteCardElement(response.note);
-                    container.insertBefore(card, container.firstChild);
-                    clearNoteForm();
-                    updateNotesCount(1);
+                if (response && response.success) {
+                    try {
+                        var container = document.getElementById('notesContainer');
+                        if (container && response.note) {
+                            var card = createNoteCardElement(response.note);
+                            container.insertBefore(card, container.firstChild);
+                        }
+                        clearNoteForm();
+                        updateNotesCount(1);
+                    } catch (e) {
+                        console.error('Error updating note list:', e);
+                    }
                     showToast('Note saved!', 'success');
+                    if (btn) {
+                        btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Saved!';
+                        setTimeout(function() {
+                            btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Save Note';
+                            btn.disabled = false;
+                        }, 1200);
+                    }
+                } else {
+                    showToast(response ? response.message : 'Failed to save note.', 'error');
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Save Note';
+                    }
                 }
             },
-            error: function(xhr) {
-                if (xhr.status === 401) {
-                    document.getElementById('notesLoginPrompt').style.display = 'block';
+            error: function(xhr, status, error) {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Save Note';
+                }
+                if (status === 'timeout') {
+                    showToast('Request timed out. Please try again.', 'error');
+                } else if (xhr && xhr.status === 401) {
+                    showToast('Please log in to save notes.', 'info');
+                } else if (xhr && xhr.status === 422) {
+                    showToast('Please fill in all required fields.', 'error');
                 } else {
                     showToast('Failed to save note.', 'error');
                 }
+            },
+            complete: function() {
+                setTimeout(function() {
+                    if (btn && btn.disabled && btn.innerHTML.indexOf('Saving') !== -1) {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Save Note';
+                    }
+                }, 1500);
             }
         });
     }
@@ -2148,15 +2200,22 @@
         $.ajax({
             url: '/notes/document',
             type: 'GET',
-            data: { page_url: window.location.pathname },
+            data: {
+                document_type: 'constitution',
+                document_id: '{{ $allCountriesConstitution["id"] ?? 0 }}'
+            },
             success: function(response) {
-                if (response.notes && response.notes.length > 0) {
+                if (response && response.notes) {
                     var container = document.getElementById('notesContainer');
+                    if (!container) return;
+                    container.innerHTML = '';
                     response.notes.forEach(function(note) {
                         var card = createNoteCardElement(note);
                         container.appendChild(card);
                     });
-                    document.getElementById('notesCountBadge').textContent = response.notes.length;
+                    var badge = document.getElementById('notesCountBadge');
+                    if (badge) badge.textContent = response.notes.length;
+                    applySidebarFilters();
                 }
             }
         });
@@ -2301,32 +2360,94 @@
     // ============================================
     // TEXT SELECTION TOOLTIP
     // ============================================
-    var currentSelection = '';
-
-    document.addEventListener('mouseup', function(e) {
+    var currentSelection = '';    function checkTextSelection(e) {
         var tooltip = document.getElementById('textSelectTooltip');
-        var readingPane = document.querySelector('.judgement_display');
+        if (!tooltip) return;
 
-        if (!readingPane || !readingPane.contains(e.target)) {
-            if (!tooltip.contains(e.target)) { tooltip.style.display = 'none'; }
-            return;
+        // If clicking inside tooltip buttons, do not process hide logic
+        if (e && e.target) {
+            var targetEl = (e.target.nodeType === 3) ? e.target.parentElement : e.target;
+            if (targetEl && tooltip.contains(targetEl)) {
+                return;
+            }
         }
 
         setTimeout(function() {
             var sel = window.getSelection();
+            if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
+                tooltip.style.display = 'none';
+                return;
+            }
+
             var text = sel.toString().trim();
-            if (text.length > 3) {
-                currentSelection = text;
+            if (text.length < 2) {
+                tooltip.style.display = 'none';
+                return;
+            }
+
+            var targetNode = sel.anchorNode || sel.focusNode;
+            if (!targetNode) {
+                tooltip.style.display = 'none';
+                return;
+            }
+
+            var anchorEl = (targetNode.nodeType === 3) ? targetNode.parentElement : targetNode;
+            if (!anchorEl) {
+                tooltip.style.display = 'none';
+                return;
+            }
+
+            // Container matching - match reading pane or article element
+            var container = anchorEl.closest('.judgement_display, #display_content, .workspace-main, .article-card, .content, .reader-container, .main-content-area, .judgment-content');
+            var isIgnored = anchorEl.closest('input, textarea, select, .toc-sidebar, .notes-card-sidebar, .right-sidebar, #rightSidebar');
+
+            if (!container || isIgnored) {
+                tooltip.style.display = 'none';
+                return;
+            }
+
+            currentSelection = text;
+            try {
                 var range = sel.getRangeAt(0);
-                var rect = range.getBoundingClientRect();
-                tooltip.style.top = (rect.top - 50 + window.scrollY) + 'px';
-                tooltip.style.left = (rect.left + rect.width / 2 - 100) + 'px';
-                tooltip.style.display = 'flex';
-            } else {
+                var clientRects = range.getClientRects();
+                var rect = (clientRects && clientRects.length > 0) ? clientRects[0] : range.getBoundingClientRect();
+
+                if (rect && (rect.width > 0 || rect.height > 0)) {
+                    var topPos = Math.round(rect.top - 48);
+                    if (topPos < 10) topPos = Math.round(rect.bottom + 8);
+                    
+                    var leftPos = Math.max(10, Math.min(Math.round(rect.left + (rect.width / 2) - 100), window.innerWidth - 230));
+
+                    tooltip.style.position = 'fixed';
+                    tooltip.style.top = topPos + 'px';
+                    tooltip.style.left = leftPos + 'px';
+                    tooltip.style.display = 'flex';
+                    tooltip.style.zIndex = '999999';
+                } else {
+                    tooltip.style.display = 'none';
+                }
+            } catch (err) {
                 tooltip.style.display = 'none';
             }
         }, 10);
-    });
+    }
+
+    document.addEventListener('mouseup', checkTextSelection);
+    document.addEventListener('keyup', checkTextSelection);
+    document.addEventListener('touchend', checkTextSelection);
+
+    // Hide tooltip on scroll, re-evaluate when scroll stops
+    var scrollHideTimer = null;
+    document.addEventListener('scroll', function() {
+        var tooltip = document.getElementById('textSelectTooltip');
+        if (tooltip && tooltip.style.display !== 'none') {
+            tooltip.style.display = 'none';
+            clearTimeout(scrollHideTimer);
+            scrollHideTimer = setTimeout(function() {
+                checkTextSelection();
+            }, 150);
+        }
+    }, true);
 
     function addNoteFromSelection() {
         if (!currentSelection) return;

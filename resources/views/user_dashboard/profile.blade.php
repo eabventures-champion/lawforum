@@ -325,7 +325,7 @@
             </div>
         </div>
 
-        <div style="margin-top: 10px;">
+        <div style="margin-top: 24px;">
             <button type="submit" class="btn-primary">
                 <i class="fa-solid fa-floppy-disk"></i>
                 <span>Save Profile Changes</span>

@@ -2,7 +2,7 @@
 @guest
     <a href="/" class="btn-login">Why Choose Us</a>
     @if(request()->cookie('guest_access'))
-        <a href="/get-started" class="btn-signup" style="background: rgba(255,255,255,0.08); box-shadow: none;">
+        <a href="javascript:void(0)" onclick="openLoginModal()" class="btn-signup" style="background: rgba(255,255,255,0.08); box-shadow: none; cursor: pointer;">
             <i class="fa-solid fa-user-secret" style="margin-right: 4px;"></i> Guest User
         </a>
     @else

@@ -1532,10 +1532,16 @@
             .search-container {
                 flex-direction: column;
                 padding: 0;
-                background: transparent;
-                border: none;
-                box-shadow: none;
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
                 gap: 12px;
+            }
+            .search-container:focus-within {
+                border: none !important;
+                border-color: transparent !important;
+                box-shadow: none !important;
+                outline: none !important;
             }
             .search-icon { display: none; }
             .search-container input {
@@ -1548,10 +1554,12 @@
                 color: var(--text-primary);
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
                 font-size: 16px !important;
+                outline: none;
             }
             .search-container input:focus {
                 border-color: var(--accent);
                 box-shadow: 0 0 0 3px var(--accent-glow);
+                outline: none;
             }
             .search-btn {
                 width: 100%;
@@ -1786,6 +1794,81 @@
             pointer-events: auto !important;
         }
 
+        @if(request()->has('quick_search'))
+        /* ── Quick Search Mode (Clean, No Header, No Indicators, No Scroll) ── */
+        html, body {
+            overflow: hidden !important;
+            height: 100vh !important;
+            max-height: 100vh !important;
+            padding-top: 0 !important;
+        }
+
+        .slider-container {
+            overflow: hidden !important;
+            height: 100vh !important;
+        }
+
+        .nav-wrap,
+        #mainNav,
+        .mobile-nav-panel,
+        .mobile-nav-overlay {
+            display: none !important;
+        }
+
+        .premium-indicators {
+            display: none !important;
+        }
+
+        .hero-badge,
+        .hero-title {
+            display: none !important;
+        }
+
+        .hero-subtitle {
+            font-size: 16px !important;
+            margin-bottom: 28px !important;
+            max-width: 620px !important;
+        }
+
+        .hero {
+            min-height: 100vh !important;
+            height: 100vh !important;
+            padding-top: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .quick-search-back-btn {
+            position: fixed;
+            top: 24px;
+            left: 28px;
+            z-index: 99999;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 10px;
+            background: rgba(12, 18, 32, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #60a5fa;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none !important;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .quick-search-back-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.5);
+            color: #fff;
+            transform: translateX(-3px);
+        }
+        @endif
+
         .premium-indicator-item {
             position: relative;
             display: flex;
@@ -1879,6 +1962,12 @@
     @include('partials._nav_subdropdown_styles')
 </head>
 <body>
+    @if(request()->has('quick_search'))
+        <a href="/home" class="quick-search-back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Dashboard</span>
+        </a>
+    @endif
 
     <!-- ====== NAVIGATION ====== -->
     <nav class="nav-wrap" id="mainNav">
@@ -1896,7 +1985,7 @@
                 @guest
                     <a href="javascript:void(0)" class="btn-login" onclick="goToSlide(1)">Why Choose Us</a>
                     @if(request()->cookie('guest_access'))
-                        <a href="/get-started" class="btn-signup" style="background: rgba(255,255,255,0.08); box-shadow: none;">
+                        <a href="javascript:void(0)" onclick="openLoginModal()" class="btn-signup" style="background: rgba(255,255,255,0.08); box-shadow: none; cursor: pointer;">
                             <i class="fa-solid fa-user-secret" style="margin-right: 4px;"></i> Guest User
                         </a>
                     @else
@@ -1946,7 +2035,7 @@
         @guest
             <a href="javascript:void(0)" onclick="goToSlide(1); document.getElementById('mobileNav').classList.remove('open');">Why Choose Us</a>
             @if(request()->cookie('guest_access'))
-                <a href="/get-started" style="color: var(--text-secondary);"><i class="fa-solid fa-user-secret"></i> Guest User</a>
+                <a href="javascript:void(0)" onclick="openLoginModal(); document.getElementById('mobileNav').classList.remove('open');" style="color: var(--text-secondary); cursor: pointer;"><i class="fa-solid fa-user-secret"></i> Guest User</a>
             @else
                 <a href="/get-started" style="color: var(--accent-light);">Sign Up Free</a>
             @endif
@@ -2632,6 +2721,7 @@
         let isTransitioning = false;
         let lastWheelTime = 0;
         let autoSlideTimeout;
+        const isQuickSearchMode = window.location.search.indexOf('quick_search') !== -1;
 
         const sliderWrapper = document.getElementById('sliderWrapper');
         const indicatorItems = document.querySelectorAll('.premium-indicator-item');
@@ -2645,6 +2735,7 @@
         }
 
         function goToSlide(slideIndex) {
+            if (isQuickSearchMode) return;
             if (isInputActive()) {
                 clearTimeout(autoSlideTimeout);
                 return;
@@ -2762,17 +2853,17 @@
 
         // Automatic slideshow loop
         function startAutoSlide() {
-            // Do not start auto-slide if any search input is focused
+            if (isQuickSearchMode) return;
             if (isInputActive()) {
                 clearTimeout(autoSlideTimeout);
                 return;
             }
 
             autoSlideTimeout = setTimeout(() => {
-                if (!isInputActive()) {
+                if (!isInputActive() && !isQuickSearchMode) {
                     goToSlide((currentSlide + 1) % totalSlides);
                 }
-            }, 10000); // Only slide when page is stagnant for 10 seconds
+            }, 10000);
         }
 
         function resetAutoSlide() {
@@ -2780,6 +2871,15 @@
             if (!isInputActive()) {
                 startAutoSlide();
             }
+        }
+
+        if (isQuickSearchMode) {
+            window.addEventListener('DOMContentLoaded', () => {
+                const searchInput = document.getElementById('hero-search-input');
+                if (searchInput) {
+                    setTimeout(() => searchInput.focus(), 200);
+                }
+            });
         }
 
         // Empty search validation prompt

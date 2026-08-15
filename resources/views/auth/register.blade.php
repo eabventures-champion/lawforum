@@ -350,6 +350,32 @@
                     </div>
                 </div>
 
+                @if(request('role') === 'researcher')
+                <!-- I am a... Field -->
+                <div class="form-group full-width">
+                    <label for="researcher_type" class="form-label">I am a...</label>
+                    <div class="input-wrapper">
+                        <select class="form-control" id="researcher_type" name="researcher_type" required>
+                            <option value="" disabled selected>Select your profession</option>
+                            @foreach($researcherTypes as $type)
+                                <option value="{{ $type->name }}" {{ old('researcher_type') == $type->name ? 'selected' : '' }}>{{ $type->name }}</option>
+                            @endforeach
+                            <option value="Other" {{ old('researcher_type') == 'Other' ? 'selected' : '' }}>Other</option>
+                        </select>
+                        <i class="fa-solid fa-briefcase input-icon"></i>
+                    </div>
+                </div>
+
+                <!-- Other Type Field (hidden by default) -->
+                <div class="form-group full-width" id="researcher-type-other-wrapper" style="display: none;">
+                    <label for="researcher_type_other" class="form-label">Please specify</label>
+                    <div class="input-wrapper">
+                        <input id="researcher_type_other" type="text" class="form-control" name="researcher_type_other" value="{{ old('researcher_type_other') }}" placeholder="Enter your profession">
+                        <i class="fa-solid fa-pen input-icon"></i>
+                    </div>
+                </div>
+                @endif
+
                 <!-- Email Address -->
                 <div class="form-group full-width">
                     <label for="email" class="form-label">E-Mail Address</label>
@@ -677,6 +703,30 @@
             const emailInput = document.getElementById('email');
             const registerForm = document.querySelector('form');
             const submitBtn = document.querySelector('.btn-submit');
+
+            // Researcher Type "Other" toggle
+            const researcherTypeSelect = document.getElementById('researcher_type');
+            const otherWrapper = document.getElementById('researcher-type-other-wrapper');
+            const otherInput = document.getElementById('researcher_type_other');
+
+            if (researcherTypeSelect && otherWrapper) {
+                function toggleOtherField() {
+                    if (researcherTypeSelect.value === 'Other') {
+                        otherWrapper.style.display = 'block';
+                        otherWrapper.style.animation = 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+                        if (otherInput) otherInput.required = true;
+                    } else {
+                        otherWrapper.style.display = 'none';
+                        if (otherInput) {
+                            otherInput.required = false;
+                            otherInput.value = '';
+                        }
+                    }
+                }
+                researcherTypeSelect.addEventListener('change', toggleOtherField);
+                // Check on page load for old() values
+                toggleOtherField();
+            }
 
             let emailTimeout = null;
             let phoneTimeout = null;

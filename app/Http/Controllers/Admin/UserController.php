@@ -509,4 +509,41 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.index')->with('success', 'Selected users deleted successfully.');
     }
+
+    /**
+     * Impersonate a specific user (Admin logs in as user)
+     */
+    public function impersonate($id)
+    {
+        $targetUser = User::findOrFail($id);
+
+        if ($targetUser->id === auth()->id()) {
+            return redirect()->back()->with('error', 'You cannot impersonate your own account.');
+        }
+
+        // Store original admin ID in session
+        session()->put('impersonated_by', auth()->id());
+        session()->put('impersonated_admin_name', auth()->user()->name);
+
+        \Auth::loginUsingId($targetUser->id);
+
+        return redirect('/home')->with('success', "You are now impersonating {$targetUser->name} {$targetUser->lname}.");
+    }
+
+    /**
+     * Leave impersonation and return to Admin account
+     */
+    public function leaveImpersonation()
+    {
+        if (!session()->has('impersonated_by')) {
+            return redirect('/home');
+        }
+
+        $adminId = session()->pull('impersonated_by');
+        session()->forget('impersonated_admin_name');
+
+        \Auth::loginUsingId($adminId);
+
+        return redirect()->route('admin.users.index')->with('success', 'You have returned to your Admin session.');
+    }
 }

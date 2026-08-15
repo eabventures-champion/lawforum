@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\ResearcherType;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -41,6 +42,18 @@ class RegisterController extends Controller
     }
 
     /**
+     * Show the registration form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showRegistrationForm(\Illuminate\Http\Request $request)
+    {
+        $role = $request->query('role', '');
+        $researcherTypes = ResearcherType::active()->get();
+        return view('auth.register', compact('role', 'researcherTypes'));
+    }
+
+    /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
@@ -62,6 +75,14 @@ class RegisterController extends Controller
             $rules['phone'] = ['required', 'numeric', 'digits_between:10,14', 'unique:users'];
         }
 
+        // Validate researcher type when registering as researcher
+        if (isset($data['user_type']) && $data['user_type'] === 'researcher') {
+            $rules['researcher_type'] = ['required', 'string', 'max:255'];
+            if (isset($data['researcher_type']) && $data['researcher_type'] === 'Other') {
+                $rules['researcher_type_other'] = ['required', 'string', 'max:255'];
+            }
+        }
+
         return Validator::make($data, $rules);
     }
 
@@ -81,6 +102,8 @@ class RegisterController extends Controller
             'phone' => $data['phone'],
             'password' => Hash::make($data['password']),
             'user_type' => $data['user_type'] ?? null,
+            'researcher_type' => $data['researcher_type'] ?? null,
+            'researcher_type_other' => $data['researcher_type_other'] ?? null,
         ]);
 
         \App\AdminNotification::create([
@@ -106,7 +129,7 @@ class RegisterController extends Controller
     protected function registered(\Illuminate\Http\Request $request, $user)
     {
         session()->flash('new_registration', true);
-        return redirect('/email/verify');
+        return redirect()->route('register.choose-plan');
     }
 
     public function checkDuplicate(\Illuminate\Http\Request $request)

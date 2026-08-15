@@ -97,18 +97,15 @@
    .premium-ad-card {
        border-radius: 12px;
        overflow: hidden;
-       border: 1px solid var(--border-color);
-       background: rgba(255, 255, 255, 0.01);
-       transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+       border: none !important;
+       background: transparent !important;
+       box-shadow: none !important;
        position: relative !important;
        z-index: 1 !important;
    }
    
    .premium-ad-card:hover {
-       transform: translateY(-2px) scale(1.01);
-       border-color: rgba(255, 255, 255, 0.15);
-       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+       transform: translateY(-2px);
    }
 </style>
 

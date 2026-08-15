@@ -31,6 +31,21 @@
         padding: 0 !important;
     }
 
+    body.is-embedded .nav-wrap,
+    body.is-embedded #mainNav,
+    html.is-embedded .nav-wrap,
+    html.is-embedded #mainNav {
+        display: none !important;
+    }
+
+    body.is-embedded .main-wrapper-scrollable,
+    body.is-embedded .workspace-wrapper,
+    html.is-embedded .main-wrapper-scrollable,
+    html.is-embedded .workspace-wrapper {
+        top: 0 !important;
+        height: 100vh !important;
+    }
+
     .main-wrapper-scrollable {
         position: fixed !important;
         top: 70px !important;
@@ -461,6 +476,15 @@
         .nav-logo-text {
             font-size: 18px !important;
             letter-spacing: 0.2px !important;
-        }
     }
 </style>
+<script>
+    if (window.self !== window.top || window.location.search.indexOf('embedded=1') !== -1) {
+        document.documentElement.classList.add('is-embedded');
+        if (document.body) document.body.classList.add('is-embedded');
+        window.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.classList.add('is-embedded');
+            document.body && document.body.classList.add('is-embedded');
+        });
+    }
+</script>

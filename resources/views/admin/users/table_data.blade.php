@@ -23,23 +23,46 @@
                 <td>
                     <div style="display: flex; flex-direction: column; gap: 6px;">
                         <span style="font-weight: 500;">{{ $user->email }}</span>
-                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
                             @if($user->phone && $user->phone !== 'N/A')
                                 <span class="badge" style="width: fit-content; font-size: 11px; padding: 2px 8px; background: rgba(255,255,255,0.05); color: var(--text-secondary); border: 1px solid var(--border-color); border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">
                                     <i class="fa-solid fa-phone" style="font-size: 9px; opacity: 0.7;"></i>{{ $user->phone }}
                                 </span>
                             @endif
-                            <span class="badge" style="width: fit-content; font-size: 11px; padding: 2px 8px; background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 4px; box-shadow: 0 0 6px rgba(16, 185, 129, 0.15); display: inline-flex; align-items: center; gap: 4px;">
+                            <span class="badge" style="width: fit-content; font-size: 11px; padding: 2px 8px; background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">
                                 <i class="fa-solid fa-globe" style="font-size: 9px;"></i>{{ $user->country ?? 'Ghana' }}
                             </span>
+                            @if($user->hasVerifiedEmail())
+                                <span style="font-size: 11px; color: #34d399; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;">
+                                    <i class="fa-solid fa-circle-check"></i> Confirmed
+                                </span>
+                            @else
+                                <span style="font-size: 11px; color: #fbbf24; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;">
+                                    <i class="fa-solid fa-clock"></i> Unconfirmed (Guest)
+                                </span>
+                            @endif
                         </div>
                     </div>
                 </td>
                 <td>
                     @if($user->isAdmin())
                         <span class="badge badge-accent">Admin</span>
+                    @elseif($user->user_type === 'student')
+                        <span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3);">
+                            <i class="fa-solid fa-graduation-cap mr-1"></i> Student
+                        </span>
+                    @elseif($user->user_type === 'lawyer')
+                        <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);">
+                            <i class="fa-solid fa-gavel mr-1"></i> Lawyer
+                        </span>
+                    @elseif($user->user_type === 'researcher')
+                        <span class="badge" style="background: rgba(139, 92, 246, 0.15); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.3);">
+                            <i class="fa-solid fa-microscope mr-1"></i> Researcher
+                        </span>
                     @else
-                        <span class="badge badge-secondary" style="background: rgba(255,255,255,0.05); color: var(--text-secondary);">User</span>
+                        <span class="badge" style="background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25);">
+                            <i class="fa-solid fa-triangle-exclamation mr-1"></i> Legacy (No Role)
+                        </span>
                     @endif
                 </td>
                 <td>
@@ -53,7 +76,15 @@
                     @endif
                 </td>
                 <td>
-                    <div style="display: flex; gap: 8px;">
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        @if($user->id !== auth()->id())
+                            <form action="{{ route('admin.users.impersonate', $user->id) }}" method="POST" style="margin: 0;">
+                                @csrf
+                                <button type="submit" class="btn btn-action" title="Login / Enter dashboard as {{ $user->name }}" style="padding: 6px 12px; font-size: 12px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-weight: 600; transition: all 0.2s;">
+                                    <i class="fa-solid fa-right-to-bracket"></i> Impersonate
+                                </button>
+                            </form>
+                        @endif
                         <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-secondary btn-action" style="padding: 6px 12px; font-size: 12px;">
                             <i class="fa-solid fa-pen-to-square"></i> Edit
                         </a>

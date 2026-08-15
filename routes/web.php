@@ -45,9 +45,11 @@ Route::get('/accounts/manage-password', 'ChangePasswordController@index');
 Route::post('/accounts/manage-password', 'ChangePasswordController@store')->name('change.password');
 
 // -----------------------------------------------------BOOKMARKS-------------------------------------
-Route::get('/bookmarks/{act}/{sections}/{section_id}/{user_name}/{user_id}/{user_section}/{group}/{act_id}','UserDashBoardController@save_bookmark_article'); //To Bookmark from a section
-Route::get('/accounts/bookmarks/{user_id}','UserDashBoardController@show_user_bookmarks'); //Bookmarks page.........shows all list of bookmarks
-Route::resource('/bookmarks', 'BookmarkController'); //To delete a record of bookmark
+Route::post('/bookmarks/toggle', 'UserDashBoardController@toggle_bookmark')->name('bookmarks.toggle');
+Route::get('/bookmarks/check', 'UserDashBoardController@check_bookmarks')->name('bookmarks.check');
+Route::get('/bookmarks/content/{id}', 'UserDashBoardController@get_bookmark_content')->name('bookmarks.content');
+Route::delete('/bookmarks/{id}', 'UserDashBoardController@destroy_bookmark')->name('bookmarks.destroy');
+Route::get('/accounts/bookmarks/{user_id}', 'UserDashBoardController@show_user_bookmarks')->name('accounts.bookmarks');
 
 // -----------------------------------------------------DOWNLOADS-------------------------------------
 Route::get('/section_downloads/{act}/{sections}/{section_id}/{user_name}/{user_id}/{user_section}/{group}/{act_id}','DownloadsController@save_download_section'); //To Download from section
@@ -57,10 +59,16 @@ Route::resource('/downloads', 'DownloadsController'); //To delete a record of bo
 
 // -----------------------------------------------------NOTES-------------------------------------
 Route::post('/notes/save','UserDashBoardController@save_note'); //AJAX save note
+Route::post('/notes','UserDashBoardController@save_note'); //AJAX save note alias
 Route::get('/notes/document','UserDashBoardController@get_document_notes'); //AJAX get notes for current document
+Route::get('/notes/content/{id}','UserDashBoardController@get_note_content')->name('notes.content');
 Route::get('/accounts/notes/{user_id}','UserDashBoardController@show_user_notes'); //Dashboard notes page
 Route::patch('/notes/{id}','UserDashBoardController@update_note'); //AJAX update note
 Route::delete('/notes/{id}','UserDashBoardController@delete_note'); //AJAX delete note
+Route::get('/notes/download-all/pdf','UserDashBoardController@download_all_notes_pdf')->name('notes.download_all.pdf');
+Route::get('/notes/download-all/word','UserDashBoardController@download_all_notes_word')->name('notes.download_all.word');
+Route::get('/notes/{id}/download/pdf','UserDashBoardController@download_note_pdf')->name('notes.download.pdf');
+Route::get('/notes/{id}/download/word','UserDashBoardController@download_note_word')->name('notes.download.word');
 
 //-------------------------------------------------------SUBSCRIPTION-------------------------------------
 Route::get('/subscription','UserDashBoardController@subscription_index');
@@ -200,6 +208,15 @@ Route::view('/scan', 'scan');
 
 Route::get('/existing-laws','Pre1992Controller@index');//display all acts
 Route::get('/pre-1992-legislation', function() { return redirect('/existing-laws'); });
+Route::get('/pre_1992_legislation/all_pre_1992_acts/{id}', function($id) {
+    if ($id && $id > 0) {
+        $act = \App\Pre1992LegislationAct::find($id);
+        if ($act) {
+            return redirect('/existing-laws/' . rawurlencode($act->pre_1992_group) . '/' . rawurlencode($act->title) . '/' . $act->id);
+        }
+    }
+    return redirect('/existing-laws');
+});
 
 foreach (['existing-laws', 'existing-law', 'existing_laws', 'pre_1992_legislation'] as $prefix) {
     Route::get('/'.$prefix.'/ajax-data','Pre1992Controller@pre1992_ajax_data');
@@ -282,6 +299,17 @@ foreach (['new-laws', 'new_laws', 'new-law', 'post-1992-legislation', 'post_1992
     Route::get('/'.$prefix.'/executive-acts/pdf_preamble_content/{title}/{id}','ExecutiveActController@pdf_preamble_content');
     Route::get('/'.$prefix.'/executive-acts/pdf-section-content/{title}/{id}','ExecutiveActController@pdf_section_content');
     Route::get('/'.$prefix.'/executive-acts/pdf-full-act-content/{group}/{title}/{id}','ExecutiveActController@pdf_full_act_content');
+
+Route::get('/post_1992_legislation/all_post_1992_acts/{id}', function($id) {
+    if ($id && $id > 0) {
+        $act = \App\Post1992Act::find($id);
+        if ($act) {
+            $group = !empty($act->post_group) ? $act->post_group : 'Acts of Parliament';
+            return redirect('/new-laws/table-of-content/' . rawurlencode($group) . '/' . rawurlencode($act->title) . '/' . $act->id);
+        }
+    }
+    return redirect('/all-new-laws/acts-of-parliament');
+});
 
     // POST 1992 CORE
     Route::get('/'.$prefix.'/ajax-data','Post1992Controller@post1992_ajax_data');
@@ -509,6 +537,12 @@ Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+// Demo mode routes (authenticated, not yet verified)
+Route::middleware('auth')->group(function () {
+    Route::get('/register/choose-plan', 'DemoController@choosePlan')->name('register.choose-plan');
+    Route::post('/register/activate-demo', 'DemoController@activateDemo')->name('register.activate-demo');
+});
+
 // CUSTOM ADMIN DASHBOARD ROUTES
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
     Route::get('/', 'Admin\DashboardController@index')->name('admin.dashboard');
@@ -524,6 +558,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::get('users/continents-preview', 'Admin\UserController@continentsPreview')->name('admin.users.continents-preview');
     Route::get('users/export', 'Admin\UserController@export')->name('admin.users.export');
     Route::delete('users/bulk-destroy', 'Admin\UserController@bulkDestroy')->name('admin.users.bulk-destroy');
+    Route::post('users/{id}/impersonate', 'Admin\UserController@impersonate')->name('admin.users.impersonate');
     Route::resource('users', 'Admin\UserController', ['as' => 'admin']);
     Route::resource('news', 'Admin\NewsController', ['as' => 'admin']);
     Route::get('laws', 'Admin\LawController@index')->name('admin.laws.index');
@@ -549,7 +584,44 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 
     // Sidebar Ads Management
     Route::resource('sidebar-ads', 'Admin\SidebarAdController', ['as' => 'admin'])->only(['index', 'edit', 'update']);
+
+    // Researcher Types Management
+    Route::resource('researcher-types', 'Admin\ResearcherTypeController', ['as' => 'admin']);
+
+    // Demo Settings Management
+    Route::get('demo-settings', 'Admin\DemoSettingController@index')->name('admin.demo-settings.index');
+    Route::post('demo-settings/update', 'Admin\DemoSettingController@update')->name('admin.demo-settings.update');
+
+    // Platform Feature Updates & Tours Management
+    Route::resource('platform-updates', 'Admin\PlatformUpdateController', ['as' => 'admin']);
+    Route::post('platform-updates/{id}/toggle-status', 'Admin\PlatformUpdateController@toggleStatus')->name('admin.platform-updates.toggle');
+
+    // Onboarding Guided Tour Management
+    Route::get('onboarding-tour', 'Admin\OnboardingTourController@index')->name('admin.onboarding-tour.index');
+    Route::post('onboarding-tour/settings', 'Admin\OnboardingTourController@updateSettings')->name('admin.onboarding-tour.settings');
+    Route::post('onboarding-tour/step', 'Admin\OnboardingTourController@storeStep')->name('admin.onboarding-tour.store_step');
+    Route::put('onboarding-tour/step/{id}', 'Admin\OnboardingTourController@updateStep')->name('admin.onboarding-tour.update_step');
+    Route::delete('onboarding-tour/step/{id}', 'Admin\OnboardingTourController@destroyStep')->name('admin.onboarding-tour.destroy_step');
+    Route::post('onboarding-tour/reset-defaults', 'Admin\OnboardingTourController@resetDefaults')->name('admin.onboarding-tour.reset_defaults');
 });
+
+// Legacy User Role Upgrade Route
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/account/upgrade-role', 'AccountUpgradeController@show')->name('account.upgrade.role');
+    Route::post('/account/upgrade-role', 'AccountUpgradeController@store')->name('account.upgrade.role.store');
+});
+
+// User Platform Updates & Tour API routes
+Route::group(['prefix' => 'accounts', 'middleware' => ['auth']], function () {
+    Route::get('platform-updates', 'UserPlatformUpdateController@getUpdates')->name('accounts.updates.list');
+    Route::post('platform-updates/{id}/read', 'UserPlatformUpdateController@markAsRead')->name('accounts.updates.read');
+    Route::post('platform-updates/read-all', 'UserPlatformUpdateController@markAllAsRead')->name('accounts.updates.read_all');
+    Route::post('onboarding-tour/complete', 'UserPlatformUpdateController@completeOnboardingTour')->name('accounts.tour.complete');
+});
+
+// Leave Impersonation route
+Route::post('/impersonate/leave', 'Admin\UserController@leaveImpersonation')->name('impersonate.leave');
+Route::get('/impersonate/leave', 'Admin\UserController@leaveImpersonation')->name('impersonate.leave.get');
 
 // Dedicated Admin Login Routes
 Route::get('/admin/login', 'Admin\LoginController@showLoginForm')->name('admin.login');
