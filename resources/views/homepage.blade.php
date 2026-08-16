@@ -636,13 +636,74 @@
             font-weight: 600;
             font-family: var(--font);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             white-space: nowrap;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            user-select: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .search-btn:hover {
-            transform: scale(1.03);
+            transform: translateY(-1px);
             box-shadow: 0 4px 16px var(--accent-glow);
+        }
+
+        .search-btn:active {
+            transform: scale(0.98);
+        }
+
+        .search-btn.is-searching {
+            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+            pointer-events: none !important;
+            opacity: 0.95;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.45) !important;
+        }
+
+        /* Search Loading Progress Bar & Status Feedback */
+        .search-progress-bar {
+            display: none;
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 12px;
+            position: relative;
+        }
+        .search-progress-bar.active {
+            display: block;
+        }
+        .search-progress-bar .search-progress-fill {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa, #93c5fd, #3b82f6);
+            background-size: 200% 100%;
+            animation: searchProgressAnim 1.2s linear infinite;
+        }
+        @keyframes searchProgressAnim {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .search-status-feedback {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #93c5fd;
+            font-weight: 550;
+            letter-spacing: 0.2px;
+            animation: fadeIn 0.3s ease;
+        }
+        .search-status-feedback.active {
+            display: flex;
         }
 
         .search-hint {
@@ -654,12 +715,22 @@
 
         .search-hint span {
             display: inline-block;
-            padding: 3px 10px;
+            padding: 4px 11px;
             background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 6px;
             margin: 2px;
             font-size: 12px;
             color: var(--text-secondary);
+            cursor: pointer;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            transition: all 0.2s ease;
+        }
+        .search-hint span:hover, .search-hint span:active {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.4);
+            color: #93c5fd;
         }
 
         /* ============================================
@@ -2138,9 +2209,21 @@
                     {{ csrf_field() }}
                     <div class="search-container" id="hero-search-container">
                         <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        <input type="text" name="search_text" id="hero-search-input" placeholder="{{ homepage_setting('slide_0_search_placeholder', 'Search any law, case, or legal document...') }}" autocomplete="off">
-                        <button type="submit" class="search-btn">{{ homepage_setting('slide_0_search_btn', 'Search') }}</button>
+                        <input type="text" name="search_text" id="hero-search-input" placeholder="{{ homepage_setting('slide_0_search_placeholder', 'Search any law, case, or legal document...') }}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                        <button type="submit" class="search-btn" id="hero-search-btn">
+                            <span class="search-btn-content">{{ homepage_setting('slide_0_search_btn', 'Search') }}</span>
+                        </button>
                     </div>
+
+                    <div class="search-progress-bar" id="searchProgressBar">
+                        <div class="search-progress-fill"></div>
+                    </div>
+
+                    <div class="search-status-feedback" id="searchStatusFeedback">
+                        <i class="fa-solid fa-circle-notch fa-spin" style="color: #60a5fa;"></i>
+                        <span>Searching legal database...</span>
+                    </div>
+
                     <div class="search-empty-prompt" id="hero-search-prompt" style="display: none;">
                         <i class="fa-solid fa-triangle-exclamation"></i>
                         <span>Search query cannot be empty. Please enter a keyword to search.</span>
@@ -2883,41 +2966,117 @@
             });
         }
 
-        // Empty search validation prompt
+        // Search Form Execution & iOS Safari Touch Optimization
         const heroSearchForm = document.getElementById('hero-search-form');
+        const heroSearchBtn = document.getElementById('hero-search-btn');
+        const heroSearchInput = document.getElementById('hero-search-input');
+        const heroSearchContainer = document.getElementById('hero-search-container');
+        const heroSearchPrompt = document.getElementById('hero-search-prompt');
+        const searchProgressBar = document.getElementById('searchProgressBar');
+        const searchStatusFeedback = document.getElementById('searchStatusFeedback');
+
+        let isSearchSubmitting = false;
+
+        function triggerHeroSearch(e) {
+            if (isSearchSubmitting) {
+                if (e) e.preventDefault();
+                return false;
+            }
+
+            const query = heroSearchInput ? heroSearchInput.value.trim() : '';
+
+            if (!query) {
+                if (e) e.preventDefault();
+                if (heroSearchContainer) {
+                    heroSearchContainer.classList.remove('error-shake');
+                    void heroSearchContainer.offsetWidth;
+                    heroSearchContainer.classList.add('error-shake');
+                    setTimeout(() => heroSearchContainer.classList.remove('error-shake'), 800);
+                }
+                if (heroSearchPrompt) {
+                    heroSearchPrompt.style.display = 'flex';
+                }
+                if (heroSearchInput) heroSearchInput.focus();
+                return false;
+            }
+
+            // Valid query -> Set searching state immediately
+            isSearchSubmitting = true;
+
+            // Retract mobile software keyboard immediately to avoid layout thrashing
+            if (heroSearchInput) {
+                heroSearchInput.blur();
+            }
+
+            // Immediate visual feedback on the button & progress bar
+            if (heroSearchBtn) {
+                heroSearchBtn.classList.add('is-searching');
+                heroSearchBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Searching...</span>';
+            }
+
+            if (searchProgressBar) {
+                searchProgressBar.classList.add('active');
+            }
+
+            if (searchStatusFeedback) {
+                searchStatusFeedback.classList.add('active');
+            }
+
+            if (heroSearchPrompt) {
+                heroSearchPrompt.style.display = 'none';
+            }
+
+            // If not native submit event, submit form programmatically
+            if (e && e.type !== 'submit') {
+                heroSearchForm.submit();
+            }
+            return true;
+        }
+
         if (heroSearchForm) {
             heroSearchForm.addEventListener('submit', (e) => {
-                const input = document.getElementById('hero-search-input');
-                const container = document.getElementById('hero-search-container');
-                const prompt = document.getElementById('hero-search-prompt');
-
-                if (!input || !input.value.trim()) {
-                    e.preventDefault();
-
-                    if (container) {
-                        container.classList.remove('error-shake');
-                        void container.offsetWidth;
-                        container.classList.add('error-shake');
-                        setTimeout(() => container.classList.remove('error-shake'), 800);
-                    }
-
-                    if (prompt) {
-                        prompt.style.display = 'flex';
-                    }
-
-                    if (input) input.focus();
+                if (!triggerHeroSearch(e)) {
+                    // Handled inside triggerHeroSearch
                 }
             });
 
-            const heroInput = document.getElementById('hero-search-input');
-            if (heroInput) {
-                heroInput.addEventListener('input', () => {
-                    const prompt = document.getElementById('hero-search-prompt');
-                    if (prompt && heroInput.value.trim()) {
-                        prompt.style.display = 'none';
+            // Handle touchstart / pointerdown for instantaneous tap reaction on iOS Safari
+            if (heroSearchBtn) {
+                heroSearchBtn.addEventListener('pointerdown', (e) => {
+                    if (e.pointerType === 'touch') {
+                        const query = heroSearchInput ? heroSearchInput.value.trim() : '';
+                        if (query && !isSearchSubmitting) {
+                            // Fast trigger for touch users
+                            triggerHeroSearch(null);
+                        }
                     }
                 });
             }
+
+            if (heroSearchInput) {
+                heroSearchInput.addEventListener('input', () => {
+                    if (heroSearchPrompt && heroSearchInput.value.trim()) {
+                        heroSearchPrompt.style.display = 'none';
+                    }
+                });
+                
+                // Allow pressing Enter key directly
+                heroSearchInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        triggerHeroSearch(null);
+                    }
+                });
+            }
+
+            // Popular tag quick-search clicks
+            document.querySelectorAll('.search-hint span').forEach(tag => {
+                tag.addEventListener('click', () => {
+                    if (heroSearchInput) {
+                        heroSearchInput.value = tag.innerText.trim();
+                        triggerHeroSearch(null);
+                    }
+                });
+            });
         }
 
         // Initialize slider
