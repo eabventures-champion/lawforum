@@ -380,6 +380,7 @@
         padding: 12px 24px !important;
         border-radius: 12px !important;
         line-height: 1.5 !important;
+        border: 1px solid transparent !important;
         transform: translateY(24px);
         opacity: 0;
         transition: all 0.3s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
@@ -388,10 +389,10 @@
 
     .mobile-nav-panel a.active {
         color: #ffffff !important;
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(37, 99, 235, 0.35) 100%) !important;
-        border: 1px solid rgba(59, 130, 246, 0.45) !important;
-        font-weight: 700 !important;
-        box-shadow: 0 4px 20px rgba(59, 130, 246, 0.25) !important;
+        background: rgba(59, 130, 246, 0.15) !important;
+        border: 1px solid rgba(59, 130, 246, 0.3) !important;
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.2) !important;
+        font-weight: 600 !important;
     }
 
     .mobile-nav-panel.open a {
@@ -421,6 +422,7 @@
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
+        z-index: 1000000 !important;
     }
 
     .mobile-nav-panel.open .mobile-nav-close {

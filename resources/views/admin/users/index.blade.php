@@ -3,6 +3,122 @@
 @section('title', 'Users Management')
 
 @section('content')
+<style>
+    /* ── User Action Dropdown ────────────────────────────── */
+    .card-table {
+        overflow: visible !important;
+    }
+    .custom-table {
+        overflow: visible !important;
+    }
+    .custom-table tbody tr {
+        position: relative;
+    }
+    .user-action-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .btn-action-dropdown-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 6px 13px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #e2e8f0;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        outline: none;
+    }
+    .btn-action-dropdown-toggle:hover,
+    .btn-action-dropdown-toggle.active {
+        background: rgba(59, 130, 246, 0.15);
+        color: #93c5fd;
+        border-color: rgba(59, 130, 246, 0.35);
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.2);
+    }
+    .btn-action-dropdown-toggle .toggle-icon {
+        font-size: 10px;
+        transition: transform 0.2s ease;
+        opacity: 0.8;
+    }
+    .btn-action-dropdown-toggle.active .toggle-icon {
+        transform: rotate(180deg);
+        color: #60a5fa;
+    }
+    .user-action-dropdown-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: calc(100% + 6px);
+        background: #0f172a;
+        background: linear-gradient(180deg, #131b2e 0%, #0b1120 100%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 10px;
+        padding: 6px;
+        min-width: 155px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 15px rgba(59, 130, 246, 0.12);
+        z-index: 1000;
+        animation: fadeInMenu 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .user-action-dropdown-menu.show {
+        display: block;
+    }
+    @keyframes fadeInMenu {
+        from { opacity: 0; transform: translateY(-4px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .action-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        width: 100%;
+        padding: 8px 12px;
+        font-size: 12.5px;
+        font-weight: 500;
+        color: #cbd5e1;
+        background: transparent;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        text-align: left;
+        text-decoration: none;
+        transition: all 0.15s ease;
+        box-sizing: border-box;
+    }
+    .action-dropdown-item i {
+        width: 14px;
+        font-size: 13px;
+        text-align: center;
+    }
+    .action-dropdown-item.impersonate-item {
+        color: #60a5fa;
+    }
+    .action-dropdown-item.impersonate-item:hover {
+        background: rgba(59, 130, 246, 0.15);
+        color: #93c5fd;
+    }
+    .action-dropdown-item.edit-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #ffffff;
+    }
+    .action-dropdown-item.delete-item {
+        color: #f87171;
+    }
+    .action-dropdown-item.delete-item:hover {
+        background: rgba(239, 68, 68, 0.15);
+        color: #fca5a5;
+    }
+    .action-dropdown-divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.08);
+        margin: 4px 0;
+    }
+</style>
+
 <div class="page-header">
     <div>
         <h1 class="page-title">Users Management</h1>
@@ -296,6 +412,41 @@
                 fetchUsers(link.getAttribute('href'));
             }
         });
+    });
+
+    // User Action Dropdown Toggle
+    window.toggleUserActionDropdown = function(btn, event) {
+        if (event) {
+            event.stopPropagation();
+        }
+        const dropdown = btn.closest('.user-action-dropdown');
+        const menu = dropdown.querySelector('.user-action-dropdown-menu');
+        const isShown = menu.classList.contains('show');
+
+        // Close any other open dropdowns first
+        document.querySelectorAll('.user-action-dropdown-menu.show').forEach(function(m) {
+            m.classList.remove('show');
+        });
+        document.querySelectorAll('.btn-action-dropdown-toggle.active').forEach(function(b) {
+            b.classList.remove('active');
+        });
+
+        if (!isShown) {
+            menu.classList.add('show');
+            btn.classList.add('active');
+        }
+    };
+
+    // Close action dropdowns when clicking anywhere outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.user-action-dropdown')) {
+            document.querySelectorAll('.user-action-dropdown-menu.show').forEach(function(m) {
+                m.classList.remove('show');
+            });
+            document.querySelectorAll('.btn-action-dropdown-toggle.active').forEach(function(b) {
+                b.classList.remove('active');
+            });
+        }
     });
 
     function submitBulkDelete() {

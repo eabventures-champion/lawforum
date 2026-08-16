@@ -1683,32 +1683,33 @@
         }
 
         .mobile-nav-close {
-            position: absolute;
-            top: 24px;
-            right: 24px;
+            position: absolute !important;
+            top: 24px !important;
+            right: 24px !important;
             background: none !important;
             border: none !important;
             padding: 0 !important;
             margin: 0 !important;
             line-height: 1 !important;
-            color: var(--text-primary);
-            font-size: 28px;
-            cursor: pointer;
+            color: var(--text-primary) !important;
+            font-size: 28px !important;
+            cursor: pointer !important;
             opacity: 0;
             transform: rotate(-90deg) scale(0.5);
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s;
             box-shadow: none !important;
             outline: none !important;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 28px !important;
+            height: 28px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 1000000 !important;
         }
 
         .mobile-nav-panel.open .mobile-nav-close {
-            opacity: 1;
-            transform: rotate(0) scale(1);
+            opacity: 1 !important;
+            transform: rotate(0) scale(1) !important;
         }
 
         /* Hide indicators and feedback trigger button when mobile nav panel is open */

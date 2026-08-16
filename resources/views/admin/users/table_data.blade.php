@@ -13,10 +13,10 @@
         @forelse($users as $user)
             <tr>
                 <td style="text-align: center; vertical-align: middle;">
-                    @if($user->id !== auth()->id())
+                    @if(!$user->isAdmin() && $user->id !== auth()->id())
                         <input type="checkbox" class="user-checkbox" value="{{ $user->id }}" style="width: 16px; height: 16px; cursor: pointer; vertical-align: middle;">
                     @else
-                        <i class="fa-solid fa-user-shield" title="Current Admin" style="opacity: 0.5;"></i>
+                        <i class="fa-solid fa-user-shield" title="Admin Account Protected" style="opacity: 0.6; color: #60a5fa;"></i>
                     @endif
                 </td>
                 <td>{{ $user->name }} {{ $user->lname }}</td>
@@ -76,25 +76,39 @@
                     @endif
                 </td>
                 <td>
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        @if($user->id !== auth()->id())
-                            <form action="{{ route('admin.users.impersonate', $user->id) }}" method="POST" style="margin: 0;">
-                                @csrf
-                                <button type="submit" class="btn btn-action" title="Login / Enter dashboard as {{ $user->name }}" style="padding: 6px 12px; font-size: 12px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-weight: 600; transition: all 0.2s;">
-                                    <i class="fa-solid fa-right-to-bracket"></i> Impersonate
-                                </button>
-                            </form>
-                        @endif
-                        <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-secondary btn-action" style="padding: 6px 12px; font-size: 12px;">
-                            <i class="fa-solid fa-pen-to-square"></i> Edit
-                        </a>
-                        <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-action" style="padding: 6px 12px; font-size: 12px;">
-                                <i class="fa-solid fa-trash"></i> Delete
-                            </button>
-                        </form>
+                    <div class="user-action-dropdown">
+                        <button type="button" class="btn-action-dropdown-toggle" onclick="toggleUserActionDropdown(this, event)">
+                            <span>Actions</span>
+                            <i class="fa-solid fa-chevron-down toggle-icon"></i>
+                        </button>
+                        <div class="user-action-dropdown-menu">
+                            @if(!$user->isAdmin() && $user->id !== auth()->id())
+                                <form action="{{ route('admin.users.impersonate', $user->id) }}" method="POST" style="margin: 0;">
+                                    @csrf
+                                    <button type="submit" class="action-dropdown-item impersonate-item">
+                                        <i class="fa-solid fa-right-to-bracket"></i>
+                                        <span>Impersonate</span>
+                                    </button>
+                                </form>
+                            @endif
+
+                            <a href="{{ route('admin.users.edit', $user->id) }}" class="action-dropdown-item edit-item">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                <span>Edit</span>
+                            </a>
+
+                            @if(!$user->isAdmin() && $user->id !== auth()->id())
+                                <div class="action-dropdown-divider"></div>
+                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?')" style="margin: 0;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="action-dropdown-item delete-item">
+                                        <i class="fa-solid fa-trash"></i>
+                                        <span>Delete</span>
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
                     </div>
                 </td>
             </tr>

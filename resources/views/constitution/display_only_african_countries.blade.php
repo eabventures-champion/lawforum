@@ -497,10 +497,19 @@
             padding: 12px 24px;
             border-radius: 12px;
             line-height: 1.5;
+            border: 1px solid transparent;
             transform: translateY(24px);
             opacity: 0;
             transition: all 0.3s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
             text-decoration: none !important;
+        }
+
+        .mobile-nav-panel a.active {
+            color: #ffffff !important;
+            background: rgba(59, 130, 246, 0.15) !important;
+            border: 1px solid rgba(59, 130, 246, 0.3) !important;
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.2) !important;
+            font-weight: 600 !important;
         }
 
         .mobile-nav-panel.open a {
@@ -517,6 +526,11 @@
         .mobile-nav-panel a:hover {
             color: var(--text-primary);
             background: rgba(255, 255, 255, 0.05);
+        }
+
+        .mobile-nav-panel a.active:hover {
+            background: rgba(59, 130, 246, 0.22) !important;
+            color: #ffffff !important;
         }
 
         .mobile-nav-close {
@@ -638,20 +652,7 @@
         <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')">
             <i class="fa-solid fa-xmark"></i>
         </button>
-        @foreach($headerMenus as $menu)
-            @if($menu->is_dropdown)
-                @php
-                    $url = '#';
-                    if ($menu->children && count($menu->children) > 0) {
-                        $firstChild = $menu->children->first();
-                        $url = $firstChild->custom_content ? route('dynamic.page', $firstChild->slug) : $firstChild->url;
-                    }
-                @endphp
-                <a href="{{ $url }}">{{ $menu->title }}</a>
-            @else
-                <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}">{{ $menu->title }}</a>
-            @endif
-        @endforeach
+        @include('partials._nav_mobile_menu')
         <div style="height: 16px;"></div>
         @guest
             <a href="/">Why Choose Us</a>

@@ -14,9 +14,13 @@
         </div>
     @else
         @if($ad->placeholder_type === 'news_feed')
-            @include('ads.placeholder_news_feed', ['ad' => $ad])
+            <div style="margin-bottom: 20px;">
+                @include('ads.placeholder_news_feed', ['ad' => $ad])
+            </div>
         @else
-            @include('ads.placeholder_advertise', ['ad' => $ad])
+            <div style="margin-bottom: 20px;">
+                @include('ads.placeholder_advertise', ['ad' => $ad])
+            </div>
         @endif
     @endif
 @endif

@@ -303,6 +303,77 @@
             display: none !important;
         }
 
+        /* ── Sidebar Submenu Accordion ────────────── */
+        .sidebar-submenu-toggle {
+            position: relative;
+            cursor: pointer;
+        }
+        .sidebar-submenu-toggle .submenu-arrow {
+            margin-left: auto;
+            font-size: 10px;
+            color: var(--text-muted);
+            transition: transform 0.25s ease;
+        }
+        .menu-item-has-submenu.open .sidebar-submenu-toggle .submenu-arrow {
+            transform: rotate(180deg);
+            color: #60a5fa;
+        }
+        .sidebar-submenu-list {
+            display: none;
+            list-style: none;
+            padding: 4px 0 6px 0;
+            margin: 4px 0 6px 14px;
+            border-left: 2px solid rgba(59, 130, 246, 0.25);
+        }
+        .sidebar-submenu-list.show {
+            display: block;
+            animation: fadeInSubmenu 0.25s ease;
+        }
+        @keyframes fadeInSubmenu {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .sidebar-submenu-heading {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #60a5fa;
+            padding: 6px 12px 2px;
+            opacity: 0.85;
+        }
+        .sidebar-submenu-link {
+            display: flex;
+            align-items: center;
+            padding: 6px 12px !important;
+            font-size: 12px !important;
+            color: var(--text-secondary) !important;
+            border-radius: 6px !important;
+            text-decoration: none !important;
+            transition: all 0.2s ease !important;
+        }
+        .sidebar-submenu-link:hover {
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.06) !important;
+            padding-left: 15px !important;
+        }
+        .sidebar.collapsed .sidebar-submenu-list,
+        .sidebar.collapsed .submenu-arrow {
+            display: none !important;
+        }
+
+        /* ── Sidebar Legal Library: Show only on mobile screens (<= 768px) ── */
+        @media (min-width: 769px) {
+            .sidebar-legal-library-item {
+                display: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .sidebar-legal-library-item {
+                display: block !important;
+            }
+        }
+
         /* Sidebar Footer */
         .sidebar-footer {
             padding: 14px 16px 24px 16px;
@@ -2014,6 +2085,9 @@
                     </a>
                 </li>
 
+                {{-- Legal Library Category Menus (Constitution, Existing Laws, New Laws, Case Laws) --}}
+                @include('partials._sidebar_legal_library')
+
                 @if(auth()->user()->isAdmin())
                 <li class="menu-label">Admin</li>
                 <li class="menu-item">
@@ -2489,9 +2563,35 @@
             }
         });
 
-        // Close mobile sidebar on navigation click
+        // Submenu Accordion Toggle for Legal Library
+        window.toggleSidebarSubmenu = function(submenuId, triggerEl) {
+            const submenu = document.getElementById(submenuId);
+            const parentItem = triggerEl.closest('.menu-item-has-submenu');
+            if (!submenu || !parentItem) return;
+
+            const isOpen = submenu.classList.contains('show');
+            if (isOpen) {
+                submenu.classList.remove('show');
+                parentItem.classList.remove('open');
+            } else {
+                // Close other open submenus for accordion behavior
+                document.querySelectorAll('.sidebar-submenu-list.show').forEach(function(list) {
+                    if (list.id !== submenuId) {
+                        list.classList.remove('show');
+                        list.closest('.menu-item-has-submenu')?.classList.remove('open');
+                    }
+                });
+                submenu.classList.add('show');
+                parentItem.classList.add('open');
+            }
+        };
+
+        // Close mobile sidebar on navigation click (except submenu toggles)
         document.querySelectorAll('#dashboardSidebar .sidebar-menu a').forEach(function(link) {
-            link.addEventListener('click', function() {
+            link.addEventListener('click', function(e) {
+                if (link.classList.contains('sidebar-submenu-toggle')) {
+                    return;
+                }
                 if (window.innerWidth <= 768) {
                     closeMobileSidebar();
                 }

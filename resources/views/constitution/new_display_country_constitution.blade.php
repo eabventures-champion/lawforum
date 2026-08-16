@@ -1245,32 +1245,33 @@
         }
 
         .mobile-nav-close {
-            position: absolute;
-            top: 24px;
-            right: 24px;
+            position: absolute !important;
+            top: 24px !important;
+            right: 24px !important;
             background: none !important;
             border: none !important;
             padding: 0 !important;
             margin: 0 !important;
             line-height: 1 !important;
-            color: var(--text-primary);
-            font-size: 28px;
-            cursor: pointer;
+            color: var(--text-primary) !important;
+            font-size: 28px !important;
+            cursor: pointer !important;
             opacity: 0;
             transform: rotate(-90deg) scale(0.5);
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s;
             box-shadow: none !important;
             outline: none !important;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 28px !important;
+            height: 28px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 1000000 !important;
         }
 
         .mobile-nav-panel.open .mobile-nav-close {
-            opacity: 1;
-            transform: rotate(0) scale(1);
+            opacity: 1 !important;
+            transform: rotate(0) scale(1) !important;
         }
 
         .nav-logo-text {
@@ -1447,8 +1448,8 @@
 
     <!-- Mobile Nav Panel (Image 2 Standard) -->
     <div class="mobile-nav-panel" id="mobileNav">
-        <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')">
-            <i class="fa-solid fa-xmark"></i>
+        <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')" style="position: fixed !important; top: 24px !important; right: 24px !important; left: auto !important; bottom: auto !important; margin: 0 !important; background: transparent !important; border: none !important; color: #f8fafc !important; font-size: 28px !important; cursor: pointer !important; width: 32px !important; height: 32px !important; display: flex !important; align-items: center !important; justify-content: center !important; z-index: 10000000 !important; box-shadow: none !important; outline: none !important; opacity: 1 !important; transform: none !important;" title="Close Menu">
+            <i class="fa-solid fa-xmark" style="font-size: 24px; color: #f8fafc;"></i>
         </button>
         @include('partials._nav_mobile_menu')
         <div style="height: 16px;"></div>

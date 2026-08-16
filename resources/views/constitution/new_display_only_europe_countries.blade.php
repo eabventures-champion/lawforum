@@ -498,10 +498,19 @@
             padding: 12px 24px;
             border-radius: 12px;
             line-height: 1.5;
+            border: 1px solid transparent;
             transform: translateY(24px);
             opacity: 0;
             transition: all 0.3s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
             text-decoration: none !important;
+        }
+
+        .mobile-nav-panel a.active {
+            color: #ffffff !important;
+            background: rgba(59, 130, 246, 0.15) !important;
+            border: 1px solid rgba(59, 130, 246, 0.3) !important;
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.2) !important;
+            font-weight: 600 !important;
         }
 
         .mobile-nav-panel.open a {
@@ -520,22 +529,39 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
+        .mobile-nav-panel a.active:hover {
+            background: rgba(59, 130, 246, 0.22) !important;
+            color: #ffffff !important;
+        }
+
         .mobile-nav-close {
-            position: absolute;
-            top: 24px;
-            right: 24px;
+            position: absolute !important;
+            top: 24px !important;
+            right: 24px !important;
             background: none !important;
             border: none !important;
             padding: 0 !important;
             margin: 0 !important;
-            color: var(--text-primary);
-            font-size: 28px;
-            cursor: pointer;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            line-height: 1 !important;
+            color: var(--text-primary) !important;
+            font-size: 28px !important;
+            cursor: pointer !important;
+            opacity: 0;
+            transform: rotate(-90deg) scale(0.5);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s;
+            box-shadow: none !important;
+            outline: none !important;
+            width: 28px !important;
+            height: 28px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 1000000 !important;
+        }
+
+        .mobile-nav-panel.open .mobile-nav-close {
+            opacity: 1 !important;
+            transform: rotate(0) scale(1) !important;
         }
 
         .nav-logo-text {
@@ -639,20 +665,7 @@
         <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')">
             <i class="fa-solid fa-xmark"></i>
         </button>
-        @foreach($headerMenus as $menu)
-            @if($menu->is_dropdown)
-                @php
-                    $url = '#';
-                    if ($menu->children && count($menu->children) > 0) {
-                        $firstChild = $menu->children->first();
-                        $url = $firstChild->custom_content ? route('dynamic.page', $firstChild->slug) : $firstChild->url;
-                    }
-                @endphp
-                <a href="{{ $url }}">{{ $menu->title }}</a>
-            @else
-                <a href="{{ $menu->custom_content ? route('dynamic.page', $menu->slug) : $menu->url }}">{{ $menu->title }}</a>
-            @endif
-        @endforeach
+        @include('partials._nav_mobile_menu')
         <div style="height: 16px;"></div>
         @guest
             <a href="/">Why Choose Us</a>

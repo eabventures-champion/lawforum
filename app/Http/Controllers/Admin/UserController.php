@@ -487,6 +487,10 @@ class UserController extends Controller
             return redirect()->route('admin.users.index')->with('error', 'You cannot delete your own account.');
         }
 
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.users.index')->with('error', 'Admin accounts are protected and cannot be deleted.');
+        }
+
         $user->delete();
         return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
     }
@@ -500,12 +504,19 @@ class UserController extends Controller
             return redirect()->route('admin.users.index')->with('error', 'No users selected for deletion.');
         }
 
-        // Prevent self-deletion
-        if (in_array(auth()->id(), $ids)) {
-            return redirect()->route('admin.users.index')->with('error', 'You cannot delete your own account.');
+        // Prevent deleting admin accounts or self
+        $adminIds = User::where(function($q) {
+            $q->where('role_id', 1)
+              ->orWhere('email', 'admin@admin.com');
+        })->pluck('id')->toArray();
+        $adminIds[] = auth()->id();
+
+        $safeIds = array_diff($ids, $adminIds);
+        if (empty($safeIds)) {
+            return redirect()->route('admin.users.index')->with('error', 'Admin accounts are protected and cannot be deleted.');
         }
 
-        User::whereIn('id', $ids)->delete();
+        User::whereIn('id', $safeIds)->delete();
 
         return redirect()->route('admin.users.index')->with('success', 'Selected users deleted successfully.');
     }
