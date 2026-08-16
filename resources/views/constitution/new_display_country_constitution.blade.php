@@ -1443,13 +1443,10 @@
         </div>
     </nav>
 
-    <!-- Main Scrollable Wrapper -->
-    <div class="main-wrapper-scrollable">
-
-    <!-- Mobile Nav Panel (Image 2 Standard) -->
+    <!-- Mobile Nav Panel -->
     <div class="mobile-nav-panel" id="mobileNav">
-        <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')" style="position: fixed !important; top: 24px !important; right: 24px !important; left: auto !important; bottom: auto !important; margin: 0 !important; background: transparent !important; border: none !important; color: #f8fafc !important; font-size: 28px !important; cursor: pointer !important; width: 32px !important; height: 32px !important; display: flex !important; align-items: center !important; justify-content: center !important; z-index: 10000000 !important; box-shadow: none !important; outline: none !important; opacity: 1 !important; transform: none !important;" title="Close Menu">
-            <i class="fa-solid fa-xmark" style="font-size: 24px; color: #f8fafc;"></i>
+        <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')">
+            <i class="fa-solid fa-xmark"></i>
         </button>
         @include('partials._nav_mobile_menu')
         <div style="height: 16px;"></div>
@@ -1463,6 +1460,9 @@
             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="color: #f43f5e;">Sign Out</a>
         @endguest
     </div>
+
+    <!-- Main Scrollable Wrapper -->
+    <div class="main-wrapper-scrollable">
 
     <!-- ====== MAIN CONTAINER ====== -->
     <div class="main-container">

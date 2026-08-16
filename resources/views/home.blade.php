@@ -116,18 +116,18 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
             background: var(--accent-gradient);
-            box-shadow: 0 6px 16px var(--accent-glow);
-            font-size: 16px;
+            box-shadow: 0 6px 18px var(--accent-glow);
+            font-size: 18px;
             color: #fff;
             flex-shrink: 0;
         }
 
         .sidebar-logo-text {
-            font-size: 17px;
+            font-size: 18px;
             font-weight: 800;
             color: #fff;
             letter-spacing: -0.4px;
@@ -704,15 +704,16 @@
 
         /* Header Icon Buttons */
         .header-icon-btn {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--text-secondary);
+            font-size: 18px;
             cursor: pointer;
             transition: var(--transition-smooth);
             position: relative;
@@ -720,9 +721,10 @@
         }
 
         .header-icon-btn:hover {
-            background: rgba(255, 255, 255, 0.07);
+            background: rgba(255, 255, 255, 0.08);
             color: #fff;
-            border-color: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
         }
 
         .header-icon-badge {
@@ -915,62 +917,77 @@
 
         /* ── Welcome & Account Unified Row Card ───────────── */
         .welcome-account-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 22px 28px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.82) 0%, rgba(10, 15, 29, 0.92) 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(96, 165, 250, 0.35);
+            border-radius: 22px;
+            padding: 24px 30px;
             margin-bottom: 28px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35), 0 0 25px rgba(59, 130, 246, 0.08);
             transition: var(--transition-smooth);
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-account-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(96, 165, 250, 0.6) 20%, rgba(245, 158, 11, 0.4) 80%, transparent 100%);
         }
 
         .welcome-info-main {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 18px;
             flex-shrink: 0;
         }
 
         .avatar-circle {
-            width: 52px;
-            height: 52px;
+            width: 58px;
+            height: 58px;
             border-radius: 50%;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(29, 78, 216, 0.1) 100%);
-            border: 2px solid rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(29, 78, 216, 0.15) 100%);
+            border: 2px solid rgba(96, 165, 250, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
-            color: var(--accent-color);
-            font-weight: 700;
-            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.15);
+            font-size: 22px;
+            color: #93c5fd;
+            font-weight: 800;
+            box-shadow: 0 4px 18px rgba(59, 130, 246, 0.25);
             flex-shrink: 0;
         }
 
         .welcome-text h2 {
-            font-size: 19px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 3px;
+            font-size: 21px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 4px;
             letter-spacing: -0.3px;
+            line-height: 1.25;
         }
 
         .welcome-text p {
-            font-size: 13px;
-            color: var(--text-secondary);
+            font-size: 14.5px;
+            font-weight: 500;
+            color: #94a3b8;
         }
 
         .welcome-meta-row {
             display: flex;
             align-items: center;
-            gap: 22px;
+            gap: 24px;
             flex-wrap: wrap;
             margin-left: auto;
         }
@@ -978,30 +995,34 @@
         .welcome-meta-item {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            align-items: center;
+            text-align: center;
+            gap: 6px;
         }
 
         .welcome-meta-item .meta-label {
-            font-size: 10px;
-            font-weight: 700;
+            font-size: 11px;
+            font-weight: 750;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: var(--text-secondary);
+            letter-spacing: 0.9px;
+            color: #94a3b8;
+            text-align: center;
         }
 
         .welcome-meta-item .meta-value {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            font-size: 13.5px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 650;
             color: var(--text-primary);
         }
 
         .welcome-meta-divider {
             width: 1px;
-            height: 38px;
-            background: var(--border-color);
+            height: 42px;
+            background: rgba(255, 255, 255, 0.1);
             flex-shrink: 0;
         }
 
@@ -1044,36 +1065,36 @@
         .btn-become-publisher {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
+            gap: 8px;
             margin-top: 6px;
-            padding: 4px 12px;
+            padding: 5px 14px;
             border-radius: 100px;
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.1) 100%);
-            border: 1px solid rgba(245, 158, 11, 0.35);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(217, 119, 6, 0.12) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.4);
             color: #fbbf24;
-            font-size: 11.5px;
-            font-weight: 600;
+            font-size: 12.5px;
+            font-weight: 700;
             text-decoration: none !important;
             transition: all 0.25s ease;
-            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1);
+            box-shadow: 0 2px 10px rgba(245, 158, 11, 0.15);
             width: fit-content;
             cursor: pointer;
         }
 
         .btn-become-publisher:hover {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.2) 100%);
-            border-color: rgba(245, 158, 11, 0.6);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.3) 0%, rgba(217, 119, 6, 0.22) 100%);
+            border-color: rgba(245, 158, 11, 0.7);
             color: #fff;
             transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25);
+            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
         }
 
         .badge-publisher-pill {
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 800;
-            padding: 1px 6px;
+            padding: 2px 7px;
             border-radius: 100px;
-            background: rgba(245, 158, 11, 0.25);
+            background: rgba(245, 158, 11, 0.3);
             color: #fbbf24;
             letter-spacing: 0.5px;
         }
@@ -1211,30 +1232,31 @@
         .type-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 5px 12px;
+            gap: 7px;
+            padding: 6px 14px;
             border-radius: 100px;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 13.5px;
+            font-weight: 650;
         }
 
-        .type-badge.researcher { background: rgba(139,92,246,0.1); color: #a78bfa; border: 1px solid rgba(139,92,246,0.2); }
-        .type-badge.student { background: rgba(59,130,246,0.1); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
-        .type-badge.lawyer { background: rgba(245,158,11,0.1); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+        .type-badge.researcher { background: rgba(139,92,246,0.14); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.3); }
+        .type-badge.student { background: rgba(59,130,246,0.14); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
+        .type-badge.lawyer { background: rgba(245,158,11,0.14); color: #fde68a; border: 1px solid rgba(245,158,11,0.3); }
+        .type-badge.profession-badge { background: rgba(16,185,129,0.14); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
 
         .demo-status-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 5px 12px;
+            padding: 6px 13px;
             border-radius: 100px;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 650;
         }
 
-        .demo-status-badge.active { background: rgba(16,185,129,0.1); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
-        .demo-status-badge.extension { background: rgba(245,158,11,0.1); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
-        .demo-status-badge.expired { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+        .demo-status-badge.active { background: rgba(16,185,129,0.14); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+        .demo-status-badge.extension { background: rgba(245,158,11,0.14); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+        .demo-status-badge.expired { background: rgba(239,68,68,0.14); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
 
         .countdown-ring {
             position: relative;
@@ -1400,30 +1422,30 @@
         .quick-search-header-btn {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            padding: 7px 14px;
-            border-radius: 10px;
-            background: rgba(59, 130, 246, 0.12);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            color: #60a5fa;
-            font-size: 12.5px;
-            font-weight: 600;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 12px;
+            background: rgba(59, 130, 246, 0.14);
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            color: #93c5fd;
+            font-size: 13.5px;
+            font-weight: 650;
             text-decoration: none !important;
             transition: var(--transition-smooth);
             margin-right: 4px;
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.12);
         }
 
         .quick-search-header-btn:hover {
-            background: rgba(59, 130, 246, 0.24);
-            border-color: rgba(59, 130, 246, 0.6);
+            background: rgba(59, 130, 246, 0.28);
+            border-color: rgba(59, 130, 246, 0.7);
             color: #fff;
             transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
         }
 
         .quick-search-header-btn i {
-            font-size: 12px;
+            font-size: 14px;
         }
 
         [data-theme="light"] .quick-search-header-btn {
@@ -1806,19 +1828,36 @@
             .top-header-actions {
                 flex: 1;
                 justify-content: flex-end;
-                gap: 8px !important;
+                gap: 10px !important;
             }
             .quick-search-header-btn {
-                padding: 7px 12px !important;
+                padding: 8px 14px !important;
                 flex: 1;
-                max-width: 160px;
+                max-width: 165px;
                 justify-content: center;
-                gap: 6px !important;
+                gap: 7px !important;
+                border-radius: 10px !important;
             }
             .quick-search-header-btn span {
                 display: inline !important;
-                font-size: 12px !important;
+                font-size: 13px !important;
+                font-weight: 700 !important;
                 white-space: nowrap;
+            }
+            .quick-search-header-btn i {
+                font-size: 13.5px !important;
+            }
+            .header-icon-btn {
+                width: 42px !important;
+                height: 42px !important;
+                font-size: 18px !important;
+                border-radius: 11px !important;
+            }
+            .mobile-menu-toggle i {
+                font-size: 18px !important;
+            }
+            #notificationBellBtn i {
+                font-size: 18px !important;
             }
             .main-content-area {
                 margin-left: 0 !important;
@@ -1883,79 +1922,97 @@
             }
             .welcome-account-card {
                 width: 100% !important;
-                padding: 18px 14px !important;
-                border-radius: 16px !important;
-                gap: 14px !important;
+                padding: 20px 16px !important;
+                border-radius: 18px !important;
+                gap: 16px !important;
                 margin-bottom: 18px !important;
-                background: linear-gradient(145deg, rgba(17, 24, 39, 0.9) 0%, rgba(15, 23, 42, 0.98) 100%) !important;
-                border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+                background: linear-gradient(145deg, rgba(17, 24, 39, 0.92) 0%, rgba(11, 17, 33, 0.98) 100%) !important;
+                border: 1px solid rgba(255, 255, 255, 0.12) !important;
+                border-top: 1px solid rgba(96, 165, 250, 0.4) !important;
+                box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(59, 130, 246, 0.08) !important;
             }
             .welcome-info-main {
                 width: 100% !important;
-                gap: 12px !important;
+                gap: 14px !important;
                 padding-bottom: 16px !important;
-                margin-bottom: 4px !important;
+                margin-bottom: 2px !important;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
             }
             .avatar-circle {
-                width: 46px !important;
-                height: 46px !important;
-                font-size: 18px !important;
-                border-width: 1.5px !important;
+                width: 52px !important;
+                height: 52px !important;
+                font-size: 20px !important;
+                border-width: 2px !important;
             }
             .welcome-text h2 {
-                font-size: 16px !important;
-                margin-bottom: 2px !important;
+                font-size: 18px !important;
+                font-weight: 800 !important;
+                margin-bottom: 3px !important;
                 line-height: 1.3 !important;
             }
             .welcome-text p {
-                font-size: 12px !important;
+                font-size: 13.5px !important;
                 margin-bottom: 6px !important;
+                color: #94a3b8 !important;
             }
             .btn-become-publisher {
-                padding: 4px 10px !important;
-                font-size: 11px !important;
+                padding: 5px 12px !important;
+                font-size: 12px !important;
                 margin-top: 6px !important;
                 margin-bottom: 2px !important;
+            }
+            .badge-publisher-pill {
+                font-size: 9.5px !important;
             }
             .welcome-meta-row {
                 width: 100% !important;
                 display: grid !important;
-                grid-template-columns: 1fr 1fr 1fr !important;
-                align-items: start !important;
-                gap: 6px !important;
+                grid-template-columns: 1fr 1fr !important;
+                align-items: center !important;
+                justify-items: center !important;
+                gap: 14px !important;
                 margin-left: 0 !important;
-                padding-top: 4px !important;
+                padding-top: 6px !important;
+            }
+            .welcome-meta-divider {
+                display: none !important;
             }
             .welcome-meta-item {
                 min-width: 0 !important;
+                width: 100% !important;
                 display: flex !important;
                 flex-direction: column !important;
-                gap: 4px !important;
+                align-items: center !important;
+                text-align: center !important;
+                gap: 5px !important;
             }
             .welcome-meta-item .meta-label {
-                font-size: 8.5px !important;
-                letter-spacing: 0.4px !important;
+                font-size: 10px !important;
+                letter-spacing: 0.6px !important;
                 white-space: nowrap !important;
                 text-transform: uppercase !important;
-                color: var(--text-muted) !important;
-                font-weight: 700 !important;
+                color: #94a3b8 !important;
+                font-weight: 750 !important;
+                text-align: center !important;
             }
             .welcome-meta-item .meta-value {
-                font-size: 11.5px !important;
+                font-size: 13.5px !important;
+                font-weight: 650 !important;
                 white-space: nowrap !important;
                 overflow: hidden !important;
                 text-overflow: ellipsis !important;
-                gap: 4px !important;
+                justify-content: center !important;
+                width: 100% !important;
+                gap: 5px !important;
             }
             .type-badge {
-                padding: 3px 6px !important;
-                font-size: 10px !important;
-                gap: 3px !important;
+                padding: 4px 10px !important;
+                font-size: 12px !important;
+                font-weight: 650 !important;
+                gap: 4px !important;
             }
             .type-badge i {
-                font-size: 9px !important;
+                font-size: 11px !important;
             }
             .profile-dropdown-container {
                 display: none !important;
@@ -2014,6 +2071,32 @@
     </style>
 </head>
 <body>
+    @php
+        $user = auth()->user();
+        $userType = $user->user_type;
+        $isDemo = $user->is_demo_mode;
+        $demoStarted = $user->demo_started_at;
+        $demoUsed = $user->demo_used;
+        $demoDays = (int) \App\DemoSetting::get('demo_duration_days', 60);
+        $extensionDays = (int) \App\DemoSetting::get('demo_extension_days', 15);
+        $totalDemoDays = $demoDays + ($user->demo_extended ? $extensionDays : 0);
+        $remaining = $user->demoRemainingDays();
+        $demoActive = $user->isDemoActive();
+        $extensionActive = $user->isDemoExtensionActive();
+        $demoExpired = $demoUsed && !$isDemo && !$demoActive;
+        $hasSubscription = $user->check_subscription && $user->subscription_expiry && \Carbon\Carbon::parse($user->subscription_expiry)->isFuture();
+        $researcherTypeLabel = $user->researcher_type === 'Other' ? $user->researcher_type_other : $user->researcher_type;
+
+        if ($isDemo && $demoStarted) {
+            $elapsed = max(0, $totalDemoDays - $remaining);
+            $progressPct = $totalDemoDays > 0 ? min(100, ($elapsed / $totalDemoDays) * 100) : 100;
+        } else {
+            $progressPct = 100;
+        }
+        $circumference = 2 * 3.14159 * 28;
+        $dashOffset = $circumference - ($progressPct / 100) * $circumference;
+    @endphp
+
     @include('partials._impersonation_banner')
 
     <!-- Mobile Sidebar Backdrop Overlay -->
@@ -2123,6 +2206,35 @@
                                 <span>My Profile</span>
                             </a>
                         </li>
+                        @if($isDemo && $demoStarted)
+                        <li class="sidebar-validity-item" style="padding: 10px 12px; margin: 6px 0 8px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                                <div style="display: flex; align-items: center; gap: 9px;">
+                                    <div class="countdown-ring" style="width: 32px; height: 32px; flex-shrink: 0;">
+                                        <svg viewBox="0 0 64 64" style="width: 32px; height: 32px;">
+                                            <circle class="ring-bg" cx="32" cy="32" r="28"></circle>
+                                            <circle class="ring-progress" cx="32" cy="32" r="28"
+                                                stroke="{{ $extensionActive ? '#f59e0b' : '#3b82f6' }}"
+                                                stroke-dasharray="{{ 2 * 3.14159 * 28 }}"
+                                                stroke-dashoffset="{{ (2 * 3.14159 * 28) - ($progressPct / 100) * (2 * 3.14159 * 28) }}"></circle>
+                                        </svg>
+                                        <div class="ring-text">
+                                            <span class="ring-days" style="font-size: 10.5px; color: {{ $extensionActive ? '#fbbf24' : '#60a5fa' }};">{{ $remaining }}</span>
+                                            <span class="ring-label" style="font-size: 6px;">{{ $remaining === 1 ? 'DAY' : 'DAYS' }}</span>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 1px;">
+                                        <span style="font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8;">Trial Validity</span>
+                                        <span style="font-size: 11.5px; font-weight: 600; color: #fff;">{{ $remaining }} {{ $remaining === 1 ? 'day' : 'days' }} left</span>
+                                    </div>
+                                </div>
+                                <span class="demo-status-badge {{ $extensionActive ? 'extension' : ($demoActive ? 'active' : 'expired') }}" style="font-size: 10px; padding: 2px 7px; white-space: nowrap;">
+                                    <i class="fa-solid {{ $extensionActive ? 'fa-clock' : ($demoActive ? 'fa-circle-play' : 'fa-circle-xmark') }}"></i>
+                                    {{ $extensionActive ? 'Extension' : ($demoActive ? 'Active' : 'Expired') }}
+                                </span>
+                            </div>
+                        </li>
+                        @endif
                         <li>
                             <a href="javascript:void(0)" class="sidebar-user-link-item" onclick="startPlatformTour()">
                                 <i class="fa-solid fa-compass" style="color: #60a5fa;"></i>
@@ -2178,10 +2290,10 @@
             <div class="top-header">
                 <div class="top-header-left">
                     <a href="/home" class="mobile-brand-header">
-                        <div class="sidebar-logo-icon" style="width: 32px; height: 32px; font-size: 14px;">
+                        <div class="sidebar-logo-icon" style="width: 38px; height: 38px; font-size: 17px;">
                             <i class="fa fa-balance-scale"></i>
                         </div>
-                        <span style="font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -0.3px;">Legals Forum</span>
+                        <span style="font-size: 17px; font-weight: 800; color: #fff; letter-spacing: -0.3px;">Legals Forum</span>
                     </a>
                     <h1 class="top-header-title">Dashboard</h1>
                 </div>
@@ -2250,6 +2362,35 @@
                                         <span>My Profile</span>
                                     </a>
                                 </li>
+                                @if($isDemo && $demoStarted)
+                                <li style="padding: 10px 14px; margin: 4px 6px 8px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                                        <div style="display: flex; align-items: center; gap: 9px;">
+                                            <div class="countdown-ring" style="width: 32px; height: 32px; flex-shrink: 0;">
+                                                <svg viewBox="0 0 64 64" style="width: 32px; height: 32px;">
+                                                    <circle class="ring-bg" cx="32" cy="32" r="28"></circle>
+                                                    <circle class="ring-progress" cx="32" cy="32" r="28"
+                                                        stroke="{{ $extensionActive ? '#f59e0b' : '#3b82f6' }}"
+                                                        stroke-dasharray="{{ 2 * 3.14159 * 28 }}"
+                                                        stroke-dashoffset="{{ (2 * 3.14159 * 28) - ($progressPct / 100) * (2 * 3.14159 * 28) }}"></circle>
+                                                </svg>
+                                                <div class="ring-text">
+                                                    <span class="ring-days" style="font-size: 10.5px; color: {{ $extensionActive ? '#fbbf24' : '#60a5fa' }};">{{ $remaining }}</span>
+                                                    <span class="ring-label" style="font-size: 6px;">{{ $remaining === 1 ? 'DAY' : 'DAYS' }}</span>
+                                                </div>
+                                            </div>
+                                            <div style="display: flex; flex-direction: column; gap: 1px;">
+                                                <span style="font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8;">Trial Validity</span>
+                                                <span style="font-size: 11.5px; font-weight: 600; color: #fff;">{{ $remaining }} {{ $remaining === 1 ? 'day' : 'days' }} left</span>
+                                            </div>
+                                        </div>
+                                        <span class="demo-status-badge {{ $extensionActive ? 'extension' : ($demoActive ? 'active' : 'expired') }}" style="font-size: 10px; padding: 2px 7px; white-space: nowrap;">
+                                            <i class="fa-solid {{ $extensionActive ? 'fa-clock' : ($demoActive ? 'fa-circle-play' : 'fa-circle-xmark') }}"></i>
+                                            {{ $extensionActive ? 'Extension' : ($demoActive ? 'Active' : 'Expired') }}
+                                        </span>
+                                    </div>
+                                </li>
+                                @endif
                                 <li>
                                     <a href="javascript:void(0)" class="profile-dropdown-item" onclick="startPlatformTour()">
                                         <i class="fa-solid fa-compass" style="color: #60a5fa;"></i>
@@ -2296,32 +2437,6 @@
             <!-- Dashboard Content -->
             <div class="dashboard-content">
 
-                @php
-                    $user = auth()->user();
-                    $userType = $user->user_type;
-                    $isDemo = $user->is_demo_mode;
-                    $demoStarted = $user->demo_started_at;
-                    $demoUsed = $user->demo_used;
-                    $demoDays = (int) \App\DemoSetting::get('demo_duration_days', 60);
-                    $extensionDays = (int) \App\DemoSetting::get('demo_extension_days', 15);
-                    $totalDemoDays = $demoDays + ($user->demo_extended ? $extensionDays : 0);
-                    $remaining = $user->demoRemainingDays();
-                    $demoActive = $user->isDemoActive();
-                    $extensionActive = $user->isDemoExtensionActive();
-                    $demoExpired = $demoUsed && !$isDemo && !$demoActive;
-                    $hasSubscription = $user->check_subscription && $user->subscription_expiry && \Carbon\Carbon::parse($user->subscription_expiry)->isFuture();
-                    $researcherTypeLabel = $user->researcher_type === 'Other' ? $user->researcher_type_other : $user->researcher_type;
-
-                    if ($isDemo && $demoStarted) {
-                        $elapsed = max(0, $totalDemoDays - $remaining);
-                        $progressPct = $totalDemoDays > 0 ? min(100, ($elapsed / $totalDemoDays) * 100) : 100;
-                    } else {
-                        $progressPct = 100;
-                    }
-                    $circumference = 2 * 3.14159 * 30;
-                    $dashOffset = $circumference - ($progressPct / 100) * $circumference;
-                @endphp
-
                 <!-- Container for Dashboard Cards & Overview -->
                 <div id="dashboardCardsContainer" class="dashboard-cards-container">
                     <!-- Unified Welcome & Account Single-Row Card -->
@@ -2342,7 +2457,7 @@
                             </div>
                         </div>
 
-                        <!-- Right: Meta Row (Account Type, Profession, Time Remaining, Status) -->
+                        <!-- Right: Meta Row (Account Type, Profession) -->
                         <div class="welcome-meta-row">
                             @if($userType)
                             <div class="welcome-meta-item">
@@ -2367,45 +2482,10 @@
                             <div class="welcome-meta-item">
                                 <span class="meta-label">Profession</span>
                                 <div class="meta-value">
-                                    <i class="fa-solid fa-briefcase" style="color: var(--text-secondary); font-size: 13px;"></i>
-                                    <span>{{ $researcherTypeLabel }}</span>
-                                </div>
-                            </div>
-                            @endif
-
-                            @if($isDemo && $demoStarted)
-                            <div class="welcome-meta-divider"></div>
-                            <div class="welcome-meta-item">
-                                <span class="meta-label">Validity</span>
-                                <div style="display: flex; align-items: center; gap: 6px;">
-                                    <div class="countdown-ring" style="width: 34px; height: 34px; flex-shrink: 0;">
-                                        <svg viewBox="0 0 64 64" style="width: 34px; height: 34px;">
-                                            <circle class="ring-bg" cx="32" cy="32" r="28"></circle>
-                                            <circle class="ring-progress" cx="32" cy="32" r="28"
-                                                stroke="{{ $extensionActive ? '#f59e0b' : '#3b82f6' }}"
-                                                stroke-dasharray="{{ 2 * 3.14159 * 28 }}"
-                                                stroke-dashoffset="{{ (2 * 3.14159 * 28) - ($progressPct / 100) * (2 * 3.14159 * 28) }}"></circle>
-                                        </svg>
-                                        <div class="ring-text">
-                                            <span class="ring-days" style="font-size: 11px; color: {{ $extensionActive ? '#fbbf24' : '#60a5fa' }};">{{ $remaining }}</span>
-                                            <span class="ring-label" style="font-size: 6.5px;">{{ $remaining === 1 ? 'DAY' : 'DAYS' }}</span>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
-                                        <span class="demo-status-badge {{ $extensionActive ? 'extension' : ($demoActive ? 'active' : 'expired') }}" style="font-size: 10px; padding: 2px 7px; white-space: nowrap;">
-                                            <i class="fa-solid {{ $extensionActive ? 'fa-clock' : ($demoActive ? 'fa-circle-play' : 'fa-circle-xmark') }}"></i>
-                                            {{ $extensionActive ? 'Extension' : ($demoActive ? 'Active' : 'Expired') }}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            @elseif($hasSubscription)
-                            <div class="welcome-meta-divider"></div>
-                            <div class="welcome-meta-item">
-                                <span class="meta-label">Subscription</span>
-                                <div class="subscription-badge" style="padding: 6px 14px; font-size: 12.5px;">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                    <span>Premium Member</span>
+                                    <span class="type-badge profession-badge">
+                                        <i class="fa-solid fa-briefcase"></i>
+                                        {{ $researcherTypeLabel }}
+                                    </span>
                                 </div>
                             </div>
                             @endif

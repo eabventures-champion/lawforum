@@ -2617,7 +2617,7 @@
     </style>
     @include('partials._nav_subdropdown_styles')
   </head>
-  <body class="bg-light">
+  <body class="has-scrollable-wrapper">
 
     <!-- ====== PREMIUM NAVIGATION ====== -->
     <nav class="nav-wrap" id="mainNav">
