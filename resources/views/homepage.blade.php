@@ -1972,8 +1972,9 @@
         }
 
         .premium-indicator-item:hover .indicator-label {
-            opacity: 1;
-            transform: translateX(0);
+            opacity: 0;
+            transform: translateX(10px);
+            pointer-events: none;
         }
 
         .indicator-icon-wrap {
@@ -2007,8 +2008,8 @@
         }
 
         .premium-indicator-item.active .indicator-label {
-            color: var(--text-primary);
-            border-color: var(--accent);
+            opacity: 0;
+            pointer-events: none;
         }
 
         /* Adjustments for smaller heights or tablets */
@@ -2820,7 +2821,7 @@
 
         function goToSlide(slideIndex) {
             if (isQuickSearchMode) return;
-            if (isInputActive()) {
+            if (isInputActive() || isSearchSubmitting) {
                 clearTimeout(autoSlideTimeout);
                 return;
             }
@@ -2938,13 +2939,13 @@
         // Automatic slideshow loop
         function startAutoSlide() {
             if (isQuickSearchMode) return;
-            if (isInputActive()) {
+            if (isInputActive() || isSearchSubmitting) {
                 clearTimeout(autoSlideTimeout);
                 return;
             }
 
             autoSlideTimeout = setTimeout(() => {
-                if (!isInputActive() && !isQuickSearchMode) {
+                if (!isInputActive() && !isQuickSearchMode && !isSearchSubmitting) {
                     goToSlide((currentSlide + 1) % totalSlides);
                 }
             }, 10000);
@@ -2952,7 +2953,7 @@
 
         function resetAutoSlide() {
             clearTimeout(autoSlideTimeout);
-            if (!isInputActive()) {
+            if (!isInputActive() && !isSearchSubmitting) {
                 startAutoSlide();
             }
         }
@@ -2977,32 +2978,7 @@
 
         let isSearchSubmitting = false;
 
-        function triggerHeroSearch(e) {
-            if (isSearchSubmitting) {
-                if (e) e.preventDefault();
-                return false;
-            }
-
-            const query = heroSearchInput ? heroSearchInput.value.trim() : '';
-
-            if (!query) {
-                if (e) e.preventDefault();
-                if (heroSearchContainer) {
-                    heroSearchContainer.classList.remove('error-shake');
-                    void heroSearchContainer.offsetWidth;
-                    heroSearchContainer.classList.add('error-shake');
-                    setTimeout(() => heroSearchContainer.classList.remove('error-shake'), 800);
-                }
-                if (heroSearchPrompt) {
-                    heroSearchPrompt.style.display = 'flex';
-                }
-                if (heroSearchInput) heroSearchInput.focus();
-                return false;
-            }
-
-            // Valid query -> Set searching state immediately
-            isSearchSubmitting = true;
-
+        function showSearchingUI() {
             // Retract mobile software keyboard immediately to avoid layout thrashing
             if (heroSearchInput) {
                 heroSearchInput.blur();
@@ -3025,29 +3001,49 @@
             if (heroSearchPrompt) {
                 heroSearchPrompt.style.display = 'none';
             }
-
-            // If not native submit event, submit form programmatically
-            if (e && e.type !== 'submit') {
-                heroSearchForm.submit();
-            }
-            return true;
         }
 
         if (heroSearchForm) {
+            // Single submit handler — validates, shows UI, then lets the native submit proceed
             heroSearchForm.addEventListener('submit', (e) => {
-                if (!triggerHeroSearch(e)) {
-                    // Handled inside triggerHeroSearch
+                if (isSearchSubmitting) {
+                    // Already submitted, prevent duplicate
+                    e.preventDefault();
+                    return;
                 }
+
+                const query = heroSearchInput ? heroSearchInput.value.trim() : '';
+
+                if (!query) {
+                    e.preventDefault();
+                    if (heroSearchContainer) {
+                        heroSearchContainer.classList.remove('error-shake');
+                        void heroSearchContainer.offsetWidth;
+                        heroSearchContainer.classList.add('error-shake');
+                        setTimeout(() => heroSearchContainer.classList.remove('error-shake'), 800);
+                    }
+                    if (heroSearchPrompt) {
+                        heroSearchPrompt.style.display = 'flex';
+                    }
+                    if (heroSearchInput) heroSearchInput.focus();
+                    return;
+                }
+
+                // Valid query — show visual feedback and let the form submit natively
+                isSearchSubmitting = true;
+                showSearchingUI();
+                // Do NOT call e.preventDefault() — let the native form submission navigate to the search page
             });
 
-            // Handle touchstart / pointerdown for instantaneous tap reaction on iOS Safari
+            // Handle touchstart / pointerdown for instantaneous visual feedback on iOS Safari
+            // but do NOT submit the form here — let the native submit event handle that
             if (heroSearchBtn) {
                 heroSearchBtn.addEventListener('pointerdown', (e) => {
                     if (e.pointerType === 'touch') {
                         const query = heroSearchInput ? heroSearchInput.value.trim() : '';
                         if (query && !isSearchSubmitting) {
-                            // Fast trigger for touch users
-                            triggerHeroSearch(null);
+                            // Show visual feedback early for touch users
+                            showSearchingUI();
                         }
                     }
                 });
@@ -3060,10 +3056,10 @@
                     }
                 });
                 
-                // Allow pressing Enter key directly
+                // Allow pressing Enter key — just submit the form natively
                 heroSearchInput.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter') {
-                        triggerHeroSearch(null);
+                        // Don't prevent default — let the Enter key trigger native form submit
                     }
                 });
             }
@@ -3073,7 +3069,7 @@
                 tag.addEventListener('click', () => {
                     if (heroSearchInput) {
                         heroSearchInput.value = tag.innerText.trim();
-                        triggerHeroSearch(null);
+                        heroSearchForm.submit();
                     }
                 });
             });
