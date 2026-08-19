@@ -689,22 +689,6 @@
             100% { background-position: -200% 0; }
         }
 
-        .search-status-feedback {
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 10px;
-            font-size: 13px;
-            color: #93c5fd;
-            font-weight: 550;
-            letter-spacing: 0.2px;
-            animation: fadeIn 0.3s ease;
-        }
-        .search-status-feedback.active {
-            display: flex;
-        }
-
         .search-hint {
             margin-top: 16px;
             font-size: 13px;
@@ -2420,11 +2404,6 @@
                         <div class="search-progress-fill"></div>
                     </div>
 
-                    <div class="search-status-feedback" id="searchStatusFeedback">
-                        <i class="fa-solid fa-circle-notch fa-spin" style="color: #60a5fa;"></i>
-                        <span>Searching legal database...</span>
-                    </div>
-
                     <div class="search-empty-prompt" id="hero-search-prompt" style="display: none;">
                         <i class="fa-solid fa-triangle-exclamation"></i>
                         <span>Search query cannot be empty. Please enter a keyword to search.</span>
@@ -3170,35 +3149,24 @@
             });
         }
 
-        // Search Form Execution & iOS Safari Touch Optimization
+        // Search Form Execution
         const heroSearchForm = document.getElementById('hero-search-form');
         const heroSearchBtn = document.getElementById('hero-search-btn');
         const heroSearchInput = document.getElementById('hero-search-input');
         const heroSearchContainer = document.getElementById('hero-search-container');
         const heroSearchPrompt = document.getElementById('hero-search-prompt');
         const searchProgressBar = document.getElementById('searchProgressBar');
-        const searchStatusFeedback = document.getElementById('searchStatusFeedback');
 
         let isSearchSubmitting = false;
 
         function showSearchingUI() {
-            // Retract mobile software keyboard immediately to avoid layout thrashing
-            if (heroSearchInput) {
-                heroSearchInput.blur();
-            }
-
-            // Immediate visual feedback on the button & progress bar
             if (heroSearchBtn) {
                 heroSearchBtn.classList.add('is-searching');
-                heroSearchBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Searching...</span>';
+                heroSearchBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Searching...</span>';
             }
 
             if (searchProgressBar) {
                 searchProgressBar.classList.add('active');
-            }
-
-            if (searchStatusFeedback) {
-                searchStatusFeedback.classList.add('active');
             }
 
             if (heroSearchPrompt) {
@@ -3207,14 +3175,7 @@
         }
 
         if (heroSearchForm) {
-            // Single submit handler — validates, shows UI, then lets the native submit proceed
             heroSearchForm.addEventListener('submit', (e) => {
-                if (isSearchSubmitting) {
-                    // Already submitted, prevent duplicate
-                    e.preventDefault();
-                    return;
-                }
-
                 const query = heroSearchInput ? heroSearchInput.value.trim() : '';
 
                 if (!query) {
@@ -3232,25 +3193,15 @@
                     return;
                 }
 
-                // Valid query — show visual feedback and let the form submit natively
+                if (isSearchSubmitting) {
+                    e.preventDefault();
+                    return;
+                }
+
                 isSearchSubmitting = true;
                 showSearchingUI();
-                // Do NOT call e.preventDefault() — let the native form submission navigate to the search page
+                // Native form submit proceeds to /main_home_search?search_text=...
             });
-
-            // Handle touchstart / pointerdown for instantaneous visual feedback on iOS Safari
-            // but do NOT submit the form here — let the native submit event handle that
-            if (heroSearchBtn) {
-                heroSearchBtn.addEventListener('pointerdown', (e) => {
-                    if (e.pointerType === 'touch') {
-                        const query = heroSearchInput ? heroSearchInput.value.trim() : '';
-                        if (query && !isSearchSubmitting) {
-                            // Show visual feedback early for touch users
-                            showSearchingUI();
-                        }
-                    }
-                });
-            }
 
             if (heroSearchInput) {
                 heroSearchInput.addEventListener('input', () => {
@@ -3258,20 +3209,14 @@
                         heroSearchPrompt.style.display = 'none';
                     }
                 });
-                
-                // Allow pressing Enter key — just submit the form natively
-                heroSearchInput.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        // Don't prevent default — let the Enter key trigger native form submit
-                    }
-                });
             }
 
             // Popular tag quick-search clicks
             document.querySelectorAll('.search-hint span').forEach(tag => {
                 tag.addEventListener('click', () => {
-                    if (heroSearchInput) {
+                    if (heroSearchInput && heroSearchForm) {
                         heroSearchInput.value = tag.innerText.trim();
+                        showSearchingUI();
                         heroSearchForm.submit();
                     }
                 });
