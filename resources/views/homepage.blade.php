@@ -399,8 +399,7 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            overflow: hidden;
-            padding: 120px 40px 80px;
+            padding: 90px 30px 40px;
         }
 
         /* Animated gradient mesh background */
@@ -731,6 +730,207 @@
             background: rgba(59, 130, 246, 0.2);
             border-color: rgba(59, 130, 246, 0.4);
             color: #93c5fd;
+        }
+
+        /* ============================================
+           SEARCH HISTORY DROPDOWN (Projected Above)
+           ============================================ */
+        .search-history-dropdown {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 12px);
+            top: auto;
+            left: 0;
+            right: 0;
+            max-width: 640px;
+            margin: 0 auto;
+            background: #0b1324 !important;
+            border: 1px solid rgba(59, 130, 246, 0.4) !important;
+            border-radius: 16px;
+            padding: 12px;
+            z-index: 10000;
+            box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+            max-height: 320px;
+            overflow-y: auto;
+            animation: searchHistoryFadeInUp 0.2s ease;
+            text-align: left;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(59, 130, 246, 0.4) rgba(255, 255, 255, 0.02);
+        }
+
+        .search-history-dropdown::-webkit-scrollbar {
+            width: 6px;
+        }
+        .search-history-dropdown::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+        }
+        .search-history-dropdown::-webkit-scrollbar-thumb {
+            background: rgba(59, 130, 246, 0.35);
+            border-radius: 4px;
+        }
+        .search-history-dropdown::-webkit-scrollbar-thumb:hover {
+            background: rgba(59, 130, 246, 0.65);
+        }
+
+        .search-history-dropdown.visible {
+            display: block;
+        }
+
+        @keyframes searchHistoryFadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .search-history-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 12px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 6px;
+        }
+
+        .search-history-header-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.9px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .search-history-clear-btn {
+            font-size: 11px;
+            font-weight: 600;
+            color: #f87171;
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid rgba(248, 113, 113, 0.2);
+            cursor: pointer;
+            padding: 3px 9px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-family: var(--font);
+        }
+
+        .search-history-clear-btn:hover {
+            background: rgba(248, 113, 113, 0.22);
+            color: #fca5a5;
+        }
+
+        .search-history-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: transparent;
+        }
+
+        .search-history-item:hover {
+            background: rgba(59, 130, 246, 0.12);
+        }
+
+        .search-history-item-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #60a5fa;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .search-history-item-text {
+            flex: 1;
+            min-width: 0;
+            text-align: left;
+        }
+
+        .search-history-item-query {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff !important;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .search-history-item-time {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+        .search-history-item-delete {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: transparent;
+            border: none;
+            color: #64748b;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.6;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .search-history-item:hover .search-history-item-delete {
+            opacity: 1;
+            color: #94a3b8;
+        }
+
+        .search-history-item-delete:hover {
+            background: rgba(239, 68, 68, 0.2) !important;
+            color: #f87171 !important;
+        }
+
+        .popular-chip-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            color: #93c5fd;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .popular-chip-item:hover {
+            background: rgba(59, 130, 246, 0.22);
+            border-color: rgba(59, 130, 246, 0.45);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .search-history-empty {
+            text-align: center;
+            padding: 20px 12px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .search-history-empty i {
+            font-size: 20px;
+            margin-bottom: 8px;
+            display: block;
+            opacity: 0.5;
         }
 
         /* ============================================
@@ -2205,7 +2405,7 @@
                 {{ homepage_setting('slide_0_description', 'Access thousands of laws, cases, constitutional instruments, and legal news — all in one powerful, searchable platform built for legal professionals.') }}
             </p>
 
-            <div class="hero-search">
+            <div class="hero-search" style="position: relative;">
                 <form action="{{ url('main_home_search') }}" method="GET" id="hero-search-form">
                     {{ csrf_field() }}
                     <div class="search-container" id="hero-search-container">
@@ -2230,6 +2430,9 @@
                         <span>Search query cannot be empty. Please enter a keyword to search.</span>
                     </div>
                 </form>
+
+                <!-- Search History Dropdown -->
+                <div class="search-history-dropdown" id="searchHistoryDropdown"></div>
             </div>
 
             <p class="search-hint">
@@ -3072,6 +3275,254 @@
                         heroSearchForm.submit();
                     }
                 });
+            });
+        }
+
+        // ============================================
+        // SEARCH HISTORY DROPDOWN
+        // ============================================
+        const searchHistoryDropdown = document.getElementById('searchHistoryDropdown');
+        let searchHistoryCache = null;
+        let searchHistoryFetching = false;
+        let searchHistoryVisible = false;
+
+        @php
+            $popularTagsList = array_values(array_filter(array_map('trim', explode(',', homepage_setting('slide_0_popular_tags', 'Criminal Offences Act, 1992 Constitution, Land Act, Court of Appeal')))));
+        @endphp
+        const defaultPopularSearches = {!! json_encode($popularTagsList) !!};
+
+        function getLocalSearchHistory() {
+            try {
+                return JSON.parse(localStorage.getItem('lawsforum_recent_searches') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveLocalSearchHistory(query) {
+            if (!query || !query.trim()) return;
+            try {
+                let list = getLocalSearchHistory();
+                list = list.filter(item => item.search_text.toLowerCase() !== query.trim().toLowerCase());
+                list.unshift({
+                    id: 'loc_' + Date.now(),
+                    search_text: query.trim(),
+                    searched_at: 'Just now'
+                });
+                localStorage.setItem('lawsforum_recent_searches', JSON.stringify(list.slice(0, 10)));
+            } catch (e) {}
+        }
+
+        function renderSearchHistory(data) {
+            if (!searchHistoryDropdown) return;
+            const heroSearchWrapper = searchHistoryDropdown.closest('.hero-search');
+
+            let html = '';
+
+            // 1. Recent Searches (if any)
+            if (data && data.length > 0) {
+                html += '<div class="search-history-header">';
+                html += '<span class="search-history-header-title"><i class="fa-solid fa-clock-rotate-left" style="color:#60a5fa;"></i> Recent Searches</span>';
+                html += '<button type="button" class="search-history-clear-btn" onclick="clearSearchHistory(event)">Clear All</button>';
+                html += '</div>';
+
+                data.forEach(item => {
+                    const escapedQuery = item.search_text.replace(/"/g, '&quot;').replace(/</g, '&lt;');
+                    html += '<div class="search-history-item" data-query="' + escapedQuery + '" data-id="' + item.id + '">';
+                    html += '<div class="search-history-item-icon"><i class="fa-solid fa-magnifying-glass"></i></div>';
+                    html += '<div class="search-history-item-text">';
+                    html += '<div class="search-history-item-query">' + escapedQuery + '</div>';
+                    html += '<div class="search-history-item-time">' + (item.searched_at || 'Recently') + '</div>';
+                    html += '</div>';
+                    html += '<button type="button" class="search-history-item-delete" onclick="deleteSearchHistoryItem(event, \'' + item.id + '\')" title="Remove">';
+                    html += '<i class="fa-solid fa-xmark"></i></button>';
+                    html += '</div>';
+                });
+            }
+
+            // 2. Popular Topics Section (always available)
+            html += '<div class="search-history-header" style="margin-top:' + (data && data.length > 0 ? '10px' : '0') + ';">';
+            html += '<span class="search-history-header-title"><i class="fa-solid fa-fire" style="color:#f59e0b;"></i> Popular Suggestions</span>';
+            html += '</div>';
+            html += '<div style="display:flex; flex-wrap:wrap; gap:8px; padding:8px 4px 4px;">';
+            defaultPopularSearches.forEach(term => {
+                const escapedTerm = term.replace(/"/g, '&quot;').replace(/</g, '&lt;');
+                html += '<div class="popular-chip-item search-history-item" data-query="' + escapedTerm + '">';
+                html += '<i class="fa-solid fa-arrow-trend-up" style="color:#60a5fa; font-size:11px;"></i>';
+                html += '<span>' + escapedTerm + '</span>';
+                html += '</div>';
+            });
+            html += '</div>';
+
+            searchHistoryDropdown.innerHTML = html;
+            searchHistoryDropdown.classList.add('visible');
+            if (heroSearchWrapper) {
+                heroSearchWrapper.classList.add('has-history-open');
+            }
+            searchHistoryVisible = true;
+
+            // Stop auto-slide while history dropdown is open
+            clearTimeout(autoSlideTimeout);
+
+            // Click handler for history items
+            searchHistoryDropdown.querySelectorAll('.search-history-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    if (e.target.closest('.search-history-item-delete')) return;
+                    const query = item.getAttribute('data-query');
+                    if (heroSearchInput && query) {
+                        heroSearchInput.value = query;
+                        saveLocalSearchHistory(query);
+                        hideSearchHistory();
+                        heroSearchForm.submit();
+                    }
+                });
+            });
+        }
+
+        function fetchSearchHistory() {
+            // First render local storage history immediately (0ms latency)
+            const localData = getLocalSearchHistory();
+            if (localData && localData.length > 0) {
+                renderSearchHistory(localData);
+            } else {
+                renderSearchHistory([]);
+            }
+
+            if (searchHistoryFetching) return;
+            searchHistoryFetching = true;
+
+            fetch('/search-history?limit=8', {
+                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                searchHistoryFetching = false;
+                if (data.success && data.data && data.data.length > 0) {
+                    searchHistoryCache = data.data;
+                    // Merge server data into local storage
+                    try {
+                        localStorage.setItem('lawsforum_recent_searches', JSON.stringify(data.data));
+                    } catch (e) {}
+                    if (searchHistoryVisible || document.activeElement === heroSearchInput) {
+                        renderSearchHistory(data.data);
+                    }
+                }
+            })
+            .catch(() => {
+                searchHistoryFetching = false;
+            });
+        }
+
+        function hideSearchHistory() {
+            if (searchHistoryDropdown) {
+                searchHistoryDropdown.classList.remove('visible');
+                const heroSearchWrapper = searchHistoryDropdown.closest('.hero-search');
+                if (heroSearchWrapper) {
+                    heroSearchWrapper.classList.remove('has-history-open');
+                }
+                searchHistoryVisible = false;
+            }
+        }
+
+        function showSearchHistoryIfAppropriate() {
+            if (!heroSearchInput) return;
+            if (searchHistoryCache && searchHistoryCache.length > 0) {
+                renderSearchHistory(searchHistoryCache);
+            } else {
+                fetchSearchHistory();
+            }
+        }
+
+        window.deleteSearchHistoryItem = function(e, id) {
+            e.stopPropagation();
+            const item = e.target.closest('.search-history-item');
+            if (item) {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-10px)';
+                item.style.transition = 'all 0.2s ease';
+            }
+
+            // Remove from local storage
+            try {
+                let localData = getLocalSearchHistory();
+                localData = localData.filter(i => String(i.id) !== String(id));
+                localStorage.setItem('lawsforum_recent_searches', JSON.stringify(localData));
+            } catch (e) {}
+
+            if (!String(id).startsWith('loc_')) {
+                fetch('/search-history/' + id, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                }).catch(() => {});
+            }
+
+            setTimeout(() => {
+                if (item) item.remove();
+                const remaining = searchHistoryDropdown.querySelectorAll('.search-history-item');
+                if (remaining.length === 0) {
+                    renderSearchHistory([]);
+                }
+                searchHistoryCache = null;
+            }, 200);
+        };
+
+        window.clearSearchHistory = function(e) {
+            e.stopPropagation();
+            try {
+                localStorage.removeItem('lawsforum_recent_searches');
+            } catch (e) {}
+
+            fetch('/search-history', {
+                method: 'DELETE',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            }).catch(() => {});
+
+            searchHistoryCache = null;
+            renderSearchHistory([]);
+        };
+
+        // Show search history on focus AND click
+        if (heroSearchInput) {
+            heroSearchInput.addEventListener('focus', () => {
+                showSearchHistoryIfAppropriate();
+            });
+
+            heroSearchInput.addEventListener('click', () => {
+                showSearchHistoryIfAppropriate();
+            });
+
+            heroSearchInput.addEventListener('input', () => {
+                if (heroSearchInput.value.trim()) {
+                    hideSearchHistory();
+                } else {
+                    showSearchHistoryIfAppropriate();
+                }
+            });
+        }
+
+        // Hide dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (searchHistoryVisible && searchHistoryDropdown && heroSearchInput) {
+                const isInsideDropdown = searchHistoryDropdown.contains(e.target);
+                const isInsideInput = heroSearchInput.contains(e.target) || e.target === heroSearchInput;
+                if (!isInsideDropdown && !isInsideInput) {
+                    hideSearchHistory();
+                    resetAutoSlide();
+                }
+            }
+        });
+
+        // Hook form submission to save to local search history
+        if (heroSearchForm) {
+            heroSearchForm.addEventListener('submit', () => {
+                const q = heroSearchInput ? heroSearchInput.value.trim() : '';
+                if (q) saveLocalSearchHistory(q);
             });
         }
 

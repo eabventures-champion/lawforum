@@ -81,6 +81,9 @@ Route::get('/accounts/subscription/{subscription}','UserDashBoardController@show
 //---------------------------------------------------------------------------SEARCH ENGINE------------------------------------------------------------------------------------------------------
 //Search for Main Home Page
 Route::get('main_home_search','HomeSearchController@main_home_search');
+Route::get('search-history','HomeSearchController@searchHistory');
+Route::delete('search-history/{id}','HomeSearchController@deleteSearchHistory');
+Route::delete('search-history','HomeSearchController@clearSearchHistory');
 
 //Search for Constitution
 Route::get('search_ghana_constitution','ConstitutionGhanaSearchController@index_search');//for ghana

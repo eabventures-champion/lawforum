@@ -51,8 +51,9 @@ class ExecutiveActController extends Controller
     }
 
     //Display section content
-    public function section_content($id){
+    public function section_content($id, Request $request){
         $allExecutiveAct       = ExecutiveArticle::find(['id' => $id])->toArray()[0];
+        $searchText = $request->get('search_text', '');
 
         if (!\Illuminate\Support\Facades\Auth::check()) {
             $allArticles = ExecutiveArticle::where('executive_act', $allExecutiveAct['executive_act'])->get();
@@ -61,11 +62,11 @@ class ExecutiveActController extends Controller
 
             $sectionIndex = array_search((string) $id, $actArticles);
             if ($sectionIndex !== false && $sectionIndex >= 3) {
-                return view('post_1992_legislation.displayed_locked_section_view', ['allPost1992Article' => $allExecutiveAct]);
+                return view('post_1992_legislation.displayed_locked_section_view', ['allPost1992Article' => $allExecutiveAct, 'searchText' => $searchText]);
             }
         }
 
-        return view('post_1992_legislation.displayed_executive_act_content', compact('allExecutiveAct'));
+        return view('post_1992_legislation.displayed_executive_act_content', compact('allExecutiveAct', 'searchText'));
     }
 
      //For expanded view

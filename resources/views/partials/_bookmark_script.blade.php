@@ -120,24 +120,20 @@
     };
 
     window.triggerGuestGateForBookmark = function() {
-        if (window.top && window.top !== window && typeof window.top.openLoginModal === 'function') {
-            window.top.openLoginModal();
+        if (typeof window.openPremiumGateModal === 'function') {
+            window.openPremiumGateModal('Sign In to Bookmark', 'Create a free account or log in to bookmark sections and organize your legal research.');
             return;
         }
-        if (window.parent && window.parent !== window && typeof window.parent.openLoginModal === 'function') {
-            window.parent.openLoginModal();
+        if (window.top && window.top !== window && typeof window.top.openPremiumGateModal === 'function') {
+            window.top.openPremiumGateModal('Sign In to Bookmark', 'Create a free account or log in to bookmark sections and organize your legal research.');
             return;
         }
         if (typeof openLoginModal === 'function') {
             openLoginModal();
             return;
         }
-        if (window.top && window.top !== window && typeof window.top.openSignUpOptionsModal === 'function') {
-            window.top.openSignUpOptionsModal();
-            return;
-        }
-        if (window.parent && window.parent !== window && typeof window.parent.openSignUpOptionsModal === 'function') {
-            window.parent.openSignUpOptionsModal();
+        if (window.top && window.top !== window && typeof window.top.openLoginModal === 'function') {
+            window.top.openLoginModal();
             return;
         }
         if (typeof openSignUpOptionsModal === 'function') {

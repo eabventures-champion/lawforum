@@ -24,6 +24,10 @@ class GuestAccessMiddleware
         'admin/*',
         'maintenance',
         'maintenance/*',
+        'main_home_search',
+        'main_home_search/*',
+        'search-history',
+        'search-history/*',
     ];
 
     /**
@@ -60,6 +64,11 @@ class GuestAccessMiddleware
         // Check if guest access cookie exists
         if ($request->cookie('guest_access')) {
             return $next($request);
+        }
+
+        // For AJAX / JSON requests, return JSON rather than redirecting to HTML page
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['guest_required' => true, 'redirect' => '/get-started'], 401);
         }
 
         // Redirect to gateway page

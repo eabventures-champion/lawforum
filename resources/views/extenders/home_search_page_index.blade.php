@@ -161,17 +161,19 @@
         .header-inner {
             width: 100%;
             max-width: 1400px;
-            padding: 0 28px;
+            padding: 0 24px;
             display: flex;
             align-items: center;
-            gap: 24px;
+            justify-content: space-between;
+            gap: 16px;
+            height: var(--header-height);
         }
 
         .brand-link {
             display: flex;
             align-items: center;
             gap: 10px;
-            flex-shrink: 0;
+            flex: 0 0 auto;
             transition: var(--transition);
         }
         .brand-link:hover { opacity: 0.85; }
@@ -187,6 +189,7 @@
             font-size: 15px;
             color: #fff;
             box-shadow: 0 4px 15px var(--accent-glow);
+            flex-shrink: 0;
         }
 
         .brand-name {
@@ -194,17 +197,22 @@
             font-weight: 800;
             color: #fff;
             letter-spacing: -0.5px;
+            white-space: nowrap;
         }
 
         .header-search-form {
-            flex: 1;
-            max-width: 600px;
+            flex: 1 1 auto;
+            max-width: 580px;
+            margin: 0 auto;
+            position: relative;
+            min-width: 0;
         }
 
         .search-input-wrap {
             position: relative;
             display: flex;
             align-items: center;
+            width: 100%;
         }
 
         .search-input-wrap .search-icon {
@@ -217,6 +225,7 @@
 
         .search-input-wrap input {
             width: 100%;
+            height: 42px;
             padding: 10px 18px 10px 42px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
@@ -246,9 +255,6 @@
             border-color: #ef4444 !important;
             box-shadow: 0 0 16px rgba(239, 68, 68, 0.4) !important;
         }
-        .header-search-form {
-            position: relative;
-        }
         .search-empty-prompt-toast {
             position: absolute;
             top: calc(100% + 8px);
@@ -267,6 +273,65 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
             animation: fadeIn 0.25s ease;
         }
+
+        /* Search History Dropdown */
+        .srp-search-history {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: #0b1324 !important;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 14px;
+            padding: 8px;
+            z-index: 10000;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 255, 255, 0.08);
+            max-height: 360px;
+            overflow-y: auto;
+            animation: fadeIn 0.2s ease;
+        }
+        .srp-search-history.visible { display: block; }
+        .srp-sh-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 10px 4px; font-size: 11px;
+        }
+        .srp-sh-header-title {
+            font-weight: 700; color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 0.7px; display: flex; align-items: center; gap: 5px;
+        }
+        .srp-sh-clear {
+            font-size: 11px; font-weight: 600; color: var(--rose);
+            background: none; border: none; cursor: pointer; padding: 3px 6px;
+            border-radius: 4px; transition: var(--transition); font-family: var(--font);
+        }
+        .srp-sh-clear:hover { background: rgba(244, 63, 94, 0.12); }
+        .srp-sh-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 10px; border-radius: 8px; cursor: pointer; transition: var(--transition);
+        }
+        .srp-sh-item:hover { background: rgba(255, 255, 255, 0.06); }
+        .srp-sh-item-icon {
+            width: 28px; height: 28px; border-radius: 6px;
+            background: rgba(59, 130, 246, 0.08); display: flex;
+            align-items: center; justify-content: center;
+            color: var(--accent-light); font-size: 12px; flex-shrink: 0;
+        }
+        .srp-sh-item-text { flex: 1; min-width: 0; }
+        .srp-sh-item-query {
+            font-size: 13px; font-weight: 500; color: var(--text-primary);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .srp-sh-item-time { font-size: 10px; color: var(--text-muted); }
+        .srp-sh-item-del {
+            width: 24px; height: 24px; border-radius: 4px;
+            background: none; border: none; color: var(--text-muted);
+            font-size: 11px; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            opacity: 0; transition: var(--transition); flex-shrink: 0;
+        }
+        .srp-sh-item:hover .srp-sh-item-del { opacity: 1; }
+        .srp-sh-item-del:hover { background: rgba(244, 63, 94, 0.12); color: var(--rose); }
 
         .header-actions {
             display: flex;
@@ -297,20 +362,33 @@
             color: var(--accent-light);
         }
 
-        .btn-header-signup {
+        .btn-header-signup, .btn-guest-user {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             padding: 8px 18px;
             font-size: 13px;
             font-weight: 600;
-            color: #fff;
+            color: #fff !important;
             background: var(--accent-gradient);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 10px;
             transition: var(--transition);
             white-space: nowrap;
-            box-shadow: 0 4px 12px var(--accent-glow);
+            cursor: pointer;
+            text-decoration: none !important;
+            box-shadow: 0 4px 14px var(--accent-glow);
+            font-family: var(--font);
         }
-        .btn-header-signup:hover {
+        .btn-header-signup:hover, .btn-guest-user:hover {
             transform: translateY(-1px);
             box-shadow: 0 6px 20px var(--accent-glow);
+            color: #fff !important;
+            border-color: rgba(255, 255, 255, 0.28);
+        }
+        .btn-guest-user i {
+            font-size: 14px;
+            color: #fff;
         }
 
         /* ============================================
@@ -1285,12 +1363,193 @@
             }
         }
 
-        @media (max-width: 640px) {
-            .header-inner { padding: 0 16px; gap: 12px; }
-            .brand-name { display: none; }
-            .btn-header-login { display: none; }
-            .search-main { gap: 20px; }
-            .result-card { padding: 18px 20px; border-radius: 14px; }
+        @media (max-width: 768px) {
+            .header-inner {
+                padding: 0 10px;
+                gap: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .brand-name {
+                display: none !important;
+            }
+
+            .brand-link {
+                flex: 0 0 38px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            .header-search-form {
+                flex: 1 1 0 !important;
+                max-width: none !important;
+                margin: 0 !important;
+                min-width: 0 !important;
+            }
+
+            .search-input-wrap {
+                width: 100% !important;
+            }
+
+            .search-input-wrap input {
+                height: 38px !important;
+                padding: 8px 12px 8px 34px !important;
+                font-size: 13px !important;
+                border-radius: 10px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            .search-input-wrap .search-icon {
+                left: 11px !important;
+                font-size: 12px !important;
+            }
+
+            .header-actions {
+                flex: 0 0 38px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            .btn-guest-user {
+                padding: 0 !important;
+                width: 38px !important;
+                height: 38px !important;
+                min-width: 38px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                border-radius: 10px !important;
+                flex-shrink: 0 !important;
+            }
+
+            .btn-guest-user span {
+                display: none !important;
+            }
+
+            .btn-guest-user i {
+                font-size: 15px !important;
+                margin: 0 !important;
+            }
+
+            /* Responsive Search History Dropdown */
+            .srp-search-history {
+                position: fixed !important;
+                top: calc(var(--header-height) + 6px) !important;
+                left: 10px !important;
+                right: 10px !important;
+                width: auto !important;
+                max-height: 65vh !important;
+                border-radius: 14px !important;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9) !important;
+                z-index: 100000 !important;
+            }
+
+            .search-summary {
+                margin-top: var(--header-height) !important;
+                padding: 16px 14px 12px !important;
+            }
+
+            .summary-inner {
+                gap: 12px !important;
+            }
+
+            .summary-icon {
+                width: 38px !important;
+                height: 38px !important;
+                font-size: 15px !important;
+                border-radius: 10px !important;
+            }
+
+            .summary-text h1 {
+                font-size: 16px !important;
+                margin-bottom: 2px !important;
+            }
+
+            .summary-text p {
+                font-size: 12.5px !important;
+            }
+
+            .search-main {
+                display: block !important;
+                padding: 14px 12px 60px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            .filter-sidebar {
+                position: static !important;
+                max-height: none !important;
+                margin-bottom: 14px !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+
+            .filter-panel {
+                padding: 10px 12px !important;
+                border-radius: 14px !important;
+            }
+
+            .results-container {
+                width: 100% !important;
+            }
+
+            .result-card {
+                padding: 14px 14px !important;
+                border-radius: 14px !important;
+                margin-bottom: 12px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+                word-break: break-word !important;
+            }
+
+            .result-card h2, .result-card .result-title {
+                font-size: 15px !important;
+                line-height: 1.35 !important;
+                word-break: break-word !important;
+            }
+
+            .result-card .result-subtitle {
+                font-size: 13px !important;
+                line-height: 1.35 !important;
+                word-break: break-word !important;
+            }
+
+            .result-card .result-snippet {
+                font-size: 12.5px !important;
+                line-height: 1.5 !important;
+            }
+
+            /* Mobile Pagination */
+            .pagination-container {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+                gap: 5px !important;
+                margin-top: 24px !important;
+                padding: 0 4px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            .page-btn {
+                min-width: 34px !important;
+                height: 34px !important;
+                padding: 0 8px !important;
+                font-size: 12px !important;
+                border-radius: 8px !important;
+            }
+
+            /* Hide the Prev/Next text labels, keep only arrows on very small screens */
+            .page-btn .pagination-label {
+                display: none !important;
+            }
         }
     </style>
 </head>
@@ -1321,19 +1580,21 @@
                     <i class="fa-solid fa-triangle-exclamation"></i>
                     <span>Search query cannot be empty. Please enter a keyword to search.</span>
                 </div>
+                <div class="srp-search-history" id="srpSearchHistory"></div>
             </div>
 
             <div class="header-actions">
                 @guest
-                    <a href="/" class="btn-header-login">Why Choose Us</a>
-                    @if (Route::has('register'))
-                        @if(request()->cookie('guest_access'))
-                            <a href="javascript:void(0)" onclick="openLoginModal()" class="btn-header-signup" style="background: rgba(255,255,255,0.08); box-shadow: none; cursor: pointer;">
-                                <i class="fa-solid fa-user-secret" style="margin-right: 4px;"></i> Guest User
-                            </a>
-                        @else
-                            <a href="/get-started" class="btn-header-signup">Sign Up Free</a>
-                        @endif
+                    @if(request()->cookie('guest_access'))
+                        <button type="button" onclick="openLoginModal()" class="btn-guest-user" title="Guest User - Click to login or register">
+                            <i class="fa-solid fa-user-secret"></i>
+                            <span>Guest User</span>
+                        </button>
+                    @else
+                        <a href="/get-started" class="btn-guest-user" title="Sign Up Free">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span>Sign Up Free</span>
+                        </a>
                     @endif
                 @else
                     <span class="user-greeting">Hi, {{ Auth::user()->name }}</span>
@@ -1518,6 +1779,8 @@
             per_page: 15
         };
 
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
         // DOM elements
         const elements = {
             searchInput: document.getElementById('main-search-input'),
@@ -1580,15 +1843,20 @@
 
         // Helper to highlight title matches in green
         function highlightTitle(text, query) {
-            if (!query || !text) return text;
-            const cleanWord = query.trim();
+            if (!query || !text) return text || '';
+            const cleanWord = decodeURIComponent(query).replace(/[\+_]/g, ' ').trim();
             if (!cleanWord) return text;
             
-            const escapedWord = cleanWord.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-            const regexPattern = escapedWord.replace(/(\\-| )/g, '[ \\-]');
-            const regex = new RegExp(`(${regexPattern})`, 'gi');
-            
-            return text.replace(regex, '<mark class="title-highlight">$1</mark>');
+            try {
+                const words = cleanWord.split(/[\s\-+]+/).filter(w => w.length > 0);
+                if (words.length === 0) return text;
+                const escapedWords = words.map(w => w.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
+                const pattern = escapedWords.join('[ \\-]+');
+                const regex = new RegExp(`(${pattern})`, 'gi');
+                return String(text).replace(regex, '<mark class="title-highlight">$1</mark>');
+            } catch(e) {
+                return text;
+            }
         }
 
         // Render individual result card
@@ -1626,13 +1894,16 @@
                 return;
             }
 
+            // Use fewer page buttons on mobile
+            const isMobile = window.innerWidth <= 768;
+            const rangeLimit = isMobile ? 1 : 2;
+
             let html = `
                 <button class="page-btn ${page === 1 ? 'disabled' : ''}" data-page="${page - 1}">
-                    <i class="fa-solid fa-chevron-left"></i> Prev
+                    <i class="fa-solid fa-chevron-left"></i><span class="pagination-label">&nbsp;Prev</span>
                 </button>
             `;
 
-            const rangeLimit = 2; // Show active page plus rangeLimit pages on each side
             for (let i = 1; i <= totalPages; i++) {
                 if (i === 1 || i === totalPages || (i >= page - rangeLimit && i <= page + rangeLimit)) {
                     html += `
@@ -1641,13 +1912,13 @@
                         </button>
                     `;
                 } else if (i === page - rangeLimit - 1 || i === page + rangeLimit + 1) {
-                    html += `<span style="color: var(--text-muted); padding: 0 4px;">...</span>`;
+                    html += `<span style="color: var(--text-muted); padding: 0 2px; font-size: 12px;">…</span>`;
                 }
             }
 
             html += `
                 <button class="page-btn ${page === totalPages ? 'disabled' : ''}" data-page="${page + 1}">
-                    Next <i class="fa-solid fa-chevron-right"></i>
+                    <span class="pagination-label">Next&nbsp;</span><i class="fa-solid fa-chevron-right"></i>
                 </button>
             `;
 
@@ -1736,12 +2007,23 @@
                 const signal = activeAbortController.signal;
 
                 const response = await fetch(url, {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    headers: { 
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'same-origin',
                     signal: signal
                 });
                 
-                if (!response.ok) throw new Error('Search failed');
+                if (!response.ok) throw new Error('Search request failed (' + response.status + ' ' + response.statusText + ')');
                 const data = await response.json();
+
+                // Record search into history dropdown safely
+                try {
+                    if (currentQuery && currentQuery.trim().length >= 2 && typeof window.recordSearchQuery === 'function') {
+                        window.recordSearchQuery(currentQuery.trim());
+                    }
+                } catch(recErr) {}
 
                 // Clear active controller reference
                 activeAbortController = null;
@@ -1756,19 +2038,21 @@
                 }
 
                 // 1. Update stats
-                elements.statsContainer.innerHTML = `
-                    <span class="result-count">${data.total.toLocaleString()}</span> results found for 
-                    &ldquo;<span class="search-query">${escapeHtml(data.query)}</span>&rdquo; 
-                    <span class="search-time">(took ${data.time_ms}ms)</span>
-                `;
+                if (elements.statsContainer) {
+                    elements.statsContainer.innerHTML = `
+                        <span class="result-count">${(data.total || 0).toLocaleString()}</span> results found for 
+                        &ldquo;<span class="search-query">${escapeHtml(data.query || currentQuery)}</span>&rdquo; 
+                        <span class="search-time">(took ${data.time_ms || 0}ms)</span>
+                    `;
+                }
 
                 // 2. Render cards
-                if (data.results.length === 0) {
+                if (!data.results || data.results.length === 0) {
                     elements.resultsFeed.innerHTML = `
                         <div class="no-results">
                             <div class="no-results-icon"><i class="fa-solid fa-circle-question"></i></div>
                             <h3>No Results Found</h3>
-                            <p>We couldn't find matches for "${escapeHtml(data.query)}" with the current filters. Try refining your spelling or clearing filters.</p>
+                            <p>We couldn't find matches for "${escapeHtml(data.query || currentQuery)}" with the current filters. Try refining your spelling or clearing filters.</p>
                         </div>
                     `;
                 } else {
@@ -1776,28 +2060,28 @@
                 }
 
                 // 3. Render pagination
-                renderPagination(data.page, data.total_pages);
+                try { renderPagination(data.page || 1, data.total_pages || 1); } catch(e) {}
 
                 // 4. Update sidebar category counts
-                updateCategoryCounts(data.facets.categories);
+                try { updateCategoryCounts((data.facets && data.facets.categories) ? data.facets.categories : {}); } catch(e) {}
 
                 // 5. Render subcategories if selected category is not 'All'
-                renderSubcategories(data.facets.subcategories);
+                try { renderSubcategories((data.facets && data.facets.subcategories) ? data.facets.subcategories : {}); } catch(e) {}
 
                 // 6. Render year facets
-                renderYears(data.facets.years);
+                try { renderYears((data.facets && data.facets.years) ? data.facets.years : {}); } catch(e) {}
 
             } catch (error) {
                 if (error.name === 'AbortError') {
                     // Ignore aborted request errors
                     return;
                 }
-                console.error(error);
+                console.error('Search Error:', error);
                 elements.resultsFeed.innerHTML = `
                     <div class="no-results">
                         <div class="no-results-icon" style="color: var(--rose);"><i class="fa-solid fa-circle-exclamation"></i></div>
                         <h3>Search Error</h3>
-                        <p>There was a problem querying the database. Please try again.</p>
+                        <p>${escapeHtml(error.message || 'There was a problem querying the database. Please try again.')}</p>
                     </div>
                 `;
             }
@@ -1815,50 +2099,62 @@
 
         // Update counts on main category options in sidebar
         function updateCategoryCounts(categories) {
-            document.getElementById('count-all').innerText = (categories.All || 0).toLocaleString();
-            document.getElementById('count-consti-ghana').innerText = (categories.Constitution_Ghana || 0).toLocaleString();
-            document.getElementById('count-4th-rep').innerText = (categories['4th_Republic'] || 0).toLocaleString();
-            document.getElementById('count-cases').innerText = (categories.Case_Laws || 0).toLocaleString();
-            document.getElementById('count-pre4th').innerText = (categories.Pre_4th_Republic || 0).toLocaleString();
-            document.getElementById('count-consti-others').innerText = (categories.Constitution_Others || 0).toLocaleString();
+            const cats = categories || {};
+            const elAll = document.getElementById('count-all');
+            const elConsti = document.getElementById('count-consti-ghana');
+            const el4th = document.getElementById('count-4th-rep');
+            const elCases = document.getElementById('count-cases');
+            const elPre = document.getElementById('count-pre4th');
+            const elOthers = document.getElementById('count-consti-others');
+
+            if (elAll) elAll.innerText = (cats.All || 0).toLocaleString();
+            if (elConsti) elConsti.innerText = (cats.Constitution_Ghana || 0).toLocaleString();
+            if (el4th) el4th.innerText = (cats['4th_Republic'] || 0).toLocaleString();
+            if (elCases) elCases.innerText = (cats.Case_Laws || 0).toLocaleString();
+            if (elPre) elPre.innerText = (cats.Pre_4th_Republic || 0).toLocaleString();
+            if (elOthers) elOthers.innerText = (cats.Constitution_Others || 0).toLocaleString();
 
             // Disable filters with 0 counts
-            elements.categoryContainer.querySelectorAll('.filter-option').forEach(option => {
-                const cat = option.dataset.category;
-                const count = categories[cat] || 0;
-                
-                if (cat !== 'All' && count === 0) {
-                    option.classList.add('disabled');
-                    if (state.category === cat) {
-                        // Switch active back to All if currently disabled
-                        setActiveCategory('All');
+            if (elements.categoryContainer) {
+                elements.categoryContainer.querySelectorAll('.filter-option').forEach(option => {
+                    const cat = option.dataset.category;
+                    const count = cats[cat] || 0;
+                    
+                    if (cat !== 'All' && count === 0) {
+                        option.classList.add('disabled');
+                        if (state.category === cat) {
+                            setActiveCategory('All');
+                        }
+                    } else {
+                        option.classList.remove('disabled');
                     }
-                } else {
-                    option.classList.remove('disabled');
-                }
-            });
+                });
+            }
         }
 
         // Helper to set active category class
         function setActiveCategory(cat) {
             state.category = cat;
-            elements.categoryContainer.querySelectorAll('.filter-option').forEach(opt => {
-                if (opt.dataset.category === cat) {
-                    opt.classList.add('active');
-                } else {
-                    opt.classList.remove('active');
-                }
-            });
+            if (elements.categoryContainer) {
+                elements.categoryContainer.querySelectorAll('.filter-option').forEach(opt => {
+                    if (opt.dataset.category === cat) {
+                        opt.classList.add('active');
+                    } else {
+                        opt.classList.remove('active');
+                    }
+                });
+            }
         }
 
         // Render subcategory list dynamically
         function renderSubcategories(subcategories) {
-            if (state.category === 'All' || Object.keys(subcategories).length === 0) {
-                elements.subcategoryPanel.style.display = 'none';
+            const subs = subcategories || {};
+            if (state.category === 'All' || Object.keys(subs).length === 0) {
+                if (elements.subcategoryPanel) elements.subcategoryPanel.style.display = 'none';
                 return;
             }
 
-            elements.subcategoryPanel.style.display = 'block';
+            if (elements.subcategoryPanel) elements.subcategoryPanel.style.display = 'block';
 
             let html = `
                 <div class="filter-option filter-option-sub ${state.subcategory === 'All' ? 'active' : ''}" data-value="All">
@@ -1867,7 +2163,7 @@
                 </div>
             `;
 
-            for (const [sub, count] of Object.entries(subcategories)) {
+            for (const [sub, count] of Object.entries(subs)) {
                 if (count > 0) {
                     html += `
                         <div class="filter-option filter-option-sub ${state.subcategory === sub ? 'active' : ''}" data-value="${sub}">
@@ -1879,17 +2175,18 @@
                 }
             }
 
-            elements.subcategoryContainer.innerHTML = html;
+            if (elements.subcategoryContainer) elements.subcategoryContainer.innerHTML = html;
         }
 
         // Render year list dynamically
         function renderYears(years) {
-            if (!years || Object.keys(years).length === 0) {
-                elements.yearPanel.style.display = 'none';
+            const yrs = years || {};
+            if (!years || Object.keys(yrs).length === 0) {
+                if (elements.yearPanel) elements.yearPanel.style.display = 'none';
                 return;
             }
 
-            elements.yearPanel.style.display = 'block';
+            if (elements.yearPanel) elements.yearPanel.style.display = 'block';
 
             let html = `
                 <div class="filter-option filter-option-year ${state.year === 'All' ? 'active' : ''}" data-value="All">
@@ -2094,6 +2391,9 @@
             }
         });
 
+        // Preloaded server-rendered initial data
+        window.initialSearchData = {!! isset($initialSearchData) ? json_encode($initialSearchData) : 'null' !!};
+
         // Initialize state on page load from URL parameters if present
         function initFromUrl() {
             const params = new URLSearchParams(window.location.search);
@@ -2106,7 +2406,51 @@
             if (params.has('year')) state.year = params.get('year');
             if (params.has('page')) state.page = parseInt(params.get('page'), 10) || 1;
 
-            elements.searchInput.value = state.query;
+            if (elements.searchInput) elements.searchInput.value = state.query;
+
+            // Instant Preload: If initial search data was bundled on page load, render immediately without an extra network request
+            if (window.initialSearchData && window.initialSearchData.results && window.initialSearchData.query === state.query && state.category === 'All' && state.subcategory === 'All' && state.year === 'All' && state.page === 1) {
+                const data = window.initialSearchData;
+                window.initialSearchData = null; // Clear so subsequent filter clicks use AJAX
+
+                // 1. Update stats
+                if (elements.statsContainer) {
+                    elements.statsContainer.innerHTML = `
+                        <span class="result-count">${(data.total || 0).toLocaleString()}</span> results found for 
+                        &ldquo;<span class="search-query">${escapeHtml(data.query || state.query)}</span>&rdquo; 
+                        <span class="search-time">(took ${data.time_ms || 0}ms)</span>
+                    `;
+                }
+
+                // 2. Render cards
+                if (!data.results || data.results.length === 0) {
+                    elements.resultsFeed.innerHTML = `
+                        <div class="no-results">
+                            <div class="no-results-icon"><i class="fa-solid fa-circle-question"></i></div>
+                            <h3>No Results Found</h3>
+                            <p>We couldn't find matches for "${escapeHtml(data.query || state.query)}" with the current filters.</p>
+                        </div>
+                    `;
+                } else {
+                    elements.resultsFeed.innerHTML = data.results.map(renderCard).join('');
+                }
+
+                // 3. Render pagination, facets, counts
+                try { renderPagination(data.page || 1, data.total_pages || 1); } catch(e) {}
+                try { updateCategoryCounts((data.facets && data.facets.categories) ? data.facets.categories : {}); } catch(e) {}
+                try { renderSubcategories((data.facets && data.facets.subcategories) ? data.facets.subcategories : {}); } catch(e) {}
+                try { renderYears((data.facets && data.facets.years) ? data.facets.years : {}); } catch(e) {}
+
+                // Record search into history dropdown safely
+                try {
+                    if (state.query && state.query.trim().length >= 2 && typeof window.recordSearchQuery === 'function') {
+                        window.recordSearchQuery(state.query.trim());
+                    }
+                } catch(e) {}
+
+                return;
+            }
+
             performSearch();
         }
 
@@ -2131,6 +2475,202 @@
         } else {
             initFromUrl();
         }
+
+        // ============================================
+        // SEARCH HISTORY DROPDOWN (Search Results Page)
+        // ============================================
+        (function() {
+            const srpHistoryEl = document.getElementById('srpSearchHistory');
+            const srpSearchInput = document.getElementById('main-search-input');
+            if (!srpHistoryEl || !srpSearchInput) return;
+
+            @php
+                $srpPopularTags = array_values(array_filter(array_map('trim', explode(',', homepage_setting('slide_0_popular_tags', 'tax, finance, land, rent')))));
+            @endphp
+            const popularTerms = {!! json_encode($srpPopularTags) !!};
+
+            function getLocal() {
+                try { return JSON.parse(localStorage.getItem('lawsforum_recent_searches') || '[]'); } catch(e) { return []; }
+            }
+
+            function saveLocal(q) {
+                if (!q || !q.trim()) return;
+                try {
+                    let list = getLocal().filter(i => i.search_text.toLowerCase() !== q.trim().toLowerCase());
+                    list.unshift({ id: 'loc_' + Date.now(), search_text: q.trim(), searched_at: 'Just now' });
+                    localStorage.setItem('lawsforum_recent_searches', JSON.stringify(list.slice(0, 10)));
+                } catch(e) {}
+            }
+
+            function renderSH(data) {
+                let h = '';
+
+                if (data && data.length > 0) {
+                    h += '<div class="srp-sh-header">';
+                    h += '<span class="srp-sh-header-title"><i class="fa-solid fa-clock-rotate-left" style="color:#60a5fa;"></i> Recent Searches</span>';
+                    h += '<button type="button" class="srp-sh-clear" id="srpShClear">Clear All</button></div>';
+
+                    data.forEach(item => {
+                        const eq = item.search_text.replace(/"/g, '&quot;').replace(/</g, '&lt;');
+                        h += '<div class="srp-sh-item" data-q="' + eq + '" data-id="' + item.id + '">';
+                        h += '<div class="srp-sh-item-icon"><i class="fa-solid fa-magnifying-glass"></i></div>';
+                        h += '<div class="srp-sh-item-text"><div class="srp-sh-item-query">' + eq + '</div>';
+                        h += '<div class="srp-sh-item-time">' + (item.searched_at || 'Recently') + '</div></div>';
+                        h += '<button type="button" class="srp-sh-item-del" data-del-id="' + item.id + '"><i class="fa-solid fa-xmark"></i></button>';
+                        h += '</div>';
+                    });
+                }
+
+                h += '<div class="srp-sh-header" style="margin-top:' + (data && data.length > 0 ? '8px' : '0') + ';">';
+                h += '<span class="srp-sh-header-title"><i class="fa-solid fa-fire" style="color:#f59e0b;"></i> Popular Suggestions</span></div>';
+                h += '<div style="display:flex; flex-wrap:wrap; gap:6px; padding:6px 4px;">';
+                popularTerms.forEach(t => {
+                    const eq = t.replace(/"/g, '&quot;').replace(/</g, '&lt;');
+                    h += '<span class="srp-sh-item" data-q="' + eq + '" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); padding:5px 12px; border-radius:16px; font-size:12px;">';
+                    h += '<i class="fa-solid fa-arrow-trend-up" style="color:#60a5fa; margin-right:4px; font-size:10px;"></i> ' + eq;
+                    h += '</span>';
+                });
+                h += '</div>';
+
+                srpHistoryEl.innerHTML = h;
+                srpHistoryEl.classList.add('visible');
+
+                // Item click → search
+                srpHistoryEl.querySelectorAll('.srp-sh-item').forEach(el => {
+                    el.addEventListener('click', (e) => {
+                        if (e.target.closest('.srp-sh-item-del')) return;
+                        const q = el.getAttribute('data-q');
+                        if (q) {
+                            srpSearchInput.value = q;
+                            saveLocal(q);
+                            srpHistoryEl.classList.remove('visible');
+                            state.query = q;
+                            state.page = 1;
+                            pushUrl();
+                            performSearch();
+                        }
+                    });
+                });
+
+                // Delete item
+                srpHistoryEl.querySelectorAll('.srp-sh-item-del').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const id = btn.getAttribute('data-del-id');
+                        const row = btn.closest('.srp-sh-item');
+                        if (row) { row.style.opacity = '0'; row.style.transition = 'opacity 0.2s'; }
+
+                        try {
+                            let localData = getLocal().filter(i => String(i.id) !== String(id));
+                            localStorage.setItem('lawsforum_recent_searches', JSON.stringify(localData));
+                        } catch(e) {}
+
+                        if (!String(id).startsWith('loc_')) {
+                            fetch('/search-history/' + id, {
+                                method: 'DELETE',
+                                headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrfToken }
+                            }).catch(() => {});
+                        }
+
+                        setTimeout(() => {
+                            if (row) row.remove();
+                            if (!srpHistoryEl.querySelector('.srp-sh-item')) renderSH([]);
+                            shCache = null;
+                        }, 200);
+                    });
+                });
+
+                // Clear all
+                const clearBtn = document.getElementById('srpShClear');
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        try { localStorage.removeItem('lawsforum_recent_searches'); } catch(e) {}
+                        fetch('/search-history', {
+                            method: 'DELETE',
+                            headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrfToken }
+                        }).catch(() => {});
+                        shCache = null;
+                        renderSH([]);
+                    });
+                }
+            }
+
+            function fetchSH() {
+                const local = getLocal();
+                if (local && local.length > 0) renderSH(local); else renderSH([]);
+
+                if (shFetching) return;
+                shFetching = true;
+                fetch('/search-history?limit=8', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                })
+                .then(r => r.json())
+                .then(d => {
+                    shFetching = false;
+                    if (d.success && d.data && d.data.length > 0) {
+                        shCache = d.data;
+                        try { localStorage.setItem('lawsforum_recent_searches', JSON.stringify(d.data)); } catch(e) {}
+                        renderSH(d.data);
+                    }
+                })
+                .catch(() => { shFetching = false; });
+            }
+
+            function showIfReady() {
+                const local = getLocal();
+                if (local && local.length > 0) {
+                    renderSH(local);
+                } else if (shCache && shCache.length > 0) {
+                    renderSH(shCache);
+                } else {
+                    fetchSH();
+                }
+            }
+
+            // Expose globally so performSearch can record every search immediately
+            window.recordSearchQuery = function(query) {
+                if (!query || !query.trim() || query.trim().length < 2) return;
+                saveLocal(query.trim());
+                shCache = null;
+                // Re-fetch in background to sync server IDs
+                if (shFetching) return;
+                shFetching = true;
+                fetch('/search-history?limit=8', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                })
+                .then(r => r.json())
+                .then(d => {
+                    shFetching = false;
+                    if (d.success && d.data && d.data.length > 0) {
+                        shCache = d.data;
+                        try { localStorage.setItem('lawsforum_recent_searches', JSON.stringify(d.data)); } catch(e) {}
+                    }
+                })
+                .catch(() => { shFetching = false; });
+            };
+
+            // Seed initial query if present
+            const initQ = @json($query);
+            if (initQ && initQ.trim().length >= 2) {
+                saveLocal(initQ.trim());
+            }
+
+            srpSearchInput.addEventListener('focus', () => { showIfReady(); });
+            srpSearchInput.addEventListener('click', () => { showIfReady(); });
+
+            srpSearchInput.addEventListener('input', () => {
+                showIfReady();
+            });
+
+            document.addEventListener('click', (e) => {
+                if (srpHistoryEl.classList.contains('visible')) {
+                    if (!srpHistoryEl.contains(e.target) && e.target !== srpSearchInput) {
+                        srpHistoryEl.classList.remove('visible');
+                    }
+                }
+            });
+        })();
     </script>
 
 @include('partials._premium_guest_gate')

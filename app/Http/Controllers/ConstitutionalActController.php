@@ -51,8 +51,9 @@ class ConstitutionalActController extends Controller
     }
 
     //Display section content
-    public function section_content($id){
+    public function section_content($id, Request $request){
         $allConstitutionalAct       = ConstitutionalArticle::find(['id' => $id])->toArray()[0];
+        $searchText = $request->get('search_text', '');
 
         if (!\Illuminate\Support\Facades\Auth::check()) {
             $allArticles = ConstitutionalArticle::where('constitutional_act', $allConstitutionalAct['constitutional_act'])->get();
@@ -61,11 +62,11 @@ class ConstitutionalActController extends Controller
 
             $sectionIndex = array_search((string) $id, $actArticles);
             if ($sectionIndex !== false && $sectionIndex >= 3) {
-                return view('post_1992_legislation.displayed_locked_section_view', ['allPost1992Article' => $allConstitutionalAct]);
+                return view('post_1992_legislation.displayed_locked_section_view', ['allPost1992Article' => $allConstitutionalAct, 'searchText' => $searchText]);
             }
         }
 
-        return view('post_1992_legislation.displayed_constitutional_act_content', compact('allConstitutionalAct'));
+        return view('post_1992_legislation.displayed_constitutional_act_content', compact('allConstitutionalAct', 'searchText'));
     }
     
     //For expanded view

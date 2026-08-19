@@ -195,6 +195,7 @@ class Post1992Controller extends Controller
         // ->get();
 
         $allPost1992Article = Post1992Article::find(['id' => $id])->toArray()[0];
+        $searchText = $request->get('search_text', '');
 
         if (!\Illuminate\Support\Facades\Auth::check()) {
             $allPostArticles = Post1992Article::where('post_act', $allPost1992Article['post_act'])->get();
@@ -203,11 +204,11 @@ class Post1992Controller extends Controller
 
             $sectionIndex = array_search((string) $id, $actArticles);
             if ($sectionIndex !== false && $sectionIndex >= 3) {
-                return view('post_1992_legislation.displayed_locked_section_view', compact('allPost1992Article'));
+                return view('post_1992_legislation.displayed_locked_section_view', compact('allPost1992Article', 'searchText'));
             }
         }
 
-        return view('post_1992_legislation.new_displayed_content_view', compact('allPost1992Article'));
+        return view('post_1992_legislation.new_displayed_content_view', compact('allPost1992Article', 'searchText'));
         // return view('post_1992_legislation.displayed_content_view', compact('allPost1992Article'));
     }
 

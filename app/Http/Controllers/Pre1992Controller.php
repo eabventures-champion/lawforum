@@ -124,8 +124,10 @@ class Pre1992Controller extends Controller
     }
 
     //Display Content
-     public function pre_1992_legislation_content($id){
+     public function pre_1992_legislation_content($id, Request $request){
         $allPre1992Article = Pre1992LegislationArticle::find(['id' => $id])->toArray()[0];
+
+        $searchText = $request->get('search_text', '');
 
         if (!\Illuminate\Support\Facades\Auth::check()) {
             $allPreArticles = Pre1992LegislationArticle::where('pre_1992_act', $allPre1992Article['pre_1992_act'])->get();
@@ -134,11 +136,11 @@ class Pre1992Controller extends Controller
 
             $sectionIndex = array_search((string) $id, $actArticles);
             if ($sectionIndex !== false && $sectionIndex >= 3) {
-                return view('pre_1992_legislation.displayed_locked_section_view', compact('allPre1992Article'));
+                return view('pre_1992_legislation.displayed_locked_section_view', compact('allPre1992Article', 'searchText'));
             }
         }
 
-        return view('pre_1992_legislation.displayed_content_view', compact('allPre1992Article'));
+        return view('pre_1992_legislation.displayed_content_view', compact('allPre1992Article', 'searchText'));
     }
 
     //Display Expanded-View
