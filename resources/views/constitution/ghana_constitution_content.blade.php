@@ -521,21 +521,50 @@
                 width: 100% !important;
                 max-width: 100vw !important;
             }
-            .content-nav-search { display: none; }
-            .content-nav-inner { height: 56px; }
-            .content-header-wrap { padding: 20px 16px 0; }
-            .content-meta-header { padding: 20px 20px; border-radius: 12px; }
-            .content-act-title { font-size: 18px; }
-            .premium-article-container { padding: 0 16px 40px; }
-            .article-card { padding: 24px 20px; border-radius: 12px; }
-            .content { font-size: 15px; }
-            .content-actions-bar { flex-wrap: wrap; }
+            .content-nav { padding: 0 12px !important; }
+            .content-nav-search { display: none !important; }
+            .content-nav-inner { height: 52px !important; gap: 8px !important; }
+            .content-nav-logo { gap: 6px !important; }
+            .content-nav-logo-text { font-size: 15px !important; }
+            .content-nav-logo img { width: 26px !important; height: 26px !important; }
+            .content-nav-actions { gap: 6px !important; }
+            .content-nav-btn { padding: 6px 10px !important; font-size: 11.5px !important; }
+            
+            .content-header-wrap { padding: 16px 12px 0 !important; width: 100% !important; box-sizing: border-box !important; }
+            .content-back-search { font-size: 12px !important; padding: 6px 12px !important; margin-bottom: 14px !important; }
+            .content-breadcrumb { font-size: 12px !important; word-break: break-word !important; margin-bottom: 16px !important; }
+            .content-meta-header { padding: 16px 14px !important; border-radius: 12px !important; width: 100% !important; box-sizing: border-box !important; margin-bottom: 20px !important; }
+            .content-meta-badges { margin-bottom: 12px !important; gap: 6px !important; }
+            .content-badge { font-size: 10px !important; padding: 3px 8px !important; }
+            .content-act-title { font-size: 16px !important; word-break: break-word !important; margin-bottom: 8px !important; line-height: 1.35 !important; }
+            .content-section-title { font-size: 13.5px !important; word-break: break-word !important; }
+            
+            .content-actions-bar {
+                flex-wrap: wrap !important;
+                gap: 8px !important;
+                margin-top: 14px !important;
+                padding-top: 14px !important;
+                justify-content: flex-start !important;
+            }
+            .content-actions-bar .content-action-btn,
+            .content-actions-bar button.btn-bookmark-toggle,
+            .content-actions-bar button.content-action-btn {
+                min-width: 70px !important;
+                height: 34px !important;
+                padding: 0 10px !important;
+                font-size: 11.5px !important;
+                gap: 6px !important;
+            }
+
+            .premium-article-container { padding: 0 12px 40px !important; width: 100% !important; box-sizing: border-box !important; }
+            .article-card { padding: 18px 14px !important; border-radius: 12px !important; width: 100% !important; box-sizing: border-box !important; word-break: break-word !important; }
+            .content { font-size: 14.5px !important; word-break: break-word !important; line-height: 1.75 !important; }
         }
 
         @media (max-width: 480px) {
-            .content-nav-actions { gap: 6px; }
-            .content-nav-btn { padding: 7px 12px; font-size: 12px; }
-            .content-breadcrumb { font-size: 12px; }
+            .content-nav-actions { gap: 4px !important; }
+            .content-nav-btn { padding: 5px 8px !important; font-size: 11px !important; }
+            .content-breadcrumb { font-size: 11.5px !important; }
         }
 
         /* ============================================
