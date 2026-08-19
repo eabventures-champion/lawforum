@@ -181,7 +181,7 @@ class Post1992Controller extends Controller
     }
 
     //Display Content
-    public function post_1992_legislation_content($id){
+    public function post_1992_legislation_content($id, Request $request){
         // dd($act_id, $title, $id);
 
         // $allPost1992Act    = Post1992Act::find(

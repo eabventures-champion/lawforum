@@ -56,9 +56,10 @@ class ConstitutionController extends Controller
         return view('constitution.ghana_constitution_preamble', compact('ghana_act'));
     }
 
-    public function ghana_constitution_content($id){
+    public function ghana_constitution_content($id, Request $request){
         $constitutionContent = GhanaArticle::find(['id' => $id])->toArray()[0];
-        return view('constitution.ghana_constitution_content', compact('constitutionContent'));
+        $searchText = $request->get('search_text', '');
+        return view('constitution.ghana_constitution_content', compact('constitutionContent', 'searchText'));
     }
 
     public function ghana_constitution_content_plain_view($id){
