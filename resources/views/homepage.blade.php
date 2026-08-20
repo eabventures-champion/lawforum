@@ -496,18 +496,36 @@
         }
 
         .hero-content.history-open {
-            transform: translateY(-90px);
+            transform: translateY(-320px);
         }
 
         @media (max-width: 768px) {
+            body.search-history-open .premium-indicators,
+            body.search-history-open #feedback-trigger-btn {
+                opacity: 0 !important;
+                visibility: hidden !important;
+                pointer-events: none !important;
+                transform: scale(0.8) !important;
+                transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+            }
+
             .hero-content.history-open {
-                transform: translateY(-135px);
+                transform: translateY(-280px);
+            }
+
+            .search-history-dropdown {
+                max-height: 380px !important;
+                padding: 14px 12px 10px !important;
+            }
+
+            .recent-searches-scroll-area {
+                max-height: 230px !important;
             }
         }
 
         @media (max-width: 480px) {
             .hero-content.history-open {
-                transform: translateY(-145px);
+                transform: translateY(-300px);
             }
         }
 
@@ -2151,6 +2169,22 @@
             justify-content: center !important;
         }
 
+        .hero-content.history-open {
+            transform: translateY(-100px) !important;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content.history-open {
+                transform: translateY(-135px) !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content.history-open {
+                transform: translateY(-145px) !important;
+            }
+        }
+
         .quick-search-back-btn {
             position: fixed;
             top: 24px;
@@ -3373,6 +3407,7 @@
 
             searchHistoryDropdown.innerHTML = html;
             searchHistoryDropdown.classList.add('visible');
+            document.body.classList.add('search-history-open');
             if (heroSearchWrapper) {
                 heroSearchWrapper.classList.add('has-history-open');
             }
@@ -3441,6 +3476,7 @@
         function hideSearchHistory() {
             if (searchHistoryDropdown) {
                 searchHistoryDropdown.classList.remove('visible');
+                document.body.classList.remove('search-history-open');
                 const heroSearchWrapper = searchHistoryDropdown.closest('.hero-search');
                 if (heroSearchWrapper) {
                     heroSearchWrapper.classList.remove('has-history-open');
