@@ -83,6 +83,7 @@
 
         .sidebar.collapsed {
             width: var(--sidebar-collapsed);
+            overflow: visible !important;
         }
 
         .sidebar-header {
@@ -381,6 +382,7 @@
             margin-top: auto;
             flex-shrink: 0;
             background: rgba(8, 12, 28, 0.98);
+            position: relative;
         }
 
         .sidebar.collapsed .sidebar-footer {
@@ -389,6 +391,8 @@
             justify-content: center;
             align-items: center;
             background: transparent;
+            overflow: visible !important;
+            position: relative;
         }
 
         .sidebar-user-card {
@@ -403,6 +407,9 @@
             margin-bottom: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
             transition: var(--transition-smooth);
+            cursor: pointer;
+            user-select: none;
+            position: relative;
         }
 
         .sidebar-user-card:hover {
@@ -422,6 +429,7 @@
             border: none;
             background: transparent;
             box-shadow: none;
+            overflow: visible !important;
         }
 
         .sidebar-avatar {
@@ -430,7 +438,7 @@
             border-radius: 50%;
             background: rgba(59, 130, 246, 0.1);
             border: 1px solid rgba(59, 130, 246, 0.2);
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             font-size: 14px;
@@ -438,6 +446,8 @@
             color: var(--accent-color);
             flex-shrink: 0;
             transition: var(--transition-smooth);
+            line-height: 1;
+            text-align: center;
         }
 
         .sidebar.collapsed .sidebar-avatar {
@@ -447,9 +457,14 @@
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(29, 78, 216, 0.15) 100%);
             border: 1.5px solid rgba(59, 130, 246, 0.4);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
         }
 
-        .sidebar.collapsed .sidebar-user-card:hover .sidebar-avatar {
+        .sidebar.collapsed .sidebar-user-card:hover .sidebar-avatar,
+        .sidebar.collapsed .sidebar-user-card.active .sidebar-avatar {
             border-color: #60a5fa;
             transform: scale(1.06);
             box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
@@ -462,6 +477,10 @@
         }
 
         .sidebar.collapsed .sidebar-user-info {
+            display: none !important;
+        }
+
+        .sidebar.collapsed .sidebar-user-chevron {
             display: none !important;
         }
 
@@ -2044,6 +2063,29 @@
         .sidebar-user-dropdown.show {
             display: block;
         }
+        .sidebar.collapsed .sidebar-user-dropdown {
+            position: absolute !important;
+            left: calc(100% + 14px) !important;
+            bottom: 8px !important;
+            width: 270px !important;
+            z-index: 1000 !important;
+            margin-bottom: 0 !important;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 25px rgba(59, 130, 246, 0.15) !important;
+            animation: flyoutIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+        @keyframes flyoutIn {
+            from { opacity: 0; transform: translateX(-8px) scale(0.97); }
+            to { opacity: 1; transform: translateX(0) scale(1); }
+        }
+        [data-theme="light"] .sidebar-user-dropdown {
+            background: #ffffff;
+            border-color: rgba(0, 0, 0, 0.1);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15), 0 0 20px rgba(59, 130, 246, 0.08);
+        }
+        [data-theme="light"] .sidebar-user-link-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: #0f172a;
+        }
         .sidebar-user-card.active .sidebar-user-chevron {
             transform: rotate(180deg);
         }
@@ -2225,7 +2267,7 @@
                                     </div>
                                     <div style="display: flex; flex-direction: column; gap: 1px;">
                                         <span style="font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8;">Trial Validity</span>
-                                        <span style="font-size: 11.5px; font-weight: 600; color: #fff;">{{ $remaining }} {{ $remaining === 1 ? 'day' : 'days' }} left</span>
+                                        <!-- <span style="font-size: 11.5px; font-weight: 600; color: #fff;">{{ $remaining }} {{ $remaining === 1 ? 'day' : 'days' }} left</span> -->
                                     </div>
                                 </div>
                                 <span class="demo-status-badge {{ $extensionActive ? 'extension' : ($demoActive ? 'active' : 'expired') }}" style="font-size: 10px; padding: 2px 7px; white-space: nowrap;">
@@ -2381,7 +2423,7 @@
                                             </div>
                                             <div style="display: flex; flex-direction: column; gap: 1px;">
                                                 <span style="font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8;">Trial Validity</span>
-                                                <span style="font-size: 11.5px; font-weight: 600; color: #fff;">{{ $remaining }} {{ $remaining === 1 ? 'day' : 'days' }} left</span>
+                                                <!-- <span style="font-size: 11.5px; font-weight: 600; color: #fff;">{{ $remaining }} {{ $remaining === 1 ? 'day' : 'days' }} left</span> -->
                                             </div>
                                         </div>
                                         <span class="demo-status-badge {{ $extensionActive ? 'extension' : ($demoActive ? 'active' : 'expired') }}" style="font-size: 10px; padding: 2px 7px; white-space: nowrap;">
