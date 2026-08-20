@@ -341,7 +341,23 @@
 
 
 
+@php
+    $readingLimitEnabled = \App\ReadingLimitSetting::get('reading_limit_enabled', '1') == '1';
+    $defaultScrollPercentage = (int) \App\ReadingLimitSetting::get('default_scroll_percentage', 10);
+    $constitutionScrollPercentage = (int) \App\ReadingLimitSetting::get('constitution_scroll_percentage', 50);
+    $caseLawScrollPercentage = (int) \App\ReadingLimitSetting::get('case_law_scroll_percentage', 20);
+    $freePreviewSectionsCount = (int) \App\ReadingLimitSetting::get('free_preview_sections_count', 3);
+@endphp
+
 <script>
+    window.GUEST_GATE_CONFIG = {
+        enabled: {{ $readingLimitEnabled ? 'true' : 'false' }},
+        defaultThreshold: {{ $defaultScrollPercentage }},
+        constitutionThreshold: {{ $constitutionScrollPercentage }},
+        caseLawThreshold: {{ $caseLawScrollPercentage }},
+        freePreviewSections: {{ $freePreviewSectionsCount }}
+    };
+
     (function() {
         if (window._premiumGuestGateScriptLoaded) {
             if (typeof window.resetGateForExpandedView === 'function') {
@@ -526,9 +542,12 @@
                     }
                 }
                 
+                const maxFreeSections = (window.GUEST_GATE_CONFIG && typeof window.GUEST_GATE_CONFIG.freePreviewSections !== 'undefined') ? window.GUEST_GATE_CONFIG.freePreviewSections : 3;
+                const gateEnabled = !window.GUEST_GATE_CONFIG || window.GUEST_GATE_CONFIG.enabled;
+
                 let isRestricted = false;
 
-                if (index !== null && index > 3) {
+                if (gateEnabled && index !== null && index > maxFreeSections) {
                     isRestricted = true;
                 }
 
@@ -550,7 +569,7 @@
 
                     openPremiumGateModal(
                         sectionTitle + ' is Locked for Guests',
-                        'As a guest, you can access full content for the first 3 sections. Please sign up as a Student, Lawyer, or Researcher to view ' + sectionTitle + ' and all remaining sections.',
+                        'As a guest, you can access full content for the first ' + maxFreeSections + ' sections. Please sign up as a Student, Lawyer, or Researcher to view ' + sectionTitle + ' and all remaining sections.',
                         false,
                         true
                     );
@@ -681,6 +700,18 @@
                     return;
                 }
 
+                if (window.GUEST_GATE_CONFIG && !window.GUEST_GATE_CONFIG.enabled) {
+                    if (scrollLocked && !window._sectionClickModalOpen) {
+                        scrollLocked = false;
+                        const blurredElements = document.querySelectorAll('.content-blurred-by-gate');
+                        blurredElements.forEach(function(el) {
+                            el.classList.remove('content-blurred-by-gate');
+                        });
+                        window.closePremiumGateModal();
+                    }
+                    return;
+                }
+
                 // The reading progress gate applies to Expanded View & Case Laws pages
                 if (!isExpandedViewActive()) {
                     if (scrollLocked && !window._sectionClickModalOpen) {
@@ -698,11 +729,21 @@
                 const lastPathSegment = pathSegments[pathSegments.length - 1] || '';
                 const isCaseLawPage = (path.includes('/judgement') || path.includes('/case-law') || path.includes('/case_law') || path.includes('/cases')) && /^\d+$/.test(lastPathSegment);
                 
-                let targetThreshold = 10;
+                const cfg = window.GUEST_GATE_CONFIG || {
+                    defaultThreshold: 10,
+                    constitutionThreshold: 50,
+                    caseLawThreshold: 20
+                };
+
+                let targetThreshold = cfg.defaultThreshold;
+                let docTypeName = 'document';
+
                 if (isConstitution) {
-                    targetThreshold = 50;
+                    targetThreshold = cfg.constitutionThreshold;
+                    docTypeName = 'Constitution document';
                 } else if (isCaseLawPage) {
-                    targetThreshold = 20;
+                    targetThreshold = cfg.caseLawThreshold;
+                    docTypeName = 'case judgment';
                 }
 
                 let currentProgress = 0;
@@ -759,15 +800,13 @@
                         target.classList.add('content-blurred-by-gate');
                     });
 
-                    let modalTitle = 'Reading Limit Reached (10%)';
-                    let modalDesc = 'You have reached 10% of this document. Sign up as a Student, Lawyer, or Researcher to continue reading full laws and case judgments.';
+                    let modalTitle = 'Reading Limit Reached (' + targetThreshold + '%)';
+                    let modalDesc = 'You have reached ' + targetThreshold + '% of this ' + docTypeName + '. Sign up as a Student, Lawyer, or Researcher to continue reading full laws and case judgments.';
 
                     if (isConstitution) {
-                        modalTitle = 'Reading Limit Reached (50%)';
-                        modalDesc = 'You have reached 50% of the Constitution document in Expanded View. Sign up as a Student, Lawyer, or Researcher to continue reading full constitutional texts and legal documents.';
+                        modalDesc = 'You have reached ' + targetThreshold + '% of the Constitution document in Expanded View. Sign up as a Student, Lawyer, or Researcher to continue reading full constitutional texts and legal documents.';
                     } else if (isCaseLawPage) {
-                        modalTitle = 'Reading Limit Reached (20%)';
-                        modalDesc = 'You have reached 20% of this case judgment. Sign up as a Student, Lawyer, or Researcher to continue reading full legal judgments and case laws.';
+                        modalDesc = 'You have reached ' + targetThreshold + '% of this case judgment. Sign up as a Student, Lawyer, or Researcher to continue reading full legal judgments and case laws.';
                     }
 
                     openPremiumGateModal(modalTitle, modalDesc, true);

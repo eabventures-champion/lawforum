@@ -129,17 +129,26 @@ class Pre1992Controller extends Controller
 
         $searchText = $request->get('search_text', '');
 
-        if (!\Illuminate\Support\Facades\Auth::check()) {
+        if (!\Illuminate\Support\Facades\Auth::check() && \App\ReadingLimitSetting::get('reading_limit_enabled', '1') == '1') {
+            $freePreviewCount = (int) \App\ReadingLimitSetting::get('free_preview_sections_count', 3);
             $allPreArticles = Pre1992LegislationArticle::where('pre_1992_act', $allPre1992Article['pre_1992_act'])->get();
             $sortedArticles = $allPreArticles->sortBy('part')->sortBy('priority');
             $actArticles = $sortedArticles->pluck('id')->map(function($v){ return (string) $v; })->values()->toArray();
 
             $sectionIndex = array_search((string) $id, $actArticles);
-            if ($sectionIndex !== false && $sectionIndex >= 3) {
+            if ($sectionIndex !== false && $sectionIndex >= $freePreviewCount) {
+                // Return lightweight partial for AJAX (reader view), full page for direct navigation
+                if ($request->ajax()) {
+                    return view('pre_1992_legislation.displayed_locked_section_partial', compact('allPre1992Article', 'searchText'));
+                }
                 return view('pre_1992_legislation.displayed_locked_section_view', compact('allPre1992Article', 'searchText'));
             }
         }
 
+        // Return lightweight partial for AJAX (reader view), full page for direct navigation
+        if ($request->ajax()) {
+            return view('pre_1992_legislation.displayed_content_partial', compact('allPre1992Article', 'searchText'));
+        }
         return view('pre_1992_legislation.displayed_content_view', compact('allPre1992Article', 'searchText'));
     }
 

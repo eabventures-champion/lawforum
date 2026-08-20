@@ -40,6 +40,12 @@
                     <span>Users Management</span>
                 </a>
             </li>
+            <li class="menu-item {{ Request::is('admin/profile*') ? 'active' : '' }}">
+                <a href="{{ route('admin.profile.index') }}">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span>Admin Profile</span>
+                </a>
+            </li>
             <li class="menu-item {{ Request::is('admin/notifications*') ? 'active' : '' }}">
                 <a href="{{ route('admin.notifications.index') }}" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                     <div style="display: flex; align-items: center; gap: 12px;">
@@ -114,6 +120,12 @@
                     <span>Demo Settings</span>
                 </a>
             </li>
+            <li class="menu-item {{ Request::is('admin/reading-limits*') ? 'active' : '' }}">
+                <a href="{{ route('admin.reading-limits.index') }}">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>Reading Limits & Gates</span>
+                </a>
+            </li>
             <li class="menu-item {{ Request::is('admin/maintenance-settings*') ? 'active' : '' }}">
                 <a href="{{ route('admin.maintenance-settings.index') }}">
                     <i class="fa-solid fa-shield-halved"></i>
@@ -125,7 +137,17 @@
             </li>
         </ul>
 
-        <div class="sidebar-footer">
+        <div class="sidebar-footer" style="display: flex; flex-direction: column; gap: 8px;">
+            <a href="{{ route('admin.profile.index') }}" style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; color: #cbd5e1; text-decoration: none; font-size: 13px; font-weight: 600; transition: all 0.2s ease;">
+                <div style="width: 28px; height: 28px; border-radius: 8px; background: #3b82f6; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; flex-shrink: 0;">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <div style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    {{ Auth::user()->name ?? 'Admin' }}
+                </div>
+                <i class="fa-solid fa-gear" style="font-size: 12px; color: #64748b;"></i>
+            </a>
+
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="logout-btn">

@@ -1,4 +1,8 @@
-<?php $oldpart = ''; $c=1; $closure = ''; ?>
+<?php 
+    $oldpart = ''; $c=1; $closure = ''; 
+    $freePreviewCount = (int) \App\ReadingLimitSetting::get('free_preview_sections_count', 3);
+    $readingLimitEnabled = \App\ReadingLimitSetting::get('reading_limit_enabled', '1') == '1';
+?>
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
             @foreach($allConstitutionalArticles as $allConstitutionalArticle)    
                     <?php
@@ -28,7 +32,7 @@
                                 data-scroll-offset="-60" class="constitutional_content_link list-group-item" style="white-space:normal; line-height: 0.4cm;" sid="{{ $allConstitutionalArticle->id }}" data-section-index="{{ $loop->iteration }}" href="/new-laws/constitutional-acts/content/{{ $allConstitutionalArticle->id }}">
                                 {{ $allConstitutionalArticle->section }}
                                 @guest
-                                    @if($loop->iteration > 3)
+                                    @if($readingLimitEnabled && $loop->iteration > $freePreviewCount)
                                         <i class="fa-solid fa-lock" style="font-size: 10px; margin-left: 6px; color: #f59e0b;" title="Locked for Guests"></i>
                                     @endif
                                 @endguest

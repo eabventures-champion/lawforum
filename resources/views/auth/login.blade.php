@@ -297,6 +297,55 @@
             font-weight: 500;
             line-height: 1.4;
         }
+
+        /* Back Navigation */
+        .auth-back-nav {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .btn-auth-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            color: #9ca3af;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            backdrop-filter: blur(8px);
+        }
+
+        .btn-auth-back:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            transform: translateX(-3px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+        }
+
+        .auth-return-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #9ca3af !important;
+            font-size: 13px;
+            text-decoration: none !important;
+            transition: var(--transition-smooth);
+            cursor: pointer;
+        }
+
+        .auth-return-link:hover {
+            color: #ffffff !important;
+            transform: translateX(-3px);
+        }
     </style>
 </head>
 <body>
@@ -305,6 +354,14 @@
     <div class="ambient-blob-2"></div>
 
     <div class="auth-container">
+        <!-- Back Navigation -->
+        <div class="auth-back-nav">
+            <a href="javascript:void(0)" onclick="handleGoBack()" class="btn-auth-back" title="Go back to previous page">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Back</span>
+            </a>
+        </div>
+
         <!-- Logo Area -->
         <div class="brand-header">
             <a href="/" style="text-decoration: none; color: inherit; display: inline-block; cursor: pointer;">
@@ -373,11 +430,25 @@
         </form>
 
         <div class="auth-footer">
-            Don't have an account? <a href="{{ route('register') }}">Sign Up</a>
+            <div>Don't have an account? <a href="{{ route('register') }}">Sign Up</a></div>
+            <div style="margin-top: 14px;">
+                <a href="javascript:void(0)" onclick="handleGoBack()" class="auth-return-link">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Return to Previous Page</span>
+                </a>
+            </div>
         </div>
     </div>
 
     <script>
+        function handleGoBack() {
+            if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+                window.history.back();
+            } else {
+                window.location.href = '/';
+            }
+        }
+
         function togglePasswordVisibility(fieldId, icon) {
             const passwordField = document.getElementById(fieldId);
             if (passwordField.type === 'password') {

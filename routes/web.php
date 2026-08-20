@@ -595,6 +595,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::get('demo-settings', 'Admin\DemoSettingController@index')->name('admin.demo-settings.index');
     Route::post('demo-settings/update', 'Admin\DemoSettingController@update')->name('admin.demo-settings.update');
 
+    // Guest Reading Limits & Scroll Gate Management
+    Route::get('reading-limits', 'Admin\ReadingLimitSettingController@index')->name('admin.reading-limits.index');
+    Route::post('reading-limits/update', 'Admin\ReadingLimitSettingController@update')->name('admin.reading-limits.update');
+
     // Platform Feature Updates & Tours Management
     Route::resource('platform-updates', 'Admin\PlatformUpdateController', ['as' => 'admin']);
     Route::post('platform-updates/{id}/toggle-status', 'Admin\PlatformUpdateController@toggleStatus')->name('admin.platform-updates.toggle');
@@ -606,6 +610,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::put('onboarding-tour/step/{id}', 'Admin\OnboardingTourController@updateStep')->name('admin.onboarding-tour.update_step');
     Route::delete('onboarding-tour/step/{id}', 'Admin\OnboardingTourController@destroyStep')->name('admin.onboarding-tour.destroy_step');
     Route::post('onboarding-tour/reset-defaults', 'Admin\OnboardingTourController@resetDefaults')->name('admin.onboarding-tour.reset_defaults');
+
+    // Admin Profile Management
+    Route::get('profile', 'Admin\ProfileController@index')->name('admin.profile.index');
+    Route::put('profile', 'Admin\ProfileController@updateProfile')->name('admin.profile.update');
+    Route::put('profile/password', 'Admin\ProfileController@updatePassword')->name('admin.profile.password');
 });
 
 // Legacy User Role Upgrade Route

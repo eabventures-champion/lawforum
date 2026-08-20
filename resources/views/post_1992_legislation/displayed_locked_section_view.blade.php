@@ -313,13 +313,14 @@
             background: rgba(17, 24, 39, 0.6);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 18px 14px;
+            padding: 18px 16px 18px 16px;
             text-decoration: none;
             transition: var(--transition);
             display: flex;
             flex-direction: column;
             position: relative;
             overflow: hidden;
+            min-height: 130px;
         }
         .role-card:hover {
             transform: translateY(-2px);
@@ -342,7 +343,7 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            font-size: 9px;
+            font-size: 8.5px;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.6px;
@@ -354,15 +355,21 @@
         }
 
         .role-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
+            position: absolute;
+            bottom: 14px;
+            right: 14px;
+            width: 26px;
+            height: 26px;
+            min-width: 26px;
+            max-width: 26px;
+            border-radius: 7px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 15px;
-            margin-bottom: 10px;
+            font-size: 11.5px;
+            margin: 0;
             flex-shrink: 0;
+            pointer-events: none;
         }
         .role-student .role-icon {
             background: rgba(59, 130, 246, 0.15);
@@ -382,16 +389,18 @@
 
         .role-info { flex: 1; min-width: 0; }
         .role-name {
-            font-size: 13.5px;
+            font-size: 14px;
             font-weight: 700;
             color: #fff;
             margin-bottom: 3px;
+            padding-right: 48px;
         }
         .role-subtitle {
-            font-size: 11px;
+            font-size: 11.5px;
             color: var(--text-muted);
-            line-height: 1.35;
-            margin-bottom: 12px;
+            line-height: 1.4;
+            margin-bottom: 14px;
+            padding-right: 32px;
         }
 
         .role-btn-text {
@@ -401,6 +410,7 @@
             align-items: center;
             gap: 5px;
             transition: var(--transition);
+            margin-top: auto;
         }
         .role-student .role-btn-text { color: #60a5fa; }
         .role-lawyer .role-btn-text { color: #fbbf24; }
@@ -419,49 +429,32 @@
         }
         .gate-back-link {
             font-size: 13px;
-            color: var(--text-secondary);
+            color: var(--text-muted);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 6px;
             transition: var(--transition);
-            cursor: pointer;
         }
-        .gate-back-link:hover { color: #fff; }
+        .gate-back-link:hover { color: #fff; transform: translateX(-2px); }
         .gate-login-prompt {
             font-size: 13px;
             color: var(--text-muted);
         }
         .gate-login-prompt a {
-            color: var(--accent-light);
+            color: var(--primary-accent);
             text-decoration: none;
             font-weight: 600;
             margin-left: 4px;
         }
         .gate-login-prompt a:hover { text-decoration: underline; }
 
-        /* Responsive Breakpoints */
-        @media (max-width: 768px) {
-            html, body {
-                overflow-x: hidden !important;
-                width: 100% !important;
-                max-width: 100vw !important;
-            }
-
-            .ambient-blob { display: none !important; }
-
-            .gate-header { padding: 0 10px; }
-            .gate-header-inner { height: 52px; gap: 6px; }
-            .gate-logo { gap: 8px; }
-            .logo-icon { width: 30px; height: 30px; font-size: 12px; border-radius: 8px; }
-            .logo-text { font-size: 14px; }
-            .gate-header-actions { gap: 6px; }
-            .btn-nav-back { padding: 5px 8px; font-size: 11px; gap: 4px; border-radius: 8px; }
-            .btn-nav-login { padding: 5px 10px; font-size: 11px; gap: 4px; border-radius: 8px; }
-
-            .gate-main { padding: 16px 10px 32px; }
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 640px) {
+            body { padding: 16px 12px 32px; }
+            .gate-container { padding: 0 4px; }
             .gate-card {
-                padding: 22px 14px 18px;
+                padding: 20px 14px;
                 border-radius: 16px;
                 max-width: 100% !important;
                 width: 100% !important;
@@ -473,24 +466,47 @@
             .gate-act-meta { font-size: 11px; padding: 4px 8px; margin-bottom: 10px; border-radius: 8px; }
             .gate-desc { font-size: 12.5px; line-height: 1.5; margin-bottom: 16px; }
 
-            /* Horizontal compact role cards on mobile */
+            /* Role cards on mobile */
             .roles-grid {
                 grid-template-columns: 1fr;
-                gap: 6px;
-                margin-bottom: 16px;
+                gap: 10px;
+                margin-bottom: 20px;
             }
             .role-card {
-                padding: 10px 12px;
-                border-radius: 10px;
-                flex-direction: row;
-                align-items: center;
-                gap: 10px;
+                padding: 14px 14px;
+                min-height: auto;
             }
-            .role-featured-tag { top: 6px; right: 6px; font-size: 8px; padding: 1px 5px; }
-            .role-icon { width: 34px; height: 34px; font-size: 13px; margin-bottom: 0; border-radius: 8px; }
-            .role-subtitle { display: none; }
-            .role-name { font-size: 12.5px; margin-bottom: 0; }
-            .role-btn-text { font-size: 11px; margin-left: auto; flex-shrink: 0; }
+            .role-name {
+                font-size: 14px;
+                margin-bottom: 3px;
+                padding-right: 52px;
+            }
+            .role-subtitle {
+                display: block;
+                font-size: 11.5px;
+                margin-bottom: 12px;
+                line-height: 1.35;
+                padding-right: 36px;
+            }
+            .role-btn-text {
+                font-size: 12px;
+            }
+            .role-icon {
+                bottom: 12px;
+                right: 12px;
+                width: 24px;
+                height: 24px;
+                min-width: 24px;
+                max-width: 24px;
+                font-size: 10.5px;
+                border-radius: 6px;
+            }
+            .role-featured-tag {
+                top: 8px;
+                right: 8px;
+                padding: 1px 6px;
+                font-size: 8px;
+            }
 
             .gate-footer-actions {
                 flex-direction: column;

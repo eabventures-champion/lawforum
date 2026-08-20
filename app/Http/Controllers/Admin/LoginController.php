@@ -42,8 +42,8 @@ class LoginController extends Controller
             // Validate that the user is an administrator
             // (either isAdmin() returns true, or email is admin@admin.com, or ends with @admin.com)
             if ($user->isAdmin() || $user->email === 'admin@admin.com' || strpos($user->email, '@admin.com') !== false) {
-                // Redirect directly to the admin laws dashboard
-                return redirect()->route('admin.laws.index')
+                // Redirect directly to the main admin dashboard
+                return redirect()->route('admin.dashboard')
                     ->with('success', 'Welcome to Legals Forum Administration Portal!');
             }
 

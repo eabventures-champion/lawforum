@@ -5504,6 +5504,7 @@
         return div.innerHTML;
     }
     </script>
+  @include('partials._bookmark_script')
   @include('partials._premium_guest_gate')
 </body>
 </html>

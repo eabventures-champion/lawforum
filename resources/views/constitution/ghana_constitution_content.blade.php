@@ -726,7 +726,6 @@
                         title="{{ $isBookmarked ? 'Remove Bookmark' : 'Bookmark this section' }}"
                         onclick="toggleBookmark(this)">
                     <i class="{{ $isBookmarked ? 'fa-solid' : 'fa-regular' }} fa-bookmark"></i>
-                    {{ $isBookmarked ? 'Bookmarked' : 'Bookmark' }}
                 </button>
 
                 <button type="button" class="content-action-btn" onclick="window.print()">

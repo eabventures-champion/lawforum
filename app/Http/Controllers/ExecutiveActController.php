@@ -55,13 +55,14 @@ class ExecutiveActController extends Controller
         $allExecutiveAct       = ExecutiveArticle::find(['id' => $id])->toArray()[0];
         $searchText = $request->get('search_text', '');
 
-        if (!\Illuminate\Support\Facades\Auth::check()) {
+        if (!\Illuminate\Support\Facades\Auth::check() && \App\ReadingLimitSetting::get('reading_limit_enabled', '1') == '1') {
+            $freePreviewCount = (int) \App\ReadingLimitSetting::get('free_preview_sections_count', 3);
             $allArticles = ExecutiveArticle::where('executive_act', $allExecutiveAct['executive_act'])->get();
             $sortedArticles = $allArticles->sortBy('part')->sortBy('priority');
             $actArticles = $sortedArticles->pluck('id')->map(function($v){ return (string) $v; })->values()->toArray();
 
             $sectionIndex = array_search((string) $id, $actArticles);
-            if ($sectionIndex !== false && $sectionIndex >= 3) {
+            if ($sectionIndex !== false && $sectionIndex >= $freePreviewCount) {
                 return view('post_1992_legislation.displayed_locked_section_view', ['allPost1992Article' => $allExecutiveAct, 'searchText' => $searchText]);
             }
         }

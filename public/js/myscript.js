@@ -24,6 +24,338 @@
     }
 })();
 
+//-------------------------------------------------------------------------------------------------------------------------
+// Universal fix: Hide standalone page elements (nav, breadcrumbs, back-to-top, Tawk.to)
+// when full-page content views are loaded into the reader's #display_content panel.
+// This covers all document types: Constitution, Existing Laws, New Laws, Amendments, etc.
+(function() {
+    var style = document.createElement('style');
+    style.textContent = '' +
+        /* ---- Hide standalone navigation & chrome ---- */
+        '#display_content .content-nav,' +
+        '#display_content .content-breadcrumb,' +
+        '#display_content .content-back-search,' +
+        '#display_content .back-to-top-btn,' +
+        '#display_content .gate-header,' +
+        '#display_content .ambient-blob,' +
+        '.split-panel-body .content-nav,' +
+        '.split-panel-body .content-breadcrumb,' +
+        '.split-panel-body .content-back-search,' +
+        '.split-panel-body .back-to-top-btn,' +
+        '.split-panel-body .gate-header,' +
+        '.split-panel-body .ambient-blob' +
+        '{ display: none !important; }' +
+
+        /* ---- Standalone body reset ---- */
+        '#display_content body.standalone-view,' +
+        '#display_content > body.standalone-view' +
+        '{ background: transparent !important; padding: 0 !important; margin: 0 !important; min-height: auto !important; }' +
+
+        /* ---- Content header wrap (contains metadata card) ---- */
+        '#display_content .content-header-wrap,' +
+        '.split-panel-body .content-header-wrap' +
+        '{ animation: none !important; padding: 0 !important; margin: 0 !important; }' +
+
+        /* ---- Metadata header: clean flex row for reader view ---- */
+        '#display_content .content-meta-header,' +
+        '.split-panel-body .content-meta-header' +
+        '{ display: flex !important; align-items: center !important; justify-content: space-between !important; background: transparent !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.08) !important; border-radius: 0 !important; padding: 8px 0 16px 0 !important; margin-bottom: 24px !important; position: relative !important; overflow: visible !important; gap: 16px !important; }' +
+
+        /* ---- Remove accent bar ---- */
+        '#display_content .content-meta-header::before,' +
+        '.split-panel-body .content-meta-header::before' +
+        '{ display: none !important; }' +
+
+        /* ---- Hide Act Title and Badges in Reader View ---- */
+        '#display_content .content-meta-badges,' +
+        '.split-panel-body .content-meta-badges,' +
+        '#display_content .content-act-title,' +
+        '.split-panel-body .content-act-title' +
+        '{ display: none !important; }' +
+
+        /* ---- Section title ---- */
+        '#display_content .content-section-title,' +
+        '.split-panel-body .content-section-title' +
+        '{ font-family: "Outfit","Inter",-apple-system,sans-serif !important; font-size: 15px !important; font-weight: 700 !important; color: #60a5fa !important; display: inline-flex !important; align-items: center !important; gap: 10px !important; margin: 0 !important; }' +
+
+        '#display_content .content-section-title i,' +
+        '.split-panel-body .content-section-title i' +
+        '{ color: #f59e0b !important; font-size: 14px !important; }' +
+
+        /* ---- Actions bar: inline on right side ---- */
+        '#display_content .content-actions-bar,' +
+        '.split-panel-body .content-actions-bar' +
+        '{ display: inline-flex !important; align-items: center !important; gap: 8px !important; margin: 0 !important; padding: 0 !important; border: none !important; }' +
+
+        /* Hide Print and Copy buttons inside reader */
+        '#display_content .content-actions-bar .content-action-btn:not(.btn-bookmark-toggle),' +
+        '.split-panel-body .content-actions-bar .content-action-btn:not(.btn-bookmark-toggle)' +
+        '{ display: none !important; }' +
+
+        /* Bookmark button — refined icon-only button on right side of section title */
+        '#display_content .content-actions-bar .btn-bookmark-toggle, #display_content .reader-bookmark-btn,' +
+        '.split-panel-body .content-actions-bar .btn-bookmark-toggle, .split-panel-body .reader-bookmark-btn' +
+        '{ display: inline-flex !important; align-items: center !important; justify-content: center !important; width: 36px !important; height: 36px !important; min-width: 36px !important; max-width: 36px !important; padding: 0 !important; border-radius: 10px !important; background: rgba(255,255,255,0.04) !important; border: 1px solid rgba(255,255,255,0.12) !important; color: #f59e0b !important; cursor: pointer !important; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important; box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important; transform: none !important; }' +
+
+        '#display_content .content-actions-bar .btn-bookmark-toggle span, #display_content .reader-bookmark-btn span,' +
+        '.split-panel-body .content-actions-bar .btn-bookmark-toggle span, .split-panel-body .reader-bookmark-btn span' +
+        '{ display: none !important; }' +
+
+        '#display_content .content-actions-bar .btn-bookmark-toggle i, #display_content .reader-bookmark-btn i,' +
+        '.split-panel-body .content-actions-bar .btn-bookmark-toggle i, .split-panel-body .reader-bookmark-btn i' +
+        '{ font-size: 15px !important; color: #f59e0b !important; transition: transform 0.2s ease !important; margin: 0 !important; }' +
+
+        '#display_content .content-actions-bar .btn-bookmark-toggle:hover, #display_content .reader-bookmark-btn:hover,' +
+        '.split-panel-body .content-actions-bar .btn-bookmark-toggle:hover, .split-panel-body .reader-bookmark-btn:hover' +
+        '{ background: rgba(245,158,11,0.15) !important; border-color: rgba(245,158,11,0.5) !important; color: #fbbf24 !important; transform: translateY(-1px) scale(1.05) !important; box-shadow: 0 4px 14px rgba(245,158,11,0.25) !important; }' +
+
+        '#display_content .content-actions-bar .btn-bookmark-toggle:hover i, #display_content .reader-bookmark-btn:hover i,' +
+        '.split-panel-body .content-actions-bar .btn-bookmark-toggle:hover i, .split-panel-body .reader-bookmark-btn:hover i' +
+        '{ transform: scale(1.15) !important; color: #fbbf24 !important; }' +
+
+        '#display_content .content-actions-bar .btn-bookmark-toggle.is-bookmarked, #display_content .reader-bookmark-btn.is-bookmarked,' +
+        '.split-panel-body .content-actions-bar .btn-bookmark-toggle.is-bookmarked, .split-panel-body .reader-bookmark-btn.is-bookmarked' +
+        '{ background: rgba(245,158,11,0.2) !important; border-color: #f59e0b !important; color: #fbbf24 !important; box-shadow: 0 0 16px rgba(245,158,11,0.3) !important; }' +
+
+        '#display_content .content-actions-bar .btn-bookmark-toggle.is-bookmarked i, #display_content .reader-bookmark-btn.is-bookmarked i,' +
+        '.split-panel-body .content-actions-bar .btn-bookmark-toggle.is-bookmarked i, .split-panel-body .reader-bookmark-btn.is-bookmarked i' +
+        '{ color: #f59e0b !important; }' +
+
+        /* =========================================================
+           PREMIUM GUEST LIMIT REACHED / LOCKED SECTION STYLING
+           ========================================================= */
+        '#display_content .gate-card, #display_content .gate-card-partial,' +
+        '.split-panel-body .gate-card, .split-panel-body .gate-card-partial' +
+        '{ width: 100% !important; max-width: 720px !important; margin: 30px auto !important; background: rgba(15, 23, 42, 0.85) !important; border: 1px solid rgba(245, 158, 11, 0.3) !important; border-radius: 22px !important; padding: 36px 28px 30px !important; text-align: center !important; box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05) !important; backdrop-filter: blur(24px) !important; -webkit-backdrop-filter: blur(24px) !important; position: relative !important; overflow: hidden !important; }' +
+
+        '#display_content .gate-card::before, #display_content .gate-card-partial::before,' +
+        '.split-panel-body .gate-card::before, .split-panel-body .gate-card-partial::before' +
+        '{ content: "" !important; position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; height: 3px !important; background: linear-gradient(90deg, #3b82f6, #f59e0b, #8b5cf6) !important; }' +
+
+        '#display_content .lock-icon-wrap, #display_content .lock-icon-wrap-partial,' +
+        '.split-panel-body .lock-icon-wrap, .split-panel-body .lock-icon-wrap-partial' +
+        '{ width: 64px !important; height: 64px !important; border-radius: 18px !important; background: radial-gradient(circle at 30% 30%, rgba(245, 158, 11, 0.25), rgba(245, 158, 11, 0.08)) !important; border: 1.5px solid rgba(245, 158, 11, 0.45) !important; color: #fbbf24 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; font-size: 26px !important; margin-bottom: 16px !important; box-shadow: 0 0 30px rgba(245, 158, 11, 0.25) !important; }' +
+
+        '#display_content .gate-badge, #display_content .gate-badge-partial,' +
+        '.split-panel-body .gate-badge, .split-panel-body .gate-badge-partial' +
+        '{ display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 4px 12px !important; border-radius: 20px !important; font-size: 11px !important; font-weight: 700 !important; text-transform: uppercase !important; letter-spacing: 0.7px !important; background: rgba(245, 158, 11, 0.12) !important; color: #fbbf24 !important; border: 1px solid rgba(245, 158, 11, 0.28) !important; margin-bottom: 14px !important; }' +
+
+        '#display_content .gate-title, #display_content .gate-title-partial,' +
+        '.split-panel-body .gate-title, .split-panel-body .gate-title-partial' +
+        '{ font-family: "Outfit","Inter",-apple-system,sans-serif !important; font-size: 22px !important; font-weight: 800 !important; color: #ffffff !important; letter-spacing: -0.4px !important; margin-bottom: 10px !important; line-height: 1.35 !important; }' +
+
+        '#display_content .gate-act-meta, #display_content .gate-act-meta-partial,' +
+        '.split-panel-body .gate-act-meta, .split-panel-body .gate-act-meta-partial' +
+        '{ display: inline-flex !important; align-items: center !important; gap: 8px !important; padding: 6px 14px !important; background: rgba(255, 255, 255, 0.04) !important; border: 1px solid rgba(255, 255, 255, 0.08) !important; border-radius: 10px !important; font-size: 13px !important; font-weight: 500 !important; color: #cbd5e1 !important; margin-bottom: 16px !important; max-width: 100% !important; word-break: break-word !important; }' +
+
+        '#display_content .gate-act-meta i, #display_content .gate-act-meta-partial i,' +
+        '.split-panel-body .gate-act-meta i, .split-panel-body .gate-act-meta-partial i' +
+        '{ color: #60a5fa !important; flex-shrink: 0 !important; }' +
+
+        '#display_content .gate-desc, #display_content .gate-desc-partial,' +
+        '.split-panel-body .gate-desc, .split-panel-body .gate-desc-partial' +
+        '{ font-size: 14px !important; color: #94a3b8 !important; line-height: 1.6 !important; max-width: 580px !important; margin: 0 auto 24px !important; }' +
+
+        '#display_content .gate-desc strong, #display_content .gate-desc-partial strong,' +
+        '.split-panel-body .gate-desc strong, .split-panel-body .gate-desc-partial strong' +
+        '{ color: #ffffff !important; font-weight: 600 !important; }' +
+
+        '#display_content .roles-grid, #display_content .roles-grid-partial,' +
+        '.split-panel-body .roles-grid, .split-panel-body .roles-grid-partial' +
+        '{ display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 14px !important; margin-bottom: 24px !important; text-align: left !important; }' +
+
+        '#display_content .role-card, #display_content .role-card-partial,' +
+        '.split-panel-body .role-card, .split-panel-body .role-card-partial' +
+        '{ background: rgba(17, 24, 39, 0.6) !important; border: 1px solid rgba(255, 255, 255, 0.08) !important; border-radius: 16px !important; padding: 18px 16px 18px 16px !important; text-decoration: none !important; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important; display: flex !important; flex-direction: column !important; position: relative !important; overflow: hidden !important; color: inherit !important; min-height: 130px !important; }' +
+
+        '#display_content .role-card:hover, #display_content .role-card-partial:hover,' +
+        '.split-panel-body .role-card:hover, .split-panel-body .role-card-partial:hover' +
+        '{ transform: translateY(-2px) !important; border-color: rgba(255, 255, 255, 0.25) !important; background: rgba(25, 35, 55, 0.85) !important; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35) !important; }' +
+
+        '#display_content .role-card.featured, #display_content .role-card.role-lawyer,' +
+        '#display_content .role-card-partial.featured-partial, #display_content .role-card-partial.role-lawyer-partial,' +
+        '.split-panel-body .role-card.featured, .split-panel-body .role-card.role-lawyer' +
+        '{ border-color: rgba(245, 158, 11, 0.45) !important; background: rgba(245, 158, 11, 0.06) !important; box-shadow: 0 8px 25px rgba(245, 158, 11, 0.1) !important; }' +
+
+        /* Reduced-size Icon at Bottom-Right of Card */
+        '#display_content .role-icon, #display_content .role-icon-partial,' +
+        '.split-panel-body .role-icon, .split-panel-body .role-icon-partial' +
+        '{ position: absolute !important; bottom: 14px !important; right: 14px !important; width: 26px !important; height: 26px !important; min-width: 26px !important; max-width: 26px !important; border-radius: 7px !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 11.5px !important; margin: 0 !important; flex-shrink: 0 !important; pointer-events: none !important; }' +
+
+        '#display_content .role-student .role-icon, #display_content .role-student-partial .role-icon-partial,' +
+        '.split-panel-body .role-student .role-icon' +
+        '{ background: rgba(59, 130, 246, 0.15) !important; color: #60a5fa !important; border: 1px solid rgba(59, 130, 246, 0.3) !important; }' +
+
+        '#display_content .role-lawyer .role-icon, #display_content .role-lawyer-partial .role-icon-partial,' +
+        '.split-panel-body .role-lawyer .role-icon' +
+        '{ background: rgba(245, 158, 11, 0.2) !important; color: #f59e0b !important; border: 1px solid rgba(245, 158, 11, 0.4) !important; }' +
+
+        '#display_content .role-researcher .role-icon, #display_content .role-researcher-partial .role-icon-partial,' +
+        '.split-panel-body .role-researcher .role-icon' +
+        '{ background: rgba(139, 92, 246, 0.18) !important; color: #a78bfa !important; border: 1px solid rgba(139, 92, 246, 0.35) !important; }' +
+
+        '#display_content .role-name, #display_content .role-name-partial,' +
+        '.split-panel-body .role-name, .split-panel-body .role-name-partial' +
+        '{ font-size: 14px !important; font-weight: 700 !important; color: #ffffff !important; margin-bottom: 3px !important; padding-right: 48px !important; }' +
+
+        '#display_content .role-subtitle, #display_content .role-subtitle-partial,' +
+        '.split-panel-body .role-subtitle, .split-panel-body .role-subtitle-partial' +
+        '{ font-size: 11.5px !important; color: #94a3b8 !important; line-height: 1.4 !important; margin-bottom: 14px !important; padding-right: 32px !important; }' +
+
+        '#display_content .role-btn-text, #display_content .role-btn-text-partial,' +
+        '.split-panel-body .role-btn-text, .split-panel-body .role-btn-text-partial' +
+        '{ font-size: 12px !important; font-weight: 700 !important; display: inline-flex !important; align-items: center !important; gap: 5px !important; transition: all 0.25s ease !important; margin-top: auto !important; }' +
+
+        '#display_content .role-student .role-btn-text, #display_content .role-student-partial .role-btn-text-partial' +
+        '{ color: #60a5fa !important; }' +
+        '#display_content .role-lawyer .role-btn-text, #display_content .role-lawyer-partial .role-btn-text-partial' +
+        '{ color: #fbbf24 !important; }' +
+        '#display_content .role-researcher .role-btn-text, #display_content .role-researcher-partial .role-btn-text-partial' +
+        '{ color: #c4b5fd !important; }' +
+
+        '#display_content .role-featured-tag, #display_content .role-featured-tag-partial,' +
+        '.split-panel-body .role-featured-tag, .split-panel-body .role-featured-tag-partial' +
+        '{ position: absolute !important; top: 10px !important; right: 10px !important; font-size: 8.5px !important; font-weight: 800 !important; text-transform: uppercase !important; letter-spacing: 0.6px !important; padding: 2px 7px !important; border-radius: 6px !important; background: rgba(245, 158, 11, 0.25) !important; color: #fbbf24 !important; border: 1px solid rgba(245, 158, 11, 0.4) !important; }' +
+
+        '#display_content .gate-footer-actions, #display_content .gate-footer-partial,' +
+        '.split-panel-body .gate-footer-actions, .split-panel-body .gate-footer-partial' +
+        '{ display: flex !important; align-items: center !important; justify-content: center !important; gap: 16px !important; flex-wrap: wrap !important; padding-top: 16px !important; border-top: 1px solid rgba(255, 255, 255, 0.08) !important; }' +
+
+        '#display_content .gate-login-prompt, #display_content .gate-login-prompt-partial,' +
+        '.split-panel-body .gate-login-prompt, .split-panel-body .gate-login-prompt-partial' +
+        '{ font-size: 13px !important; color: #64748b !important; }' +
+
+        '#display_content .gate-login-prompt a, #display_content .gate-login-prompt-partial a,' +
+        '.split-panel-body .gate-login-prompt a, .split-panel-body .gate-login-prompt-partial a' +
+        '{ color: #60a5fa !important; text-decoration: none !important; font-weight: 600 !important; margin-left: 4px !important; }' +
+
+        /* Mobile & Tablet responsive layout for role cards */
+        '@media (max-width: 768px) {' +
+            '#display_content .roles-grid, #display_content .roles-grid-partial, .split-panel-body .roles-grid, .split-panel-body .roles-grid-partial { grid-template-columns: 1fr !important; gap: 10px !important; }' +
+            '#display_content .gate-card, #display_content .gate-card-partial, .split-panel-body .gate-card, .split-panel-body .gate-card-partial { padding: 20px 14px !important; margin: 10px auto 20px !important; border-radius: 16px !important; }' +
+            '#display_content .gate-title, #display_content .gate-title-partial, .split-panel-body .gate-title, .split-panel-body .gate-title-partial { font-size: 18px !important; }' +
+            '#display_content .gate-desc, #display_content .gate-desc-partial, .split-panel-body .gate-desc, .split-panel-body .gate-desc-partial { font-size: 12.5px !important; margin-bottom: 18px !important; }' +
+            '#display_content .role-card, #display_content .role-card-partial, .split-panel-body .role-card, .split-panel-body .role-card-partial { padding: 14px 14px 14px 14px !important; min-height: auto !important; }' +
+            '#display_content .role-name, #display_content .role-name-partial, .split-panel-body .role-name, .split-panel-body .role-name-partial { font-size: 14px !important; margin-bottom: 3px !important; padding-right: 52px !important; }' +
+            '#display_content .role-subtitle, #display_content .role-subtitle-partial, .split-panel-body .role-subtitle, .split-panel-body .role-subtitle-partial { font-size: 11.5px !important; margin-bottom: 12px !important; line-height: 1.35 !important; padding-right: 36px !important; }' +
+            '#display_content .role-btn-text, #display_content .role-btn-text-partial, .split-panel-body .role-btn-text, .split-panel-body .role-btn-text-partial { font-size: 12px !important; }' +
+            '#display_content .role-icon, #display_content .role-icon-partial, .split-panel-body .role-icon, .split-panel-body .role-icon-partial { bottom: 12px !important; right: 12px !important; width: 24px !important; height: 24px !important; min-width: 24px !important; max-width: 24px !important; font-size: 10.5px !important; border-radius: 6px !important; }' +
+            '#display_content .role-featured-tag, #display_content .role-featured-tag-partial, .split-panel-body .role-featured-tag, .split-panel-body .role-featured-tag-partial { top: 8px !important; right: 8px !important; padding: 1px 6px !important; font-size: 8px !important; }' +
+        '}';
+
+    document.head.appendChild(style);
+
+    // Also strip full HTML document wrapper when injected into #display_content
+    // by observing DOM changes and extracting only the <body> content
+    function stripStandaloneFromContainer(container) {
+        if (!container) return;
+        // If the response was a full HTML page, the browser parses it and keeps only
+        // the body content. But <style>, <link>, and <nav> elements survive.
+        // Remove standalone-only elements that shouldn't appear in the reader panel.
+        var removeSelectors = [
+            'nav.content-nav',
+            '.content-breadcrumb',
+            '.content-back-search',
+            '.back-to-top-btn',
+            'header.gate-header',
+            '.ambient-blob',
+            'link[href*="fonts.googleapis"]',
+            'link[href*="font-awesome"]',
+            'link[href*="tooltipster"]'
+        ];
+        removeSelectors.forEach(function(sel) {
+            var els = container.querySelectorAll(sel);
+            for (var i = 0; i < els.length; i++) {
+                els[i].parentNode.removeChild(els[i]);
+            }
+        });
+
+        // Remove standalone <style> blocks that define standalone-view selectors
+        // These leak CSS that conflicts with the reader's dark theme
+        var styleEls = container.querySelectorAll('style');
+        for (var i = 0; i < styleEls.length; i++) {
+            var text = styleEls[i].textContent || '';
+            if (text.indexOf('.content-nav') !== -1 ||
+                text.indexOf('.standalone-view') !== -1) {
+                styleEls[i].parentNode.removeChild(styleEls[i]);
+            }
+        }
+
+        // Remove duplicate script loaders (jQuery, Bootstrap) that leak from standalone pages
+        var scriptEls = container.querySelectorAll('script');
+        for (var j = 0; j < scriptEls.length; j++) {
+            var src = scriptEls[j].src || '';
+            var txt = scriptEls[j].textContent || '';
+            if (src.indexOf('jquery') !== -1 ||
+                src.indexOf('bootstrap') !== -1 ||
+                src.indexOf('tawk.to') !== -1 ||
+                txt.indexOf('typeof jQuery') !== -1 ||
+                txt.indexOf('$.fn.modal') !== -1 ||
+                txt.indexOf('Tawk_API') !== -1) {
+                scriptEls[j].parentNode.removeChild(scriptEls[j]);
+            }
+        }
+
+        // Ensure bookmark button in reader view is strictly icon-only
+        var bookmarkBtns = container.querySelectorAll('.btn-bookmark-toggle, .reader-bookmark-btn');
+        for (var k = 0; k < bookmarkBtns.length; k++) {
+            var btn = bookmarkBtns[k];
+            var childNodes = Array.prototype.slice.call(btn.childNodes);
+            for (var m = 0; m < childNodes.length; m++) {
+                var node = childNodes[m];
+                if (node.nodeType === 3 /* TEXT_NODE */ || (node.nodeType === 1 && node.tagName === 'SPAN')) {
+                    btn.removeChild(node);
+                }
+            }
+        }
+    }
+
+    // Set up MutationObserver on #display_content once it exists
+    function observeDisplayContent() {
+        var el = document.getElementById('display_content');
+        if (!el) return;
+        var observer = new MutationObserver(function(mutations) {
+            for (var i = 0; i < mutations.length; i++) {
+                if (mutations[i].addedNodes.length > 0) {
+                    stripStandaloneFromContainer(el);
+                    break;
+                }
+            }
+        });
+        observer.observe(el, { childList: true });
+    }
+
+    // Also observe split panel bodies
+    function observeSplitPanels() {
+        var panels = document.querySelectorAll('.split-panel-body');
+        panels.forEach(function(panel) {
+            var observer = new MutationObserver(function(mutations) {
+                for (var i = 0; i < mutations.length; i++) {
+                    if (mutations[i].addedNodes.length > 0) {
+                        stripStandaloneFromContainer(panel);
+                        break;
+                    }
+                }
+            });
+            observer.observe(panel, { childList: true });
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            observeDisplayContent();
+            observeSplitPanels();
+        });
+    } else {
+        observeDisplayContent();
+        observeSplitPanels();
+    }
+
+    // Expose for manual use if needed
+    window.stripStandaloneFromContainer = stripStandaloneFromContainer;
+    window.observeDisplayContent = observeDisplayContent;
+})();
+
 window.resetReaderScroll = function(panel) {
     if (panel) {
         var pBody = document.getElementById('bodyPanel' + panel);
@@ -914,6 +1246,7 @@ $(document).ready(function(){
         var link = $(this).attr("href");
         preSetPrevNext(psid);
         xhr.open("GET", link, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         xhr.onreadystatechange = function receiveUpdate(e) {
             if (this.readyState == 4 && this.status == 200) {
                 $("#display_preamble").html("");
@@ -1112,6 +1445,7 @@ $(document).ready(function(){
         preSetPrevNext(nsid);
 
         xhr.open("GET", link, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         xhr.onreadystatechange = function receiveUpdate(e) {
             if (this.readyState == 4 && this.status == 200) {
                 $("#display_preamble").html("");
@@ -1695,6 +2029,7 @@ $(document).ready(function(){
         preSetPrevNext(gsid);
         
         xhr.open("GET", link, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         xhr.onreadystatechange = function receiveUpdate(e) {
             if (this.readyState == 4 && this.status == 200) {
                 $("#display_view_all_section").html("");
@@ -1727,6 +2062,7 @@ $(document).ready(function(){
         preSetPrevNext(gsid);
         
         xhr.open("GET", link, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         xhr.onreadystatechange = function receiveUpdate(e) {
             if (this.readyState == 4 && this.status == 200) {
                 // $("#display_preamble").html("");
@@ -2866,4 +3202,21 @@ $(document).ready(function(){
 function newFunction() {
     return '.panel-collapse';
 }
+
+// Global delegated handler for bookmark button clicks
+$(document).on('click', '.btn-bookmark-toggle, .reader-bookmark-btn', function(e) {
+    if (typeof window.toggleBookmark === 'function') {
+        // toggleBookmark handles guest vs auth check internally
+        return;
+    }
+    // Fallback if toggleBookmark not yet loaded
+    if (typeof window.openPremiumGateModal === 'function') {
+        e.preventDefault();
+        window.openPremiumGateModal('Sign In to Bookmark', 'Create a free account or log in to bookmark sections and organize your legal research.');
+    } else if (typeof window.openLoginModal === 'function') {
+        e.preventDefault();
+        window.openLoginModal();
+    }
+});
+
 

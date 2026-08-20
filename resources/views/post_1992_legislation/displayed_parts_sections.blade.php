@@ -1,6 +1,10 @@
 {{-- Accordion for sections --}}
 
-<?php $oldpart = ''; $c=1; $closure = ''; ?>
+<?php 
+    $oldpart = ''; $c=1; $closure = ''; 
+    $freePreviewCount = (int) \App\ReadingLimitSetting::get('free_preview_sections_count', 3);
+    $readingLimitEnabled = \App\ReadingLimitSetting::get('reading_limit_enabled', '1') == '1';
+?>
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
             @foreach($allPost1992Articles as $allPost1992Article )    
                     <?php
@@ -35,7 +39,7 @@
                                     data-scroll-offset="-60" class="content_link" sid="{{ $allPost1992Article->id }}" data-section-index="{{ $loop->iteration }}" href="/new-laws/content/{{ $allPost1992Article->id }}">
                                     <span style="color:black;">{{ $allPost1992Article->section }}</span>
                                     @guest
-                                        @if($loop->iteration > 3)
+                                        @if($readingLimitEnabled && $loop->iteration > $freePreviewCount)
                                             <i class="fa-solid fa-lock" style="font-size: 10px; margin-left: 6px; color: #f59e0b;" title="Locked for Guests"></i>
                                         @endif
                                     @endguest
