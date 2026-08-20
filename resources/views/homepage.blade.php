@@ -491,6 +491,24 @@
             position: relative;
             z-index: 1;
             max-width: 820px;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform;
+        }
+
+        .hero-content.history-open {
+            transform: translateY(-90px);
+        }
+
+        @media (max-width: 768px) {
+            .hero-content.history-open {
+                transform: translateY(-135px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content.history-open {
+                transform: translateY(-145px);
+            }
         }
 
         .hero-badge {
@@ -507,6 +525,7 @@
             letter-spacing: 0.5px;
             margin-bottom: 28px;
             animation: fadeInUp 0.8s ease both;
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
         }
 
         .hero-badge i {
@@ -520,6 +539,7 @@
             letter-spacing: -1.5px;
             margin-bottom: 20px;
             animation: fadeInUp 0.8s ease 0.1s both;
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
         }
 
         .hero-title .gradient-text {
@@ -537,6 +557,16 @@
             margin: 0 auto 40px;
             font-weight: 400;
             animation: fadeInUp 0.8s ease 0.2s both;
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+        }
+
+        .hero-content.history-open .hero-subtitle,
+        .hero-content.history-open .hero-title,
+        .hero-content.history-open .hero-badge {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            transform: translateY(-12px);
         }
 
         @keyframes fadeInUp {
@@ -735,7 +765,7 @@
             display: none;
             flex-direction: column;
             position: absolute;
-            top: calc(100% + 10px);
+            top: calc(100% + 12px);
             bottom: auto;
             left: 0;
             right: 0;
@@ -745,10 +775,10 @@
             background: #090f1e !important;
             border: 1px solid rgba(59, 130, 246, 0.45) !important;
             border-radius: 18px;
-            padding: 12px 12px 8px;
+            padding: 16px 16px 14px;
             z-index: 100000;
             box-shadow: 0 28px 70px rgba(0, 0, 0, 0.98), 0 0 35px rgba(59, 130, 246, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
-            max-height: min(400px, calc(100vh - 56vh - 24px));
+            max-height: 300px;
             overflow: hidden;
             animation: searchHistoryFadeInDown 0.22s cubic-bezier(0.16, 1, 0.3, 1);
             text-align: left;
@@ -765,10 +795,11 @@
             scrollbar-width: thin;
             scrollbar-color: rgba(59, 130, 246, 0.5) rgba(255, 255, 255, 0.04);
             padding-right: 4px;
-            padding-bottom: 12px;
+            padding-bottom: 8px;
             margin-right: -4px;
             flex: 1 1 auto;
-            min-height: 0;
+            min-height: 80px;
+            max-height: 155px;
         }
 
         .recent-searches-scroll-area::-webkit-scrollbar {
@@ -3287,19 +3318,12 @@
             return defaultPopularSearches || ['tax', 'finance', 'land', 'rent'];
         }
 
-        function adjustDropdownMaxHeight() {
-            if (!searchHistoryDropdown || !heroSearchInput) return;
-            const rect = heroSearchInput.getBoundingClientRect();
-            const availableSpaceBelow = window.innerHeight - rect.bottom - 20;
-            if (availableSpaceBelow > 160) {
-                searchHistoryDropdown.style.maxHeight = Math.min(420, availableSpaceBelow) + 'px';
-            }
-        }
-        window.addEventListener('resize', adjustDropdownMaxHeight);
+        let lastHistoryOpenedTime = 0;
 
         function renderSearchHistory(data) {
             if (!searchHistoryDropdown) return;
             const heroSearchWrapper = searchHistoryDropdown.closest('.hero-search');
+            lastHistoryOpenedTime = Date.now();
 
             let html = '';
             const popularTags = getPopularTagsList();
@@ -3348,10 +3372,13 @@
             }
 
             searchHistoryDropdown.innerHTML = html;
-            adjustDropdownMaxHeight();
             searchHistoryDropdown.classList.add('visible');
             if (heroSearchWrapper) {
                 heroSearchWrapper.classList.add('has-history-open');
+            }
+            const heroContent = document.querySelector('.hero-content');
+            if (heroContent) {
+                heroContent.classList.add('history-open');
             }
             const searchHint = document.querySelector('.search-hint');
             if (searchHint) {
@@ -3417,6 +3444,10 @@
                 const heroSearchWrapper = searchHistoryDropdown.closest('.hero-search');
                 if (heroSearchWrapper) {
                     heroSearchWrapper.classList.remove('has-history-open');
+                }
+                const heroContent = document.querySelector('.hero-content');
+                if (heroContent) {
+                    heroContent.classList.remove('history-open');
                 }
                 const searchHint = document.querySelector('.search-hint');
                 if (searchHint) {
@@ -3524,10 +3555,12 @@
 
         // Hide dropdown when clicking outside
         document.addEventListener('click', (e) => {
-            if (searchHistoryVisible && searchHistoryDropdown && heroSearchInput) {
-                const isInsideDropdown = searchHistoryDropdown.contains(e.target);
-                const isInsideInput = heroSearchInput.contains(e.target) || e.target === heroSearchInput;
-                if (!isInsideDropdown && !isInsideInput) {
+            if (searchHistoryVisible && searchHistoryDropdown) {
+                // Ignore clicks during upward opening transition (prevents instant close from coordinate shift)
+                if (Date.now() - lastHistoryOpenedTime < 350) return;
+
+                const isInsideSearch = e.target.closest('.hero-search, .search-container, #hero-search-form, #searchHistoryDropdown, .search-history-dropdown');
+                if (!isInsideSearch) {
                     hideSearchHistory();
                     userExplicitlyInteracting = false;
                     resetAutoSlide();
