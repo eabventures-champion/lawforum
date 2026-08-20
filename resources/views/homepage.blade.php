@@ -510,22 +510,22 @@
             }
 
             .hero-content.history-open {
-                transform: translateY(-280px);
+                transform: translateY(-250px);
             }
 
             .search-history-dropdown {
-                max-height: 380px !important;
+                max-height: 360px !important;
                 padding: 14px 12px 10px !important;
             }
 
             .recent-searches-scroll-area {
-                max-height: 230px !important;
+                max-height: 210px !important;
             }
         }
 
         @media (max-width: 480px) {
             .hero-content.history-open {
-                transform: translateY(-300px);
+                transform: translateY(-265px);
             }
         }
 
