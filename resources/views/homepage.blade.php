@@ -3581,11 +3581,7 @@
 
             heroSearchInput.addEventListener('input', () => {
                 userExplicitlyInteracting = true;
-                if (heroSearchInput.value.trim()) {
-                    hideSearchHistory();
-                } else {
-                    showSearchHistoryIfAppropriate();
-                }
+                showSearchHistoryIfAppropriate();
             });
         }
 
