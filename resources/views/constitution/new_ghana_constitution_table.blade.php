@@ -3193,7 +3193,7 @@
     <script src="{{ asset('js/tooltipster.bundle.min.js') }}"></script>
     <script src="{{ asset('js/print-preview.js') }}"></script>
     <script src="{{ asset('js/offcanvas.js') }}"></script>
-    <script src="{{ asset('js/myscript.js') }}"></script>
+    <script src="{{ asset('js/myscript.js') }}?v={{ file_exists(public_path('js/myscript.js')) ? filemtime(public_path('js/myscript.js')) : time() }}"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 
     <script>
