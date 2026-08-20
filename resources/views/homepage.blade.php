@@ -546,6 +546,9 @@
 
         /* Search bar */
         .hero-search {
+            position: relative;
+            max-width: 640px;
+            margin: 0 auto;
             animation: fadeInUp 0.8s ease 0.3s both;
         }
 
@@ -694,6 +697,15 @@
             font-size: 13px;
             color: var(--text-muted);
             animation: fadeInUp 0.8s ease 0.4s both;
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+        }
+
+        .search-hint.is-hidden-history,
+        .hero-search.has-history-open + .search-hint {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            transform: translateY(-8px) !important;
         }
 
         .search-hint span {
@@ -717,52 +729,65 @@
         }
 
         /* ============================================
-           SEARCH HISTORY DROPDOWN (Projected Above)
+           SEARCH HISTORY DROPDOWN (Projected Below)
            ============================================ */
         .search-history-dropdown {
             display: none;
+            flex-direction: column;
             position: absolute;
-            bottom: calc(100% + 12px);
-            top: auto;
+            top: calc(100% + 10px);
+            bottom: auto;
             left: 0;
             right: 0;
+            width: 100%;
             max-width: 640px;
             margin: 0 auto;
-            background: #0b1324 !important;
-            border: 1px solid rgba(59, 130, 246, 0.4) !important;
-            border-radius: 16px;
-            padding: 12px;
-            z-index: 10000;
-            box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
-            max-height: 320px;
-            overflow-y: auto;
-            animation: searchHistoryFadeInUp 0.2s ease;
+            background: #090f1e !important;
+            border: 1px solid rgba(59, 130, 246, 0.45) !important;
+            border-radius: 18px;
+            padding: 12px 12px 8px;
+            z-index: 100000;
+            box-shadow: 0 28px 70px rgba(0, 0, 0, 0.98), 0 0 35px rgba(59, 130, 246, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+            max-height: min(400px, calc(100vh - 56vh - 24px));
+            overflow: hidden;
+            animation: searchHistoryFadeInDown 0.22s cubic-bezier(0.16, 1, 0.3, 1);
             text-align: left;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(59, 130, 246, 0.4) rgba(255, 255, 255, 0.02);
-        }
-
-        .search-history-dropdown::-webkit-scrollbar {
-            width: 6px;
-        }
-        .search-history-dropdown::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 4px;
-        }
-        .search-history-dropdown::-webkit-scrollbar-thumb {
-            background: rgba(59, 130, 246, 0.35);
-            border-radius: 4px;
-        }
-        .search-history-dropdown::-webkit-scrollbar-thumb:hover {
-            background: rgba(59, 130, 246, 0.65);
+            box-sizing: border-box;
         }
 
         .search-history-dropdown.visible {
-            display: block;
+            display: flex !important;
         }
 
-        @keyframes searchHistoryFadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
+        .recent-searches-scroll-area {
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(59, 130, 246, 0.5) rgba(255, 255, 255, 0.04);
+            padding-right: 4px;
+            padding-bottom: 12px;
+            margin-right: -4px;
+            flex: 1 1 auto;
+            min-height: 0;
+        }
+
+        .recent-searches-scroll-area::-webkit-scrollbar {
+            width: 6px;
+        }
+        .recent-searches-scroll-area::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+        }
+        .recent-searches-scroll-area::-webkit-scrollbar-thumb {
+            background: rgba(59, 130, 246, 0.35);
+            border-radius: 4px;
+        }
+        .recent-searches-scroll-area::-webkit-scrollbar-thumb:hover {
+            background: rgba(59, 130, 246, 0.65);
+        }
+
+        @keyframes searchHistoryFadeInDown {
+            from { opacity: 0; transform: translateY(-8px) scale(0.99); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -3141,12 +3166,7 @@
         }
 
         if (isQuickSearchMode) {
-            window.addEventListener('DOMContentLoaded', () => {
-                const searchInput = document.getElementById('hero-search-input');
-                if (searchInput) {
-                    setTimeout(() => searchInput.focus(), 200);
-                }
-            });
+            // Quick search mode active
         }
 
         // Search Form Execution
@@ -3258,19 +3278,60 @@
             } catch (e) {}
         }
 
+        function getPopularTagsList() {
+            const spans = document.querySelectorAll('.search-hint span');
+            if (spans && spans.length > 0) {
+                const list = Array.from(spans).map(s => s.innerText.trim()).filter(Boolean);
+                if (list.length > 0) return list;
+            }
+            return defaultPopularSearches || ['tax', 'finance', 'land', 'rent'];
+        }
+
+        function adjustDropdownMaxHeight() {
+            if (!searchHistoryDropdown || !heroSearchInput) return;
+            const rect = heroSearchInput.getBoundingClientRect();
+            const availableSpaceBelow = window.innerHeight - rect.bottom - 20;
+            if (availableSpaceBelow > 160) {
+                searchHistoryDropdown.style.maxHeight = Math.min(420, availableSpaceBelow) + 'px';
+            }
+        }
+        window.addEventListener('resize', adjustDropdownMaxHeight);
+
         function renderSearchHistory(data) {
             if (!searchHistoryDropdown) return;
             const heroSearchWrapper = searchHistoryDropdown.closest('.hero-search');
 
             let html = '';
+            const popularTags = getPopularTagsList();
 
-            // 1. Recent Searches (if any)
+            // 1. Popular Suggestions Section (Pinned at Top for Immediate Access)
+            if (popularTags && popularTags.length > 0) {
+                html += '<div style="flex-shrink: 0;">';
+                html += '<div class="search-history-header" style="margin-bottom: 8px;">';
+                html += '<span class="search-history-header-title"><i class="fa-solid fa-fire" style="color:#f59e0b;"></i> Popular Suggestions</span>';
+                html += '</div>';
+                html += '<div style="display:flex; flex-wrap:wrap; gap:8px; padding:0 2px ' + (data && data.length > 0 ? '12px' : '4px') + '; border-bottom:' + (data && data.length > 0 ? '1px solid rgba(255,255,255,0.08)' : 'none') + ';">';
+                popularTags.forEach(term => {
+                    const escapedTerm = term.replace(/"/g, '&quot;').replace(/</g, '&lt;');
+                    html += '<div class="popular-chip-item search-history-item" data-query="' + escapedTerm + '">';
+                    html += '<i class="fa-solid fa-arrow-trend-up" style="color:#60a5fa; font-size:11px;"></i>';
+                    html += '<span>' + escapedTerm + '</span>';
+                    html += '</div>';
+                });
+                html += '</div>';
+                html += '</div>';
+            }
+
+            // 2. Recent Searches Section (Scrollable list with pinned header)
             if (data && data.length > 0) {
-                html += '<div class="search-history-header">';
+                html += '<div style="flex-shrink: 0;">';
+                html += '<div class="search-history-header" style="margin-top: 10px;">';
                 html += '<span class="search-history-header-title"><i class="fa-solid fa-clock-rotate-left" style="color:#60a5fa;"></i> Recent Searches</span>';
                 html += '<button type="button" class="search-history-clear-btn" onclick="clearSearchHistory(event)">Clear All</button>';
                 html += '</div>';
+                html += '</div>';
 
+                html += '<div class="recent-searches-scroll-area">';
                 data.forEach(item => {
                     const escapedQuery = item.search_text.replace(/"/g, '&quot;').replace(/</g, '&lt;');
                     html += '<div class="search-history-item" data-query="' + escapedQuery + '" data-id="' + item.id + '">';
@@ -3283,26 +3344,18 @@
                     html += '<i class="fa-solid fa-xmark"></i></button>';
                     html += '</div>';
                 });
+                html += '</div>';
             }
 
-            // 2. Popular Topics Section (always available)
-            html += '<div class="search-history-header" style="margin-top:' + (data && data.length > 0 ? '10px' : '0') + ';">';
-            html += '<span class="search-history-header-title"><i class="fa-solid fa-fire" style="color:#f59e0b;"></i> Popular Suggestions</span>';
-            html += '</div>';
-            html += '<div style="display:flex; flex-wrap:wrap; gap:8px; padding:8px 4px 4px;">';
-            defaultPopularSearches.forEach(term => {
-                const escapedTerm = term.replace(/"/g, '&quot;').replace(/</g, '&lt;');
-                html += '<div class="popular-chip-item search-history-item" data-query="' + escapedTerm + '">';
-                html += '<i class="fa-solid fa-arrow-trend-up" style="color:#60a5fa; font-size:11px;"></i>';
-                html += '<span>' + escapedTerm + '</span>';
-                html += '</div>';
-            });
-            html += '</div>';
-
             searchHistoryDropdown.innerHTML = html;
+            adjustDropdownMaxHeight();
             searchHistoryDropdown.classList.add('visible');
             if (heroSearchWrapper) {
                 heroSearchWrapper.classList.add('has-history-open');
+            }
+            const searchHint = document.querySelector('.search-hint');
+            if (searchHint) {
+                searchHint.classList.add('is-hidden-history');
             }
             searchHistoryVisible = true;
 
@@ -3364,6 +3417,10 @@
                 const heroSearchWrapper = searchHistoryDropdown.closest('.hero-search');
                 if (heroSearchWrapper) {
                     heroSearchWrapper.classList.remove('has-history-open');
+                }
+                const searchHint = document.querySelector('.search-hint');
+                if (searchHint) {
+                    searchHint.classList.remove('is-hidden-history');
                 }
                 searchHistoryVisible = false;
             }
@@ -3432,17 +3489,31 @@
             renderSearchHistory([]);
         };
 
-        // Show search history on focus AND click
+        // Show search history on focus AND click (only upon active user interaction)
+        let userExplicitlyInteracting = false;
+
         if (heroSearchInput) {
+            heroSearchInput.addEventListener('mousedown', () => {
+                userExplicitlyInteracting = true;
+            });
+
+            heroSearchInput.addEventListener('keydown', () => {
+                userExplicitlyInteracting = true;
+            });
+
             heroSearchInput.addEventListener('focus', () => {
-                showSearchHistoryIfAppropriate();
+                if (userExplicitlyInteracting) {
+                    showSearchHistoryIfAppropriate();
+                }
             });
 
             heroSearchInput.addEventListener('click', () => {
+                userExplicitlyInteracting = true;
                 showSearchHistoryIfAppropriate();
             });
 
             heroSearchInput.addEventListener('input', () => {
+                userExplicitlyInteracting = true;
                 if (heroSearchInput.value.trim()) {
                     hideSearchHistory();
                 } else {
@@ -3458,6 +3529,7 @@
                 const isInsideInput = heroSearchInput.contains(e.target) || e.target === heroSearchInput;
                 if (!isInsideDropdown && !isInsideInput) {
                     hideSearchHistory();
+                    userExplicitlyInteracting = false;
                     resetAutoSlide();
                 }
             }
