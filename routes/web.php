@@ -114,6 +114,7 @@ Route::get('/accounts/subscription/{subscription}','UserDashBoardController@show
 //Search for Main Home Page
 Route::get('main_home_search','HomeSearchController@main_home_search');
 Route::get('search-history','HomeSearchController@searchHistory');
+Route::get('search-autocomplete','HomeSearchController@autocomplete');
 Route::delete('search-history/{id}','HomeSearchController@deleteSearchHistory');
 Route::delete('search-history','HomeSearchController@clearSearchHistory');
 

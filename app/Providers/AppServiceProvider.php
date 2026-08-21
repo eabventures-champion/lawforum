@@ -54,5 +54,32 @@ class AppServiceProvider extends ServiceProvider
                 $view->with('sidebarAds', collect());
             }
         });
+
+        // Automatically refresh search suggestions & autocomplete vocabulary whenever documents are created, updated, or deleted
+        $documentModels = [
+            \App\Post1992Act::class,
+            \App\Pre1992LegislationAct::class,
+            \App\GhanaAct::class,
+            \App\ConstitutionalAct::class,
+            \App\ExecutiveAct::class,
+            \App\AmendRegulationAct::class,
+            \App\GhAmendedAct::class,
+            \App\GhLawJudgment::class,
+            \App\ForeignLawJudgment::class,
+            \App\AllConstitution::class,
+        ];
+
+        foreach ($documentModels as $modelClass) {
+            try {
+                if (class_exists($modelClass)) {
+                    $modelClass::saved(function () {
+                        \App\Services\SearchSuggestionService::clearCache();
+                    });
+                    $modelClass::deleted(function () {
+                        \App\Services\SearchSuggestionService::clearCache();
+                    });
+                }
+            } catch (\Exception $e) {}
+        }
     }
 }

@@ -1047,6 +1047,41 @@
             opacity: 0.5;
         }
 
+        .search-sugg-badge {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        .sugg-act {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .sugg-case {
+            background: rgba(139, 92, 246, 0.15);
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+        .sugg-term {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .sugg-spell {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .sugg-highlight {
+            color: #60a5fa;
+            font-weight: 700;
+        }
+
         /* ============================================
            STATS BAR
            ============================================ */
@@ -3331,10 +3366,34 @@
                 // Native form submit proceeds to /main_home_search?search_text=...
             });
 
+            let heroAutocompleteDebounceTimer;
             if (heroSearchInput) {
                 heroSearchInput.addEventListener('input', () => {
                     if (heroSearchPrompt && heroSearchInput.value.trim()) {
                         heroSearchPrompt.style.display = 'none';
+                    }
+
+                    clearTimeout(heroAutocompleteDebounceTimer);
+                    const val = heroSearchInput.value.trim();
+
+                    if (val.length === 0) {
+                        showSearchHistoryIfAppropriate();
+                        return;
+                    }
+
+                    if (val.length >= 2) {
+                        heroAutocompleteDebounceTimer = setTimeout(() => {
+                            fetch('/search-autocomplete?q=' + encodeURIComponent(val) + '&limit=6', {
+                                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                            })
+                            .then(r => r.json())
+                            .then(d => {
+                                if (d && (d.suggestions || d.did_you_mean) && heroSearchInput.value.trim() === val) {
+                                    renderHeroAutocomplete(d.suggestions, d.did_you_mean, val);
+                                }
+                            })
+                            .catch(() => {});
+                        }, 180);
                     }
                 });
             }
@@ -3485,6 +3544,109 @@
                     if (heroSearchInput && query) {
                         heroSearchInput.value = query;
                         saveLocalSearchHistory(query);
+                        hideSearchHistory();
+                        heroSearchForm.submit();
+                    }
+                });
+            });
+        }
+
+        function renderHeroAutocomplete(suggestions, didYouMean, query) {
+            if (!searchHistoryDropdown) return;
+            const heroSearchWrapper = searchHistoryDropdown.closest('.hero-search');
+            lastHistoryOpenedTime = Date.now();
+
+            if ((!suggestions || suggestions.length === 0) && !didYouMean) {
+                return;
+            }
+
+            let html = '';
+
+            // 1. Spelling Correction (Did you mean)
+            if (didYouMean && didYouMean.toLowerCase() !== query.toLowerCase()) {
+                const escapedCorrection = didYouMean.replace(/"/g, '&quot;').replace(/</g, '&lt;');
+                html += '<div style="flex-shrink: 0; margin-bottom: 8px;">';
+                html += '<div class="search-history-header" style="margin-bottom: 4px;">';
+                html += '<span class="search-history-header-title"><i class="fa-solid fa-wand-magic-sparkles" style="color:#a78bfa;"></i> Spelling Correction</span>';
+                html += '</div>';
+                html += '<div class="search-history-item" data-query="' + escapedCorrection + '" style="background: rgba(139, 92, 246, 0.12); border: 1px solid rgba(139, 92, 246, 0.3);">';
+                html += '<div class="search-history-item-icon" style="color:#a78bfa; background:rgba(139,92,246,0.15);"><i class="fa-solid fa-wand-magic-sparkles"></i></div>';
+                html += '<div class="search-history-item-text">';
+                html += '<div class="search-history-item-query" style="color:#c4b5fd;">Did you mean: <strong style="color:#ffffff;">' + escapedCorrection + '</strong>?</div>';
+                html += '</div>';
+                html += '<span class="search-sugg-badge sugg-spell">Fix</span>';
+                html += '</div>';
+                html += '</div>';
+            }
+
+            // 2. Suggestions & Word completions
+            if (suggestions && suggestions.length > 0) {
+                html += '<div style="flex-shrink: 0;">';
+                html += '<div class="search-history-header" style="margin-bottom: 4px;">';
+                html += '<span class="search-history-header-title"><i class="fa-solid fa-lightbulb" style="color:#60a5fa;"></i> Word Completions & Terms</span>';
+                html += '</div>';
+                html += '</div>';
+
+                html += '<div class="recent-searches-scroll-area">';
+                suggestions.forEach(item => {
+                    const originalText = item.text || '';
+                    const escapedText = originalText.replace(/"/g, '&quot;').replace(/</g, '&lt;');
+                    let badgeHtml = '';
+                    let iconHtml = '<i class="fa-solid fa-magnifying-glass"></i>';
+
+                    if (item.type === 'legislation') {
+                        badgeHtml = '<span class="search-sugg-badge sugg-act"><i class="fa-solid fa-scale-balanced"></i> Law</span>';
+                        iconHtml = '<i class="fa-solid fa-book-bookmark"></i>';
+                    } else if (item.type === 'case_law') {
+                        badgeHtml = '<span class="search-sugg-badge sugg-case"><i class="fa-solid fa-gavel"></i> Case</span>';
+                        iconHtml = '<i class="fa-solid fa-gavel"></i>';
+                    } else if (item.is_correction || item.type === 'spelling_suggestion') {
+                        badgeHtml = '<span class="search-sugg-badge sugg-spell"><i class="fa-solid fa-wand-magic-sparkles"></i> Fix</span>';
+                        iconHtml = '<i class="fa-solid fa-wand-magic-sparkles"></i>';
+                    } else {
+                        badgeHtml = '<span class="search-sugg-badge sugg-term">Term</span>';
+                    }
+
+                    // Highlight matching substring
+                    const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const regex = new RegExp('(' + safeQuery + ')', 'gi');
+                    const highlighted = escapedText.replace(regex, '<span class="sugg-highlight">$1</span>');
+
+                    html += '<div class="search-history-item" data-query="' + escapedText + '">';
+                    html += '<div class="search-history-item-icon">' + iconHtml + '</div>';
+                    html += '<div class="search-history-item-text">';
+                    html += '<div class="search-history-item-query">' + highlighted + '</div>';
+                    html += '</div>';
+                    html += badgeHtml;
+                    html += '</div>';
+                });
+                html += '</div>';
+            }
+
+            searchHistoryDropdown.innerHTML = html;
+            searchHistoryDropdown.classList.add('visible');
+            document.documentElement.classList.add('search-history-open');
+            document.body.classList.add('search-history-open');
+            if (heroSearchWrapper) {
+                heroSearchWrapper.classList.add('has-history-open');
+            }
+            const heroContent = document.querySelector('.hero-content');
+            if (heroContent) {
+                heroContent.classList.add('history-open');
+            }
+            const searchHint = document.querySelector('.search-hint');
+            if (searchHint) {
+                searchHint.classList.add('is-hidden-history');
+            }
+            searchHistoryVisible = true;
+
+            // Click handler for suggestion items
+            searchHistoryDropdown.querySelectorAll('.search-history-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const q = item.getAttribute('data-query');
+                    if (heroSearchInput && q) {
+                        heroSearchInput.value = q;
+                        saveLocalSearchHistory(q);
                         hideSearchHistory();
                         heroSearchForm.submit();
                     }

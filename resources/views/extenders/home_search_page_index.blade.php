@@ -340,6 +340,78 @@
         .srp-sh-item:hover .srp-sh-item-del { opacity: 1; }
         .srp-sh-item-del:hover { background: rgba(244, 63, 94, 0.12); color: var(--rose); }
 
+        /* Did you mean spell correction banner */
+        .did-you-mean-banner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 18px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.14), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 14.5px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.25s ease;
+        }
+        .did-you-mean-icon {
+            color: #a78bfa;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .did-you-mean-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .did-you-mean-link {
+            color: #60a5fa;
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+        .did-you-mean-link:hover {
+            color: #93c5fd;
+        }
+        .srp-sugg-badge {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 2px 7px;
+            border-radius: 4px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        .sugg-act {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .sugg-case {
+            background: rgba(139, 92, 246, 0.15);
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+        .sugg-term {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .sugg-spell {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .srp-sugg-highlight {
+            color: #60a5fa;
+            font-weight: 700;
+        }
+
         .header-actions {
             display: flex;
             align-items: center;
@@ -1755,6 +1827,15 @@
 
         <!-- RESULTS AREA -->
         <section class="results-container">
+            <!-- Did You Mean / Spell Correction Alert Banner -->
+            <div id="did-you-mean-banner" class="did-you-mean-banner" style="display: {{ !empty($did_you_mean) ? 'flex' : 'none' }};">
+                <i class="fa-solid fa-wand-magic-sparkles did-you-mean-icon"></i>
+                <div class="did-you-mean-content">
+                    <span>Did you mean:</span>
+                    <a href="javascript:void(0)" class="did-you-mean-link" id="did-you-mean-link" onclick="triggerSearch('{{ $did_you_mean ?? '' }}')">{{ $did_you_mean ?? '' }}</a>
+                </div>
+            </div>
+
             <div id="search-results-feed">
                 <!-- Result cards rendered here -->
             </div>
@@ -2078,6 +2159,19 @@
                         &ldquo;<span class="search-query">${escapeHtml(data.query || currentQuery)}</span>&rdquo; 
                         <span class="search-time">(took ${data.time_ms || 0}ms)</span>
                     `;
+                }
+
+                // 1.1 Update Did You Mean Banner
+                const didYouMeanBanner = document.getElementById('did-you-mean-banner');
+                const didYouMeanLink = document.getElementById('did-you-mean-link');
+                if (didYouMeanBanner && didYouMeanLink) {
+                    if (data.did_you_mean && data.did_you_mean.toLowerCase() !== (data.query || currentQuery).toLowerCase()) {
+                        didYouMeanLink.textContent = data.did_you_mean;
+                        didYouMeanLink.onclick = function() { triggerSearch(data.did_you_mean); };
+                        didYouMeanBanner.style.display = 'flex';
+                    } else {
+                        didYouMeanBanner.style.display = 'none';
+                    }
                 }
 
                 // 2. Render cards
@@ -2691,14 +2785,122 @@
                 saveLocal(initQ.trim());
             }
 
-            srpSearchInput.addEventListener('focus', () => { showIfReady(); });
-            srpSearchInput.addEventListener('click', () => { showIfReady(); });
+            function highlightMatch(text, query) {
+                if (!query) return escapeHtml(text);
+                const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp('(' + safeQuery + ')', 'gi');
+                return escapeHtml(text).replace(regex, '<span class="srp-sugg-highlight">$1</span>');
+            }
 
-            srpSearchInput.addEventListener('input', () => {
-                if (srpSearchInput.value.trim().length > 0) {
+            function renderAutocomplete(suggestions, didYouMean, query) {
+                if ((!suggestions || suggestions.length === 0) && !didYouMean) {
                     srpHistoryEl.classList.remove('visible');
-                } else {
+                    return;
+                }
+
+                let h = '';
+
+                // 1. Did you mean suggestion
+                if (didYouMean && didYouMean.toLowerCase() !== query.toLowerCase()) {
+                    const eq = didYouMean.replace(/"/g, '&quot;').replace(/</g, '&lt;');
+                    h += '<div class="srp-sh-header" style="padding-bottom: 2px;">';
+                    h += '<span class="srp-sh-header-title"><i class="fa-solid fa-wand-magic-sparkles" style="color:#a78bfa;"></i> Spelling Correction</span></div>';
+                    h += '<div class="srp-sh-item" data-q="' + eq + '" style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.25); margin-bottom: 6px;">';
+                    h += '<div class="srp-sh-item-icon" style="color:#a78bfa; background:rgba(139,92,246,0.15);"><i class="fa-solid fa-wand-magic-sparkles"></i></div>';
+                    h += '<div class="srp-sh-item-text"><div class="srp-sh-item-query" style="color:#c4b5fd;">Did you mean: <strong style="color:#ffffff;">' + eq + '</strong>?</div></div>';
+                    h += '<span class="srp-sugg-badge sugg-spell">Fix</span>';
+                    h += '</div>';
+                }
+
+                // 2. Suggestions & Word completions
+                if (suggestions && suggestions.length > 0) {
+                    h += '<div class="srp-sh-header">';
+                    h += '<span class="srp-sh-header-title"><i class="fa-solid fa-lightbulb" style="color:#60a5fa;"></i> Word Completions & Terms</span></div>';
+
+                    suggestions.forEach(item => {
+                        const originalText = item.text || '';
+                        const eq = originalText.replace(/"/g, '&quot;').replace(/</g, '&lt;');
+                        let badgeHtml = '';
+                        let iconHtml = '<i class="fa-solid fa-magnifying-glass"></i>';
+
+                        if (item.type === 'legislation') {
+                            badgeHtml = '<span class="srp-sugg-badge sugg-act"><i class="fa-solid fa-scale-balanced"></i> Law</span>';
+                            iconHtml = '<i class="fa-solid fa-book-bookmark"></i>';
+                        } else if (item.type === 'case_law') {
+                            badgeHtml = '<span class="srp-sugg-badge sugg-case"><i class="fa-solid fa-gavel"></i> Case</span>';
+                            iconHtml = '<i class="fa-solid fa-gavel"></i>';
+                        } else if (item.is_correction || item.type === 'spelling_suggestion') {
+                            badgeHtml = '<span class="srp-sugg-badge sugg-spell"><i class="fa-solid fa-wand-magic-sparkles"></i> Fix</span>';
+                            iconHtml = '<i class="fa-solid fa-wand-magic-sparkles"></i>';
+                        } else {
+                            badgeHtml = '<span class="srp-sugg-badge sugg-term">Term</span>';
+                        }
+
+                        h += '<div class="srp-sh-item" data-q="' + eq + '">';
+                        h += '<div class="srp-sh-item-icon">' + iconHtml + '</div>';
+                        h += '<div class="srp-sh-item-text"><div class="srp-sh-item-query">' + highlightMatch(originalText, query) + '</div></div>';
+                        h += badgeHtml;
+                        h += '</div>';
+                    });
+                }
+
+                srpHistoryEl.innerHTML = h;
+                srpHistoryEl.classList.add('visible');
+
+                // Item click → search
+                srpHistoryEl.querySelectorAll('.srp-sh-item').forEach(el => {
+                    el.addEventListener('click', () => {
+                        const q = el.getAttribute('data-q');
+                        if (q) {
+                            srpSearchInput.value = q;
+                            saveLocal(q);
+                            srpHistoryEl.classList.remove('visible');
+                            state.query = q;
+                            state.page = 1;
+                            state.subcategory = 'All';
+                            state.year = 'All';
+                            performSearch();
+                        }
+                    });
+                });
+            }
+
+            srpSearchInput.addEventListener('focus', () => {
+                if (!srpSearchInput.value.trim()) {
                     showIfReady();
+                }
+            });
+            srpSearchInput.addEventListener('click', () => {
+                if (!srpSearchInput.value.trim()) {
+                    showIfReady();
+                }
+            });
+
+            let autocompleteDebounceTimer;
+            srpSearchInput.addEventListener('input', () => {
+                clearTimeout(autocompleteDebounceTimer);
+                const val = srpSearchInput.value.trim();
+
+                if (val.length === 0) {
+                    showIfReady();
+                    return;
+                }
+
+                if (val.length >= 2) {
+                    autocompleteDebounceTimer = setTimeout(() => {
+                        fetch('/search-autocomplete?q=' + encodeURIComponent(val) + '&limit=6', {
+                            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                        })
+                        .then(r => r.json())
+                        .then(d => {
+                            if (d && (d.suggestions || d.did_you_mean) && srpSearchInput.value.trim() === val) {
+                                renderAutocomplete(d.suggestions, d.did_you_mean, val);
+                            }
+                        })
+                        .catch(() => {});
+                    }, 180);
+                } else {
+                    srpHistoryEl.classList.remove('visible');
                 }
             });
 
