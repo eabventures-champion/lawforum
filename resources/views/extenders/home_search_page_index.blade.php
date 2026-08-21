@@ -2695,7 +2695,11 @@
             srpSearchInput.addEventListener('click', () => { showIfReady(); });
 
             srpSearchInput.addEventListener('input', () => {
-                showIfReady();
+                if (srpSearchInput.value.trim().length > 0) {
+                    srpHistoryEl.classList.remove('visible');
+                } else {
+                    showIfReady();
+                }
             });
 
             document.addEventListener('click', (e) => {

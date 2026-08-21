@@ -422,11 +422,31 @@
             padding-top: 100px !important;
         }
 
+        body.search-history-open .hero-search {
+            margin-top: 24px !important;
+        }
+
         @media (max-width: 768px) {
             body.search-history-open .hero {
                 align-items: flex-start !important;
-                padding-top: 75px !important;
+                padding-top: 90px !important;
                 padding-bottom: 20px !important;
+            }
+
+            body.search-history-open .hero-search {
+                margin-top: 22px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body.search-history-open .hero {
+                align-items: flex-start !important;
+                padding-top: 85px !important;
+                padding-bottom: 20px !important;
+            }
+
+            body.search-history-open .hero-search {
+                margin-top: 20px !important;
             }
         }
 
@@ -543,12 +563,12 @@
             }
 
             .search-history-dropdown {
-                max-height: 320px !important;
-                padding: 12px 10px 8px !important;
+                max-height: 380px !important;
+                padding: 14px 12px 10px !important;
             }
 
             .recent-searches-scroll-area {
-                max-height: 160px !important;
+                max-height: 210px !important;
             }
 
             input, select, textarea, .search-container input {
@@ -832,7 +852,7 @@
             padding: 16px 16px 14px;
             z-index: 100000;
             box-shadow: 0 28px 70px rgba(0, 0, 0, 0.98), 0 0 35px rgba(59, 130, 246, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
-            max-height: 300px;
+            max-height: 460px;
             overflow: hidden;
             animation: searchHistoryFadeInDown 0.22s cubic-bezier(0.16, 1, 0.3, 1);
             text-align: left;
@@ -853,7 +873,7 @@
             margin-right: -4px;
             flex: 1 1 auto;
             min-height: 80px;
-            max-height: 155px;
+            max-height: 260px;
         }
 
         .recent-searches-scroll-area::-webkit-scrollbar {
