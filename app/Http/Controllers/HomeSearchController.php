@@ -84,6 +84,9 @@ class HomeSearchController extends Controller
         $booleanQuery = implode(' ', array_map(function($w) { return '+' . $w . '*'; }, $ftWords));
         // Use FULLTEXT when we have at least one indexable word
         $useFulltext = !empty($booleanQuery);
+        // For multi-word queries, apply phrase precision: after FULLTEXT narrows candidates,
+        // filter to rows where the exact phrase appears in at least one searched column
+        $isMultiWord = count($words) > 1;
 
         if (empty($query)) {
             return [
@@ -697,6 +700,49 @@ class HomeSearchController extends Controller
             $mergedCollection = $mergedCollection->filter(function ($item) use ($yearFilter) {
                 return (string) $item['year'] === (string) $yearFilter;
             });
+        }
+
+        // Phrase precision: for multi-word queries, keep only results where the
+        // exact phrase appears in the content or title (not just individual words scattered)
+        if ($isMultiWord) {
+            $phrasePattern = mb_strtolower($cleanOriginal);
+            $mergedCollection = $mergedCollection->filter(function ($item) use ($phrasePattern, $fuzzyQuery) {
+                $content = mb_strtolower($item['content'] ?? '');
+                $title = mb_strtolower($item['parent_title'] ?? '');
+                $subtitle = mb_strtolower($item['subtitle'] ?? '');
+                // Check exact phrase in content, title, or subtitle
+                // Also check fuzzy pattern (handles extra spaces/punctuation in titles like "ANGUAH  vs.  CENTRE")
+                $fuzzyLower = mb_strtolower(str_replace('%', '', $fuzzyQuery));
+                return str_contains($content, $phrasePattern) ||
+                       str_contains($title, $phrasePattern) ||
+                       str_contains($subtitle, $phrasePattern) ||
+                       str_contains($title, $fuzzyLower);
+            });
+
+            // Recalculate counts from the phrase-filtered collection
+            $catCounts = $mergedCollection->groupBy('category')->map->count();
+            $constitution_ghana_total = $catCounts->get('constitution_ghana', 0);
+            $constitution_others_total = $catCounts->get('constitution_others', 0);
+            $pre_4th_total = $catCounts->get('pre_4th_republic', 0);
+            $cases_total = $catCounts->get('case_laws', 0);
+            $fourthRepCats = $mergedCollection->whereIn('category', ['4th_republic'])->count();
+            $post_4th_total = $fourthRepCats;
+            $all_total_count = $mergedCollection->count();
+
+            $counts = [
+                'constitution_ghana_total' => $constitution_ghana_total,
+                'constitution_others_total' => $constitution_others_total,
+                'pre_4th_total' => $pre_4th_total,
+                'post1992_count' => $counts['post1992_count'] ?? 0,
+                'regulation_count' => $counts['regulation_count'] ?? 0,
+                'constitutional_count' => $counts['constitutional_count'] ?? 0,
+                'executive_count' => $counts['executive_count'] ?? 0,
+                'amends_count' => $counts['amends_count'] ?? 0,
+                'amends_regs_count' => $counts['amends_regs_count'] ?? 0,
+                'post_4th_total' => $post_4th_total,
+                'cases_total' => $cases_total,
+                'all_total_count' => $all_total_count
+            ];
         }
 
         // Calculate Year Facets for the active set
