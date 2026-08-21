@@ -74,6 +74,17 @@ class HomeSearchController extends Controller
         $query = preg_replace('/[\s\-+]+/', '_', $cleanOriginal);
         $fuzzyQuery = preg_replace('/[^\p{L}\p{N}]+/u', '%', $cleanOriginal);
 
+        // Build boolean mode query for FULLTEXT: wrap each word with + for AND logic
+        // Filter out words shorter than InnoDB ft_min_token_size (3) and default stopwords
+        $ftStopwords = ['a','about','an','are','as','at','be','by','com','de','en','for','from','how','i','in','is','it','la','of','on','or','that','the','this','to','was','what','when','where','who','will','with','und','www'];
+        $words = preg_split('/[^\p{L}\p{N}]+/u', $cleanOriginal, -1, PREG_SPLIT_NO_EMPTY);
+        $ftWords = array_filter($words, function($w) use ($ftStopwords) {
+            return mb_strlen($w) >= 3 && !in_array(mb_strtolower($w), $ftStopwords);
+        });
+        $booleanQuery = implode(' ', array_map(function($w) { return '+' . $w . '*'; }, $ftWords));
+        // Use FULLTEXT when we have at least one indexable word
+        $useFulltext = !empty($booleanQuery);
+
         if (empty($query)) {
             return [
                 'query' => $originalQuery,
@@ -90,20 +101,26 @@ class HomeSearchController extends Controller
             ];
         }
 
+        // Full result caching: cache the entire search response for 5 minutes
+        $resultCacheKey = 'search_results_v1_' . md5($originalQuery . '_' . $category . '_' . $subcategory . '_' . $yearFilter . '_' . $page . '_' . $perPage);
+        $cachedResult = Cache::get($resultCacheKey);
+        if ($cachedResult) {
+            return $cachedResult;
+        }
+
         $mergedCollection = collect();
         $counts = null;
 
         if ($category === 'All') {
-            // --- SINGLE PASS SEARCH FOR 'ALL' CATEGORIES ---
+            // --- SINGLE PASS SEARCH FOR 'ALL' CATEGORIES (FULLTEXT INDEXED) ---
             // 1. Ghana Constitution
-            $ghana_articles = GhanaArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                    $q->where('articles', 'LIKE', "%$query%")
-                      ->orWhere('articles', 'LIKE', "%$originalQuery%")
-                      ->orWhere('gh_title', 'LIKE', "%$query%")
-                      ->orWhere('gh_title', 'LIKE', "%$originalQuery%")
-                      ->orWhere('gh_title', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('chapter', 'LIKE', "%$query%")
-                      ->orWhere('section', 'LIKE', "%$query%");
+            $ghana_articles = GhanaArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                    if ($useFulltext) {
+                        $q->whereRaw("MATCH(articles, gh_title, chapter, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                    } else {
+                        $q->where('articles', 'LIKE', "%$originalQuery%")
+                          ->orWhere('gh_title', 'LIKE', "%$originalQuery%");
+                    }
                 })
                 ->select('id', 'chapter', 'section', 'articles as content', 'gh_title as parent_title', 'priority')
                 ->get()
@@ -121,14 +138,13 @@ class HomeSearchController extends Controller
                     ];
                 });
 
-            $ghana_amended = GhAmendedArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                    $q->where('articles', 'LIKE', "%$query%")
-                      ->orWhere('articles', 'LIKE', "%$originalQuery%")
-                      ->orWhere('gh_title', 'LIKE', "%$query%")
-                      ->orWhere('gh_title', 'LIKE', "%$originalQuery%")
-                      ->orWhere('gh_title', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('chapter', 'LIKE', "%$query%")
-                      ->orWhere('section', 'LIKE', "%$query%");
+            $ghana_amended = GhAmendedArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                    if ($useFulltext) {
+                        $q->whereRaw("MATCH(articles, gh_title, chapter, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                    } else {
+                        $q->where('articles', 'LIKE', "%$originalQuery%")
+                          ->orWhere('gh_title', 'LIKE', "%$originalQuery%");
+                    }
                 })
                 ->select('id', 'chapter', 'section', 'articles as content', 'gh_title as parent_title', 'priority')
                 ->get()
@@ -150,16 +166,13 @@ class HomeSearchController extends Controller
             $mergedCollection = $mergedCollection->concat($ghana_articles)->concat($ghana_amended);
 
             // 2. Others Constitution
-            $others = AllConstitution::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                    $q->where('content', 'LIKE', "%$query%")
-                      ->orWhere('content', 'LIKE', "%$originalQuery%")
-                      ->orWhere('title', 'LIKE', "%$query%")
-                      ->orWhere('title', 'LIKE', "%$originalQuery%")
-                      ->orWhere('title', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('country', 'LIKE', "%$query%")
-                      ->orWhere('country', 'LIKE', "%$originalQuery%")
-                      ->orWhere('country', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('continent', 'LIKE', "%$query%");
+            $others = AllConstitution::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                    if ($useFulltext) {
+                        $q->whereRaw("MATCH(content, title, country, continent) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                    } else {
+                        $q->where('content', 'LIKE', "%$originalQuery%")
+                          ->orWhere('title', 'LIKE', "%$originalQuery%");
+                    }
                 })
                 ->select('id', 'title', 'content', 'year', 'country', 'continent')
                 ->get()
@@ -180,16 +193,17 @@ class HomeSearchController extends Controller
             $mergedCollection = $mergedCollection->concat($others);
 
             // 3. Pre 4th Republic
-            $pre4th = DB::table('pre1992_legislation_acts')
-                ->leftJoin('pre1992_legislation_articles', 'pre1992_legislation_acts.title', '=', 'pre1992_legislation_articles.pre_1992_act')
-                ->where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                    $q->where('pre1992_legislation_articles.content', 'LIKE', "%$query%")
-                      ->orWhere('pre1992_legislation_articles.content', 'LIKE', "%$originalQuery%")
-                      ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$query%")
-                      ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$originalQuery%")
-                      ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('pre1992_legislation_articles.section', 'LIKE', "%$query%");
-                })
+            $pre4thQuery = DB::table('pre1992_legislation_articles');
+            if ($useFulltext) {
+                $pre4thQuery->whereRaw("MATCH(pre1992_legislation_articles.content, pre1992_legislation_articles.section, pre1992_legislation_articles.pre_1992_act) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+            } else {
+                $pre4thQuery->where(function($q) use ($originalQuery) {
+                    $q->where('pre1992_legislation_articles.content', 'LIKE', "%$originalQuery%")
+                      ->orWhere('pre1992_legislation_articles.pre_1992_act', 'LIKE', "%$originalQuery%");
+                });
+            }
+            $pre4th = $pre4thQuery
+                ->leftJoin('pre1992_legislation_acts', 'pre1992_legislation_acts.title', '=', 'pre1992_legislation_articles.pre_1992_act')
                 ->select('pre1992_legislation_articles.id', 'pre1992_legislation_acts.title as parent_title', 'pre1992_legislation_articles.section', 'pre1992_legislation_articles.content', 'pre_1992_group', 'year', 'priority')
                 ->get()
                 ->map(function($row) {
@@ -209,14 +223,13 @@ class HomeSearchController extends Controller
             $mergedCollection = $mergedCollection->concat($pre4th);
 
             // 4. 4th Republic
-            $posts = Post1992Article::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                $q->where('part', 'LIKE', "%$query%")
-                  ->orWhere('section', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$originalQuery%")
-                  ->orWhere('post_act', 'LIKE', "%$query%")
-                  ->orWhere('post_act', 'LIKE', "%$originalQuery%")
-                  ->orWhere('post_act', 'LIKE', "%$fuzzyQuery%");
+            $posts = Post1992Article::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                if ($useFulltext) {
+                    $q->whereRaw("MATCH(content, post_act, part, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $q->where('content', 'LIKE', "%$originalQuery%")
+                      ->orWhere('post_act', 'LIKE', "%$originalQuery%");
+                }
             })->get()->map(function($row) {
                 return [
                     'id' => $row->id,
@@ -231,14 +244,13 @@ class HomeSearchController extends Controller
                 ];
             });
 
-            $regs = RegulationArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                $q->where('part', 'LIKE', "%$query%")
-                  ->orWhere('section', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$originalQuery%")
-                  ->orWhere('regulation_title', 'LIKE', "%$query%")
-                  ->orWhere('regulation_title', 'LIKE', "%$originalQuery%")
-                  ->orWhere('regulation_title', 'LIKE', "%$fuzzyQuery%");
+            $regs = RegulationArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                if ($useFulltext) {
+                    $q->whereRaw("MATCH(content, regulation_title, part, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $q->where('content', 'LIKE', "%$originalQuery%")
+                      ->orWhere('regulation_title', 'LIKE', "%$originalQuery%");
+                }
             })->get()->map(function($row) {
                 return [
                     'id' => $row->id,
@@ -253,14 +265,13 @@ class HomeSearchController extends Controller
                 ];
             });
 
-            $consts = ConstitutionalArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                $q->where('part', 'LIKE', "%$query%")
-                  ->orWhere('section', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$originalQuery%")
-                  ->orWhere('constitutional_act', 'LIKE', "%$query%")
-                  ->orWhere('constitutional_act', 'LIKE', "%$originalQuery%")
-                  ->orWhere('constitutional_act', 'LIKE', "%$fuzzyQuery%");
+            $consts = ConstitutionalArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                if ($useFulltext) {
+                    $q->whereRaw("MATCH(content, constitutional_act, part, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $q->where('content', 'LIKE', "%$originalQuery%")
+                      ->orWhere('constitutional_act', 'LIKE', "%$originalQuery%");
+                }
             })->get()->map(function($row) {
                 return [
                     'id' => $row->id,
@@ -275,14 +286,13 @@ class HomeSearchController extends Controller
                 ];
             });
 
-            $exes = ExecutiveArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                $q->where('part', 'LIKE', "%$query%")
-                  ->orWhere('section', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$originalQuery%")
-                  ->orWhere('executive_act', 'LIKE', "%$query%")
-                  ->orWhere('executive_act', 'LIKE', "%$originalQuery%")
-                  ->orWhere('executive_act', 'LIKE', "%$fuzzyQuery%");
+            $exes = ExecutiveArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                if ($useFulltext) {
+                    $q->whereRaw("MATCH(content, executive_act, part, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $q->where('content', 'LIKE', "%$originalQuery%")
+                      ->orWhere('executive_act', 'LIKE', "%$originalQuery%");
+                }
             })->get()->map(function($row) {
                 return [
                     'id' => $row->id,
@@ -297,13 +307,13 @@ class HomeSearchController extends Controller
                 ];
             });
 
-            $amends = AmendedArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                $q->where('section', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$originalQuery%")
-                  ->orWhere('act_title', 'LIKE', "%$query%")
-                  ->orWhere('act_title', 'LIKE', "%$originalQuery%")
-                  ->orWhere('act_title', 'LIKE', "%$fuzzyQuery%");
+            $amends = AmendedArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                if ($useFulltext) {
+                    $q->whereRaw("MATCH(content, act_title, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $q->where('content', 'LIKE', "%$originalQuery%")
+                      ->orWhere('act_title', 'LIKE', "%$originalQuery%");
+                }
             })->get()->map(function($row) {
                 return [
                     'id' => $row->id,
@@ -318,14 +328,13 @@ class HomeSearchController extends Controller
                 ];
             });
 
-            $amends_regs = AmendRegulationArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                $q->where('part', 'LIKE', "%$query%")
-                  ->orWhere('section', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$originalQuery%")
-                  ->orWhere('title', 'LIKE', "%$query%")
-                  ->orWhere('title', 'LIKE', "%$originalQuery%")
-                  ->orWhere('title', 'LIKE', "%$fuzzyQuery%");
+            $amends_regs = AmendRegulationArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                if ($useFulltext) {
+                    $q->whereRaw("MATCH(content, title, part, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $q->where('content', 'LIKE', "%$originalQuery%")
+                      ->orWhere('title', 'LIKE', "%$originalQuery%");
+                }
             })->get()->map(function($row) {
                 return [
                     'id' => $row->id,
@@ -350,24 +359,14 @@ class HomeSearchController extends Controller
             $mergedCollection = $mergedCollection->concat($posts)->concat($regs)->concat($consts)->concat($exes)->concat($amends)->concat($amends_regs);
 
             // 5. Case Laws
-            $cases = GhLawJudgment::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                    $q->where('case_title', 'LIKE', "%$query%")
-                      ->orWhere('case_title', 'LIKE', "%$originalQuery%")
-                      ->orWhere('case_title', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('case_title_1', 'LIKE', "%$query%")
-                      ->orWhere('case_title_1', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('case_title_2', 'LIKE', "%$query%")
-                      ->orWhere('case_title_2', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('content', 'LIKE', "%$query%")
-                      ->orWhere('content', 'LIKE', "%$originalQuery%")
-                      ->orWhere('reference_number', 'LIKE', "%$query%")
-                      ->orWhere('reference_number', 'LIKE', "%$originalQuery%")
-                      ->orWhere('court_name', 'LIKE', "%$query%")
-                      ->orWhere('court_name', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('coram', 'LIKE', "%$query%")
-                      ->orWhere('coram', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('counsellors', 'LIKE', "%$query%")
-                      ->orWhere('counsellors', 'LIKE', "%$fuzzyQuery%");
+            $cases = GhLawJudgment::where(function($q) use ($booleanQuery, $originalQuery, $fuzzyQuery, $useFulltext) {
+                    if ($useFulltext) {
+                        $q->whereRaw("MATCH(case_title, content, case_title_1, case_title_2, reference_number, court_name, coram, counsellors) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                    } else {
+                        $q->where('case_title', 'LIKE', "%$originalQuery%")
+                          ->orWhere('case_title', 'LIKE', "%$fuzzyQuery%")
+                          ->orWhere('content', 'LIKE', "%$originalQuery%");
+                    }
                 })
                 ->select('id', 'case_title', 'content', 'year', 'gh_law_judgment_group_name', 'reference_number', 'court_name')
                 ->get()
@@ -413,14 +412,13 @@ class HomeSearchController extends Controller
 
             if ($category === 'Constitution_Ghana') {
                 if ($subcategory === 'All' || $subcategory === 'Ghana Constitution') {
-                    $ghana_articles = GhanaArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                            $q->where('articles', 'LIKE', "%$query%")
-                              ->orWhere('articles', 'LIKE', "%$originalQuery%")
-                              ->orWhere('gh_title', 'LIKE', "%$query%")
-                              ->orWhere('gh_title', 'LIKE', "%$originalQuery%")
-                              ->orWhere('gh_title', 'LIKE', "%$fuzzyQuery%")
-                              ->orWhere('chapter', 'LIKE', "%$query%")
-                              ->orWhere('section', 'LIKE', "%$query%");
+                    $ghana_articles = GhanaArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                            if ($useFulltext) {
+                                $q->whereRaw("MATCH(articles, gh_title, chapter, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                            } else {
+                                $q->where('articles', 'LIKE', "%$originalQuery%")
+                                  ->orWhere('gh_title', 'LIKE', "%$originalQuery%");
+                            }
                         })
                         ->select('id', 'chapter', 'section', 'articles as content', 'gh_title as parent_title', 'priority')
                         ->get()->map(function($row) {
@@ -440,14 +438,13 @@ class HomeSearchController extends Controller
                 }
 
                 if ($subcategory === 'All' || $subcategory === 'Ghana Constitution (Amended)') {
-                    $ghana_amended = GhAmendedArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                            $q->where('articles', 'LIKE', "%$query%")
-                              ->orWhere('articles', 'LIKE', "%$originalQuery%")
-                              ->orWhere('gh_title', 'LIKE', "%$query%")
-                              ->orWhere('gh_title', 'LIKE', "%$originalQuery%")
-                              ->orWhere('gh_title', 'LIKE', "%$fuzzyQuery%")
-                              ->orWhere('chapter', 'LIKE', "%$query%")
-                              ->orWhere('section', 'LIKE', "%$query%");
+                    $ghana_amended = GhAmendedArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                            if ($useFulltext) {
+                                $q->whereRaw("MATCH(articles, gh_title, chapter, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                            } else {
+                                $q->where('articles', 'LIKE', "%$originalQuery%")
+                                  ->orWhere('gh_title', 'LIKE', "%$originalQuery%");
+                            }
                         })
                         ->select('id', 'chapter', 'section', 'articles as content', 'gh_title as parent_title', 'priority')
                         ->get()->map(function($row) {
@@ -466,16 +463,13 @@ class HomeSearchController extends Controller
                     $mergedCollection = $mergedCollection->concat($ghana_amended);
                 }
             } elseif ($category === 'Constitution_Others') {
-                $othersQuery = AllConstitution::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                    $q->where('content', 'LIKE', "%$query%")
-                      ->orWhere('content', 'LIKE', "%$originalQuery%")
-                      ->orWhere('title', 'LIKE', "%$query%")
-                      ->orWhere('title', 'LIKE', "%$originalQuery%")
-                      ->orWhere('title', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('country', 'LIKE', "%$query%")
-                      ->orWhere('country', 'LIKE', "%$originalQuery%")
-                      ->orWhere('country', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('continent', 'LIKE', "%$query%");
+                $othersQuery = AllConstitution::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                    if ($useFulltext) {
+                        $q->whereRaw("MATCH(content, title, country, continent) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                    } else {
+                        $q->where('content', 'LIKE', "%$originalQuery%")
+                          ->orWhere('title', 'LIKE', "%$originalQuery%");
+                    }
                 });
                 if ($subcategory !== 'All') {
                     $othersQuery->where('continent', $subcategory);
@@ -495,16 +489,16 @@ class HomeSearchController extends Controller
                 });
                 $mergedCollection = $mergedCollection->concat($others);
             } elseif ($category === 'Pre_4th_Republic') {
-                $preQuery = DB::table('pre1992_legislation_acts')
-                    ->leftJoin('pre1992_legislation_articles', 'pre1992_legislation_acts.title', '=', 'pre1992_legislation_articles.pre_1992_act')
-                    ->where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                        $q->where('pre1992_legislation_articles.content', 'LIKE', "%$query%")
-                          ->orWhere('pre1992_legislation_articles.content', 'LIKE', "%$originalQuery%")
-                          ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$query%")
-                          ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$originalQuery%")
-                          ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$fuzzyQuery%")
-                          ->orWhere('pre1992_legislation_articles.section', 'LIKE', "%$query%");
+                $preQuery = DB::table('pre1992_legislation_articles');
+                if ($useFulltext) {
+                    $preQuery->whereRaw("MATCH(pre1992_legislation_articles.content, pre1992_legislation_articles.section, pre1992_legislation_articles.pre_1992_act) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $preQuery->where(function($q) use ($originalQuery) {
+                        $q->where('pre1992_legislation_articles.content', 'LIKE', "%$originalQuery%")
+                          ->orWhere('pre1992_legislation_articles.pre_1992_act', 'LIKE', "%$originalQuery%");
                     });
+                }
+                $preQuery->leftJoin('pre1992_legislation_acts', 'pre1992_legislation_acts.title', '=', 'pre1992_legislation_articles.pre_1992_act');
                 if ($subcategory !== 'All') {
                     $preQuery->where('pre_1992_group', $subcategory);
                 }
@@ -525,14 +519,13 @@ class HomeSearchController extends Controller
                 $mergedCollection = $mergedCollection->concat($pre4th);
             } elseif ($category === '4th_Republic') {
                 if ($subcategory === 'All' || $subcategory === 'Acts of Parliament') {
-                    $posts = Post1992Article::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                        $q->where('part', 'LIKE', "%$query%")
-                          ->orWhere('section', 'LIKE', "%$query%")
-                          ->orWhere('content', 'LIKE', "%$query%")
-                          ->orWhere('content', 'LIKE', "%$originalQuery%")
-                          ->orWhere('post_act', 'LIKE', "%$query%")
-                          ->orWhere('post_act', 'LIKE', "%$originalQuery%")
-                          ->orWhere('post_act', 'LIKE', "%$fuzzyQuery%");
+                    $posts = Post1992Article::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                        if ($useFulltext) {
+                            $q->whereRaw("MATCH(content, post_act, part, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                        } else {
+                            $q->where('content', 'LIKE', "%$originalQuery%")
+                              ->orWhere('post_act', 'LIKE', "%$originalQuery%");
+                        }
                     })->get()->map(function($row) {
                         return [
                             'id' => $row->id,
@@ -550,14 +543,13 @@ class HomeSearchController extends Controller
                 }
 
                 if ($subcategory === 'All' || $subcategory === 'Legislative Instruments') {
-                    $regs = RegulationArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                        $q->where('part', 'LIKE', "%$query%")
-                          ->orWhere('section', 'LIKE', "%$query%")
-                          ->orWhere('content', 'LIKE', "%$query%")
-                          ->orWhere('content', 'LIKE', "%$originalQuery%")
-                          ->orWhere('regulation_title', 'LIKE', "%$query%")
-                          ->orWhere('regulation_title', 'LIKE', "%$originalQuery%")
-                          ->orWhere('regulation_title', 'LIKE', "%$fuzzyQuery%");
+                    $regs = RegulationArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                        if ($useFulltext) {
+                            $q->whereRaw("MATCH(content, regulation_title, part, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                        } else {
+                            $q->where('content', 'LIKE', "%$originalQuery%")
+                              ->orWhere('regulation_title', 'LIKE', "%$originalQuery%");
+                        }
                     })->get()->map(function($row) {
                         return [
                             'id' => $row->id,
@@ -575,14 +567,13 @@ class HomeSearchController extends Controller
                 }
 
                 if ($subcategory === 'All' || $subcategory === 'Constitutional Instruments') {
-                    $consts = ConstitutionalArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                        $q->where('part', 'LIKE', "%$query%")
-                          ->orWhere('section', 'LIKE', "%$query%")
-                          ->orWhere('content', 'LIKE', "%$query%")
-                          ->orWhere('content', 'LIKE', "%$originalQuery%")
-                          ->orWhere('constitutional_act', 'LIKE', "%$query%")
-                          ->orWhere('constitutional_act', 'LIKE', "%$originalQuery%")
-                          ->orWhere('constitutional_act', 'LIKE', "%$fuzzyQuery%");
+                    $consts = ConstitutionalArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                        if ($useFulltext) {
+                            $q->whereRaw("MATCH(content, constitutional_act, part, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                        } else {
+                            $q->where('content', 'LIKE', "%$originalQuery%")
+                              ->orWhere('constitutional_act', 'LIKE', "%$originalQuery%");
+                        }
                     })->get()->map(function($row) {
                         return [
                             'id' => $row->id,
@@ -600,14 +591,13 @@ class HomeSearchController extends Controller
                 }
 
                 if ($subcategory === 'All' || $subcategory === 'Executive Instruments') {
-                    $exes = ExecutiveArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                        $q->where('part', 'LIKE', "%$query%")
-                          ->orWhere('section', 'LIKE', "%$query%")
-                          ->orWhere('content', 'LIKE', "%$query%")
-                          ->orWhere('content', 'LIKE', "%$originalQuery%")
-                          ->orWhere('executive_act', 'LIKE', "%$query%")
-                          ->orWhere('executive_act', 'LIKE', "%$originalQuery%")
-                          ->orWhere('executive_act', 'LIKE', "%$fuzzyQuery%");
+                    $exes = ExecutiveArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                        if ($useFulltext) {
+                            $q->whereRaw("MATCH(content, executive_act, part, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                        } else {
+                            $q->where('content', 'LIKE', "%$originalQuery%")
+                              ->orWhere('executive_act', 'LIKE', "%$originalQuery%");
+                        }
                     })->get()->map(function($row) {
                         return [
                             'id' => $row->id,
@@ -625,13 +615,13 @@ class HomeSearchController extends Controller
                 }
 
                 if ($subcategory === 'All' || $subcategory === 'Amended Acts') {
-                    $amends = AmendedArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                        $q->where('section', 'LIKE', "%$query%")
-                          ->orWhere('content', 'LIKE', "%$query%")
-                          ->orWhere('content', 'LIKE', "%$originalQuery%")
-                          ->orWhere('act_title', 'LIKE', "%$query%")
-                          ->orWhere('act_title', 'LIKE', "%$originalQuery%")
-                          ->orWhere('act_title', 'LIKE', "%$fuzzyQuery%");
+                    $amends = AmendedArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                        if ($useFulltext) {
+                            $q->whereRaw("MATCH(content, act_title, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                        } else {
+                            $q->where('content', 'LIKE', "%$originalQuery%")
+                              ->orWhere('act_title', 'LIKE', "%$originalQuery%");
+                        }
                     })->get()->map(function($row) {
                         return [
                             'id' => $row->id,
@@ -649,14 +639,13 @@ class HomeSearchController extends Controller
                 }
 
                 if ($subcategory === 'All' || $subcategory === 'Amended Regulations') {
-                    $amends_regs = AmendRegulationArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                        $q->where('part', 'LIKE', "%$query%")
-                          ->orWhere('section', 'LIKE', "%$query%")
-                          ->orWhere('content', 'LIKE', "%$query%")
-                          ->orWhere('content', 'LIKE', "%$originalQuery%")
-                          ->orWhere('title', 'LIKE', "%$query%")
-                          ->orWhere('title', 'LIKE', "%$originalQuery%")
-                          ->orWhere('title', 'LIKE', "%$fuzzyQuery%");
+                    $amends_regs = AmendRegulationArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                        if ($useFulltext) {
+                            $q->whereRaw("MATCH(content, title, part, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                        } else {
+                            $q->where('content', 'LIKE', "%$originalQuery%")
+                              ->orWhere('title', 'LIKE', "%$originalQuery%");
+                        }
                     })->get()->map(function($row) {
                         return [
                             'id' => $row->id,
@@ -673,24 +662,14 @@ class HomeSearchController extends Controller
                     $mergedCollection = $mergedCollection->concat($amends_regs);
                 }
             } elseif ($category === 'Case_Laws') {
-                $casesQuery = GhLawJudgment::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                    $q->where('case_title', 'LIKE', "%$query%")
-                      ->orWhere('case_title', 'LIKE', "%$originalQuery%")
-                      ->orWhere('case_title', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('case_title_1', 'LIKE', "%$query%")
-                      ->orWhere('case_title_1', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('case_title_2', 'LIKE', "%$query%")
-                      ->orWhere('case_title_2', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('content', 'LIKE', "%$query%")
-                      ->orWhere('content', 'LIKE', "%$originalQuery%")
-                      ->orWhere('reference_number', 'LIKE', "%$query%")
-                      ->orWhere('reference_number', 'LIKE', "%$originalQuery%")
-                      ->orWhere('court_name', 'LIKE', "%$query%")
-                      ->orWhere('court_name', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('coram', 'LIKE', "%$query%")
-                      ->orWhere('coram', 'LIKE', "%$fuzzyQuery%")
-                      ->orWhere('counsellors', 'LIKE', "%$query%")
-                      ->orWhere('counsellors', 'LIKE', "%$fuzzyQuery%");
+                $casesQuery = GhLawJudgment::where(function($q) use ($booleanQuery, $originalQuery, $fuzzyQuery, $useFulltext) {
+                    if ($useFulltext) {
+                        $q->whereRaw("MATCH(case_title, content, case_title_1, case_title_2, reference_number, court_name, coram, counsellors) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                    } else {
+                        $q->where('case_title', 'LIKE', "%$originalQuery%")
+                          ->orWhere('case_title', 'LIKE', "%$fuzzyQuery%")
+                          ->orWhere('content', 'LIKE', "%$originalQuery%");
+                    }
                 });
                 if ($subcategory !== 'All') {
                     $casesQuery->where('gh_law_judgment_group_name', $subcategory);
@@ -738,46 +717,49 @@ class HomeSearchController extends Controller
         } else {
             if ($category === 'Constitution_Ghana') {
                 $subFacets = [
-                    'Ghana Constitution' => GhanaArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                        $q->where('articles', 'LIKE', "%$query%")
-                          ->orWhere('articles', 'LIKE', "%$originalQuery%")
-                          ->orWhere('gh_title', 'LIKE', "%$query%")
-                          ->orWhere('gh_title', 'LIKE', "%$originalQuery%")
-                          ->orWhere('gh_title', 'LIKE', "%$fuzzyQuery%");
+                    'Ghana Constitution' => GhanaArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                        if ($useFulltext) {
+                            $q->whereRaw("MATCH(articles, gh_title, chapter, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                        } else {
+                            $q->where('articles', 'LIKE', "%$originalQuery%")
+                              ->orWhere('gh_title', 'LIKE', "%$originalQuery%");
+                        }
                     })->count(),
-                    'Ghana Constitution (Amended)' => GhAmendedArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                        $q->where('articles', 'LIKE', "%$query%")
-                          ->orWhere('articles', 'LIKE', "%$originalQuery%")
-                          ->orWhere('gh_title', 'LIKE', "%$query%")
-                          ->orWhere('gh_title', 'LIKE', "%$originalQuery%")
-                          ->orWhere('gh_title', 'LIKE', "%$fuzzyQuery%");
+                    'Ghana Constitution (Amended)' => GhAmendedArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                        if ($useFulltext) {
+                            $q->whereRaw("MATCH(articles, gh_title, chapter, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                        } else {
+                            $q->where('articles', 'LIKE', "%$originalQuery%")
+                              ->orWhere('gh_title', 'LIKE', "%$originalQuery%");
+                        }
                     })->count()
                 ];
             } elseif ($category === 'Constitution_Others') {
-                $subFacets = AllConstitution::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                        $q->where('content', 'LIKE', "%$query%")
-                          ->orWhere('content', 'LIKE', "%$originalQuery%")
-                          ->orWhere('title', 'LIKE', "%$query%")
-                          ->orWhere('title', 'LIKE', "%$originalQuery%")
-                          ->orWhere('title', 'LIKE', "%$fuzzyQuery%")
-                          ->orWhere('country', 'LIKE', "%$query%")
-                          ->orWhere('country', 'LIKE', "%$originalQuery%")
-                          ->orWhere('country', 'LIKE', "%$fuzzyQuery%");
-                    })
+                $subFacetsQuery = AllConstitution::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                        if ($useFulltext) {
+                            $q->whereRaw("MATCH(content, title, country, continent) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                        } else {
+                            $q->where('content', 'LIKE', "%$originalQuery%")
+                              ->orWhere('title', 'LIKE', "%$originalQuery%");
+                        }
+                    });
+                $subFacets = $subFacetsQuery
                     ->groupBy('continent')
                     ->selectRaw('continent, count(*) as count')
                     ->pluck('count', 'continent')
                     ->toArray();
             } elseif ($category === 'Pre_4th_Republic') {
-                $subFacets = DB::table('pre1992_legislation_acts')
-                    ->leftJoin('pre1992_legislation_articles', 'pre1992_legislation_acts.title', '=', 'pre1992_legislation_articles.pre_1992_act')
-                    ->where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                        $q->where('pre1992_legislation_articles.content', 'LIKE', "%$query%")
-                          ->orWhere('pre1992_legislation_articles.content', 'LIKE', "%$originalQuery%")
-                          ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$query%")
-                          ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$originalQuery%")
-                          ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$fuzzyQuery%");
-                    })
+                $preSubQuery = DB::table('pre1992_legislation_articles');
+                if ($useFulltext) {
+                    $preSubQuery->whereRaw("MATCH(pre1992_legislation_articles.content, pre1992_legislation_articles.section, pre1992_legislation_articles.pre_1992_act) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $preSubQuery->where(function($q) use ($originalQuery) {
+                        $q->where('pre1992_legislation_articles.content', 'LIKE', "%$originalQuery%")
+                          ->orWhere('pre1992_legislation_articles.pre_1992_act', 'LIKE', "%$originalQuery%");
+                    });
+                }
+                $subFacets = $preSubQuery
+                    ->leftJoin('pre1992_legislation_acts', 'pre1992_legislation_acts.title', '=', 'pre1992_legislation_articles.pre_1992_act')
                     ->groupBy('pre_1992_group')
                     ->selectRaw('pre_1992_group, count(*) as count')
                     ->pluck('count', 'pre_1992_group')
@@ -792,25 +774,16 @@ class HomeSearchController extends Controller
                     'Amended Regulations' => $counts['amends_regs_count'] ?? 0
                 ];
             } elseif ($category === 'Case_Laws') {
-                $subFacets = GhLawJudgment::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                        $q->where('case_title', 'LIKE', "%$query%")
-                          ->orWhere('case_title', 'LIKE', "%$originalQuery%")
-                          ->orWhere('case_title', 'LIKE', "%$fuzzyQuery%")
-                          ->orWhere('case_title_1', 'LIKE', "%$query%")
-                          ->orWhere('case_title_1', 'LIKE', "%$fuzzyQuery%")
-                          ->orWhere('case_title_2', 'LIKE', "%$query%")
-                          ->orWhere('case_title_2', 'LIKE', "%$fuzzyQuery%")
-                          ->orWhere('content', 'LIKE', "%$query%")
-                          ->orWhere('content', 'LIKE', "%$originalQuery%")
-                          ->orWhere('reference_number', 'LIKE', "%$query%")
-                          ->orWhere('reference_number', 'LIKE', "%$originalQuery%")
-                          ->orWhere('court_name', 'LIKE', "%$query%")
-                          ->orWhere('court_name', 'LIKE', "%$fuzzyQuery%")
-                          ->orWhere('coram', 'LIKE', "%$query%")
-                          ->orWhere('coram', 'LIKE', "%$fuzzyQuery%")
-                          ->orWhere('counsellors', 'LIKE', "%$query%")
-                          ->orWhere('counsellors', 'LIKE', "%$fuzzyQuery%");
-                    })
+                $caseSubQuery = GhLawJudgment::where(function($q) use ($booleanQuery, $originalQuery, $fuzzyQuery, $useFulltext) {
+                        if ($useFulltext) {
+                            $q->whereRaw("MATCH(case_title, content, case_title_1, case_title_2, reference_number, court_name, coram, counsellors) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                        } else {
+                            $q->where('case_title', 'LIKE', "%$originalQuery%")
+                              ->orWhere('case_title', 'LIKE', "%$fuzzyQuery%")
+                              ->orWhere('content', 'LIKE', "%$originalQuery%");
+                        }
+                    });
+                $subFacets = $caseSubQuery
                     ->groupBy('gh_law_judgment_group_name')
                     ->selectRaw('gh_law_judgment_group_name, count(*) as count')
                     ->pluck('count', 'gh_law_judgment_group_name')
@@ -843,7 +816,7 @@ class HomeSearchController extends Controller
             $didYouMean = SearchSuggestionService::suggestCorrection($originalQuery);
         }
 
-        return [
+        $searchResult = [
             'query' => $originalQuery,
             'did_you_mean' => $didYouMean,
             'category' => $category,
@@ -867,6 +840,11 @@ class HomeSearchController extends Controller
             'per_page' => $perPage,
             'total_pages' => ceil($totalItems / $perPage) ?: 1
         ];
+
+        // Cache the full result for 5 minutes
+        Cache::put($resultCacheKey, $searchResult, 300);
+
+        return $searchResult;
     }
 
     /**
@@ -874,127 +852,125 @@ class HomeSearchController extends Controller
      */
     private function calculateCounts($query, $originalQuery = '', $fuzzyQuery = '')
     {
-        $cacheKey = 'search_counts_v5_' . md5($query . '_' . $originalQuery . '_' . $fuzzyQuery);
+        $cacheKey = 'search_counts_v6_' . md5($query . '_' . $originalQuery . '_' . $fuzzyQuery);
 
         return Cache::remember($cacheKey, 300, function() use ($query, $originalQuery, $fuzzyQuery) {
-            $ghana_const_count = GhanaArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                $q->where('articles', 'LIKE', "%$query%")
-                  ->orWhere('articles', 'LIKE', "%$originalQuery%")
-                  ->orWhere('gh_title', 'LIKE', "%$query%")
-                  ->orWhere('gh_title', 'LIKE', "%$originalQuery%")
-                  ->orWhere('gh_title', 'LIKE', "%$fuzzyQuery%");
+            // Build boolean query for FULLTEXT (filter stopwords and short words)
+            $cleanOriginal = trim(urldecode($originalQuery));
+            $ftStopwords = ['a','about','an','are','as','at','be','by','com','de','en','for','from','how','i','in','is','it','la','of','on','or','that','the','this','to','was','what','when','where','who','will','with','und','www'];
+            $words = preg_split('/[^\p{L}\p{N}]+/u', $cleanOriginal, -1, PREG_SPLIT_NO_EMPTY);
+            $ftWords = array_filter($words, function($w) use ($ftStopwords) {
+                return mb_strlen($w) >= 3 && !in_array(mb_strtolower($w), $ftStopwords);
+            });
+            $booleanQuery = implode(' ', array_map(function($w) { return '+' . $w . '*'; }, $ftWords));
+            $useFulltext = !empty($booleanQuery);
+
+            $ghana_const_count = GhanaArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                if ($useFulltext) {
+                    $q->whereRaw("MATCH(articles, gh_title, chapter, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $q->where('articles', 'LIKE', "%$originalQuery%")
+                      ->orWhere('gh_title', 'LIKE', "%$originalQuery%");
+                }
             })->count();
 
-            $ghana_const_amended_count = GhAmendedArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                $q->where('articles', 'LIKE', "%$query%")
-                  ->orWhere('articles', 'LIKE', "%$originalQuery%")
-                  ->orWhere('gh_title', 'LIKE', "%$query%")
-                  ->orWhere('gh_title', 'LIKE', "%$originalQuery%")
-                  ->orWhere('gh_title', 'LIKE', "%$fuzzyQuery%");
+            $ghana_const_amended_count = GhAmendedArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                if ($useFulltext) {
+                    $q->whereRaw("MATCH(articles, gh_title, chapter, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $q->where('articles', 'LIKE', "%$originalQuery%")
+                      ->orWhere('gh_title', 'LIKE', "%$originalQuery%");
+                }
             })->count();
 
             $constitution_ghana_total = $ghana_const_count + $ghana_const_amended_count;
 
-            $constitution_others_total = AllConstitution::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                $q->where('content', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$originalQuery%")
-                  ->orWhere('title', 'LIKE', "%$query%")
-                  ->orWhere('title', 'LIKE', "%$originalQuery%")
-                  ->orWhere('title', 'LIKE', "%$fuzzyQuery%")
-                  ->orWhere('country', 'LIKE', "%$query%")
-                  ->orWhere('country', 'LIKE', "%$originalQuery%")
-                  ->orWhere('country', 'LIKE', "%$fuzzyQuery%");
+            $constitution_others_total = AllConstitution::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                if ($useFulltext) {
+                    $q->whereRaw("MATCH(content, title, country, continent) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $q->where('content', 'LIKE', "%$originalQuery%")
+                      ->orWhere('title', 'LIKE', "%$originalQuery%");
+                }
             })->count();
 
-            $pre_4th_total = DB::table('pre1992_legislation_acts')
-                ->leftJoin('pre1992_legislation_articles', 'pre1992_legislation_acts.title', '=', 'pre1992_legislation_articles.pre_1992_act')
-                ->where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                    $q->where('pre1992_legislation_articles.content', 'LIKE', "%$query%")
-                      ->orWhere('pre1992_legislation_articles.content', 'LIKE', "%$originalQuery%")
-                      ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$query%")
-                      ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$originalQuery%")
-                      ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$fuzzyQuery%");
-                })->count();
+            $pre4thCountQuery = DB::table('pre1992_legislation_articles');
+            if ($useFulltext) {
+                $pre4thCountQuery->whereRaw("MATCH(pre1992_legislation_articles.content, pre1992_legislation_articles.section, pre1992_legislation_articles.pre_1992_act) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+            } else {
+                $pre4thCountQuery->where(function($q) use ($originalQuery) {
+                    $q->where('pre1992_legislation_articles.content', 'LIKE', "%$originalQuery%")
+                      ->orWhere('pre1992_legislation_articles.pre_1992_act', 'LIKE', "%$originalQuery%");
+                });
+            }
+            $pre_4th_total = $pre4thCountQuery
+                ->leftJoin('pre1992_legislation_acts', 'pre1992_legislation_acts.title', '=', 'pre1992_legislation_articles.pre_1992_act')
+                ->count();
 
-            $post1992_count = Post1992Article::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                $q->where('part', 'LIKE', "%$query%")
-                  ->orWhere('section', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$originalQuery%")
-                  ->orWhere('post_act', 'LIKE', "%$query%")
-                  ->orWhere('post_act', 'LIKE', "%$originalQuery%")
-                  ->orWhere('post_act', 'LIKE', "%$fuzzyQuery%");
+            $post1992_count = Post1992Article::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                if ($useFulltext) {
+                    $q->whereRaw("MATCH(content, post_act, part, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $q->where('content', 'LIKE', "%$originalQuery%")
+                      ->orWhere('post_act', 'LIKE', "%$originalQuery%");
+                }
             })->count();
 
-            $regulation_count = RegulationArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                $q->where('part', 'LIKE', "%$query%")
-                  ->orWhere('section', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$originalQuery%")
-                  ->orWhere('regulation_title', 'LIKE', "%$query%")
-                  ->orWhere('regulation_title', 'LIKE', "%$originalQuery%")
-                  ->orWhere('regulation_title', 'LIKE', "%$fuzzyQuery%");
+            $regulation_count = RegulationArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                if ($useFulltext) {
+                    $q->whereRaw("MATCH(content, regulation_title, part, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $q->where('content', 'LIKE', "%$originalQuery%")
+                      ->orWhere('regulation_title', 'LIKE', "%$originalQuery%");
+                }
             })->count();
 
-            $constitutional_count = ConstitutionalArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                $q->where('part', 'LIKE', "%$query%")
-                  ->orWhere('section', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$originalQuery%")
-                  ->orWhere('constitutional_act', 'LIKE', "%$query%")
-                  ->orWhere('constitutional_act', 'LIKE', "%$originalQuery%")
-                  ->orWhere('constitutional_act', 'LIKE', "%$fuzzyQuery%");
+            $constitutional_count = ConstitutionalArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                if ($useFulltext) {
+                    $q->whereRaw("MATCH(content, constitutional_act, part, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $q->where('content', 'LIKE', "%$originalQuery%")
+                      ->orWhere('constitutional_act', 'LIKE', "%$originalQuery%");
+                }
             })->count();
 
-            $executive_count = ExecutiveArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                $q->where('part', 'LIKE', "%$query%")
-                  ->orWhere('section', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$originalQuery%")
-                  ->orWhere('executive_act', 'LIKE', "%$query%")
-                  ->orWhere('executive_act', 'LIKE', "%$originalQuery%")
-                  ->orWhere('executive_act', 'LIKE', "%$fuzzyQuery%");
+            $executive_count = ExecutiveArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                if ($useFulltext) {
+                    $q->whereRaw("MATCH(content, executive_act, part, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $q->where('content', 'LIKE', "%$originalQuery%")
+                      ->orWhere('executive_act', 'LIKE', "%$originalQuery%");
+                }
             })->count();
 
-            $amends_count = AmendedArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                $q->where('section', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$originalQuery%")
-                  ->orWhere('act_title', 'LIKE', "%$query%")
-                  ->orWhere('act_title', 'LIKE', "%$originalQuery%")
-                  ->orWhere('act_title', 'LIKE', "%$fuzzyQuery%");
+            $amends_count = AmendedArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                if ($useFulltext) {
+                    $q->whereRaw("MATCH(content, act_title, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $q->where('content', 'LIKE', "%$originalQuery%")
+                      ->orWhere('act_title', 'LIKE', "%$originalQuery%");
+                }
             })->count();
 
-            $amends_regs_count = AmendRegulationArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                $q->where('part', 'LIKE', "%$query%")
-                  ->orWhere('section', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$originalQuery%")
-                  ->orWhere('title', 'LIKE', "%$query%")
-                  ->orWhere('title', 'LIKE', "%$originalQuery%")
-                  ->orWhere('title', 'LIKE', "%$fuzzyQuery%");
+            $amends_regs_count = AmendRegulationArticle::where(function($q) use ($booleanQuery, $originalQuery, $useFulltext) {
+                if ($useFulltext) {
+                    $q->whereRaw("MATCH(content, title, part, section) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $q->where('content', 'LIKE', "%$originalQuery%")
+                      ->orWhere('title', 'LIKE', "%$originalQuery%");
+                }
             })->count();
 
             $post_4th_total = $post1992_count + $regulation_count + $constitutional_count + $executive_count + $amends_count + $amends_regs_count;
 
-            $cases_total = GhLawJudgment::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
-                $q->where('case_title', 'LIKE', "%$query%")
-                  ->orWhere('case_title', 'LIKE', "%$originalQuery%")
-                  ->orWhere('case_title', 'LIKE', "%$fuzzyQuery%")
-                  ->orWhere('case_title_1', 'LIKE', "%$query%")
-                  ->orWhere('case_title_1', 'LIKE', "%$fuzzyQuery%")
-                  ->orWhere('case_title_2', 'LIKE', "%$query%")
-                  ->orWhere('case_title_2', 'LIKE', "%$fuzzyQuery%")
-                  ->orWhere('content', 'LIKE', "%$query%")
-                  ->orWhere('content', 'LIKE', "%$originalQuery%")
-                  ->orWhere('reference_number', 'LIKE', "%$query%")
-                  ->orWhere('reference_number', 'LIKE', "%$originalQuery%")
-                  ->orWhere('court_name', 'LIKE', "%$query%")
-                  ->orWhere('court_name', 'LIKE', "%$fuzzyQuery%")
-                  ->orWhere('coram', 'LIKE', "%$query%")
-                  ->orWhere('coram', 'LIKE', "%$fuzzyQuery%")
-                  ->orWhere('counsellors', 'LIKE', "%$query%")
-                  ->orWhere('counsellors', 'LIKE', "%$fuzzyQuery%");
+            $cases_total = GhLawJudgment::where(function($q) use ($booleanQuery, $originalQuery, $fuzzyQuery, $useFulltext) {
+                if ($useFulltext) {
+                    $q->whereRaw("MATCH(case_title, content, case_title_1, case_title_2, reference_number, court_name, coram, counsellors) AGAINST(? IN BOOLEAN MODE)", [$booleanQuery]);
+                } else {
+                    $q->where('case_title', 'LIKE', "%$originalQuery%")
+                      ->orWhere('case_title', 'LIKE', "%$fuzzyQuery%")
+                      ->orWhere('content', 'LIKE', "%$originalQuery%");
+                }
             })->count();
 
             $all_total_count = $constitution_ghana_total + $constitution_others_total + $pre_4th_total + $post_4th_total + $cases_total;
