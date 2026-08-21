@@ -84,8 +84,20 @@
             top: 0;
             left: 0;
             width: 100%;
-            z-index: 1000;
+            z-index: 100001;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.search-history-open .nav-wrap {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            z-index: 100001 !important;
+            background: rgba(6, 10, 19, 0.95) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border-bottom: 1px solid var(--border-color) !important;
         }
 
         .nav-wrap.scrolled {
@@ -400,6 +412,20 @@
             justify-content: center;
             text-align: center;
             padding: 90px 30px 40px;
+            transition: padding 0.35s ease;
+        }
+
+        body.search-history-open .hero {
+            align-items: flex-start !important;
+            padding-top: 100px !important;
+        }
+
+        @media (max-width: 768px) {
+            body.search-history-open .hero {
+                align-items: flex-start !important;
+                padding-top: 75px !important;
+                padding-bottom: 20px !important;
+            }
         }
 
         /* Animated gradient mesh background */
@@ -491,12 +517,13 @@
             position: relative;
             z-index: 1;
             max-width: 820px;
+            width: 100%;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: transform;
         }
 
         .hero-content.history-open {
-            transform: translateY(-320px);
+            transform: none !important;
         }
 
         @media (max-width: 768px) {
@@ -510,22 +537,22 @@
             }
 
             .hero-content.history-open {
-                transform: translateY(-250px);
+                transform: none !important;
             }
 
             .search-history-dropdown {
-                max-height: 360px !important;
-                padding: 14px 12px 10px !important;
+                max-height: 320px !important;
+                padding: 12px 10px 8px !important;
             }
 
             .recent-searches-scroll-area {
-                max-height: 210px !important;
+                max-height: 160px !important;
             }
         }
 
         @media (max-width: 480px) {
             .hero-content.history-open {
-                transform: translateY(-265px);
+                transform: none !important;
             }
         }
 
@@ -543,7 +570,8 @@
             letter-spacing: 0.5px;
             margin-bottom: 28px;
             animation: fadeInUp 0.8s ease both;
-            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease, max-height 0.35s ease, margin 0.35s ease, padding 0.35s ease;
+            max-height: 100px;
         }
 
         .hero-badge i {
@@ -557,7 +585,8 @@
             letter-spacing: -1.5px;
             margin-bottom: 20px;
             animation: fadeInUp 0.8s ease 0.1s both;
-            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease, max-height 0.35s ease, margin 0.35s ease, padding 0.35s ease;
+            max-height: 300px;
         }
 
         .hero-title .gradient-text {
@@ -575,7 +604,8 @@
             margin: 0 auto 40px;
             font-weight: 400;
             animation: fadeInUp 0.8s ease 0.2s both;
-            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease, max-height 0.35s ease, margin 0.35s ease, padding 0.35s ease;
+            max-height: 300px;
         }
 
         .hero-content.history-open .hero-subtitle,
@@ -584,7 +614,13 @@
             opacity: 0 !important;
             visibility: hidden !important;
             pointer-events: none !important;
-            transform: translateY(-12px);
+            max-height: 0 !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            overflow: hidden !important;
+            transform: translateY(-8px);
         }
 
         @keyframes fadeInUp {
@@ -753,6 +789,10 @@
             opacity: 0 !important;
             visibility: hidden !important;
             pointer-events: none !important;
+            max-height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
             transform: translateY(-8px) !important;
         }
 
@@ -2170,18 +2210,18 @@
         }
 
         .hero-content.history-open {
-            transform: translateY(-100px) !important;
+            transform: none !important;
         }
 
         @media (max-width: 768px) {
             .hero-content.history-open {
-                transform: translateY(-135px) !important;
+                transform: none !important;
             }
         }
 
         @media (max-width: 480px) {
             .hero-content.history-open {
-                transform: translateY(-145px) !important;
+                transform: none !important;
             }
         }
 
@@ -3420,6 +3460,15 @@
                 searchHint.classList.add('is-hidden-history');
             }
             searchHistoryVisible = true;
+
+            // Ensure window/container is reset to top so navbar remains perfectly in place
+            if (window.scrollY > 0) {
+                window.scrollTo({ top: 0, behavior: 'instant' });
+            }
+            const heroSlide = document.querySelector('.slide-hero');
+            if (heroSlide && heroSlide.scrollTop > 0) {
+                heroSlide.scrollTop = 0;
+            }
 
             // Stop auto-slide while history dropdown is open
             clearTimeout(autoSlideTimeout);
