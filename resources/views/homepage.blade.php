@@ -852,7 +852,7 @@
             padding: 16px 16px 14px;
             z-index: 100000;
             box-shadow: 0 28px 70px rgba(0, 0, 0, 0.98), 0 0 35px rgba(59, 130, 246, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
-            max-height: 460px;
+            max-height: 350px;
             overflow: hidden;
             animation: searchHistoryFadeInDown 0.22s cubic-bezier(0.16, 1, 0.3, 1);
             text-align: left;
@@ -873,7 +873,7 @@
             margin-right: -4px;
             flex: 1 1 auto;
             min-height: 80px;
-            max-height: 260px;
+            max-height: 190px;
         }
 
         .recent-searches-scroll-area::-webkit-scrollbar {
