@@ -3403,6 +3403,7 @@
                 tag.addEventListener('click', () => {
                     if (heroSearchInput && heroSearchForm) {
                         heroSearchInput.value = tag.innerText.trim();
+                        isSearchSubmitting = true;
                         showSearchingUI();
                         heroSearchForm.submit();
                     }
@@ -3544,7 +3545,8 @@
                     if (heroSearchInput && query) {
                         heroSearchInput.value = query;
                         saveLocalSearchHistory(query);
-                        hideSearchHistory();
+                        isSearchSubmitting = true;
+                        showSearchingUI();
                         heroSearchForm.submit();
                     }
                 });
@@ -3647,7 +3649,8 @@
                     if (heroSearchInput && q) {
                         heroSearchInput.value = q;
                         saveLocalSearchHistory(q);
-                        hideSearchHistory();
+                        isSearchSubmitting = true;
+                        showSearchingUI();
                         heroSearchForm.submit();
                     }
                 });
@@ -3689,6 +3692,8 @@
         }
 
         function hideSearchHistory() {
+            if (isSearchSubmitting) return; // Prevent layout collapse when search is in progress
+
             if (searchHistoryDropdown) {
                 searchHistoryDropdown.classList.remove('visible');
                 document.documentElement.classList.remove('search-history-open');
@@ -3785,6 +3790,8 @@
 
         // Hide dropdown when clicking outside
         document.addEventListener('click', (e) => {
+            if (isSearchSubmitting) return; // Prevent collapse when search is in progress
+
             if (searchHistoryVisible && searchHistoryDropdown) {
                 // Ignore clicks during upward opening transition (prevents instant close from coordinate shift)
                 if (Date.now() - lastHistoryOpenedTime < 350) return;

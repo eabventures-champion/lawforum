@@ -70,7 +70,9 @@ class HomeSearchController extends Controller
     public function executeSearch($originalQuery, $category = 'All', $subcategory = 'All', $yearFilter = 'All', $page = 1, $perPage = 15)
     {
         $startTime = microtime(true);
-        $query = preg_replace('/[\s\-+]+/', '_', trim($originalQuery));
+        $cleanOriginal = trim(urldecode($originalQuery));
+        $query = preg_replace('/[\s\-+]+/', '_', $cleanOriginal);
+        $fuzzyQuery = preg_replace('/[^\p{L}\p{N}]+/u', '%', $cleanOriginal);
 
         if (empty($query)) {
             return [
@@ -94,10 +96,12 @@ class HomeSearchController extends Controller
         if ($category === 'All') {
             // --- SINGLE PASS SEARCH FOR 'ALL' CATEGORIES ---
             // 1. Ghana Constitution
-            $ghana_articles = GhanaArticle::where(function($q) use ($query, $originalQuery) {
+            $ghana_articles = GhanaArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                     $q->where('articles', 'LIKE', "%$query%")
+                      ->orWhere('articles', 'LIKE', "%$originalQuery%")
                       ->orWhere('gh_title', 'LIKE', "%$query%")
                       ->orWhere('gh_title', 'LIKE', "%$originalQuery%")
+                      ->orWhere('gh_title', 'LIKE', "%$fuzzyQuery%")
                       ->orWhere('chapter', 'LIKE', "%$query%")
                       ->orWhere('section', 'LIKE', "%$query%");
                 })
@@ -117,10 +121,12 @@ class HomeSearchController extends Controller
                     ];
                 });
 
-            $ghana_amended = GhAmendedArticle::where(function($q) use ($query, $originalQuery) {
+            $ghana_amended = GhAmendedArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                     $q->where('articles', 'LIKE', "%$query%")
+                      ->orWhere('articles', 'LIKE', "%$originalQuery%")
                       ->orWhere('gh_title', 'LIKE', "%$query%")
                       ->orWhere('gh_title', 'LIKE', "%$originalQuery%")
+                      ->orWhere('gh_title', 'LIKE', "%$fuzzyQuery%")
                       ->orWhere('chapter', 'LIKE', "%$query%")
                       ->orWhere('section', 'LIKE', "%$query%");
                 })
@@ -144,12 +150,15 @@ class HomeSearchController extends Controller
             $mergedCollection = $mergedCollection->concat($ghana_articles)->concat($ghana_amended);
 
             // 2. Others Constitution
-            $others = AllConstitution::where(function($q) use ($query, $originalQuery) {
+            $others = AllConstitution::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                     $q->where('content', 'LIKE', "%$query%")
+                      ->orWhere('content', 'LIKE', "%$originalQuery%")
                       ->orWhere('title', 'LIKE', "%$query%")
                       ->orWhere('title', 'LIKE', "%$originalQuery%")
+                      ->orWhere('title', 'LIKE', "%$fuzzyQuery%")
                       ->orWhere('country', 'LIKE', "%$query%")
                       ->orWhere('country', 'LIKE', "%$originalQuery%")
+                      ->orWhere('country', 'LIKE', "%$fuzzyQuery%")
                       ->orWhere('continent', 'LIKE', "%$query%");
                 })
                 ->select('id', 'title', 'content', 'year', 'country', 'continent')
@@ -173,10 +182,12 @@ class HomeSearchController extends Controller
             // 3. Pre 4th Republic
             $pre4th = DB::table('pre1992_legislation_acts')
                 ->leftJoin('pre1992_legislation_articles', 'pre1992_legislation_acts.title', '=', 'pre1992_legislation_articles.pre_1992_act')
-                ->where(function($q) use ($query, $originalQuery) {
+                ->where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                     $q->where('pre1992_legislation_articles.content', 'LIKE', "%$query%")
+                      ->orWhere('pre1992_legislation_articles.content', 'LIKE', "%$originalQuery%")
                       ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$query%")
                       ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$originalQuery%")
+                      ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$fuzzyQuery%")
                       ->orWhere('pre1992_legislation_articles.section', 'LIKE', "%$query%");
                 })
                 ->select('pre1992_legislation_articles.id', 'pre1992_legislation_acts.title as parent_title', 'pre1992_legislation_articles.section', 'pre1992_legislation_articles.content', 'pre_1992_group', 'year', 'priority')
@@ -198,8 +209,14 @@ class HomeSearchController extends Controller
             $mergedCollection = $mergedCollection->concat($pre4th);
 
             // 4. 4th Republic
-            $posts = Post1992Article::where(function($q) use ($query) {
-                $q->where('part', 'LIKE', "%$query%")->orWhere('section', 'LIKE', "%$query%")->orWhere('content', 'LIKE', "%$query%")->orWhere('post_act', 'LIKE', "%$query%");
+            $posts = Post1992Article::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
+                $q->where('part', 'LIKE', "%$query%")
+                  ->orWhere('section', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$originalQuery%")
+                  ->orWhere('post_act', 'LIKE', "%$query%")
+                  ->orWhere('post_act', 'LIKE', "%$originalQuery%")
+                  ->orWhere('post_act', 'LIKE', "%$fuzzyQuery%");
             })->get()->map(function($row) {
                 return [
                     'id' => $row->id,
@@ -214,8 +231,14 @@ class HomeSearchController extends Controller
                 ];
             });
 
-            $regs = RegulationArticle::where(function($q) use ($query) {
-                $q->where('part', 'LIKE', "%$query%")->orWhere('section', 'LIKE', "%$query%")->orWhere('content', 'LIKE', "%$query%")->orWhere('regulation_title', 'LIKE', "%$query%");
+            $regs = RegulationArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
+                $q->where('part', 'LIKE', "%$query%")
+                  ->orWhere('section', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$originalQuery%")
+                  ->orWhere('regulation_title', 'LIKE', "%$query%")
+                  ->orWhere('regulation_title', 'LIKE', "%$originalQuery%")
+                  ->orWhere('regulation_title', 'LIKE', "%$fuzzyQuery%");
             })->get()->map(function($row) {
                 return [
                     'id' => $row->id,
@@ -230,8 +253,14 @@ class HomeSearchController extends Controller
                 ];
             });
 
-            $consts = ConstitutionalArticle::where(function($q) use ($query) {
-                $q->where('part', 'LIKE', "%$query%")->orWhere('section', 'LIKE', "%$query%")->orWhere('content', 'LIKE', "%$query%")->orWhere('constitutional_act', 'LIKE', "%$query%");
+            $consts = ConstitutionalArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
+                $q->where('part', 'LIKE', "%$query%")
+                  ->orWhere('section', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$originalQuery%")
+                  ->orWhere('constitutional_act', 'LIKE', "%$query%")
+                  ->orWhere('constitutional_act', 'LIKE', "%$originalQuery%")
+                  ->orWhere('constitutional_act', 'LIKE', "%$fuzzyQuery%");
             })->get()->map(function($row) {
                 return [
                     'id' => $row->id,
@@ -246,8 +275,14 @@ class HomeSearchController extends Controller
                 ];
             });
 
-            $exes = ExecutiveArticle::where(function($q) use ($query) {
-                $q->where('part', 'LIKE', "%$query%")->orWhere('section', 'LIKE', "%$query%")->orWhere('content', 'LIKE', "%$query%")->orWhere('executive_act', 'LIKE', "%$query%");
+            $exes = ExecutiveArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
+                $q->where('part', 'LIKE', "%$query%")
+                  ->orWhere('section', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$originalQuery%")
+                  ->orWhere('executive_act', 'LIKE', "%$query%")
+                  ->orWhere('executive_act', 'LIKE', "%$originalQuery%")
+                  ->orWhere('executive_act', 'LIKE', "%$fuzzyQuery%");
             })->get()->map(function($row) {
                 return [
                     'id' => $row->id,
@@ -262,8 +297,13 @@ class HomeSearchController extends Controller
                 ];
             });
 
-            $amends = AmendedArticle::where(function($q) use ($query) {
-                $q->where('section', 'LIKE', "%$query%")->orWhere('content', 'LIKE', "%$query%")->orWhere('act_title', 'LIKE', "%$query%");
+            $amends = AmendedArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
+                $q->where('section', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$originalQuery%")
+                  ->orWhere('act_title', 'LIKE', "%$query%")
+                  ->orWhere('act_title', 'LIKE', "%$originalQuery%")
+                  ->orWhere('act_title', 'LIKE', "%$fuzzyQuery%");
             })->get()->map(function($row) {
                 return [
                     'id' => $row->id,
@@ -278,8 +318,14 @@ class HomeSearchController extends Controller
                 ];
             });
 
-            $amends_regs = AmendRegulationArticle::where(function($q) use ($query) {
-                $q->where('part', 'LIKE', "%$query%")->orWhere('section', 'LIKE', "%$query%")->orWhere('content', 'LIKE', "%$query%")->orWhere('title', 'LIKE', "%$query%");
+            $amends_regs = AmendRegulationArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
+                $q->where('part', 'LIKE', "%$query%")
+                  ->orWhere('section', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$originalQuery%")
+                  ->orWhere('title', 'LIKE', "%$query%")
+                  ->orWhere('title', 'LIKE', "%$originalQuery%")
+                  ->orWhere('title', 'LIKE', "%$fuzzyQuery%");
             })->get()->map(function($row) {
                 return [
                     'id' => $row->id,
@@ -304,17 +350,24 @@ class HomeSearchController extends Controller
             $mergedCollection = $mergedCollection->concat($posts)->concat($regs)->concat($consts)->concat($exes)->concat($amends)->concat($amends_regs);
 
             // 5. Case Laws
-            $cases = GhLawJudgment::where(function($q) use ($query, $originalQuery) {
+            $cases = GhLawJudgment::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                     $q->where('case_title', 'LIKE', "%$query%")
                       ->orWhere('case_title', 'LIKE', "%$originalQuery%")
+                      ->orWhere('case_title', 'LIKE', "%$fuzzyQuery%")
                       ->orWhere('case_title_1', 'LIKE', "%$query%")
+                      ->orWhere('case_title_1', 'LIKE', "%$fuzzyQuery%")
                       ->orWhere('case_title_2', 'LIKE', "%$query%")
+                      ->orWhere('case_title_2', 'LIKE', "%$fuzzyQuery%")
                       ->orWhere('content', 'LIKE', "%$query%")
+                      ->orWhere('content', 'LIKE', "%$originalQuery%")
                       ->orWhere('reference_number', 'LIKE', "%$query%")
                       ->orWhere('reference_number', 'LIKE', "%$originalQuery%")
                       ->orWhere('court_name', 'LIKE', "%$query%")
+                      ->orWhere('court_name', 'LIKE', "%$fuzzyQuery%")
                       ->orWhere('coram', 'LIKE', "%$query%")
-                      ->orWhere('counsellors', 'LIKE', "%$query%");
+                      ->orWhere('coram', 'LIKE', "%$fuzzyQuery%")
+                      ->orWhere('counsellors', 'LIKE', "%$query%")
+                      ->orWhere('counsellors', 'LIKE', "%$fuzzyQuery%");
                 })
                 ->select('id', 'case_title', 'content', 'year', 'gh_law_judgment_group_name', 'reference_number', 'court_name')
                 ->get()
@@ -356,14 +409,16 @@ class HomeSearchController extends Controller
 
         } else {
             // --- FILTERED CATEGORY SEARCH ---
-            $counts = $this->calculateCounts($query, $originalQuery);
+            $counts = $this->calculateCounts($query, $originalQuery, $fuzzyQuery);
 
             if ($category === 'Constitution_Ghana') {
                 if ($subcategory === 'All' || $subcategory === 'Ghana Constitution') {
-                    $ghana_articles = GhanaArticle::where(function($q) use ($query, $originalQuery) {
+                    $ghana_articles = GhanaArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                             $q->where('articles', 'LIKE', "%$query%")
+                              ->orWhere('articles', 'LIKE', "%$originalQuery%")
                               ->orWhere('gh_title', 'LIKE', "%$query%")
                               ->orWhere('gh_title', 'LIKE', "%$originalQuery%")
+                              ->orWhere('gh_title', 'LIKE', "%$fuzzyQuery%")
                               ->orWhere('chapter', 'LIKE', "%$query%")
                               ->orWhere('section', 'LIKE', "%$query%");
                         })
@@ -385,10 +440,12 @@ class HomeSearchController extends Controller
                 }
 
                 if ($subcategory === 'All' || $subcategory === 'Ghana Constitution (Amended)') {
-                    $ghana_amended = GhAmendedArticle::where(function($q) use ($query, $originalQuery) {
+                    $ghana_amended = GhAmendedArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                             $q->where('articles', 'LIKE', "%$query%")
+                              ->orWhere('articles', 'LIKE', "%$originalQuery%")
                               ->orWhere('gh_title', 'LIKE', "%$query%")
                               ->orWhere('gh_title', 'LIKE', "%$originalQuery%")
+                              ->orWhere('gh_title', 'LIKE', "%$fuzzyQuery%")
                               ->orWhere('chapter', 'LIKE', "%$query%")
                               ->orWhere('section', 'LIKE', "%$query%");
                         })
@@ -409,12 +466,15 @@ class HomeSearchController extends Controller
                     $mergedCollection = $mergedCollection->concat($ghana_amended);
                 }
             } elseif ($category === 'Constitution_Others') {
-                $othersQuery = AllConstitution::where(function($q) use ($query, $originalQuery) {
+                $othersQuery = AllConstitution::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                     $q->where('content', 'LIKE', "%$query%")
+                      ->orWhere('content', 'LIKE', "%$originalQuery%")
                       ->orWhere('title', 'LIKE', "%$query%")
                       ->orWhere('title', 'LIKE', "%$originalQuery%")
+                      ->orWhere('title', 'LIKE', "%$fuzzyQuery%")
                       ->orWhere('country', 'LIKE', "%$query%")
                       ->orWhere('country', 'LIKE', "%$originalQuery%")
+                      ->orWhere('country', 'LIKE', "%$fuzzyQuery%")
                       ->orWhere('continent', 'LIKE', "%$query%");
                 });
                 if ($subcategory !== 'All') {
@@ -437,10 +497,12 @@ class HomeSearchController extends Controller
             } elseif ($category === 'Pre_4th_Republic') {
                 $preQuery = DB::table('pre1992_legislation_acts')
                     ->leftJoin('pre1992_legislation_articles', 'pre1992_legislation_acts.title', '=', 'pre1992_legislation_articles.pre_1992_act')
-                    ->where(function($q) use ($query, $originalQuery) {
+                    ->where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                         $q->where('pre1992_legislation_articles.content', 'LIKE', "%$query%")
+                          ->orWhere('pre1992_legislation_articles.content', 'LIKE', "%$originalQuery%")
                           ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$query%")
                           ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$originalQuery%")
+                          ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$fuzzyQuery%")
                           ->orWhere('pre1992_legislation_articles.section', 'LIKE', "%$query%");
                     });
                 if ($subcategory !== 'All') {
@@ -463,8 +525,14 @@ class HomeSearchController extends Controller
                 $mergedCollection = $mergedCollection->concat($pre4th);
             } elseif ($category === '4th_Republic') {
                 if ($subcategory === 'All' || $subcategory === 'Acts of Parliament') {
-                    $posts = Post1992Article::where(function($q) use ($query) {
-                        $q->where('part', 'LIKE', "%$query%")->orWhere('section', 'LIKE', "%$query%")->orWhere('content', 'LIKE', "%$query%")->orWhere('post_act', 'LIKE', "%$query%");
+                    $posts = Post1992Article::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
+                        $q->where('part', 'LIKE', "%$query%")
+                          ->orWhere('section', 'LIKE', "%$query%")
+                          ->orWhere('content', 'LIKE', "%$query%")
+                          ->orWhere('content', 'LIKE', "%$originalQuery%")
+                          ->orWhere('post_act', 'LIKE', "%$query%")
+                          ->orWhere('post_act', 'LIKE', "%$originalQuery%")
+                          ->orWhere('post_act', 'LIKE', "%$fuzzyQuery%");
                     })->get()->map(function($row) {
                         return [
                             'id' => $row->id,
@@ -482,8 +550,14 @@ class HomeSearchController extends Controller
                 }
 
                 if ($subcategory === 'All' || $subcategory === 'Legislative Instruments') {
-                    $regs = RegulationArticle::where(function($q) use ($query) {
-                        $q->where('part', 'LIKE', "%$query%")->orWhere('section', 'LIKE', "%$query%")->orWhere('content', 'LIKE', "%$query%")->orWhere('regulation_title', 'LIKE', "%$query%");
+                    $regs = RegulationArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
+                        $q->where('part', 'LIKE', "%$query%")
+                          ->orWhere('section', 'LIKE', "%$query%")
+                          ->orWhere('content', 'LIKE', "%$query%")
+                          ->orWhere('content', 'LIKE', "%$originalQuery%")
+                          ->orWhere('regulation_title', 'LIKE', "%$query%")
+                          ->orWhere('regulation_title', 'LIKE', "%$originalQuery%")
+                          ->orWhere('regulation_title', 'LIKE', "%$fuzzyQuery%");
                     })->get()->map(function($row) {
                         return [
                             'id' => $row->id,
@@ -501,8 +575,14 @@ class HomeSearchController extends Controller
                 }
 
                 if ($subcategory === 'All' || $subcategory === 'Constitutional Instruments') {
-                    $consts = ConstitutionalArticle::where(function($q) use ($query) {
-                        $q->where('part', 'LIKE', "%$query%")->orWhere('section', 'LIKE', "%$query%")->orWhere('content', 'LIKE', "%$query%")->orWhere('constitutional_act', 'LIKE', "%$query%");
+                    $consts = ConstitutionalArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
+                        $q->where('part', 'LIKE', "%$query%")
+                          ->orWhere('section', 'LIKE', "%$query%")
+                          ->orWhere('content', 'LIKE', "%$query%")
+                          ->orWhere('content', 'LIKE', "%$originalQuery%")
+                          ->orWhere('constitutional_act', 'LIKE', "%$query%")
+                          ->orWhere('constitutional_act', 'LIKE', "%$originalQuery%")
+                          ->orWhere('constitutional_act', 'LIKE', "%$fuzzyQuery%");
                     })->get()->map(function($row) {
                         return [
                             'id' => $row->id,
@@ -520,8 +600,14 @@ class HomeSearchController extends Controller
                 }
 
                 if ($subcategory === 'All' || $subcategory === 'Executive Instruments') {
-                    $exes = ExecutiveArticle::where(function($q) use ($query) {
-                        $q->where('part', 'LIKE', "%$query%")->orWhere('section', 'LIKE', "%$query%")->orWhere('content', 'LIKE', "%$query%")->orWhere('executive_act', 'LIKE', "%$query%");
+                    $exes = ExecutiveArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
+                        $q->where('part', 'LIKE', "%$query%")
+                          ->orWhere('section', 'LIKE', "%$query%")
+                          ->orWhere('content', 'LIKE', "%$query%")
+                          ->orWhere('content', 'LIKE', "%$originalQuery%")
+                          ->orWhere('executive_act', 'LIKE', "%$query%")
+                          ->orWhere('executive_act', 'LIKE', "%$originalQuery%")
+                          ->orWhere('executive_act', 'LIKE', "%$fuzzyQuery%");
                     })->get()->map(function($row) {
                         return [
                             'id' => $row->id,
@@ -539,8 +625,13 @@ class HomeSearchController extends Controller
                 }
 
                 if ($subcategory === 'All' || $subcategory === 'Amended Acts') {
-                    $amends = AmendedArticle::where(function($q) use ($query) {
-                        $q->where('section', 'LIKE', "%$query%")->orWhere('content', 'LIKE', "%$query%")->orWhere('act_title', 'LIKE', "%$query%");
+                    $amends = AmendedArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
+                        $q->where('section', 'LIKE', "%$query%")
+                          ->orWhere('content', 'LIKE', "%$query%")
+                          ->orWhere('content', 'LIKE', "%$originalQuery%")
+                          ->orWhere('act_title', 'LIKE', "%$query%")
+                          ->orWhere('act_title', 'LIKE', "%$originalQuery%")
+                          ->orWhere('act_title', 'LIKE', "%$fuzzyQuery%");
                     })->get()->map(function($row) {
                         return [
                             'id' => $row->id,
@@ -558,8 +649,14 @@ class HomeSearchController extends Controller
                 }
 
                 if ($subcategory === 'All' || $subcategory === 'Amended Regulations') {
-                    $amends_regs = AmendRegulationArticle::where(function($q) use ($query) {
-                        $q->where('part', 'LIKE', "%$query%")->orWhere('section', 'LIKE', "%$query%")->orWhere('content', 'LIKE', "%$query%")->orWhere('title', 'LIKE', "%$query%");
+                    $amends_regs = AmendRegulationArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
+                        $q->where('part', 'LIKE', "%$query%")
+                          ->orWhere('section', 'LIKE', "%$query%")
+                          ->orWhere('content', 'LIKE', "%$query%")
+                          ->orWhere('content', 'LIKE', "%$originalQuery%")
+                          ->orWhere('title', 'LIKE', "%$query%")
+                          ->orWhere('title', 'LIKE', "%$originalQuery%")
+                          ->orWhere('title', 'LIKE', "%$fuzzyQuery%");
                     })->get()->map(function($row) {
                         return [
                             'id' => $row->id,
@@ -576,17 +673,24 @@ class HomeSearchController extends Controller
                     $mergedCollection = $mergedCollection->concat($amends_regs);
                 }
             } elseif ($category === 'Case_Laws') {
-                $casesQuery = GhLawJudgment::where(function($q) use ($query, $originalQuery) {
+                $casesQuery = GhLawJudgment::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                     $q->where('case_title', 'LIKE', "%$query%")
                       ->orWhere('case_title', 'LIKE', "%$originalQuery%")
+                      ->orWhere('case_title', 'LIKE', "%$fuzzyQuery%")
                       ->orWhere('case_title_1', 'LIKE', "%$query%")
+                      ->orWhere('case_title_1', 'LIKE', "%$fuzzyQuery%")
                       ->orWhere('case_title_2', 'LIKE', "%$query%")
+                      ->orWhere('case_title_2', 'LIKE', "%$fuzzyQuery%")
                       ->orWhere('content', 'LIKE', "%$query%")
+                      ->orWhere('content', 'LIKE', "%$originalQuery%")
                       ->orWhere('reference_number', 'LIKE', "%$query%")
                       ->orWhere('reference_number', 'LIKE', "%$originalQuery%")
                       ->orWhere('court_name', 'LIKE', "%$query%")
+                      ->orWhere('court_name', 'LIKE', "%$fuzzyQuery%")
                       ->orWhere('coram', 'LIKE', "%$query%")
-                      ->orWhere('counsellors', 'LIKE', "%$query%");
+                      ->orWhere('coram', 'LIKE', "%$fuzzyQuery%")
+                      ->orWhere('counsellors', 'LIKE', "%$query%")
+                      ->orWhere('counsellors', 'LIKE', "%$fuzzyQuery%");
                 });
                 if ($subcategory !== 'All') {
                     $casesQuery->where('gh_law_judgment_group_name', $subcategory);
@@ -634,24 +738,31 @@ class HomeSearchController extends Controller
         } else {
             if ($category === 'Constitution_Ghana') {
                 $subFacets = [
-                    'Ghana Constitution' => GhanaArticle::where(function($q) use ($query, $originalQuery) {
+                    'Ghana Constitution' => GhanaArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                         $q->where('articles', 'LIKE', "%$query%")
+                          ->orWhere('articles', 'LIKE', "%$originalQuery%")
                           ->orWhere('gh_title', 'LIKE', "%$query%")
-                          ->orWhere('gh_title', 'LIKE', "%$originalQuery%");
+                          ->orWhere('gh_title', 'LIKE', "%$originalQuery%")
+                          ->orWhere('gh_title', 'LIKE', "%$fuzzyQuery%");
                     })->count(),
-                    'Ghana Constitution (Amended)' => GhAmendedArticle::where(function($q) use ($query, $originalQuery) {
+                    'Ghana Constitution (Amended)' => GhAmendedArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                         $q->where('articles', 'LIKE', "%$query%")
+                          ->orWhere('articles', 'LIKE', "%$originalQuery%")
                           ->orWhere('gh_title', 'LIKE', "%$query%")
-                          ->orWhere('gh_title', 'LIKE', "%$originalQuery%");
+                          ->orWhere('gh_title', 'LIKE', "%$originalQuery%")
+                          ->orWhere('gh_title', 'LIKE', "%$fuzzyQuery%");
                     })->count()
                 ];
             } elseif ($category === 'Constitution_Others') {
-                $subFacets = AllConstitution::where(function($q) use ($query, $originalQuery) {
+                $subFacets = AllConstitution::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                         $q->where('content', 'LIKE', "%$query%")
+                          ->orWhere('content', 'LIKE', "%$originalQuery%")
                           ->orWhere('title', 'LIKE', "%$query%")
                           ->orWhere('title', 'LIKE', "%$originalQuery%")
+                          ->orWhere('title', 'LIKE', "%$fuzzyQuery%")
                           ->orWhere('country', 'LIKE', "%$query%")
-                          ->orWhere('country', 'LIKE', "%$originalQuery%");
+                          ->orWhere('country', 'LIKE', "%$originalQuery%")
+                          ->orWhere('country', 'LIKE', "%$fuzzyQuery%");
                     })
                     ->groupBy('continent')
                     ->selectRaw('continent, count(*) as count')
@@ -660,10 +771,12 @@ class HomeSearchController extends Controller
             } elseif ($category === 'Pre_4th_Republic') {
                 $subFacets = DB::table('pre1992_legislation_acts')
                     ->leftJoin('pre1992_legislation_articles', 'pre1992_legislation_acts.title', '=', 'pre1992_legislation_articles.pre_1992_act')
-                    ->where(function($q) use ($query, $originalQuery) {
+                    ->where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                         $q->where('pre1992_legislation_articles.content', 'LIKE', "%$query%")
+                          ->orWhere('pre1992_legislation_articles.content', 'LIKE', "%$originalQuery%")
                           ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$query%")
-                          ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$originalQuery%");
+                          ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$originalQuery%")
+                          ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$fuzzyQuery%");
                     })
                     ->groupBy('pre_1992_group')
                     ->selectRaw('pre_1992_group, count(*) as count')
@@ -679,17 +792,24 @@ class HomeSearchController extends Controller
                     'Amended Regulations' => $counts['amends_regs_count'] ?? 0
                 ];
             } elseif ($category === 'Case_Laws') {
-                $subFacets = GhLawJudgment::where(function($q) use ($query, $originalQuery) {
+                $subFacets = GhLawJudgment::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                         $q->where('case_title', 'LIKE', "%$query%")
                           ->orWhere('case_title', 'LIKE', "%$originalQuery%")
+                          ->orWhere('case_title', 'LIKE', "%$fuzzyQuery%")
                           ->orWhere('case_title_1', 'LIKE', "%$query%")
+                          ->orWhere('case_title_1', 'LIKE', "%$fuzzyQuery%")
                           ->orWhere('case_title_2', 'LIKE', "%$query%")
+                          ->orWhere('case_title_2', 'LIKE', "%$fuzzyQuery%")
                           ->orWhere('content', 'LIKE', "%$query%")
+                          ->orWhere('content', 'LIKE', "%$originalQuery%")
                           ->orWhere('reference_number', 'LIKE', "%$query%")
                           ->orWhere('reference_number', 'LIKE', "%$originalQuery%")
                           ->orWhere('court_name', 'LIKE', "%$query%")
+                          ->orWhere('court_name', 'LIKE', "%$fuzzyQuery%")
                           ->orWhere('coram', 'LIKE', "%$query%")
-                          ->orWhere('counsellors', 'LIKE', "%$query%");
+                          ->orWhere('coram', 'LIKE', "%$fuzzyQuery%")
+                          ->orWhere('counsellors', 'LIKE', "%$query%")
+                          ->orWhere('counsellors', 'LIKE', "%$fuzzyQuery%");
                     })
                     ->groupBy('gh_law_judgment_group_name')
                     ->selectRaw('gh_law_judgment_group_name, count(*) as count')
@@ -752,101 +872,129 @@ class HomeSearchController extends Controller
     /**
      * Helper to compute table counts efficiently (Cached for 5 minutes)
      */
-    private function calculateCounts($query, $originalQuery = '')
+    private function calculateCounts($query, $originalQuery = '', $fuzzyQuery = '')
     {
-        $cacheKey = 'search_counts_v3_' . md5($query . '_' . $originalQuery);
+        $cacheKey = 'search_counts_v5_' . md5($query . '_' . $originalQuery . '_' . $fuzzyQuery);
 
-        return Cache::remember($cacheKey, 300, function() use ($query, $originalQuery) {
-            $ghana_const_count = GhanaArticle::where(function($q) use ($query, $originalQuery) {
+        return Cache::remember($cacheKey, 300, function() use ($query, $originalQuery, $fuzzyQuery) {
+            $ghana_const_count = GhanaArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                 $q->where('articles', 'LIKE', "%$query%")
+                  ->orWhere('articles', 'LIKE', "%$originalQuery%")
                   ->orWhere('gh_title', 'LIKE', "%$query%")
-                  ->orWhere('gh_title', 'LIKE', "%$originalQuery%");
+                  ->orWhere('gh_title', 'LIKE', "%$originalQuery%")
+                  ->orWhere('gh_title', 'LIKE', "%$fuzzyQuery%");
             })->count();
 
-            $ghana_const_amended_count = GhAmendedArticle::where(function($q) use ($query, $originalQuery) {
+            $ghana_const_amended_count = GhAmendedArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                 $q->where('articles', 'LIKE', "%$query%")
+                  ->orWhere('articles', 'LIKE', "%$originalQuery%")
                   ->orWhere('gh_title', 'LIKE', "%$query%")
-                  ->orWhere('gh_title', 'LIKE', "%$originalQuery%");
+                  ->orWhere('gh_title', 'LIKE', "%$originalQuery%")
+                  ->orWhere('gh_title', 'LIKE', "%$fuzzyQuery%");
             })->count();
 
             $constitution_ghana_total = $ghana_const_count + $ghana_const_amended_count;
 
-            $constitution_others_total = AllConstitution::where(function($q) use ($query, $originalQuery) {
+            $constitution_others_total = AllConstitution::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                 $q->where('content', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$originalQuery%")
                   ->orWhere('title', 'LIKE', "%$query%")
                   ->orWhere('title', 'LIKE', "%$originalQuery%")
+                  ->orWhere('title', 'LIKE', "%$fuzzyQuery%")
                   ->orWhere('country', 'LIKE', "%$query%")
-                  ->orWhere('country', 'LIKE', "%$originalQuery%");
+                  ->orWhere('country', 'LIKE', "%$originalQuery%")
+                  ->orWhere('country', 'LIKE', "%$fuzzyQuery%");
             })->count();
 
             $pre_4th_total = DB::table('pre1992_legislation_acts')
                 ->leftJoin('pre1992_legislation_articles', 'pre1992_legislation_acts.title', '=', 'pre1992_legislation_articles.pre_1992_act')
-                ->where(function($q) use ($query, $originalQuery) {
+                ->where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                     $q->where('pre1992_legislation_articles.content', 'LIKE', "%$query%")
+                      ->orWhere('pre1992_legislation_articles.content', 'LIKE', "%$originalQuery%")
                       ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$query%")
-                      ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$originalQuery%");
+                      ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$originalQuery%")
+                      ->orWhere('pre1992_legislation_acts.title', 'LIKE', "%$fuzzyQuery%");
                 })->count();
 
-            $post1992_count = Post1992Article::where(function($q) use ($query, $originalQuery) {
+            $post1992_count = Post1992Article::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                 $q->where('part', 'LIKE', "%$query%")
                   ->orWhere('section', 'LIKE', "%$query%")
                   ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$originalQuery%")
                   ->orWhere('post_act', 'LIKE', "%$query%")
-                  ->orWhere('post_act', 'LIKE', "%$originalQuery%");
+                  ->orWhere('post_act', 'LIKE', "%$originalQuery%")
+                  ->orWhere('post_act', 'LIKE', "%$fuzzyQuery%");
             })->count();
 
-            $regulation_count = RegulationArticle::where(function($q) use ($query, $originalQuery) {
+            $regulation_count = RegulationArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                 $q->where('part', 'LIKE', "%$query%")
                   ->orWhere('section', 'LIKE', "%$query%")
                   ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$originalQuery%")
                   ->orWhere('regulation_title', 'LIKE', "%$query%")
-                  ->orWhere('regulation_title', 'LIKE', "%$originalQuery%");
+                  ->orWhere('regulation_title', 'LIKE', "%$originalQuery%")
+                  ->orWhere('regulation_title', 'LIKE', "%$fuzzyQuery%");
             })->count();
 
-            $constitutional_count = ConstitutionalArticle::where(function($q) use ($query, $originalQuery) {
+            $constitutional_count = ConstitutionalArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                 $q->where('part', 'LIKE', "%$query%")
                   ->orWhere('section', 'LIKE', "%$query%")
                   ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$originalQuery%")
                   ->orWhere('constitutional_act', 'LIKE', "%$query%")
-                  ->orWhere('constitutional_act', 'LIKE', "%$originalQuery%");
+                  ->orWhere('constitutional_act', 'LIKE', "%$originalQuery%")
+                  ->orWhere('constitutional_act', 'LIKE', "%$fuzzyQuery%");
             })->count();
 
-            $executive_count = ExecutiveArticle::where(function($q) use ($query, $originalQuery) {
+            $executive_count = ExecutiveArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                 $q->where('part', 'LIKE', "%$query%")
                   ->orWhere('section', 'LIKE', "%$query%")
                   ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$originalQuery%")
                   ->orWhere('executive_act', 'LIKE', "%$query%")
-                  ->orWhere('executive_act', 'LIKE', "%$originalQuery%");
+                  ->orWhere('executive_act', 'LIKE', "%$originalQuery%")
+                  ->orWhere('executive_act', 'LIKE', "%$fuzzyQuery%");
             })->count();
 
-            $amends_count = AmendedArticle::where(function($q) use ($query, $originalQuery) {
+            $amends_count = AmendedArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                 $q->where('section', 'LIKE', "%$query%")
                   ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$originalQuery%")
                   ->orWhere('act_title', 'LIKE', "%$query%")
-                  ->orWhere('act_title', 'LIKE', "%$originalQuery%");
+                  ->orWhere('act_title', 'LIKE', "%$originalQuery%")
+                  ->orWhere('act_title', 'LIKE', "%$fuzzyQuery%");
             })->count();
 
-            $amends_regs_count = AmendRegulationArticle::where(function($q) use ($query, $originalQuery) {
+            $amends_regs_count = AmendRegulationArticle::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                 $q->where('part', 'LIKE', "%$query%")
                   ->orWhere('section', 'LIKE', "%$query%")
                   ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$originalQuery%")
                   ->orWhere('title', 'LIKE', "%$query%")
-                  ->orWhere('title', 'LIKE', "%$originalQuery%");
+                  ->orWhere('title', 'LIKE', "%$originalQuery%")
+                  ->orWhere('title', 'LIKE', "%$fuzzyQuery%");
             })->count();
 
             $post_4th_total = $post1992_count + $regulation_count + $constitutional_count + $executive_count + $amends_count + $amends_regs_count;
 
-            $cases_total = GhLawJudgment::where(function($q) use ($query, $originalQuery) {
+            $cases_total = GhLawJudgment::where(function($q) use ($query, $originalQuery, $fuzzyQuery) {
                 $q->where('case_title', 'LIKE', "%$query%")
                   ->orWhere('case_title', 'LIKE', "%$originalQuery%")
+                  ->orWhere('case_title', 'LIKE', "%$fuzzyQuery%")
                   ->orWhere('case_title_1', 'LIKE', "%$query%")
+                  ->orWhere('case_title_1', 'LIKE', "%$fuzzyQuery%")
                   ->orWhere('case_title_2', 'LIKE', "%$query%")
+                  ->orWhere('case_title_2', 'LIKE', "%$fuzzyQuery%")
                   ->orWhere('content', 'LIKE', "%$query%")
+                  ->orWhere('content', 'LIKE', "%$originalQuery%")
                   ->orWhere('reference_number', 'LIKE', "%$query%")
                   ->orWhere('reference_number', 'LIKE', "%$originalQuery%")
                   ->orWhere('court_name', 'LIKE', "%$query%")
+                  ->orWhere('court_name', 'LIKE', "%$fuzzyQuery%")
                   ->orWhere('coram', 'LIKE', "%$query%")
-                  ->orWhere('counsellors', 'LIKE', "%$query%");
+                  ->orWhere('coram', 'LIKE', "%$fuzzyQuery%")
+                  ->orWhere('counsellors', 'LIKE', "%$query%")
+                  ->orWhere('counsellors', 'LIKE', "%$fuzzyQuery%");
             })->count();
 
             $all_total_count = $constitution_ghana_total + $constitution_others_total + $pre_4th_total + $post_4th_total + $cases_total;
