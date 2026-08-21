@@ -415,7 +415,6 @@
             justify-content: center;
             text-align: center;
             padding: 90px 30px 40px;
-            transition: padding 0.35s ease;
         }
 
         body.search-history-open .hero {
@@ -614,16 +613,7 @@
         .hero-content.history-open .hero-subtitle,
         .hero-content.history-open .hero-title,
         .hero-content.history-open .hero-badge {
-            opacity: 0 !important;
-            visibility: hidden !important;
-            pointer-events: none !important;
-            max-height: 0 !important;
-            margin-top: 0 !important;
-            margin-bottom: 0 !important;
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
-            overflow: hidden !important;
-            transform: translateY(-8px);
+            display: none !important;
         }
 
         @keyframes fadeInUp {
@@ -795,14 +785,7 @@
 
         .search-hint.is-hidden-history,
         .hero-search.has-history-open + .search-hint {
-            opacity: 0 !important;
-            visibility: hidden !important;
-            pointer-events: none !important;
-            max-height: 0 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow: hidden !important;
-            transform: translateY(-8px) !important;
+            display: none !important;
         }
 
         .search-hint span {
