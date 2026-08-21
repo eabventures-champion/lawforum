@@ -550,6 +550,10 @@
             .recent-searches-scroll-area {
                 max-height: 160px !important;
             }
+
+            input, select, textarea, .search-container input {
+                font-size: 16px !important; /* Prevents mobile browser auto-zoom on input focus */
+            }
         }
 
         @media (max-width: 480px) {

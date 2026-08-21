@@ -2431,6 +2431,15 @@
                 display: flex !important;
             }
 
+            .sidebar-restore-btn.right-restore {
+                right: 0 !important;
+                top: 150px !important;
+                height: 70px !important;
+                width: 24px !important;
+                z-index: 95 !important;
+                display: flex !important;
+            }
+
             .premium-details-card,
             .premium-filter-card {
                 display: none !important;
@@ -2487,7 +2496,10 @@
                 margin: 0 auto !important;
             }
 
-            .content-search-box input {
+            .content-search-box input,
+            .sidebar-search input,
+            .notes-search-sidebar,
+            input, select, textarea {
                 font-size: 16px !important; /* Prevents mobile browser auto-zoom on input focus */
             }
 
@@ -2507,23 +2519,6 @@
                 height: 32px !important;
                 min-width: 32px !important;
                 flex-shrink: 0 !important;
-            }
-
-            #rightRestoreBtn {
-                position: fixed !important;
-                right: 0 !important;
-                top: 150px !important;
-                height: 70px !important;
-                width: 24px !important;
-                z-index: 1005 !important;
-                display: flex;
-            }
-
-            .workspace-wrapper:has(#rightSidebar.open) #rightRestoreBtn,
-            .workspace-wrapper:has(#rightSidebar:not(.collapsed)) #rightRestoreBtn,
-            #rightSidebar.open ~ #rightRestoreBtn,
-            #rightSidebar:not(.collapsed) ~ #rightRestoreBtn {
-                display: none !important;
             }
 
             .nav-inner { padding: 14px 20px !important; }

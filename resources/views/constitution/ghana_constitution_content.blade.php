@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @php
@@ -129,7 +129,7 @@
             border: 1px solid var(--border-color);
             border-radius: 10px;
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 16px;
             font-family: var(--font-ui);
             outline: none;
             transition: var(--transition);

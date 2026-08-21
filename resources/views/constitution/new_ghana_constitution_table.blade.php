@@ -2325,7 +2325,10 @@
                 margin: 0 auto !important;
             }
 
-            .content-search-box input {
+            .content-search-box input,
+            .sidebar-search input,
+            .notes-search-sidebar,
+            input, select, textarea {
                 font-size: 16px !important; /* Prevents mobile browser auto-zoom on input focus */
             }
 

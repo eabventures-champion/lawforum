@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="Search results for {{ $query }} — Legals Forum Legal Research Platform">
     <title>Search Results — Legals Forum</title>
@@ -71,6 +71,9 @@
 
         html {
             scroll-behavior: smooth;
+            overflow-x: clip;
+            width: 100%;
+            max-width: 100%;
         }
 
         body {
@@ -79,6 +82,10 @@
             color: var(--text-primary);
             -webkit-font-smoothing: antialiased;
             min-height: 100vh;
+            overflow-x: clip;
+            width: 100%;
+            max-width: 100%;
+            position: relative;
         }
 
         a { text-decoration: none; color: inherit; }
@@ -232,7 +239,7 @@
             border-radius: 12px;
             color: var(--text-primary);
             font-family: var(--font);
-            font-size: 14px;
+            font-size: 16px;
             outline: none;
             transition: var(--transition);
         }
@@ -505,6 +512,14 @@
             border: 1px solid var(--border-color);
             border-radius: 18px;
             padding: 24px;
+        }
+
+        .mobile-filter-header {
+            display: none;
+        }
+
+        .filter-panel-collapsible {
+            display: block;
         }
 
         .filter-title {
@@ -984,20 +999,25 @@
             }
 
             .filter-sidebar {
+                position: -webkit-sticky !important;
                 position: sticky !important;
                 top: var(--header-height) !important;
                 align-self: start !important;
-                max-height: calc(100vh - var(--header-height)) !important;
+                max-height: calc(100vh - var(--header-height) - 10px) !important;
                 overflow-y: visible !important;
                 padding-right: 0 !important;
-                margin-bottom: 12px !important;
-                z-index: 100 !important;
+                margin-bottom: 14px !important;
+                z-index: 500 !important;
             }
 
             .filter-panel {
                 border-radius: 14px;
-                padding: 16px 12px;
-                box-shadow: 0 4px 25px rgba(0, 0, 0, 0.25) !important;
+                padding: 14px 12px;
+                background: rgba(12, 18, 32, 0.95) !important;
+                backdrop-filter: blur(20px) !important;
+                -webkit-backdrop-filter: blur(20px) !important;
+                border: 1px solid var(--border-color) !important;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45) !important;
             }
 
             .mobile-filter-header {
@@ -1399,10 +1419,14 @@
             .search-input-wrap input {
                 height: 38px !important;
                 padding: 8px 12px 8px 34px !important;
-                font-size: 13px !important;
+                font-size: 16px !important; /* Prevents mobile browser auto-zoom on input focus */
                 border-radius: 10px !important;
                 width: 100% !important;
                 box-sizing: border-box !important;
+            }
+
+            input, select, textarea {
+                font-size: 16px !important; /* Global mobile safety to prevent iOS zoom */
             }
 
             .search-input-wrap .search-icon {
@@ -1445,6 +1469,8 @@
                 left: 10px !important;
                 right: 10px !important;
                 width: auto !important;
+                max-width: calc(100vw - 20px) !important;
+                box-sizing: border-box !important;
                 max-height: 65vh !important;
                 border-radius: 14px !important;
                 box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9) !important;
@@ -1484,16 +1510,24 @@
             }
 
             .filter-sidebar {
-                position: static !important;
-                max-height: none !important;
+                position: -webkit-sticky !important;
+                position: sticky !important;
+                top: var(--header-height) !important;
+                max-height: calc(100vh - var(--header-height) - 10px) !important;
                 margin-bottom: 14px !important;
                 padding: 0 !important;
                 width: 100% !important;
+                z-index: 500 !important;
             }
 
             .filter-panel {
                 padding: 10px 12px !important;
                 border-radius: 14px !important;
+                background: rgba(12, 18, 32, 0.95) !important;
+                backdrop-filter: blur(20px) !important;
+                -webkit-backdrop-filter: blur(20px) !important;
+                border: 1px solid var(--border-color) !important;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45) !important;
             }
 
             .results-container {
@@ -1644,12 +1678,12 @@
                     <span>
                         <i class="fa-solid fa-sliders"></i> Search Filters
                     </span>
-                    <span id="mobile-filter-toggle-icon">
-                        <i class="fa-solid fa-chevron-up"></i>
+                    <span id="mobile-filter-toggle-icon" style="transition: transform 0.25s ease; display: inline-block;">
+                        <i class="fa-solid fa-chevron-down"></i>
                     </span>
                 </div>
 
-                <div class="filter-panel-collapsible" id="filterPanelCollapsible">
+                <div class="filter-panel-collapsible collapsed" id="filterPanelCollapsible">
                     <h3 class="filter-title desktop-only-title">
                         <i class="fa-solid fa-filter"></i> Categories
                     </h3>
@@ -2461,9 +2495,9 @@
             if (content && icon) {
                 const isCollapsed = content.classList.toggle('collapsed');
                 if (isCollapsed) {
-                    icon.style.transform = 'rotate(-180deg)';
-                } else {
                     icon.style.transform = 'rotate(0deg)';
+                } else {
+                    icon.style.transform = 'rotate(-180deg)';
                 }
             }
         };
@@ -2546,7 +2580,8 @@
                             srpHistoryEl.classList.remove('visible');
                             state.query = q;
                             state.page = 1;
-                            pushUrl();
+                            state.subcategory = 'All';
+                            state.year = 'All';
                             performSearch();
                         }
                     });

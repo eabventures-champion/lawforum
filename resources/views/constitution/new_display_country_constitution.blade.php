@@ -648,7 +648,9 @@
         }
 
         @media (max-width: 991px) {
-            #document-search-input {
+            #document-search-input,
+            .notes-search-sidebar,
+            input, select, textarea {
                 font-size: 16px !important; /* Prevents mobile browser auto-zoom on input focus */
             }
         }
@@ -1358,6 +1360,8 @@
                 box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
             }
 
+            body:has(#right-sidebar-col.open) #expand-right-btn,
+            body:has(#right-sidebar-col:not(.collapsed-sidebar)) #expand-right-btn,
             #right-sidebar-col.open ~ #expand-right-btn,
             #right-sidebar-col:not(.collapsed-sidebar) ~ #expand-right-btn {
                 display: none !important;

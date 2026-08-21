@@ -2380,7 +2380,10 @@
                 margin: 0 auto !important;
             }
 
-            .content-search-box input {
+            .content-search-box input,
+            .sidebar-search input,
+            .notes-search-sidebar,
+            input, select, textarea {
                 font-size: 16px !important; /* Prevents mobile browser auto-zoom on input focus */
             }
 
@@ -2411,21 +2414,13 @@
                 display: flex !important;
             }
 
-            #rightRestoreBtn {
-                position: fixed !important;
+            .sidebar-restore-btn.right-restore {
                 right: 0 !important;
                 top: 150px !important;
                 height: 70px !important;
                 width: 24px !important;
-                z-index: 1005 !important;
-                display: flex;
-            }
-
-            .workspace-wrapper:has(#rightSidebar.open) #rightRestoreBtn,
-            .workspace-wrapper:has(#rightSidebar:not(.collapsed)) #rightRestoreBtn,
-            #rightSidebar.open ~ #rightRestoreBtn,
-            #rightSidebar:not(.collapsed) ~ #rightRestoreBtn {
-                display: none !important;
+                z-index: 95 !important;
+                display: flex !important;
             }
 
             .mobile-workspace-backdrop.active {

@@ -163,5 +163,12 @@ box-sizing: border-box;
 #mysearch   {width:70%;}
 #mysearch:focus  {width:110%;}
 
+/* Global Mobile Zoom & Drift Prevention */
+@media screen and (max-width: 768px) {
+  input, select, textarea, .form-control {
+    font-size: 16px !important;
+  }
+}
+
 
 

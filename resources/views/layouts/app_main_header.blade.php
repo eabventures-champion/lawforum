@@ -2,7 +2,7 @@
 <html lang="en" style="background-color:#070a13;">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <meta name="description" content="Browse and search Ghana case laws including Supreme Court, Court of Appeal, and High Court judgements on Legals Forum.">
     <title>Ghana Case Laws - Legals Forum</title>
 
