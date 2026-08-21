@@ -79,14 +79,6 @@
         /* ============================================
            NAVIGATION
            ============================================ */
-        html.search-history-open,
-        body.search-history-open {
-            overflow: hidden !important;
-            height: 100% !important;
-            max-height: 100vh !important;
-            overscroll-behavior: none !important;
-        }
-
         .nav-wrap {
             position: fixed;
             top: 0;
@@ -717,6 +709,12 @@
             font-family: var(--font);
             color: var(--text-primary);
             padding: 14px 12px;
+            cursor: text !important;
+            pointer-events: auto !important;
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            position: relative;
+            z-index: 10;
         }
 
         .search-container input::placeholder {
@@ -3259,26 +3257,13 @@
             }, 150);
         });
 
-        // Automatic slideshow loop
+        // Automatic slideshow disabled: slides never auto-advance
         function startAutoSlide() {
-            if (isQuickSearchMode) return;
-            if (isInputActive() || isSearchSubmitting) {
-                clearTimeout(autoSlideTimeout);
-                return;
-            }
-
-            autoSlideTimeout = setTimeout(() => {
-                if (!isInputActive() && !isQuickSearchMode && !isSearchSubmitting) {
-                    goToSlide((currentSlide + 1) % totalSlides);
-                }
-            }, 10000);
+            clearTimeout(autoSlideTimeout);
         }
 
         function resetAutoSlide() {
             clearTimeout(autoSlideTimeout);
-            if (!isInputActive() && !isSearchSubmitting) {
-                startAutoSlide();
-            }
         }
 
         if (isQuickSearchMode) {
@@ -3618,47 +3603,16 @@
             renderSearchHistory([]);
         };
 
-        // Show search history on touch/focus/click/input
-        let userExplicitlyInteracting = false;
-
+        // Show search history on focus/click
         if (heroSearchInput) {
-            heroSearchInput.addEventListener('touchstart', () => {
-                userExplicitlyInteracting = true;
-                showSearchHistoryIfAppropriate();
-            }, { passive: true });
-
-            heroSearchInput.addEventListener('mousedown', () => {
-                userExplicitlyInteracting = true;
-                showSearchHistoryIfAppropriate();
-            });
-
-            heroSearchInput.addEventListener('keydown', () => {
-                userExplicitlyInteracting = true;
-                showSearchHistoryIfAppropriate();
-            });
-
             heroSearchInput.addEventListener('focus', () => {
-                userExplicitlyInteracting = true;
                 showSearchHistoryIfAppropriate();
             });
 
             heroSearchInput.addEventListener('click', () => {
-                userExplicitlyInteracting = true;
-                showSearchHistoryIfAppropriate();
-            });
-
-            heroSearchInput.addEventListener('input', () => {
-                userExplicitlyInteracting = true;
                 showSearchHistoryIfAppropriate();
             });
         }
-
-        // Prevent unexpected scrolling while search history is open on mobile
-        window.addEventListener('scroll', () => {
-            if (searchHistoryVisible && window.scrollY !== 0) {
-                window.scrollTo(0, 0);
-            }
-        }, { passive: true });
 
         // Hide dropdown when clicking outside
         document.addEventListener('click', (e) => {
@@ -3685,7 +3639,6 @@
 
         // Initialize slider
         activateRevealAnimations(0);
-        startAutoSlide();
     </script>
 
     <!--Start of Tawk.to Script-->
