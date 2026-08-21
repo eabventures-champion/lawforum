@@ -343,10 +343,17 @@
         </div>
 
         <div class="options-grid">
+            @php
+                $targetUrl = request('redirect_to') ?: request('redirect') ?: session('url.intended') ?: ($redirectTo ?? null);
+                $redirParam = $targetUrl ? '&redirect_to=' . urlencode($targetUrl) : '';
+            @endphp
             
             <!-- Guest Card -->
             <form action="/set-guest-access" method="POST" class="card-form">
                 @csrf
+                @if($targetUrl)
+                    <input type="hidden" name="redirect_to" value="{{ $targetUrl }}">
+                @endif
                 <button type="submit" class="card guest-card">
                     <div class="icon-wrapper">
                         <i class="fa-solid fa-user-secret"></i>
@@ -362,7 +369,7 @@
             </form>
 
             <!-- Student Card -->
-            <a href="/register?role=student" class="card student-card">
+            <a href="/register?role=student{{ $redirParam }}" class="card student-card">
                 <div class="icon-wrapper">
                     <i class="fa-solid fa-graduation-cap"></i>
                 </div>
@@ -376,7 +383,7 @@
             </a>
 
             <!-- Lawyer Card -->
-            <a href="/register?role=lawyer" class="card lawyer-card">
+            <a href="/register?role=lawyer{{ $redirParam }}" class="card lawyer-card">
                 <div class="icon-wrapper">
                     <i class="fa-solid fa-gavel"></i>
                 </div>
@@ -390,7 +397,7 @@
             </a>
 
             <!-- Researcher Card -->
-            <a href="/register?role=researcher" class="card researcher-card">
+            <a href="/register?role=researcher{{ $redirParam }}" class="card researcher-card">
                 <div class="icon-wrapper">
                     <i class="fa-solid fa-microscope"></i>
                 </div>

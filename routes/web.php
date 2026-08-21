@@ -13,20 +13,52 @@ if (env('APP_ENV') === 'production') {
 Route::get('/','WelcomePageController@index');
 
 // GATEWAY PAGE (Get Started / Role Selection)
-Route::get('/get-started', function () {
-    // If user is already authenticated, redirect to home
+Route::get('/get-started', function (\Illuminate\Http\Request $request) {
+    $redirectTo = $request->query('redirect_to')
+        ?: $request->query('redirect')
+        ?: session('url.intended');
+
+    if (!$redirectTo && url()->previous() && url()->previous() !== url()->current()) {
+        $prev = url()->previous();
+        if (!\Illuminate\Support\Str::contains($prev, ['get-started', 'set-guest-access', 'login', 'register'])) {
+            $redirectTo = $prev;
+        }
+    }
+
+    // If user is already authenticated, redirect to intended or home
     if (auth()->check()) {
-        return redirect('/');
+        return redirect($redirectTo ?: '/');
     }
-    // If guest already has access cookie, redirect to home
-    if (request()->cookie('guest_access')) {
-        return redirect('/');
+    // If guest already has access cookie, redirect to intended or home
+    if ($request->cookie('guest_access')) {
+        return redirect($redirectTo ?: '/');
     }
-    return view('get-started');
+
+    if ($redirectTo && !session()->has('url.intended')) {
+        session(['url.intended' => $redirectTo]);
+    }
+
+    return view('get-started', ['redirectTo' => $redirectTo]);
 })->name('get-started');
 
-Route::post('/set-guest-access', function () {
-    return redirect('/')->withCookie(cookie('guest_access', '1', 60 * 24 * 30)); // 30 days
+Route::post('/set-guest-access', function (\Illuminate\Http\Request $request) {
+    $redirectTo = $request->input('redirect_to')
+        ?: session()->pull('url.intended')
+        ?: $request->query('redirect_to')
+        ?: $request->query('redirect');
+
+    if (!$redirectTo && url()->previous() && url()->previous() !== url()->current()) {
+        $prev = url()->previous();
+        if (!\Illuminate\Support\Str::contains($prev, ['get-started', 'set-guest-access', 'login', 'register'])) {
+            $redirectTo = $prev;
+        }
+    }
+
+    if (!$redirectTo || \Illuminate\Support\Str::contains($redirectTo, ['get-started', 'set-guest-access', 'login', 'register'])) {
+        $redirectTo = '/';
+    }
+
+    return redirect($redirectTo)->withCookie(cookie('guest_access', '1', 60 * 24 * 30)); // 30 days
 })->name('set-guest-access');
 
 //----------------------------------------------------------------------------DASHBOARD------------------------------------------------------------------------------------------------------------

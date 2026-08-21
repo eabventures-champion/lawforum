@@ -66,12 +66,17 @@ class GuestAccessMiddleware
             return $next($request);
         }
 
+        $targetUrl = $request->fullUrl();
+
         // For AJAX / JSON requests, return JSON rather than redirecting to HTML page
         if ($request->ajax() || $request->wantsJson()) {
-            return response()->json(['guest_required' => true, 'redirect' => '/get-started'], 401);
+            return response()->json([
+                'guest_required' => true,
+                'redirect' => '/get-started?redirect_to=' . urlencode($targetUrl)
+            ], 401);
         }
 
-        // Redirect to gateway page
-        return redirect('/get-started');
+        // Redirect to gateway page with intended URL saved in session and passed as query parameter
+        return redirect()->guest('/get-started?redirect_to=' . urlencode($targetUrl));
     }
 }
