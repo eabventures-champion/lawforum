@@ -79,10 +79,19 @@
         /* ============================================
            NAVIGATION
            ============================================ */
+        html.search-history-open,
+        body.search-history-open {
+            overflow: hidden !important;
+            height: 100% !important;
+            max-height: 100vh !important;
+            overscroll-behavior: none !important;
+        }
+
         .nav-wrap {
             position: fixed;
             top: 0;
             left: 0;
+            right: 0;
             width: 100%;
             z-index: 100001;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -92,9 +101,11 @@
             position: fixed !important;
             top: 0 !important;
             left: 0 !important;
+            right: 0 !important;
             width: 100% !important;
             z-index: 100001 !important;
-            background: rgba(6, 10, 19, 0.95) !important;
+            transform: none !important;
+            background: rgba(6, 10, 19, 0.96) !important;
             backdrop-filter: blur(20px) !important;
             -webkit-backdrop-filter: blur(20px) !important;
             border-bottom: 1px solid var(--border-color) !important;
@@ -3447,6 +3458,7 @@
 
             searchHistoryDropdown.innerHTML = html;
             searchHistoryDropdown.classList.add('visible');
+            document.documentElement.classList.add('search-history-open');
             document.body.classList.add('search-history-open');
             if (heroSearchWrapper) {
                 heroSearchWrapper.classList.add('has-history-open');
@@ -3462,11 +3474,11 @@
             searchHistoryVisible = true;
 
             // Ensure window/container is reset to top so navbar remains perfectly in place
-            if (window.scrollY > 0) {
-                window.scrollTo({ top: 0, behavior: 'instant' });
-            }
+            window.scrollTo(0, 0);
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
             const heroSlide = document.querySelector('.slide-hero');
-            if (heroSlide && heroSlide.scrollTop > 0) {
+            if (heroSlide) {
                 heroSlide.scrollTop = 0;
             }
 
@@ -3525,6 +3537,7 @@
         function hideSearchHistory() {
             if (searchHistoryDropdown) {
                 searchHistoryDropdown.classList.remove('visible');
+                document.documentElement.classList.remove('search-history-open');
                 document.body.classList.remove('search-history-open');
                 const heroSearchWrapper = searchHistoryDropdown.closest('.hero-search');
                 if (heroSearchWrapper) {
@@ -3605,22 +3618,28 @@
             renderSearchHistory([]);
         };
 
-        // Show search history on focus AND click (only upon active user interaction)
+        // Show search history on touch/focus/click/input
         let userExplicitlyInteracting = false;
 
         if (heroSearchInput) {
+            heroSearchInput.addEventListener('touchstart', () => {
+                userExplicitlyInteracting = true;
+                showSearchHistoryIfAppropriate();
+            }, { passive: true });
+
             heroSearchInput.addEventListener('mousedown', () => {
                 userExplicitlyInteracting = true;
+                showSearchHistoryIfAppropriate();
             });
 
             heroSearchInput.addEventListener('keydown', () => {
                 userExplicitlyInteracting = true;
+                showSearchHistoryIfAppropriate();
             });
 
             heroSearchInput.addEventListener('focus', () => {
-                if (userExplicitlyInteracting) {
-                    showSearchHistoryIfAppropriate();
-                }
+                userExplicitlyInteracting = true;
+                showSearchHistoryIfAppropriate();
             });
 
             heroSearchInput.addEventListener('click', () => {
@@ -3633,6 +3652,13 @@
                 showSearchHistoryIfAppropriate();
             });
         }
+
+        // Prevent unexpected scrolling while search history is open on mobile
+        window.addEventListener('scroll', () => {
+            if (searchHistoryVisible && window.scrollY !== 0) {
+                window.scrollTo(0, 0);
+            }
+        }, { passive: true });
 
         // Hide dropdown when clicking outside
         document.addEventListener('click', (e) => {
