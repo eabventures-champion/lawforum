@@ -703,20 +703,56 @@ class HomeSearchController extends Controller
         }
 
         // Phrase precision: for multi-word queries, keep only results where the
-        // exact phrase appears in the content or title (not just individual words scattered)
+        // phrase/tokens match in content, title, or subtitle (handling multi-spaces, punctuation, HTML entities, and legal v/vs variations)
         if ($isMultiWord) {
-            $phrasePattern = mb_strtolower($cleanOriginal);
-            $mergedCollection = $mergedCollection->filter(function ($item) use ($phrasePattern, $fuzzyQuery) {
-                $content = mb_strtolower($item['content'] ?? '');
-                $title = mb_strtolower($item['parent_title'] ?? '');
-                $subtitle = mb_strtolower($item['subtitle'] ?? '');
-                // Check exact phrase in content, title, or subtitle
-                // Also check fuzzy pattern (handles extra spaces/punctuation in titles like "ANGUAH  vs.  CENTRE")
-                $fuzzyLower = mb_strtolower(str_replace('%', '', $fuzzyQuery));
-                return str_contains($content, $phrasePattern) ||
-                       str_contains($title, $phrasePattern) ||
-                       str_contains($subtitle, $phrasePattern) ||
-                       str_contains($title, $fuzzyLower);
+            $cleanQuery = trim(preg_replace('/\s+/u', ' ', mb_strtolower($cleanOriginal)));
+            $alphaQuery = trim(preg_replace('/[^\p{L}\p{N}]+/u', ' ', mb_strtolower($cleanOriginal)));
+            $compactQuery = preg_replace('/[^\p{L}\p{N}]+/u', '', mb_strtolower($cleanOriginal));
+            $vsNormalizedQuery = !empty($alphaQuery) ? preg_replace('/\b(versus|v)\b/i', 'vs', $alphaQuery) : '';
+
+            $mergedCollection = $mergedCollection->filter(function ($item) use ($cleanQuery, $alphaQuery, $compactQuery, $vsNormalizedQuery) {
+                $rawContent = $item['content'] ?? '';
+                $rawTitle = $item['parent_title'] ?? '';
+                $rawSubtitle = $item['subtitle'] ?? '';
+
+                $normTitle = trim(preg_replace('/\s+/u', ' ', mb_strtolower($rawTitle)));
+                $normSubtitle = trim(preg_replace('/\s+/u', ' ', mb_strtolower($rawSubtitle)));
+                $normContent = trim(preg_replace('/\s+/u', ' ', mb_strtolower(strip_tags(html_entity_decode($rawContent, ENT_QUOTES, 'UTF-8')))));
+
+                // 1. Direct normalized phrase match (whitespace normalized)
+                if (str_contains($normContent, $cleanQuery) || str_contains($normTitle, $cleanQuery) || str_contains($normSubtitle, $cleanQuery)) {
+                    return true;
+                }
+
+                $alphaTitle = trim(preg_replace('/[^\p{L}\p{N}]+/u', ' ', $normTitle));
+                $alphaSubtitle = trim(preg_replace('/[^\p{L}\p{N}]+/u', ' ', $normSubtitle));
+                $alphaContent = trim(preg_replace('/[^\p{L}\p{N}]+/u', ' ', $normContent));
+
+                // 2. Normalized alphanumeric match (handles varying punctuation, periods, hyphens, ampersands)
+                if (!empty($alphaQuery)) {
+                    if (str_contains($alphaTitle, $alphaQuery) || str_contains($alphaSubtitle, $alphaQuery) || str_contains($alphaContent, $alphaQuery)) {
+                        return true;
+                    }
+                }
+
+                // 3. Compact match (handles numbers/codes with slashes/hyphens like RPC 500/2009 or MARKET-DIRECT)
+                if (!empty($compactQuery) && mb_strlen($compactQuery) >= 3) {
+                    $compactTitle = preg_replace('/[^\p{L}\p{N}]+/u', '', $normTitle);
+                    $compactSubtitle = preg_replace('/[^\p{L}\p{N}]+/u', '', $normSubtitle);
+                    if (str_contains($compactTitle, $compactQuery) || str_contains($compactSubtitle, $compactQuery)) {
+                        return true;
+                    }
+                }
+
+                // 4. Legal citation variation: v. / vs. / versus interchangeability
+                if (!empty($vsNormalizedQuery)) {
+                    $vsNormalizedTitle = preg_replace('/\b(versus|v)\b/i', 'vs', $alphaTitle);
+                    if (str_contains($vsNormalizedTitle, $vsNormalizedQuery)) {
+                        return true;
+                    }
+                }
+
+                return false;
             });
 
             // Recalculate counts from the phrase-filtered collection

@@ -28,6 +28,8 @@ class GuestAccessMiddleware
         'main_home_search/*',
         'search-history',
         'search-history/*',
+        'search-autocomplete',
+        'search-autocomplete/*',
     ];
 
     /**
