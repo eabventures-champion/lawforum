@@ -172,16 +172,17 @@
     </div>
 
     <!-- Category Pills Grid -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;">
         @foreach($categories as $cat)
         @php
             $isEnabled = (bool)$cat->is_enabled;
             $cleanName = str_replace('-', ' ', $cat->name);
         @endphp
-        <div id="cat-card-{{ $cat->id }}" style="background: {{ $isEnabled ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.01)' }}; border: 1px solid {{ $isEnabled ? 'rgba(59, 130, 246, 0.3)' : 'rgba(255, 255, 255, 0.08)' }}; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px; transition: all 0.25s ease;">
-            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <div id="cat-icon-{{ $cat->id }}" style="width: 36px; height: 36px; border-radius: 8px; background: {{ $isEnabled ? 'rgba(59, 130, 246, 0.15)' : 'rgba(255, 255, 255, 0.05)' }}; color: {{ $isEnabled ? '#60a5fa' : 'var(--text-muted)' }}; display: flex; align-items: center; justify-content: center; font-size: 15px;">
+        <div id="cat-card-{{ $cat->id }}" style="background: {{ $isEnabled ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.01)' }}; border: 1px solid {{ $isEnabled ? 'rgba(59, 130, 246, 0.3)' : 'rgba(255, 255, 255, 0.08)' }}; border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px; transition: all 0.25s ease;">
+            <!-- Top Row: Icon, Category Name, Article Count, and Status Badge -->
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+                    <div id="cat-icon-{{ $cat->id }}" style="width: 38px; height: 38px; border-radius: 10px; background: {{ $isEnabled ? 'rgba(59, 130, 246, 0.15)' : 'rgba(255, 255, 255, 0.05)' }}; color: {{ $isEnabled ? '#60a5fa' : 'var(--text-muted)' }}; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
                         @if(str_contains(strtolower($cat->name), 'ghana'))
                             <i class="fa-solid fa-flag"></i>
                         @elseif(str_contains(strtolower($cat->name), 'africa'))
@@ -196,26 +197,32 @@
                             <i class="fa-regular fa-newspaper"></i>
                         @endif
                     </div>
-                    <div>
-                        <div id="cat-name-{{ $cat->id }}" style="font-size: 14.5px; font-weight: 700; color: {{ $isEnabled ? '#fff' : 'var(--text-muted)' }};">{{ $cleanName }}</div>
-                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">
-                            {{ $cat->articles_count ?? 0 }} articles
+                    <div style="min-width: 0;">
+                        <div id="cat-name-{{ $cat->id }}" style="font-size: 15px; font-weight: 700; color: {{ $isEnabled ? '#fff' : 'var(--text-muted)' }}; white-space: nowrap; line-height: 1.2;">
+                            {{ $cleanName }}
+                        </div>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px; display: flex; align-items: center; gap: 5px; white-space: nowrap;">
+                            <i class="fa-regular fa-newspaper" style="font-size: 10.5px; opacity: 0.7;"></i>
+                            <span>{{ $cat->articles_count ?? 0 }} articles</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Status Badge -->
-                <span id="cat-badge-{{ $cat->id }}" style="font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; {{ $isEnabled ? 'background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);' : 'background: rgba(100, 116, 139, 0.15); color: #94a3b8; border: 1px solid rgba(100, 116, 139, 0.3);' }}">
+                <span id="cat-badge-{{ $cat->id }}" style="font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; white-space: nowrap; {{ $isEnabled ? 'background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);' : 'background: rgba(100, 116, 139, 0.15); color: #94a3b8; border: 1px solid rgba(100, 116, 139, 0.3);' }}">
                     {{ $isEnabled ? 'Visible' : 'Hidden' }}
                 </span>
             </div>
 
-            <!-- Toggle Form & Action -->
-            <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.05);">
-                <span style="font-size: 12px; color: var(--text-muted);">Header Tab:</span>
+            <!-- Bottom Row: Header Tab status indicator & Toggle Action Button -->
+            <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.05); gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); white-space: nowrap;">
+                    <span id="cat-dot-{{ $cat->id }}" style="width: 7px; height: 7px; border-radius: 50%; background: {{ $isEnabled ? '#34d399' : '#94a3b8' }}; display: inline-block;"></span>
+                    <span>Header Tab</span>
+                </div>
                 <form action="{{ route('admin.news.categories.toggle', $cat->id) }}" method="POST" class="cat-toggle-form" data-id="{{ $cat->id }}" style="margin: 0;">
                     @csrf
-                    <button type="submit" id="cat-toggle-btn-{{ $cat->id }}" class="btn" style="height: 30px; padding: 0 12px; border-radius: 6px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s; {{ $isEnabled ? 'background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35);' : 'background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);' }}">
+                    <button type="submit" id="cat-toggle-btn-{{ $cat->id }}" class="btn" style="height: 30px; padding: 0 12px; border-radius: 6px; font-size: 11.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s; white-space: nowrap; {{ $isEnabled ? 'background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35);' : 'background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);' }}">
                         <i class="fa-solid {{ $isEnabled ? 'fa-eye-slash' : 'fa-eye' }}"></i>
                         <span>{{ $isEnabled ? 'Disable Tab' : 'Enable Tab' }}</span>
                     </button>
@@ -599,6 +606,7 @@
                 const badge = document.getElementById('cat-badge-' + catId);
                 const icon = document.getElementById('cat-icon-' + catId);
                 const name = document.getElementById('cat-name-' + catId);
+                const dot = document.getElementById('cat-dot-' + catId);
                 const origHtml = btn.innerHTML;
 
                 btn.disabled = true;
@@ -623,6 +631,7 @@
                     btn.disabled = false;
                     if (data.success) {
                         const isEnabled = data.is_enabled;
+                        if (dot) dot.style.background = isEnabled ? '#34d399' : '#94a3b8';
                         if (isEnabled) {
                             card.style.background = 'rgba(255, 255, 255, 0.03)';
                             card.style.borderColor = 'rgba(59, 130, 246, 0.3)';
