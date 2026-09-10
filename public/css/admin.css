@@ -192,6 +192,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
 .page-title {
@@ -396,6 +398,7 @@ body {
     transition: var(--transition-smooth);
     border: none;
     text-decoration: none;
+    white-space: nowrap;
 }
 
 .btn-primary {

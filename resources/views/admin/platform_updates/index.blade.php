@@ -3,14 +3,17 @@
 @section('title', 'Platform Updates & Tours')
 
 @section('content')
-<div class="page-header">
-    <div>
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <div style="flex: 1; min-width: 280px; max-width: 680px;">
         <h1 class="page-title">Platform Feature Updates & Walkthrough Tours</h1>
-        <p class="page-subtitle">Publish new feature announcements, configure bespoke role targeting (Researchers, Lawyers, Students, or All), and manage interactive walkthrough tours.</p>
+        <p class="page-subtitle" style="line-height: 1.5;">Publish new feature announcements, configure bespoke role targeting (Researchers, Lawyers, Students, or All), and manage interactive walkthrough tours.</p>
     </div>
-    <a href="{{ route('admin.platform-updates.create') }}" class="btn btn-primary btn-action">
-        <i class="fa-solid fa-plus"></i> Add New Update / Tour
-    </a>
+    <div style="display: flex; align-items: center; flex-shrink: 0; margin-right: 16px;">
+        <a href="{{ route('admin.platform-updates.create') }}" class="btn btn-primary" style="white-space: nowrap; padding: 10px 18px; font-size: 13.5px; border-radius: 10px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-plus"></i>
+            <span>Add New Update / Tour</span>
+        </a>
+    </div>
 </div>
 
 @if(session('success'))
