@@ -306,6 +306,16 @@
     </script>
 
     @yield('scripts')
+
+    <!-- Auto-scroll sidebar to active menu item -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const activeItem = document.querySelector('.sidebar-menu .menu-item.active');
+            if (activeItem) {
+                activeItem.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            }
+        });
+    </script>
 @include('partials._premium_guest_gate')
 
 <!--Start of Tawk.to Script-->
