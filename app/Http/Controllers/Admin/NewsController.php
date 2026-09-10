@@ -158,4 +158,38 @@ class NewsController extends Controller
 
         return redirect()->route('admin.news.index')->with('success', 'Selected news articles (' . count($articles) . ') deleted successfully.');
     }
+
+    /**
+     * Toggle Legal News Coming Soon mode on or off.
+     */
+    public function toggleComingSoon(Request $request)
+    {
+        $setting = \App\HomepageSetting::firstOrCreate(
+            ['key' => 'slide_1_news_coming_soon'],
+            [
+                'label' => 'Legal News Coming Soon Mode',
+                'type' => 'boolean',
+                'group' => 'slide_1',
+                'value' => '1',
+            ]
+        );
+
+        $current = $setting->value == '1';
+        $newValue = $request->has('status') ? ($request->input('status') == '1' ? '1' : '0') : ($current ? '0' : '1');
+        $setting->update(['value' => $newValue]);
+
+        $message = $newValue === '1'
+            ? 'Legal News is now in Coming Soon mode (homepage card disabled, public access blocked).'
+            : 'Legal News is now LIVE (homepage card active, public access enabled).';
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'is_coming_soon' => $newValue === '1',
+                'message' => $message,
+            ]);
+        }
+
+        return back()->with('success', $message);
+    }
 }

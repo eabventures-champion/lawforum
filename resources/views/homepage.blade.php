@@ -2748,11 +2748,11 @@
 
             @if(homepage_setting('slide_1_news_coming_soon', '1') == '1')
             <div class="category-card card-news card-disabled reveal">
-                <span class="card-disabled-badge"><span class="pulse-dot"></span> Coming Soon</span>
+                <span class="card-disabled-badge"><span class="pulse-dot"></span> {{ homepage_setting('slide_1_news_badge', 'COMING SOON') }}</span>
                 <div class="card-icon-wrap"><i class="fa-solid fa-newspaper"></i></div>
                 <h3 class="card-title">{{ homepage_setting('slide_1_card5_title', 'Legal News') }}</h3>
                 <p class="card-description">{{ homepage_setting('slide_1_card5_desc', 'Stay updated with relevant legal and business news content from Ghana, Africa, Asia, Europe, and America.') }}</p>
-                <span class="card-arrow"><i class="fa-regular fa-clock"></i> Coming Soon</span>
+                <span class="card-arrow"><i class="fa-regular fa-clock"></i> {{ homepage_setting('slide_1_news_btn_text', 'Coming Soon') }}</span>
             </div>
             @else
             <a href="/News/Ghana-News/1" class="category-card card-news reveal">

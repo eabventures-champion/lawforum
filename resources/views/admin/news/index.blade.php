@@ -16,6 +16,54 @@
     </div>
 </div>
 
+@if(session('success'))
+    <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success-color); color: var(--success-color); padding: 14px 18px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>{{ session('success') }}</span>
+    </div>
+@endif
+
+@php
+    $isNewsComingSoon = homepage_setting('slide_1_news_coming_soon', '1') == '1';
+@endphp
+
+<!-- Legal News Dynamic Coming Soon Control Card -->
+<div style="background: {{ $isNewsComingSoon ? 'rgba(244, 63, 94, 0.06)' : 'rgba(16, 185, 129, 0.06)' }}; border: 1px solid {{ $isNewsComingSoon ? 'rgba(244, 63, 94, 0.3)' : 'rgba(16, 185, 129, 0.3)' }}; border-radius: 14px; padding: 18px 24px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+        <div style="width: 44px; height: 44px; border-radius: 12px; background: {{ $isNewsComingSoon ? 'rgba(244, 63, 94, 0.15)' : 'rgba(16, 185, 129, 0.15)' }}; color: {{ $isNewsComingSoon ? '#fb7185' : '#34d399' }}; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+            <i class="fa-solid {{ $isNewsComingSoon ? 'fa-clock' : 'fa-globe' }}"></i>
+        </div>
+        <div>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <span style="font-size: 15px; font-weight: 700; color: #fff;">Legal News Public Status:</span>
+                @if($isNewsComingSoon)
+                    <span style="background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                        <span style="width: 6px; height: 6px; border-radius: 50%; background: #fb7185; display: inline-block;"></span> COMING SOON MODE (ACTIVE)
+                    </span>
+                @else
+                    <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                        <span style="width: 6px; height: 6px; border-radius: 50%; background: #34d399; display: inline-block;"></span> LIVE & PUBLIC
+                    </span>
+                @endif
+            </div>
+            <p style="color: var(--text-secondary); font-size: 12.5px; margin: 4px 0 0;">
+                @if($isNewsComingSoon)
+                    Homepage card is currently disabled with a Coming Soon badge, and public navigation to news content is blocked.
+                @else
+                    Legal News is fully live: visitors can click through from the homepage and browse all published news articles.
+                @endif
+            </p>
+        </div>
+    </div>
+    <form action="{{ route('admin.news.toggle-coming-soon') }}" method="POST" style="margin: 0;">
+        @csrf
+        <button type="submit" class="btn" style="height: 38px; padding: 0 18px; border-radius: 8px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s; {{ $isNewsComingSoon ? 'background: #10b981; color: #fff; border: 1px solid #10b981;' : 'background: rgba(244, 63, 94, 0.18); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.4);' }}">
+            <i class="fa-solid {{ $isNewsComingSoon ? 'fa-globe' : 'fa-lock' }}"></i>
+            <span>{{ $isNewsComingSoon ? 'Switch to Live Mode' : 'Switch to Coming Soon' }}</span>
+        </button>
+    </form>
+</div>
+
 <div class="card-table" style="width: 100%; margin-bottom: 40px;">
     <!-- Header with Title, Actions & Search -->
     <div class="table-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 20px 24px;">
