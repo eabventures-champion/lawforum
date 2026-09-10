@@ -14,6 +14,8 @@
                 $menuIcon = 'fa-scale-balanced';
             } elseif (strpos($titleLower, 'case') !== false || strpos($titleLower, 'judgement') !== false || strpos($titleLower, 'report') !== false) {
                 $menuIcon = 'fa-gavel';
+            } elseif (strpos($titleLower, 'news') !== false) {
+                $menuIcon = 'fa-newspaper';
             }
 
             $hasChildren = $menu->is_dropdown && $menu->children && $menu->children->count() > 0;
@@ -59,8 +61,8 @@
             </li>
         @else
             <li class="menu-item sidebar-legal-library-item">
-                <a href="{{ $menuUrl }}">
-                    <i class="fa-solid {{ $menuIcon }}"></i>
+                <a href="{{ $menuUrl }}" style="{{ strpos($titleLower, 'news') !== false ? 'color: #f97316;' : '' }}">
+                    <i class="fa-solid {{ $menuIcon }}" style="{{ strpos($titleLower, 'news') !== false ? 'color: #f97316;' : '' }}"></i>
                     <span>{{ $menu->title }}</span>
                 </a>
             </li>

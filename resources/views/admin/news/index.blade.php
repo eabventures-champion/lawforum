@@ -25,10 +25,24 @@
 
 @php
     $isNewsComingSoon = homepage_setting('slide_1_news_coming_soon', '1') == '1';
+    $countdownTarget = homepage_setting('slide_1_news_countdown_target', '');
+    $formattedCountdownTarget = null;
+    $diffCountdownTarget = null;
+    $inputCountdownTarget = '';
+    if (!empty($countdownTarget)) {
+        try {
+            $parsedDate = \Carbon\Carbon::parse($countdownTarget);
+            $formattedCountdownTarget = $parsedDate->format('M j, Y g:i A');
+            $diffCountdownTarget = $parsedDate->diffForHumans();
+            $inputCountdownTarget = $parsedDate->format('Y-m-d\TH:i');
+        } catch (\Exception $e) {
+            $formattedCountdownTarget = null;
+        }
+    }
 @endphp
 
 <!-- Legal News Dynamic Coming Soon Control Card -->
-<div style="background: {{ $isNewsComingSoon ? 'rgba(244, 63, 94, 0.06)' : 'rgba(16, 185, 129, 0.06)' }}; border: 1px solid {{ $isNewsComingSoon ? 'rgba(244, 63, 94, 0.3)' : 'rgba(16, 185, 129, 0.3)' }}; border-radius: 14px; padding: 18px 24px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+<div style="background: {{ $isNewsComingSoon ? 'rgba(244, 63, 94, 0.06)' : 'rgba(16, 185, 129, 0.06)' }}; border: 1px solid {{ $isNewsComingSoon ? 'rgba(244, 63, 94, 0.3)' : 'rgba(16, 185, 129, 0.3)' }}; border-radius: 14px; padding: 18px 24px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
     <div style="display: flex; align-items: center; gap: 14px;">
         <div style="width: 44px; height: 44px; border-radius: 12px; background: {{ $isNewsComingSoon ? 'rgba(244, 63, 94, 0.15)' : 'rgba(16, 185, 129, 0.15)' }}; color: {{ $isNewsComingSoon ? '#fb7185' : '#34d399' }}; display: flex; align-items: center; justify-content: center; font-size: 20px;">
             <i class="fa-solid {{ $isNewsComingSoon ? 'fa-clock' : 'fa-globe' }}"></i>
@@ -63,6 +77,155 @@
         </button>
     </form>
 </div>
+
+<!-- Coming Soon Countdown Timer Settings Card -->
+<div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                <i class="fa-solid fa-stopwatch"></i>
+            </div>
+            <div>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <span style="font-size: 15px; font-weight: 700; color: #fff;">Coming Soon Launch Countdown Timer:</span>
+                    @if($formattedCountdownTarget)
+                        <span style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-calendar-check"></i> {{ $formattedCountdownTarget }} ({{ $diffCountdownTarget }})
+                        </span>
+                    @else
+                        <span style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-clock-rotate-left"></i> Default Rolling (+28 Days)
+                        </span>
+                    @endif
+                </div>
+                <p style="color: var(--text-secondary); font-size: 12.5px; margin: 4px 0 0;">
+                    Controls the live Days / Hours / Minutes / Seconds countdown clock shown to visitors on the Coming Soon page.
+                </p>
+            </div>
+        </div>
+
+        <!-- Quick Reset to Default Form -->
+        <form action="{{ route('admin.news.update-countdown') }}" method="POST" style="margin: 0;">
+            @csrf
+            <input type="hidden" name="action" value="reset_default">
+            <button type="submit" class="btn" style="height: 36px; padding: 0 14px; border-radius: 8px; font-size: 12px; font-weight: 600; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); color: var(--text-secondary); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.color='#fff'; this.style.borderColor='rgba(255,255,255,0.3)';" onmouseout="this.style.color='var(--text-secondary)'; this.style.borderColor='rgba(255,255,255,0.15)';">
+                <i class="fa-solid fa-rotate-left"></i>
+                <span>Reset to Default (+28 Days)</span>
+            </button>
+        </form>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; align-items: center; background: rgba(0, 0, 0, 0.2); padding: 14px 18px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.05);">
+        <!-- Quick Presets -->
+        <div>
+            <span style="display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">
+                <i class="fa-solid fa-bolt" style="color: #f59e0b; margin-right: 4px;"></i> Quick Reset Presets:
+            </span>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                @foreach([7 => '7 Days', 14 => '14 Days', 21 => '21 Days', 30 => '30 Days', 60 => '60 Days'] as $days => $label)
+                <form action="{{ route('admin.news.update-countdown') }}" method="POST" style="margin: 0; display: inline-block;">
+                    @csrf
+                    <input type="hidden" name="preset_days" value="{{ $days }}">
+                    <button type="submit" style="background: rgba(59, 130, 246, 0.12); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 6px; padding: 6px 12px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#3b82f6'; this.style.color='#fff';" onmouseout="this.style.background='rgba(59, 130, 246, 0.12)'; this.style.color='#93c5fd';">
+                        +{{ $label }}
+                    </button>
+                </form>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Custom Date & Time Picker -->
+        <form action="{{ route('admin.news.update-countdown') }}" method="POST" style="margin: 0; display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+            @csrf
+            <div style="flex: 1; min-width: 200px;">
+                <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px;">
+                    <i class="fa-regular fa-calendar" style="margin-right: 4px;"></i> Pick Exact Target Date & Time:
+                </label>
+                <input type="datetime-local" name="countdown_target" value="{{ $inputCountdownTarget }}" required min="{{ now()->format('Y-m-d\TH:i') }}" style="width: 100%; height: 36px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 6px; padding: 0 10px; color: #fff; font-size: 12.5px; font-family: inherit; outline: none;">
+            </div>
+            <button type="submit" class="btn btn-primary" style="height: 36px; padding: 0 16px; border-radius: 6px; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
+                <i class="fa-solid fa-check"></i>
+                <span>Set Date</span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Newsroom Navigation Tabs Dynamic Controls -->
+@if(isset($categories) && count($categories) > 0)
+<div class="card-table" style="width: 100%; margin-bottom: 28px; padding: 22px 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+                <i class="fa-solid fa-layer-group"></i>
+            </div>
+            <div>
+                <h2 style="font-size: 17px; font-weight: 700; color: #fff; margin: 0;">Newsroom Navigation Tabs</h2>
+                <p style="font-size: 12.5px; color: var(--text-secondary); margin: 2px 0 0;">
+                    Dynamically enable or disable category tabs in the public newsroom header and mobile navigation. Disabled tabs are hidden from visitors.
+                </p>
+            </div>
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted);">
+            <i class="fa-solid fa-circle-info" style="color: #60a5fa; margin-right: 4px;"></i> Click any button to toggle tab visibility instantly
+        </div>
+    </div>
+
+    <!-- Category Pills Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;">
+        @foreach($categories as $cat)
+        @php
+            $isEnabled = (bool)$cat->is_enabled;
+            $cleanName = str_replace('-', ' ', $cat->name);
+        @endphp
+        <div id="cat-card-{{ $cat->id }}" style="background: {{ $isEnabled ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.01)' }}; border: 1px solid {{ $isEnabled ? 'rgba(59, 130, 246, 0.3)' : 'rgba(255, 255, 255, 0.08)' }}; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px; transition: all 0.25s ease;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div id="cat-icon-{{ $cat->id }}" style="width: 36px; height: 36px; border-radius: 8px; background: {{ $isEnabled ? 'rgba(59, 130, 246, 0.15)' : 'rgba(255, 255, 255, 0.05)' }}; color: {{ $isEnabled ? '#60a5fa' : 'var(--text-muted)' }}; display: flex; align-items: center; justify-content: center; font-size: 15px;">
+                        @if(str_contains(strtolower($cat->name), 'ghana'))
+                            <i class="fa-solid fa-flag"></i>
+                        @elseif(str_contains(strtolower($cat->name), 'africa'))
+                            <i class="fa-solid fa-earth-africa"></i>
+                        @elseif(str_contains(strtolower($cat->name), 'europe'))
+                            <i class="fa-solid fa-earth-europe"></i>
+                        @elseif(str_contains(strtolower($cat->name), 'america'))
+                            <i class="fa-solid fa-earth-americas"></i>
+                        @elseif(str_contains(strtolower($cat->name), 'asia'))
+                            <i class="fa-solid fa-earth-asia"></i>
+                        @else
+                            <i class="fa-regular fa-newspaper"></i>
+                        @endif
+                    </div>
+                    <div>
+                        <div id="cat-name-{{ $cat->id }}" style="font-size: 14.5px; font-weight: 700; color: {{ $isEnabled ? '#fff' : 'var(--text-muted)' }};">{{ $cleanName }}</div>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">
+                            {{ $cat->articles_count ?? 0 }} articles
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Badge -->
+                <span id="cat-badge-{{ $cat->id }}" style="font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; {{ $isEnabled ? 'background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);' : 'background: rgba(100, 116, 139, 0.15); color: #94a3b8; border: 1px solid rgba(100, 116, 139, 0.3);' }}">
+                    {{ $isEnabled ? 'Visible' : 'Hidden' }}
+                </span>
+            </div>
+
+            <!-- Toggle Form & Action -->
+            <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.05);">
+                <span style="font-size: 12px; color: var(--text-muted);">Header Tab:</span>
+                <form action="{{ route('admin.news.categories.toggle', $cat->id) }}" method="POST" class="cat-toggle-form" data-id="{{ $cat->id }}" style="margin: 0;">
+                    @csrf
+                    <button type="submit" id="cat-toggle-btn-{{ $cat->id }}" class="btn" style="height: 30px; padding: 0 12px; border-radius: 6px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s; {{ $isEnabled ? 'background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35);' : 'background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);' }}">
+                        <i class="fa-solid {{ $isEnabled ? 'fa-eye-slash' : 'fa-eye' }}"></i>
+                        <span>{{ $isEnabled ? 'Disable Tab' : 'Enable Tab' }}</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+        @endforeach
+    </div>
+</div>
+@endif
 
 <div class="card-table" style="width: 100%; margin-bottom: 40px;">
     <!-- Header with Title, Actions & Search -->
@@ -263,6 +426,87 @@
                 }
             });
         }
+
+        // Category Tab AJAX Toggle Handler
+        document.querySelectorAll('.cat-toggle-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const catId = this.dataset.id;
+                const btn = document.getElementById('cat-toggle-btn-' + catId);
+                const card = document.getElementById('cat-card-' + catId);
+                const badge = document.getElementById('cat-badge-' + catId);
+                const icon = document.getElementById('cat-icon-' + catId);
+                const name = document.getElementById('cat-name-' + catId);
+                const origHtml = btn.innerHTML;
+
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Updating...';
+
+                const csrfToken = document.querySelector('meta[name="csrf-token"]') 
+                    ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') 
+                    : form.querySelector('input[name="_token"]').value;
+
+                fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(res => res.json())
+                .then(data => {
+                    btn.disabled = false;
+                    if (data.success) {
+                        const isEnabled = data.is_enabled;
+                        if (isEnabled) {
+                            card.style.background = 'rgba(255, 255, 255, 0.03)';
+                            card.style.borderColor = 'rgba(59, 130, 246, 0.3)';
+                            badge.style.background = 'rgba(16, 185, 129, 0.15)';
+                            badge.style.color = '#34d399';
+                            badge.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+                            badge.textContent = 'Visible';
+
+                            icon.style.background = 'rgba(59, 130, 246, 0.15)';
+                            icon.style.color = '#60a5fa';
+                            name.style.color = '#fff';
+
+                            btn.style.background = 'rgba(244, 63, 94, 0.15)';
+                            btn.style.color = '#fb7185';
+                            btn.style.border = '1px solid rgba(244, 63, 94, 0.35)';
+                            btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> <span>Disable Tab</span>';
+                        } else {
+                            card.style.background = 'rgba(255, 255, 255, 0.01)';
+                            card.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                            badge.style.background = 'rgba(100, 116, 139, 0.15)';
+                            badge.style.color = '#94a3b8';
+                            badge.style.border = '1px solid rgba(100, 116, 139, 0.3)';
+                            badge.textContent = 'Hidden';
+
+                            icon.style.background = 'rgba(255, 255, 255, 0.05)';
+                            icon.style.color = 'var(--text-muted)';
+                            name.style.color = 'var(--text-muted)';
+
+                            btn.style.background = 'rgba(16, 185, 129, 0.15)';
+                            btn.style.color = '#34d399';
+                            btn.style.border = '1px solid rgba(16, 185, 129, 0.35)';
+                            btn.innerHTML = '<i class="fa-solid fa-eye"></i> <span>Enable Tab</span>';
+                        }
+                    } else {
+                        btn.innerHTML = origHtml;
+                        alert('Failed to update category status.');
+                    }
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                    btn.innerHTML = origHtml;
+                    console.error('Error toggling category status:', err);
+                    alert('Error updating category status.');
+                });
+            });
+        });
     });
 
     function submitBulkDelete() {

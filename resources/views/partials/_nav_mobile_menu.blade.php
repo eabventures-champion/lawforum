@@ -14,7 +14,11 @@
         $activeSection = 'existing_laws';
     } elseif (strpos($currentPath, 'post_1992') === 0 || strpos($currentPath, 'post-1992') === 0 || strpos($currentPath, 'new-laws') === 0) {
         $activeSection = 'new_laws';
+    } elseif (strpos($currentPath, 'news') === 0 || strpos($currentPath, 'News') === 0) {
+        $activeSection = 'news';
     }
+
+    $renderedNewsMob = false;
 @endphp
 
 @foreach($headerMenus as $menu)
@@ -47,6 +51,8 @@
                 $isMenuActive = true;
             } elseif ($activeSection === 'new_laws' && (strpos($titleLower, 'new') !== false || strpos($titleLower, 'post-1992') !== false || strpos($titleLower, 'post 1992') !== false)) {
                 $isMenuActive = true;
+            } elseif ($activeSection === 'news' && ($titleLower === 'news' || strpos($titleLower, 'news') !== false)) {
+                $isMenuActive = true;
             }
         } else {
             if (!empty($menuPath) && $menuPath !== '#' && $menuPath !== '/') {
@@ -56,6 +62,15 @@
             }
         }
     @endphp
-    <a href="{{ $menuUrl }}" class="{{ $isMenuActive ? 'active' : '' }}">{{ $menu->title }}</a>
+    @if($titleLower === 'news' || strpos($titleLower, 'news') !== false)
+        @php $renderedNewsMob = true; @endphp
+        <a href="/News/Ghana-News/1" class="{{ $isMenuActive ? 'active' : '' }}" style="color: #f97316 !important; font-weight: 700;">{{ $menu->title }}</a>
+    @else
+        <a href="{{ $menuUrl }}" class="{{ $isMenuActive ? 'active' : '' }}">{{ $menu->title }}</a>
+    @endif
 @endforeach
+
+@if(!$renderedNewsMob)
+    <a href="/News/Ghana-News/1" class="{{ ($activeSection === 'news') ? 'active' : '' }}" style="color: #f97316 !important; font-weight: 700;">News</a>
+@endif
 @endif

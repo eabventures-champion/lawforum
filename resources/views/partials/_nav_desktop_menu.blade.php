@@ -14,7 +14,11 @@
         $activeSection = 'existing_laws';
     } elseif (strpos($currentPath, 'post_1992') === 0 || strpos($currentPath, 'post-1992') === 0 || strpos($currentPath, 'new-laws') === 0) {
         $activeSection = 'new_laws';
+    } elseif (strpos($currentPath, 'news') === 0 || strpos($currentPath, 'News') === 0) {
+        $activeSection = 'news';
     }
+
+    $renderedNews = false;
 @endphp
 
 @foreach($headerMenus as $menu)
@@ -34,6 +38,8 @@
             } elseif ($activeSection === 'existing_laws' && (strpos($titleLower, 'existing') !== false || strpos($titleLower, 'pre-1992') !== false || strpos($titleLower, 'pre 1992') !== false)) {
                 $isMenuActive = true;
             } elseif ($activeSection === 'new_laws' && (strpos($titleLower, 'new') !== false || strpos($titleLower, 'post-1992') !== false || strpos($titleLower, 'post 1992') !== false)) {
+                $isMenuActive = true;
+            } elseif ($activeSection === 'news' && ($titleLower === 'news' || strpos($titleLower, 'news') !== false)) {
                 $isMenuActive = true;
             }
         } else {
@@ -82,8 +88,20 @@
                 @endforeach
             </div>
         </div>
+    @elseif($titleLower === 'news' || strpos($titleLower, 'news') !== false)
+        @php $renderedNews = true; @endphp
+        <a href="/News/Ghana-News/1" class="nav-link-btn nav-link-news {{ $isMenuActive ? 'active' : '' }}" style="color: #f97316 !important; font-weight: 700; text-decoration: none !important;">
+            {{ $menu->title }}
+        </a>
     @else
         <a href="{{ $menuUrl }}" class="nav-link-btn {{ $isMenuActive ? 'active' : '' }}" style="text-decoration:none !important;">{{ $menu->title }}</a>
     @endif
 @endforeach
+
+{{-- Fallback: Ensure News is always displayed right after Case Laws in orange text --}}
+@if(!$renderedNews)
+    <a href="/News/Ghana-News/1" class="nav-link-btn nav-link-news {{ ($activeSection === 'news') ? 'active' : '' }}" style="color: #f97316 !important; font-weight: 700; text-decoration: none !important;">
+        News
+    </a>
+@endif
 @endif

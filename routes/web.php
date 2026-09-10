@@ -599,6 +599,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::delete('news/destroy-all', 'Admin\NewsController@destroyAll')->name('admin.news.destroy-all');
     Route::delete('news/bulk-destroy', 'Admin\NewsController@bulkDestroy')->name('admin.news.bulk-destroy');
     Route::post('news/toggle-coming-soon', 'Admin\NewsController@toggleComingSoon')->name('admin.news.toggle-coming-soon');
+    Route::post('news/update-countdown', 'Admin\NewsController@updateCountdownTarget')->name('admin.news.update-countdown');
+    Route::post('news/categories/{id}/toggle', 'Admin\NewsController@toggleCategoryStatus')->name('admin.news.categories.toggle');
     Route::resource('news', 'Admin\NewsController', ['as' => 'admin']);
     Route::get('laws', 'Admin\LawController@index')->name('admin.laws.index');
     Route::get('laws/create/{type}', 'Admin\LawController@create')->name('admin.laws.create');

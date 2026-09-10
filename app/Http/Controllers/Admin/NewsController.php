@@ -33,7 +33,12 @@ class NewsController extends Controller
             ]);
         }
 
-        return view('admin.news.index', compact('news'));
+        $categories = NewsCategory::all()->map(function($cat) {
+            $cat->articles_count = NewsContent::where('news_category', $cat->name)->count();
+            return $cat;
+        });
+
+        return view('admin.news.index', compact('news', 'categories'));
     }
 
     public function create()
@@ -187,6 +192,86 @@ class NewsController extends Controller
                 'success' => true,
                 'is_coming_soon' => $newValue === '1',
                 'message' => $message,
+            ]);
+        }
+
+        return back()->with('success', $message);
+    }
+
+    /**
+     * Toggle a News Category navigation tab (enable/disable).
+     */
+    public function toggleCategoryStatus(Request $request, $id)
+    {
+        $category = NewsCategory::findOrFail($id);
+        $newStatus = $request->has('status') 
+            ? (bool)$request->input('status') 
+            : !$category->is_enabled;
+
+        $category->is_enabled = $newStatus;
+        $category->save();
+
+        $cleanName = str_replace('-', ' ', $category->name);
+        $message = $newStatus 
+            ? "Category '{$cleanName}' is now ENABLED and visible in the newsroom tabs."
+            : "Category '{$cleanName}' is now DISABLED and hidden from the newsroom tabs.";
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'category_id' => $category->id,
+                'is_enabled' => $category->is_enabled,
+                'message' => $message,
+            ]);
+        }
+
+        return back()->with('success', $message);
+    }
+
+    /**
+     * Update or reset the countdown timer target date for the Coming Soon page.
+     */
+    public function updateCountdownTarget(Request $request)
+    {
+        $targetDate = null;
+
+        if ($request->filled('preset_days')) {
+            $days = (int) $request->input('preset_days');
+            if ($days > 0) {
+                $targetDate = now()->addDays($days)->format('Y-m-d\TH:i');
+            }
+        } elseif ($request->input('action') === 'reset_default') {
+            $targetDate = now()->addDays(28)->addHours(14)->format('Y-m-d\TH:i');
+        } elseif ($request->filled('countdown_target')) {
+            $request->validate([
+                'countdown_target' => 'required|date|after:now',
+            ]);
+            $targetDate = \Carbon\Carbon::parse($request->input('countdown_target'))->format('Y-m-d\TH:i');
+        } else {
+            return back()->with('error', 'Please choose a preset or pick a valid date/time in the future.');
+        }
+
+        $setting = \App\HomepageSetting::firstOrCreate(
+            ['key' => 'slide_1_news_countdown_target'],
+            [
+                'label' => 'Coming Soon Countdown Target Date',
+                'type' => 'string',
+                'group' => 'slide_1',
+                'value' => '',
+            ]
+        );
+
+        $setting->update(['value' => $targetDate]);
+
+        $formatted = \Carbon\Carbon::parse($targetDate)->format('M j, Y g:i A');
+        $message = "Countdown timer successfully updated! Target date is now {$formatted}.";
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'countdown_target' => $targetDate,
+                'formatted' => $formatted,
             ]);
         }
 
