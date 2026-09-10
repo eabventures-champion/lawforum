@@ -557,6 +557,8 @@ Route::get('/judgement/all-countries','JudgementController@all_countries_laws');
 Route::get('/News/{category}/{id}','NewsController@news_index');//display homepage of Ghana News
 Route::get('/News/Next/{category}/fetch_data','NewsController@news_ajax_display');//display homepage of Ghana News
 Route::get('/News/{category}/{title}/{id}','NewsController@news_content');//display homepage of Ghana News
+Route::post('/news/launch-invitation', 'NewsController@storeLaunchInvitation')->name('news.launch-invitation');
+Route::post('/news/subscribe-digest', 'NewsController@subscribeDigest')->name('news.subscribe-digest');
 
 //------------------------------------------------------------------------------------END OF NEWS----------------------------------------------------------------------------------------------
 
@@ -598,6 +600,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::resource('users', 'Admin\UserController', ['as' => 'admin']);
     Route::delete('news/destroy-all', 'Admin\NewsController@destroyAll')->name('admin.news.destroy-all');
     Route::delete('news/bulk-destroy', 'Admin\NewsController@bulkDestroy')->name('admin.news.bulk-destroy');
+    Route::delete('news/launch-invitations/{id}', 'Admin\NewsController@destroyLaunchInvitation')->name('admin.news.launch-invitations.destroy');
     Route::post('news/toggle-coming-soon', 'Admin\NewsController@toggleComingSoon')->name('admin.news.toggle-coming-soon');
     Route::post('news/update-countdown', 'Admin\NewsController@updateCountdownTarget')->name('admin.news.update-countdown');
     Route::post('news/categories/{id}/toggle', 'Admin\NewsController@toggleCategoryStatus')->name('admin.news.categories.toggle');

@@ -1028,12 +1028,13 @@
                 <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.6; margin-bottom: 16px;">
                     Receive curated briefings on key legislative developments, court rulings, and regulatory shifts weekly.
                 </p>
-                <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Thank you for subscribing to Legals Forum News Digest!');">
-                    <input type="email" class="nl-input" placeholder="Enter your email address..." required>
-                    <button type="submit" class="nl-btn">
+                <form id="digestForm" onsubmit="handleDigestSubmit(event)">
+                    <input type="email" id="digestEmail" class="nl-input" placeholder="Enter your email address..." required autocomplete="email">
+                    <button type="submit" id="btnDigestSubmit" class="nl-btn">
                         <span>Subscribe Now</span>
                         <i class="fa-solid fa-paper-plane"></i>
                     </button>
+                    <div id="digestToast" style="display: none; margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; line-height: 1.4;"></div>
                 </form>
             </div>
 
@@ -1106,5 +1107,74 @@
             });
         }
     });
+
+    function handleDigestSubmit(e) {
+        e.preventDefault();
+        var emailInput = document.getElementById('digestEmail');
+        var btn = document.getElementById('btnDigestSubmit');
+        var toast = document.getElementById('digestToast');
+
+        if (!emailInput) return;
+        var email = emailInput.value.trim();
+
+        // Client-side email validation
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z0-9]{2,}$/;
+        if (!email || !emailRegex.test(email)) {
+            if (toast) {
+                toast.style.display = 'block';
+                toast.style.background = 'rgba(244, 63, 94, 0.15)';
+                toast.style.border = '1px solid rgba(244, 63, 94, 0.35)';
+                toast.style.color = '#fb7185';
+                toast.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="margin-right: 6px;"></i> <span>Please enter a valid email address (e.g. name@domain.com).</span>';
+            }
+            emailInput.focus();
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Subscribing...</span>';
+
+        fetch("{{ route('news.subscribe-digest') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '',
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({ email: email })
+        })
+        .then(function(res) {
+            return res.json().then(function(data) {
+                if (!res.ok) {
+                    throw new Error(data.message || (data.errors && data.errors.email ? data.errors.email[0] : 'Subscription failed. Please check your email.'));
+                }
+                return data;
+            });
+        })
+        .then(function(data) {
+            btn.disabled = true;
+            btn.style.background = '#10b981';
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Subscribed!</span>';
+            if (toast) {
+                toast.style.display = 'block';
+                toast.style.background = 'rgba(16, 185, 129, 0.15)';
+                toast.style.border = '1px solid rgba(16, 185, 129, 0.35)';
+                toast.style.color = '#34d399';
+                toast.innerHTML = '<i class="fa-solid fa-circle-check" style="margin-right: 6px;"></i> <span>' + (data.message || 'Thank you for subscribing to Legals Forum Legal Intelligence Digest!') + '</span>';
+            }
+            emailInput.disabled = true;
+        })
+        .catch(function(err) {
+            btn.disabled = false;
+            btn.innerHTML = '<span>Subscribe Now</span> <i class="fa-solid fa-paper-plane"></i>';
+            if (toast) {
+                toast.style.display = 'block';
+                toast.style.background = 'rgba(244, 63, 94, 0.15)';
+                toast.style.border = '1px solid rgba(244, 63, 94, 0.35)';
+                toast.style.color = '#fb7185';
+                toast.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="margin-right: 6px;"></i> <span>' + (err.message || 'An error occurred. Please try again.') + '</span>';
+            }
+        });
+    }
 </script>
 @endsection

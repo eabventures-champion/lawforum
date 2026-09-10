@@ -144,5 +144,92 @@ class NewsController extends Controller
             return view('news.displayed_all_ghana_news', compact('newsSelectors', 'category'))->render();
         }
     }
-    
+
+    /**
+     * Store early access / launch day invitation email.
+     */
+    public function storeLaunchInvitation(Request $request)
+    {
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please enter a valid email address (e.g. name@domain.com).',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $email = strtolower(trim($request->email));
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || !preg_match('/^[^@\s]+@[^@\s]+\.[a-zA-Z0-9]{2,}$/', $email)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please enter a valid email address with a valid domain (e.g. name@domain.com).',
+            ], 422);
+        }
+
+        $invitation = \App\LaunchInvitation::firstOrCreate(
+            [
+                'email' => $email,
+                'source' => 'launch',
+            ],
+            [
+                'ip_address' => $request->ip(),
+                'user_agent' => substr((string)$request->userAgent(), 0, 500),
+            ]
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Thank you! We have reserved your priority invitation for launch.',
+            'email' => $invitation->email,
+        ]);
+    }
+
+    /**
+     * Store newsletter subscriber for Legal Intelligence Digest.
+     */
+    public function subscribeDigest(Request $request)
+    {
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please enter a valid email address (e.g. name@domain.com).',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $email = strtolower(trim($request->email));
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || !preg_match('/^[^@\s]+@[^@\s]+\.[a-zA-Z0-9]{2,}$/', $email)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please enter a valid email address with a valid domain (e.g. name@domain.com).',
+            ], 422);
+        }
+
+        $subscription = \App\LaunchInvitation::firstOrCreate(
+            [
+                'email' => $email,
+                'source' => 'digest',
+            ],
+            [
+                'ip_address' => $request->ip(),
+                'user_agent' => substr((string)$request->userAgent(), 0, 500),
+            ]
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Thank you for subscribing to Legals Forum Legal Intelligence Digest!',
+            'email' => $subscription->email,
+        ]);
+    }
 }

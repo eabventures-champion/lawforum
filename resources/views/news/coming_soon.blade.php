@@ -1223,18 +1223,53 @@
             var btn = document.getElementById('btnNotify');
             var toast = document.getElementById('notifyToast');
 
-            if (!emailInput || !emailInput.value) return;
+            if (!emailInput || !emailInput.value.trim()) return;
 
+            var email = emailInput.value.trim();
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Reserving...';
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Reserving...</span>';
 
-            setTimeout(function() {
-                btn.disabled = false;
+            fetch("{{ route('news.launch-invitation') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '{{ csrf_token() }}',
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({ email: email })
+            })
+            .then(function(res) {
+                return res.json().then(function(data) {
+                    if (!res.ok) {
+                        throw new Error(data.message || (data.errors && data.errors.email ? data.errors.email[0] : 'Failed to submit'));
+                    }
+                    return data;
+                });
+            })
+            .then(function(data) {
+                btn.disabled = true;
+                btn.style.background = '#10b981';
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Reserved!</span>';
-                toast.style.display = 'block';
-                emailInput.value = '';
+                if (toast) {
+                    toast.style.display = 'block';
+                    toast.style.background = 'rgba(16, 185, 129, 0.15)';
+                    toast.style.borderColor = 'rgba(16, 185, 129, 0.35)';
+                    toast.style.color = '#34d399';
+                    toast.innerHTML = '<i class="fa-solid fa-circle-check" style="margin-right: 6px;"></i> <span>' + (data.message || 'Thank you! We have reserved your priority invitation for launch.') + '</span>';
+                }
                 emailInput.disabled = true;
-            }, 650);
+            })
+            .catch(function(err) {
+                btn.disabled = false;
+                btn.innerHTML = '<span>Notify Me</span> <i class="fa-solid fa-paper-plane"></i>';
+                if (toast) {
+                    toast.style.display = 'block';
+                    toast.style.background = 'rgba(244, 63, 94, 0.15)';
+                    toast.style.borderColor = 'rgba(244, 63, 94, 0.35)';
+                    toast.style.color = '#fb7185';
+                    toast.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="margin-right: 6px;"></i> <span>' + (err.message || 'An error occurred. Please try again.') + '</span>';
+                }
+            });
         }
     </script>
 

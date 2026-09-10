@@ -227,6 +227,168 @@
 </div>
 @endif
 
+<!-- Audience & Subscribers Management Card -->
+@php
+    $subscriberList = $launchInvitations ?? collect();
+    $digestCount = $subscriberList->where('source', 'digest')->count();
+    $launchCount = $subscriberList->where('source', 'launch')->count();
+    $allEmailsString = $subscriberList->pluck('email')->implode(', ');
+@endphp
+<div class="card-table" style="width: 100%; margin-bottom: 28px; padding: 22px 24px; border: 1px solid rgba(59, 130, 246, 0.25); background: rgba(15, 23, 42, 0.65); border-radius: 14px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 18px;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                <i class="fa-solid fa-users-viewfinder"></i>
+            </div>
+            <div>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <h2 style="font-size: 17px; font-weight: 700; color: #fff; margin: 0;">Subscribers & Audience Lists</h2>
+                    @if($subscriberList->count() > 0)
+                        <span style="background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-envelope"></i> {{ $subscriberList->count() }} Total {{ Str::plural('Subscriber', $subscriberList->count()) }}
+                        </span>
+                        <span style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-newspaper"></i> {{ $digestCount }} Digest
+                        </span>
+                        <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-rocket"></i> {{ $launchCount }} Launch VIP
+                        </span>
+                    @else
+                        <span style="background: rgba(148, 163, 184, 0.12); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.25); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                            0 Subscribers
+                        </span>
+                    @endif
+                </div>
+                <p style="font-size: 12.5px; color: var(--text-secondary); margin: 3px 0 0;">
+                    All audiences collected from the <strong>Legal Intelligence Digest</strong> weekly newsletter widget and the <strong>Coming Soon</strong> Launch Day invitation form.
+                </p>
+            </div>
+        </div>
+
+        @if($subscriberList->count() > 0)
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <!-- Copy All Button -->
+            <button type="button" onclick="copyAllSubscriberEmails()" id="btnCopyAllEmails" class="btn btn-secondary btn-action" style="height: 36px; padding: 0 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; background: rgba(59, 130, 246, 0.12); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3);">
+                <i class="fa-regular fa-copy"></i>
+                <span id="btnCopyText">Copy Filtered Emails</span>
+            </button>
+
+            <!-- Mailto Button -->
+            <a id="btnSendEmail" href="mailto:?bcc={{ rawurlencode($allEmailsString) }}&subject={{ rawurlencode('Legals Forum Update & Intelligence') }}" class="btn btn-primary btn-action" style="height: 36px; padding: 0 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>Send Email</span>
+            </a>
+        </div>
+        @endif
+    </div>
+
+    @if($subscriberList->count() > 0)
+        <!-- Audience Filter Pills -->
+        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 16px;">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-right: 4px;">Filter Audience:</span>
+            <button type="button" onclick="filterSubscriberList('all')" id="sub-filter-all" class="sub-filter-btn" style="background: #3b82f6; color: #fff; border: 1px solid #3b82f6; border-radius: 20px; padding: 4px 14px; font-size: 11.5px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+                All ({{ $subscriberList->count() }})
+            </button>
+            <button type="button" onclick="filterSubscriberList('digest')" id="sub-filter-digest" class="sub-filter-btn" style="background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 4px 14px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                <i class="fa-solid fa-newspaper" style="margin-right: 4px;"></i> Legal Intelligence Digest ({{ $digestCount }})
+            </button>
+            <button type="button" onclick="filterSubscriberList('launch')" id="sub-filter-launch" class="sub-filter-btn" style="background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 4px 14px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                <i class="fa-solid fa-rocket" style="margin-right: 4px;"></i> Launch Day VIP ({{ $launchCount }})
+            </button>
+        </div>
+
+        <div style="overflow-x: auto; width: 100%; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.06);">
+            <table class="custom-table" style="width: 100%; margin-bottom: 0;">
+                <thead>
+                    <tr>
+                        <th style="width: 50px; text-align: center;">#</th>
+                        <th style="min-width: 260px;">Subscriber Email</th>
+                        <th style="width: 200px;">Registered Date</th>
+                        <th style="width: 140px;">IP Address</th>
+                        <th style="width: 110px;">Status</th>
+                        <th style="width: 100px; text-align: right; padding-right: 20px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="subscriber-table-body">
+                    @foreach($subscriberList as $index => $invitation)
+                        <tr class="subscriber-row" data-source="{{ $invitation->source ?? 'launch' }}" data-email="{{ $invitation->email }}">
+                            <td style="text-align: center; color: var(--text-muted); font-size: 12.5px;">
+                                {{ $index + 1 }}
+                            </td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 34px; height: 34px; border-radius: 50%; background: {{ ($invitation->source === 'digest') ? 'rgba(168, 85, 247, 0.18)' : 'rgba(16, 185, 129, 0.18)' }}; color: {{ ($invitation->source === 'digest') ? '#c084fc' : '#34d399' }}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; text-transform: uppercase; flex-shrink: 0;">
+                                        {{ substr($invitation->email, 0, 2) }}
+                                    </div>
+                                    <div>
+                                        <div style="display: flex; align-items: center; gap: 6px;">
+                                            <a href="mailto:{{ $invitation->email }}" style="font-weight: 600; color: #fff; font-size: 13.5px; text-decoration: none;" onmouseover="this.style.color='#60a5fa'" onmouseout="this.style.color='#fff'">
+                                                {{ $invitation->email }}
+                                            </a>
+                                            <button type="button" onclick="navigator.clipboard.writeText('{{ $invitation->email }}'); this.innerHTML='<i class=\'fa-solid fa-check\'></i>'; setTimeout(() => this.innerHTML='<i class=\'fa-regular fa-copy\'></i>', 1200);" title="Copy email" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 2px 4px; font-size: 11px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">
+                                                <i class="fa-regular fa-copy"></i>
+                                            </button>
+                                        </div>
+                                        <div style="margin-top: 4px;">
+                                            @if($invitation->source === 'digest')
+                                                <span style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.35); font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px;">
+                                                    <i class="fa-solid fa-newspaper" style="font-size: 10px;"></i> Legal Intelligence Digest
+                                                </span>
+                                            @else
+                                                <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px;">
+                                                    <i class="fa-solid fa-rocket" style="font-size: 10px;"></i> Launch Day VIP
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="color: #e2e8f0; font-weight: 500; font-size: 12.5px; white-space: nowrap;">
+                                    {{ $invitation->created_at ? $invitation->created_at->format('M d, Y h:i A') : 'N/A' }}
+                                </div>
+                                <div style="color: var(--text-secondary); font-size: 11px; margin-top: 2px; white-space: nowrap;">
+                                    {{ $invitation->created_at ? $invitation->created_at->diffForHumans() : '' }}
+                                </div>
+                            </td>
+                            <td>
+                                <span style="font-family: monospace; font-size: 11.5px; color: var(--text-secondary); background: rgba(255, 255, 255, 0.04); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.06);">
+                                    {{ $invitation->ip_address ?? '—' }}
+                                </span>
+                            </td>
+                            <td>
+                                <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i class="fa-solid fa-circle-check" style="font-size: 10px;"></i> Active
+                                </span>
+                            </td>
+                            <td style="text-align: right; padding-right: 20px;">
+                                <form action="{{ route('admin.news.launch-invitations.destroy', $invitation->id) }}" method="POST" style="margin: 0; display: inline-block;" onsubmit="return confirm('Remove {{ $invitation->email }} from {{ $invitation->source === "digest" ? "Legal Intelligence Digest" : "VIP Launch list" }}?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-action" style="padding: 5px 10px; font-size: 11.5px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;" title="Remove subscriber">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                        <span>Remove</span>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @else
+        <div style="text-align: center; padding: 36px 16px; background: rgba(0, 0, 0, 0.15); border-radius: 8px; border: 1px dashed rgba(255, 255, 255, 0.1);">
+            <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); color: var(--text-muted); display: inline-flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px;">
+                <i class="fa-regular fa-envelope"></i>
+            </div>
+            <h4 style="font-size: 14.5px; font-weight: 600; color: #fff; margin-bottom: 6px;">No Subscribers Recorded Yet</h4>
+            <p style="font-size: 12.5px; color: var(--text-secondary); max-width: 480px; margin: 0 auto;">
+                When visitors subscribe to the <strong>Legal Intelligence Digest</strong> or register on the <strong>Coming Soon</strong> Launch Day card, their emails and registration details will appear here automatically.
+            </p>
+        </div>
+    @endif
+</div>
+
 <div class="card-table" style="width: 100%; margin-bottom: 40px;">
     <!-- Header with Title, Actions & Search -->
     <div class="table-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 20px 24px;">
@@ -518,6 +680,68 @@
             document.getElementById('bulk-delete-ids').value = JSON.stringify(ids);
             document.getElementById('bulk-delete-form').submit();
         }
+    }
+
+    let activeSubFilter = 'all';
+
+    function filterSubscriberList(source) {
+        activeSubFilter = source;
+        const rows = document.querySelectorAll('.subscriber-row');
+        const filterBtns = document.querySelectorAll('.sub-filter-btn');
+
+        filterBtns.forEach(btn => {
+            btn.style.background = 'rgba(255, 255, 255, 0.05)';
+            btn.style.color = 'var(--text-secondary)';
+            btn.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+        });
+
+        const activeBtn = document.getElementById('sub-filter-' + source);
+        if (activeBtn) {
+            activeBtn.style.background = '#3b82f6';
+            activeBtn.style.color = '#fff';
+            activeBtn.style.borderColor = '#3b82f6';
+        }
+
+        const visibleEmails = [];
+        rows.forEach(row => {
+            const rowSource = row.getAttribute('data-source');
+            if (source === 'all' || rowSource === source) {
+                row.style.display = '';
+                visibleEmails.push(row.getAttribute('data-email'));
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        // Update send email link
+        const sendEmailBtn = document.getElementById('btnSendEmail');
+        if (sendEmailBtn) {
+            const bccStr = encodeURIComponent(visibleEmails.join(', '));
+            const subjectStr = encodeURIComponent(source === 'digest' ? 'Legal Intelligence Digest Update' : (source === 'launch' ? 'VIP Launch Invitation — Legals Forum EcoSystem' : 'Legals Forum Update & Intelligence'));
+            sendEmailBtn.href = `mailto:?bcc=${bccStr}&subject=${subjectStr}`;
+        }
+    }
+
+    function copyAllSubscriberEmails() {
+        const rows = document.querySelectorAll('.subscriber-row');
+        const emails = [];
+        rows.forEach(row => {
+            if (row.style.display !== 'none') {
+                const em = row.getAttribute('data-email');
+                if (em) emails.push(em);
+            }
+        });
+
+        if (emails.length === 0) return;
+
+        navigator.clipboard.writeText(emails.join(', ')).then(() => {
+            const btnText = document.getElementById('btnCopyText');
+            if (btnText) {
+                const orig = btnText.textContent;
+                btnText.textContent = `Copied ${emails.length} Email(s)!`;
+                setTimeout(() => { btnText.textContent = orig; }, 2200);
+            }
+        });
     }
 </script>
 @endsection

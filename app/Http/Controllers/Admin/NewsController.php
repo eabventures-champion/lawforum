@@ -38,7 +38,9 @@ class NewsController extends Controller
             return $cat;
         });
 
-        return view('admin.news.index', compact('news', 'categories'));
+        $launchInvitations = \App\LaunchInvitation::orderBy('created_at', 'desc')->get();
+
+        return view('admin.news.index', compact('news', 'categories', 'launchInvitations'));
     }
 
     public function create()
@@ -276,5 +278,18 @@ class NewsController extends Controller
         }
 
         return back()->with('success', $message);
+    }
+
+    /**
+     * Delete a launch invitation or newsletter digest subscriber.
+     */
+    public function destroyLaunchInvitation($id)
+    {
+        $invitation = \App\LaunchInvitation::findOrFail($id);
+        $email = $invitation->email;
+        $sourceLabel = ($invitation->source === 'digest') ? 'Legal Intelligence Digest' : 'VIP Launch Day';
+        $invitation->delete();
+
+        return back()->with('success', "Subscriber '{$email}' ({$sourceLabel}) has been successfully removed.");
     }
 }
