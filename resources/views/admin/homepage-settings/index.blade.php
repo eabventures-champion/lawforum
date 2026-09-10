@@ -86,6 +86,8 @@
                                 <small class="switch-desc">
                                     @if($setting->key === 'slide_1_stats_published')
                                         Toggle whether the 4-box statistics counter card (Laws & Acts, Case Laws, Constitutions, Registered Users) is visible.
+                                    @elseif($setting->key === 'slide_1_news_coming_soon')
+                                        Put Legal News in "Coming Soon" mode (disables homepage card and blocks direct access to news pages).
                                     @else
                                         Toggle whether this slide is visible on the homepage.
                                     @endif

@@ -57,6 +57,11 @@ class GuestAccessMiddleware
             return $next($request);
         }
 
+        // Allow direct access to News coming soon page without requiring get-started gate
+        if (homepage_setting('slide_1_news_coming_soon', '1') == '1' && (fnmatch('News*', $path) || fnmatch('news*', $path))) {
+            return $next($request);
+        }
+
         foreach ($this->exemptRoutes as $exempt) {
             if ($path === $exempt || fnmatch($exempt, $path)) {
                 return $next($request);

@@ -1287,6 +1287,60 @@
         .card-news { --card-accent: var(--rose); --card-glow: var(--rose-glow); }
         .card-news .card-icon-wrap { background: rgba(244, 63, 94, 0.12); color: var(--rose); }
 
+        .category-card.card-disabled {
+            cursor: default;
+            position: relative;
+            user-select: none;
+        }
+        .category-card.card-disabled:hover {
+            transform: none !important;
+            border-color: var(--border-color) !important;
+            box-shadow: none !important;
+        }
+        .category-card.card-disabled:hover .card-icon-wrap {
+            transform: none !important;
+        }
+        .category-card.card-disabled:hover::before {
+            opacity: 0 !important;
+        }
+        .category-card.card-disabled .card-arrow {
+            color: #fb7185;
+            cursor: default;
+        }
+        .category-card.card-disabled:hover .card-arrow {
+            gap: 6px;
+        }
+        .card-disabled-badge {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(244, 63, 94, 0.15);
+            color: #fb7185;
+            border: 1px solid rgba(244, 63, 94, 0.35);
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        .card-disabled-badge .pulse-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: #fb7185;
+            box-shadow: 0 0 8px #fb7185;
+            animation: pulseComingSoon 2s infinite;
+        }
+        @keyframes pulseComingSoon {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.25); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
         /* Bottom row: 2 cards centered */
         .categories-grid .category-card:nth-child(4) {
             grid-column: 1 / 2;
@@ -2692,12 +2746,22 @@
                 <span class="card-arrow">Explore <i class="fa-solid fa-arrow-right"></i></span>
             </a>
 
+            @if(homepage_setting('slide_1_news_coming_soon', '1') == '1')
+            <div class="category-card card-news card-disabled reveal">
+                <span class="card-disabled-badge"><span class="pulse-dot"></span> Coming Soon</span>
+                <div class="card-icon-wrap"><i class="fa-solid fa-newspaper"></i></div>
+                <h3 class="card-title">{{ homepage_setting('slide_1_card5_title', 'Legal News') }}</h3>
+                <p class="card-description">{{ homepage_setting('slide_1_card5_desc', 'Stay updated with relevant legal and business news content from Ghana, Africa, Asia, Europe, and America.') }}</p>
+                <span class="card-arrow"><i class="fa-regular fa-clock"></i> Coming Soon</span>
+            </div>
+            @else
             <a href="/News/Ghana-News/1" class="category-card card-news reveal">
                 <div class="card-icon-wrap"><i class="fa-solid fa-newspaper"></i></div>
                 <h3 class="card-title">{{ homepage_setting('slide_1_card5_title', 'Legal News') }}</h3>
                 <p class="card-description">{{ homepage_setting('slide_1_card5_desc', 'Stay updated with relevant legal and business news content from Ghana, Africa, Asia, Europe, and America.') }}</p>
                 <span class="card-arrow">Explore <i class="fa-solid fa-arrow-right"></i></span>
             </a>
+            @endif
         </div>
     </section>
 
@@ -2858,7 +2922,11 @@
                     <a href="/existing-laws">Existing Laws</a>
                     <a href="/new-laws">Post-1992 Laws</a>
                     <a href="/judgement/Ghana">Case Laws</a>
+                    @if(homepage_setting('slide_1_news_coming_soon', '1') == '1')
+                    <a href="javascript:void(0);" style="opacity: 0.6; cursor: default;" title="Coming Soon">Legal News <span style="font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); margin-left: 4px;">Soon</span></a>
+                    @else
                     <a href="/News/Ghana-News/1">Legal News</a>
+                    @endif
                 </div>
                 <div class="footer-col">
                     <h4>Account</h4>
