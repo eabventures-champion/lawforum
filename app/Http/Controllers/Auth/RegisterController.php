@@ -49,6 +49,22 @@ class RegisterController extends Controller
     public function showRegistrationForm(\Illuminate\Http\Request $request)
     {
         $role = $request->query('role', '');
+
+        // Block registration if the role is disabled via admin settings
+        $roleSettingMap = [
+            'student' => 'student_registration_enabled',
+            'lawyer' => 'lawyer_registration_enabled',
+            'researcher' => 'researcher_registration_enabled',
+        ];
+
+        if (isset($roleSettingMap[$role])) {
+            $enabled = \App\RegistrationSetting::get($roleSettingMap[$role], '1');
+            if ($enabled !== '1') {
+                return redirect()->route('get-started')
+                    ->with('error', ucfirst($role) . ' registration is not currently available. Please check back later.');
+            }
+        }
+
         $researcherTypes = ResearcherType::active()->get();
         return view('auth.register', compact('role', 'researcherTypes'));
     }

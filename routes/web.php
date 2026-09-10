@@ -596,6 +596,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::delete('users/bulk-destroy', 'Admin\UserController@bulkDestroy')->name('admin.users.bulk-destroy');
     Route::post('users/{id}/impersonate', 'Admin\UserController@impersonate')->name('admin.users.impersonate');
     Route::resource('users', 'Admin\UserController', ['as' => 'admin']);
+    Route::delete('news/destroy-all', 'Admin\NewsController@destroyAll')->name('admin.news.destroy-all');
+    Route::delete('news/bulk-destroy', 'Admin\NewsController@bulkDestroy')->name('admin.news.bulk-destroy');
     Route::resource('news', 'Admin\NewsController', ['as' => 'admin']);
     Route::get('laws', 'Admin\LawController@index')->name('admin.laws.index');
     Route::get('laws/create/{type}', 'Admin\LawController@create')->name('admin.laws.create');
@@ -627,6 +629,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     // Demo Settings Management
     Route::get('demo-settings', 'Admin\DemoSettingController@index')->name('admin.demo-settings.index');
     Route::post('demo-settings/update', 'Admin\DemoSettingController@update')->name('admin.demo-settings.update');
+
+    // Registration Gates (Coming Soon) Management
+    Route::get('registration-settings', 'Admin\RegistrationSettingController@index')->name('admin.registration-settings.index');
+    Route::post('registration-settings/update', 'Admin\RegistrationSettingController@update')->name('admin.registration-settings.update');
 
     // Guest Reading Limits & Scroll Gate Management
     Route::get('reading-limits', 'Admin\ReadingLimitSettingController@index')->name('admin.reading-limits.index');

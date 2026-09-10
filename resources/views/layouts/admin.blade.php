@@ -120,6 +120,12 @@
                     <span>Demo Settings</span>
                 </a>
             </li>
+            <li class="menu-item {{ Request::is('admin/registration-settings*') ? 'active' : '' }}">
+                <a href="{{ route('admin.registration-settings.index') }}">
+                    <i class="fa-solid fa-user-lock"></i>
+                    <span>Registration Gates</span>
+                </a>
+            </li>
             <li class="menu-item {{ Request::is('admin/reading-limits*') ? 'active' : '' }}">
                 <a href="{{ route('admin.reading-limits.index') }}">
                     <i class="fa-solid fa-gauge-high"></i>

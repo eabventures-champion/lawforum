@@ -117,6 +117,64 @@
         background: rgba(255, 255, 255, 0.08);
         margin: 4px 0;
     }
+
+    /* ── Filter Tabs & Controls ──────────────────────────── */
+    .user-search-toolbar {
+        padding: 16px 24px;
+        background: rgba(0, 0, 0, 0.22);
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+    }
+    .user-filters-section {
+        padding: 14px 24px 16px 24px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: rgba(255, 255, 255, 0.01);
+    }
+    .filter-tab {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 6px 13px;
+        border-radius: 20px;
+        font-size: 12.5px;
+        font-weight: 500;
+        color: #94a3b8;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border-color);
+        text-decoration: none;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        user-select: none;
+        cursor: pointer;
+    }
+    .filter-tab:hover {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(255, 255, 255, 0.18);
+        transform: translateY(-1px);
+    }
+    .filter-tab.active {
+        color: #ffffff;
+        background: rgba(59, 130, 246, 0.16);
+        border-color: rgba(59, 130, 246, 0.45);
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.22);
+        font-weight: 600;
+    }
+    .tab-badge-count {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 1px 7px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #94a3b8;
+        transition: all 0.2s ease;
+    }
+    .filter-tab.active .tab-badge-count {
+        background: rgba(59, 130, 246, 0.3);
+        color: #93c5fd;
+    }
 </style>
 
 <div class="page-header">
@@ -127,73 +185,120 @@
 </div>
 
 <div class="card-table">
-    <div class="table-header" style="flex-wrap: wrap; gap: 16px; align-items: center; border-bottom: none !important;">
+    <!-- Header with Title & Action Buttons -->
+    <div class="table-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 20px 24px; border-bottom: none !important;">
         <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-            <h2 class="table-title" style="margin-bottom: 0;">System Users</h2>
+            <h2 class="table-title" style="margin-bottom: 0; font-size: 20px;">System Users</h2>
+            <span style="background: rgba(59, 130, 246, 0.12); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-users" style="font-size: 11px;"></i> <span id="header-total-count">{{ number_format($totalAll) }}</span> Total Members
+            </span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <!-- Bulk Action Button -->
+            <button type="button" id="bulk-delete-btn" class="btn btn-danger btn-action" style="display: none; height: 38px; padding: 0 16px; gap: 6px; border-radius: 8px;" onclick="submitBulkDelete()">
+                <i class="fa-solid fa-trash-can"></i> Delete Selected (<span id="selected-count">0</span>)
+            </button>
 
             <!-- Continents Preview Button -->
-            <a href="{{ route('admin.users.continents-preview') }}" class="btn btn-primary btn-action" style="padding: 8px 16px; gap: 6px; text-decoration: none; display: inline-flex; align-items: center; height: 38px; font-weight: 500; font-size: 14px;">
-                <i class="fa-solid fa-earth-americas"></i> Continents Preview
+            <a href="{{ route('admin.users.continents-preview') }}" class="btn btn-secondary btn-action" style="height: 38px; padding: 0 16px; gap: 7px; text-decoration: none; display: inline-flex; align-items: center; font-weight: 500; font-size: 13px; border-radius: 8px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); color: #e2e8f0;">
+                <i class="fa-solid fa-earth-americas" style="color: #60a5fa;"></i> Continents Preview
             </a>
 
             <!-- Export CSV Button -->
-            <button type="button" id="export-csv-btn" class="btn btn-secondary btn-action" style="padding: 8px 16px; gap: 6px; display: inline-flex; align-items: center; height: 38px; font-weight: 500; font-size: 14px; background-color: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border-color); cursor: pointer;" onclick="openExportModal()">
-                <i class="fa-solid fa-file-csv" style="color: #10b981; font-size: 16px;"></i> Export CSV
-            </button>
-            
-            <!-- Bulk Action Button -->
-            <button type="button" id="bulk-delete-btn" class="btn btn-danger btn-action" style="display: none; padding: 8px 16px; gap: 6px;" onclick="submitBulkDelete()">
-                <i class="fa-solid fa-trash-can"></i> Delete Selected (<span id="selected-count">0</span>)
+            <button type="button" id="export-csv-btn" class="btn btn-secondary btn-action" style="height: 38px; padding: 0 16px; gap: 7px; display: inline-flex; align-items: center; font-weight: 500; font-size: 13px; border-radius: 8px; background: rgba(16, 185, 129, 0.08); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); cursor: pointer;" onclick="openExportModal()">
+                <i class="fa-solid fa-file-csv" style="font-size: 15px;"></i> Export CSV
             </button>
         </div>
-        
-        <!-- Search and Filter Form -->
-        <form id="filter-form" action="{{ route('admin.users.index') }}" method="GET" style="display: flex; gap: 8px; align-items: center;">
+    </div>
+
+    <!-- Search & Country Toolbar -->
+    <div class="user-search-toolbar">
+        <form id="filter-form" action="{{ route('admin.users.index') }}" method="GET" style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;">
             @if(request('filter'))
                 <input type="hidden" name="filter" id="active-filter-param" value="{{ request('filter') }}">
             @endif
 
-            <!-- Country Dropdown -->
-            <select name="country" id="country-filter" class="form-control" style="width: 220px; padding: 8px 16px; height: 38px; border-radius: 8px; background-color: #181f29; color: #f3f4f6; border: 1px solid var(--border-color); cursor: pointer;">
-                <option value="" style="background-color: #181f29; color: #f3f4f6;">All Countries</option>
-                @foreach($countries as $continent => $list)
-                    <optgroup label="{{ $continent }}" style="background-color: #181f29; color: #3b82f6; font-weight: 600;">
-                        @foreach($list as $name => $count)
-                            <option value="{{ $name }}" {{ request('country') === $name ? 'selected' : '' }} style="background-color: #181f29; color: #f3f4f6;">{{ $name }} ({{ $count }})</option>
-                        @endforeach
-                    </optgroup>
-                @endforeach
-            </select>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; flex: 1; min-width: 300px;">
+                <!-- Search Input with Icon -->
+                <div style="position: relative; flex: 1; min-width: 260px;">
+                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 13px; pointer-events: none;"></i>
+                    <input type="text" name="search" id="search-input" class="form-control" placeholder="Search by name, email or contact..." value="{{ request('search') }}" style="padding-left: 38px; height: 40px; border-radius: 8px; font-size: 13.5px; width: 100%;">
+                </div>
 
-            <input type="text" name="search" id="search-input" class="form-control" placeholder="Search by name, email or contact..." value="{{ request('search') }}" style="width: 260px; padding: 8px 16px; height: 38px;">
-            <button type="submit" class="btn btn-primary btn-action" style="padding: 8px 16px; height: 38px; display: inline-flex; align-items: center; justify-content: center;">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-            @if(request('search') || request('country'))
-                <a href="{{ route('admin.users.index', request('filter') ? ['filter' => request('filter')] : []) }}" class="btn btn-secondary btn-action" style="padding: 8px 16px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; height: 38px;">Clear</a>
-            @endif
+                <!-- Country Dropdown with Icon -->
+                <div style="position: relative; width: 220px; flex-shrink: 0;">
+                    <i class="fa-solid fa-globe" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 12px; pointer-events: none; z-index: 1;"></i>
+                    <select name="country" id="country-filter" class="form-control" style="padding-left: 36px; padding-right: 28px; height: 40px; border-radius: 8px; background-color: #121824; color: #f3f4f6; border: 1px solid var(--border-color); cursor: pointer; font-size: 13px; width: 100%;">
+                        <option value="" style="background-color: #121824; color: #f3f4f6;">All Countries</option>
+                        @foreach($countries as $continent => $list)
+                            <optgroup label="{{ $continent }}" style="background-color: #121824; color: #60a5fa; font-weight: 600;">
+                                @foreach($list as $name => $count)
+                                    <option value="{{ $name }}" {{ request('country') === $name ? 'selected' : '' }} style="background-color: #121824; color: #f3f4f6;">{{ $name }} ({{ $count }})</option>
+                                @endforeach
+                            </optgroup>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <button type="submit" class="btn btn-primary btn-action" style="height: 40px; padding: 0 18px; border-radius: 8px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 7px;">
+                    <i class="fa-solid fa-magnifying-glass"></i> Search
+                </button>
+                @if(request('search') || request('country') || request('filter'))
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-secondary btn-action" style="height: 40px; padding: 0 14px; border-radius: 8px; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; color: var(--text-secondary); background: rgba(255,255,255,0.04); border: 1px solid var(--border-color);">
+                        <i class="fa-solid fa-rotate-left"></i> Reset
+                    </a>
+                @endif
+            </div>
         </form>
     </div>
 
-    <!-- Filter Tabs -->
-    <div class="tabs-nav" style="display: flex; gap: 8px; margin: 0 24px 20px 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; flex-wrap: wrap;">
-        <a href="{{ route('admin.users.index', array_merge(request()->except(['page']), ['filter' => ''])) }}" class="tab-btn filter-tab {{ !request('filter') ? 'active' : '' }}" data-filter="" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-            All Users <span id="tab-count-all" style="font-size: 11px; opacity: 0.7; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 10px; font-weight: 500;">{{ $totalAll }}</span>
-        </a>
-        <a href="{{ route('admin.users.index', array_merge(request()->except(['page']), ['filter' => 'with_phone'])) }}" class="tab-btn filter-tab {{ request('filter') === 'with_phone' ? 'active' : '' }}" data-filter="with_phone" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-            With Phone Number <span id="tab-count-phone" style="font-size: 11px; opacity: 0.7; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 10px; font-weight: 500;">{{ $totalWithPhone }}</span>
-        </a>
-        <a href="{{ route('admin.users.index', array_merge(request()->except(['page']), ['filter' => 'email_only'])) }}" class="tab-btn filter-tab {{ request('filter') === 'email_only' ? 'active' : '' }}" data-filter="email_only" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-            Email Only <span id="tab-count-email" style="font-size: 11px; opacity: 0.7; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 10px; font-weight: 500;">{{ $totalEmailOnly }}</span>
-        </a>
-        <a href="{{ route('admin.users.index', array_merge(request()->except(['page']), ['filter' => 'Ghana'])) }}" class="tab-btn filter-tab {{ request('filter') === 'Ghana' ? 'active' : '' }}" data-filter="Ghana" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-            Ghana <span id="tab-count-ghana" style="font-size: 11px; opacity: 0.7; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 10px; font-weight: 500;">{{ $totalGhana }}</span>
-        </a>
-        @foreach($continentCounts as $continent => $count)
-            <a href="{{ route('admin.users.index', array_merge(request()->except(['page']), ['filter' => $continent])) }}" class="tab-btn filter-tab {{ request('filter') === $continent ? 'active' : '' }}" data-filter="{{ $continent }}" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-                {{ $continent }} <span id="tab-count-{{ strtolower(str_replace(' ', '-', $continent)) }}" style="font-size: 11px; opacity: 0.7; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 10px; font-weight: 500;">{{ $count }}</span>
-            </a>
-        @endforeach
+    <!-- Structured Filter Tabs (Status & Regions) -->
+    <div class="user-filters-section">
+        <!-- Row 1: Account Status / Type -->
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-secondary); min-width: 65px; display: inline-flex; align-items: center; gap: 5px;">
+                <i class="fa-regular fa-id-badge" style="font-size: 12px; color: #60a5fa;"></i> Status:
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <a href="{{ route('admin.users.index', array_merge(request()->except(['page']), ['filter' => ''])) }}" class="filter-tab tab-btn {{ !request('filter') ? 'active' : '' }}" data-filter="">
+                    <span>All Users</span>
+                    <span id="tab-count-all" class="tab-badge-count">{{ $totalAll }}</span>
+                </a>
+                <a href="{{ route('admin.users.index', array_merge(request()->except(['page']), ['filter' => 'with_phone'])) }}" class="filter-tab tab-btn {{ request('filter') === 'with_phone' ? 'active' : '' }}" data-filter="with_phone">
+                    <i class="fa-solid fa-phone" style="font-size: 10px; color: #10b981;"></i>
+                    <span>With Phone Number</span>
+                    <span id="tab-count-phone" class="tab-badge-count">{{ $totalWithPhone }}</span>
+                </a>
+                <a href="{{ route('admin.users.index', array_merge(request()->except(['page']), ['filter' => 'email_only'])) }}" class="filter-tab tab-btn {{ request('filter') === 'email_only' ? 'active' : '' }}" data-filter="email_only">
+                    <i class="fa-regular fa-envelope" style="font-size: 11px; color: #38bdf8;"></i>
+                    <span>Email Only</span>
+                    <span id="tab-count-email" class="tab-badge-count">{{ $totalEmailOnly }}</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Row 2: Geographic Regions -->
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-secondary); min-width: 65px; display: inline-flex; align-items: center; gap: 5px;">
+                <i class="fa-solid fa-globe" style="font-size: 12px; color: #10b981;"></i> Region:
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <a href="{{ route('admin.users.index', array_merge(request()->except(['page']), ['filter' => 'Ghana'])) }}" class="filter-tab tab-btn {{ request('filter') === 'Ghana' ? 'active' : '' }}" data-filter="Ghana">
+                    <span style="font-size: 12px;">🇬🇭</span>
+                    <span>Ghana</span>
+                    <span id="tab-count-ghana" class="tab-badge-count">{{ $totalGhana }}</span>
+                </a>
+                @foreach($continentCounts as $continent => $count)
+                    <a href="{{ route('admin.users.index', array_merge(request()->except(['page']), ['filter' => $continent])) }}" class="filter-tab tab-btn {{ request('filter') === $continent ? 'active' : '' }}" data-filter="{{ $continent }}">
+                        <span>{{ $continent }}</span>
+                        <span id="tab-count-{{ strtolower(str_replace(' ', '-', $continent)) }}" class="tab-badge-count">{{ $count }}</span>
+                    </a>
+                @endforeach
+            </div>
+        </div>
     </div>
 
     <!-- Table Data Wrapper -->
@@ -307,6 +412,9 @@
                 
                 const countGhana = document.getElementById('tab-count-ghana');
                 if (countGhana) countGhana.textContent = data.totalGhana;
+
+                const headerTotal = document.getElementById('header-total-count');
+                if (headerTotal && data.totalAll !== undefined) headerTotal.textContent = Number(data.totalAll).toLocaleString();
 
                 // Update continent tab counts dynamically
                 if (data.continentCounts) {

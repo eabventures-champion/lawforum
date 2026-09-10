@@ -28,10 +28,10 @@ class DashboardController extends Controller
                      ExecutiveAct::count();
 
         // Get recent signups
-        $recentUsers = User::orderBy('created_at', 'desc')->take(5)->get();
+        $recentUsers = User::orderBy('created_at', 'desc')->take(8)->get();
         
         // Get recent news
-        $recentNews = NewsContent::orderBy('created_at', 'desc')->take(5)->get();
+        $recentNews = NewsContent::orderBy('created_at', 'desc')->take(8)->get();
 
         return view('admin.dashboard', compact(
             'totalUsers', 

@@ -4,7 +4,6 @@
             <th style="width: 40px; text-align: center;"><input type="checkbox" id="select-all-users" style="width: 16px; height: 16px; cursor: pointer; vertical-align: middle;"></th>
             <th>Name</th>
             <th>Email</th>
-            <th>Role</th>
             <th>Subscription Status</th>
             <th>Actions</th>
         </tr>
@@ -19,7 +18,34 @@
                         <i class="fa-solid fa-user-shield" title="Admin Account Protected" style="opacity: 0.6; color: #60a5fa;"></i>
                     @endif
                 </td>
-                <td>{{ $user->name }} {{ $user->lname }}</td>
+                <td>
+                    <div style="font-weight: 600; color: #fff; font-size: 14px; margin-bottom: 5px;">
+                        {{ $user->name }} {{ $user->lname }}
+                    </div>
+                    <div>
+                        @if($user->isAdmin())
+                            <span class="badge badge-accent" style="font-size: 11px; padding: 2px 8px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">
+                                <i class="fa-solid fa-shield-halved" style="font-size: 10px;"></i> Admin
+                            </span>
+                        @elseif($user->user_type === 'student')
+                            <span class="badge" style="font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); display: inline-flex; align-items: center; gap: 4px;">
+                                <i class="fa-solid fa-graduation-cap" style="font-size: 10px;"></i> Student
+                            </span>
+                        @elseif($user->user_type === 'lawyer')
+                            <span class="badge" style="font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); display: inline-flex; align-items: center; gap: 4px;">
+                                <i class="fa-solid fa-gavel" style="font-size: 10px;"></i> Lawyer
+                            </span>
+                        @elseif($user->user_type === 'researcher')
+                            <span class="badge" style="font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(139, 92, 246, 0.15); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.3); display: inline-flex; align-items: center; gap: 4px;">
+                                <i class="fa-solid fa-microscope" style="font-size: 10px;"></i> Researcher
+                            </span>
+                        @else
+                            <span class="badge" style="font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); display: inline-flex; align-items: center; gap: 4px;">
+                                <i class="fa-solid fa-triangle-exclamation" style="font-size: 10px;"></i> Legacy (No Role)
+                            </span>
+                        @endif
+                    </div>
+                </td>
                 <td>
                     <div style="display: flex; flex-direction: column; gap: 6px;">
                         <span style="font-weight: 500;">{{ $user->email }}</span>
@@ -43,27 +69,6 @@
                             @endif
                         </div>
                     </div>
-                </td>
-                <td>
-                    @if($user->isAdmin())
-                        <span class="badge badge-accent">Admin</span>
-                    @elseif($user->user_type === 'student')
-                        <span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3);">
-                            <i class="fa-solid fa-graduation-cap mr-1"></i> Student
-                        </span>
-                    @elseif($user->user_type === 'lawyer')
-                        <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);">
-                            <i class="fa-solid fa-gavel mr-1"></i> Lawyer
-                        </span>
-                    @elseif($user->user_type === 'researcher')
-                        <span class="badge" style="background: rgba(139, 92, 246, 0.15); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.3);">
-                            <i class="fa-solid fa-microscope mr-1"></i> Researcher
-                        </span>
-                    @else
-                        <span class="badge" style="background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25);">
-                            <i class="fa-solid fa-triangle-exclamation mr-1"></i> Legacy (No Role)
-                        </span>
-                    @endif
                 </td>
                 <td>
                     @if($user->check_subscription && $user->subscription_expiry >= \Carbon\Carbon::today())
@@ -114,7 +119,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="6" style="text-align: center; color: var(--text-secondary); padding: 32px;">No users found.</td>
+                <td colspan="5" style="text-align: center; color: var(--text-secondary); padding: 32px;">No users found.</td>
             </tr>
         @endforelse
     </tbody>

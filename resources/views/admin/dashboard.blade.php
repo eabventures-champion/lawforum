@@ -52,86 +52,261 @@
     </div>
 </div>
 
-<!-- Recent Sections -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 32px;">
-    <!-- Recent Signups -->
-    <div class="card-table">
-        <div class="table-header">
-            <h2 class="table-title">Recent Signups</h2>
-            <a href="{{ route('admin.users.index') }}" class="btn btn-secondary btn-action">View All</a>
+<style>
+    .recent-toggle-container {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(15, 23, 42, 0.7);
+        padding: 4px;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        gap: 4px;
+    }
+    .recent-tab-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 18px;
+        border-radius: 9px;
+        font-size: 13.5px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        background: transparent;
+        color: var(--text-secondary);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        user-select: none;
+    }
+    .recent-tab-btn:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.05);
+    }
+    .recent-tab-btn.active {
+        background: var(--accent-gradient);
+        color: #fff;
+        box-shadow: 0 4px 14px var(--accent-glow);
+    }
+    .recent-tab-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 7px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.1);
+        color: #cbd5e1;
+        transition: all 0.2s ease;
+    }
+    .recent-tab-btn.active .recent-tab-badge {
+        background: rgba(255, 255, 255, 0.25);
+        color: #fff;
+    }
+    .recent-tab-panel {
+        animation: fadeInTab 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @keyframes fadeInTab {
+        from {
+            opacity: 0;
+            transform: translateY(4px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<!-- Full-Width Recent Activities Section with Toggle -->
+<div class="card-table" style="width: 100%; margin-bottom: 40px;">
+    <!-- Toggle Header -->
+    <div class="table-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 20px 24px;">
+        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+            <!-- Segmented Switcher -->
+            <div class="recent-toggle-container">
+                <button type="button" id="tab-btn-signups" onclick="switchRecentTab('signups')" class="recent-tab-btn active">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>Recent Signups</span>
+                    <span class="recent-tab-badge">{{ count($recentUsers) }}</span>
+                </button>
+                <button type="button" id="tab-btn-news" onclick="switchRecentTab('news')" class="recent-tab-btn">
+                    <i class="fa-solid fa-newspaper"></i>
+                    <span>Recent News</span>
+                    <span class="recent-tab-badge">{{ count($recentNews) }}</span>
+                </button>
+            </div>
+
+            <!-- Subtitle info -->
+            <div style="font-size: 13px; color: var(--text-secondary);">
+                <span id="tab-meta-signups"><i class="fa-solid fa-circle-info" style="margin-right: 4px; color: var(--accent-color);"></i> Latest registered members on Lawsforum</span>
+                <span id="tab-meta-news" style="display: none;"><i class="fa-solid fa-circle-info" style="margin-right: 4px; color: #eab308;"></i> Latest published articles and legal updates</span>
+            </div>
         </div>
-        <table class="custom-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Subscribed</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($recentUsers as $user)
-                    <tr>
-                        <td>
-                            <div style="font-weight: 600; color: #fff;">{{ $user->name }} {{ $user->lname }}</div>
-                            <div style="margin-top: 4px;">
-                                <span style="display: inline-flex; align-items: center; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #10b981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.15); text-transform: uppercase; letter-spacing: 0.5px;">
-                                    <i class="fa-solid fa-globe" style="margin-right: 4px; font-size: 9px;"></i> {{ $user->country ?? 'Ghana' }}
-                                </span>
-                            </div>
-                        </td>
-                        <td>
-                            <div style="color: #fff; font-weight: 500;">{{ $user->email }}</div>
-                            <div style="margin-top: 4px; color: var(--text-secondary); font-size: 11px; display: inline-flex; align-items: center; gap: 4px;">
-                                <i class="fa-solid fa-phone" style="font-size: 10px;"></i> {{ $user->phone ?? 'N/A' }}
-                            </div>
-                        </td>
-                        <td>
-                            @if($user->check_subscription && $user->subscription_expiry >= \Carbon\Carbon::today())
-                                <span class="badge badge-success">Active</span>
-                            @else
-                                <span class="badge badge-danger">Inactive</span>
-                            @endif
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="3" style="text-align: center; color: var(--text-secondary);">No recent users found.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+
+        <!-- Dynamic View All Action Button -->
+        <div>
+            <a id="view-all-signups-btn" href="{{ route('admin.users.index') }}" class="btn btn-secondary btn-action" style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 8px;">
+                <span>View All Users</span>
+                <i class="fa-solid fa-arrow-right" style="font-size: 11px;"></i>
+            </a>
+            <a id="view-all-news-btn" href="{{ route('admin.news.index') }}" class="btn btn-secondary btn-action" style="display: none; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 8px;">
+                <span>View All News</span>
+                <i class="fa-solid fa-arrow-right" style="font-size: 11px;"></i>
+            </a>
+        </div>
     </div>
 
-    <!-- Recent News -->
-    <div class="card-table">
-        <div class="table-header">
-            <h2 class="table-title">Recent News</h2>
-            <a href="{{ route('admin.news.index') }}" class="btn btn-secondary btn-action">View All</a>
+    <!-- Panel 1: Recent Signups Table (Full Width) -->
+    <div id="panel-recent-signups" class="recent-tab-panel" style="display: block;">
+        <div style="overflow-x: auto; width: 100%;">
+            <table class="custom-table" style="width: 100%; min-width: 750px;">
+                <thead>
+                    <tr>
+                        <th style="padding-left: 24px;">User</th>
+                        <th>Email & Contact</th>
+                        <th>Subscription Status</th>
+                        <th>Registered Date</th>
+                        <th style="text-align: right; padding-right: 24px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($recentUsers as $user)
+                        <tr>
+                            <td style="padding-left: 24px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.25); color: #60a5fa; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0;">
+                                        {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; color: #fff; font-size: 14px;">{{ $user->name }} {{ $user->lname }}</div>
+                                        <div style="margin-top: 4px;">
+                                            <span style="display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #10b981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.15); text-transform: uppercase; letter-spacing: 0.5px;">
+                                                <i class="fa-solid fa-globe" style="margin-right: 4px; font-size: 9px;"></i> {{ $user->country ?? 'Ghana' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="color: #fff; font-weight: 500; font-size: 13.5px; display: flex; align-items: center; gap: 6px;">
+                                    <i class="fa-regular fa-envelope" style="color: var(--text-secondary); font-size: 12px;"></i>
+                                    <span>{{ $user->email }}</span>
+                                </div>
+                                <div style="margin-top: 5px; color: var(--text-secondary); font-size: 12px; display: inline-flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-phone" style="font-size: 11px;"></i>
+                                    <span>{{ $user->phone ?? 'N/A' }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                @if($user->check_subscription && $user->subscription_expiry >= \Carbon\Carbon::today())
+                                    <span class="badge badge-success" style="display: inline-flex; align-items: center; gap: 5px;">
+                                        <i class="fa-solid fa-circle-check" style="font-size: 10px;"></i> Active
+                                    </span>
+                                    <div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">
+                                        Expires {{ \Carbon\Carbon::parse($user->subscription_expiry)->format('M d, Y') }}
+                                    </div>
+                                @else
+                                    <span class="badge badge-danger" style="display: inline-flex; align-items: center; gap: 5px;">
+                                        <i class="fa-solid fa-circle-xmark" style="font-size: 10px;"></i> Inactive
+                                    </span>
+                                @endif
+                            </td>
+                            <td>
+                                <div style="color: #e2e8f0; font-weight: 500; font-size: 13px;">
+                                    {{ $user->created_at ? $user->created_at->format('M d, Y') : 'N/A' }}
+                                </div>
+                                <div style="color: var(--text-secondary); font-size: 11px; margin-top: 3px;">
+                                    {{ $user->created_at ? $user->created_at->diffForHumans() : '' }}
+                                </div>
+                            </td>
+                            <td style="text-align: right; padding-right: 24px;">
+                                <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-secondary btn-action" style="padding: 6px 14px; font-size: 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    <span>Edit</span>
+                                </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: var(--text-secondary); padding: 40px 20px;">
+                                <i class="fa-solid fa-users" style="font-size: 24px; margin-bottom: 8px; opacity: 0.5; display: block;"></i>
+                                No recent signups found.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
-        <table class="custom-table">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Category</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($recentNews as $article)
+    </div>
+
+    <!-- Panel 2: Recent News Table (Full Width) -->
+    <div id="panel-recent-news" class="recent-tab-panel" style="display: none;">
+        <div style="overflow-x: auto; width: 100%;">
+            <table class="custom-table" style="width: 100%; min-width: 750px;">
+                <thead>
                     <tr>
-                        <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            {{ $article->title }}
-                        </td>
-                        <td><span class="badge badge-accent">{{ $article->news_category }}</span></td>
-                        <td>{{ $article->created_at->format('M d, Y') }}</td>
+                        <th style="padding-left: 24px; width: 70px;">Thumbnail</th>
+                        <th>Article Details</th>
+                        <th>Category</th>
+                        <th>Published Date</th>
+                        <th style="text-align: right; padding-right: 24px;">Action</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="3" style="text-align: center; color: var(--text-secondary);">No news articles found.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @forelse($recentNews as $article)
+                        <tr>
+                            <td style="padding-left: 24px;">
+                                @if($article->image)
+                                    <img src="{{ Str::startsWith($article->image, 'http') ? $article->image : (Str::startsWith($article->image, 'storage/') ? asset($article->image) : asset('storage/' . $article->image)) }}" alt="Thumbnail" style="width: 52px; height: 38px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color); display: block;">
+                                @else
+                                    <div style="width: 52px; height: 38px; border-radius: 6px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--text-secondary);">
+                                        <i class="fa-regular fa-newspaper"></i>
+                                    </div>
+                                @endif
+                            </td>
+                            <td>
+                                <div style="font-weight: 600; color: #fff; font-size: 14px; line-height: 1.4; margin-bottom: 4px;">
+                                    {{ $article->title }}
+                                </div>
+                                @if($article->extract)
+                                    <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; max-width: 650px;">
+                                        {{ $article->extract }}
+                                    </div>
+                                @endif
+                            </td>
+                            <td>
+                                <span class="badge badge-accent" style="white-space: nowrap;">
+                                    {{ $article->news_category }}
+                                </span>
+                            </td>
+                            <td>
+                                <div style="color: #e2e8f0; font-weight: 500; font-size: 13px; white-space: nowrap;">
+                                    {{ $article->created_at ? $article->created_at->format('M d, Y') : 'N/A' }}
+                                </div>
+                                <div style="color: var(--text-secondary); font-size: 11px; margin-top: 3px; white-space: nowrap;">
+                                    {{ $article->created_at ? $article->created_at->diffForHumans() : '' }}
+                                </div>
+                            </td>
+                            <td style="text-align: right; padding-right: 24px;">
+                                <a href="{{ route('admin.news.edit', $article->id) }}" class="btn btn-secondary btn-action" style="padding: 6px 14px; font-size: 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    <span>Edit</span>
+                                </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: var(--text-secondary); padding: 40px 20px;">
+                                <i class="fa-solid fa-newspaper" style="font-size: 24px; margin-bottom: 8px; opacity: 0.5; display: block;"></i>
+                                No news articles found.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -187,6 +362,51 @@
 </div>
 
 <script>
+    // Tab switching functionality with local persistence
+    function switchRecentTab(tab) {
+        const panelSignups = document.getElementById('panel-recent-signups');
+        const panelNews = document.getElementById('panel-recent-news');
+        const tabSignups = document.getElementById('tab-btn-signups');
+        const tabNews = document.getElementById('tab-btn-news');
+        const metaSignups = document.getElementById('tab-meta-signups');
+        const metaNews = document.getElementById('tab-meta-news');
+        const viewAllSignups = document.getElementById('view-all-signups-btn');
+        const viewAllNews = document.getElementById('view-all-news-btn');
+
+        if (tab === 'signups') {
+            panelSignups.style.display = 'block';
+            panelNews.style.display = 'none';
+            tabSignups.classList.add('active');
+            tabNews.classList.remove('active');
+            metaSignups.style.display = 'inline';
+            metaNews.style.display = 'none';
+            viewAllSignups.style.display = 'inline-flex';
+            viewAllNews.style.display = 'none';
+        } else {
+            panelSignups.style.display = 'none';
+            panelNews.style.display = 'block';
+            tabNews.classList.add('active');
+            tabSignups.classList.remove('active');
+            metaSignups.style.display = 'none';
+            metaNews.style.display = 'inline';
+            viewAllSignups.style.display = 'none';
+            viewAllNews.style.display = 'inline-flex';
+        }
+
+        try {
+            localStorage.setItem('lawsforum_admin_recent_tab', tab);
+        } catch (e) {}
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            const savedTab = localStorage.getItem('lawsforum_admin_recent_tab');
+            if (savedTab === 'news') {
+                switchRecentTab('news');
+            }
+        } catch (e) {}
+    });
+
     function openSubscriptionsModal() {
         document.getElementById('subscriptions-modal').style.display = 'flex';
     }

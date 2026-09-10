@@ -16,11 +16,22 @@ class NewsController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->where('title', 'like', "%{$search}%")
-                  ->orWhere('content', 'like', "%{$search}%");
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('content', 'like', "%{$search}%")
+                  ->orWhere('extract', 'like', "%{$search}%")
+                  ->orWhere('news_category', 'like', "%{$search}%");
+            });
         }
 
         $news = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('admin.news.table_data', compact('news'))->render(),
+                'total' => $news->total(),
+            ]);
+        }
 
         return view('admin.news.index', compact('news'));
     }
@@ -107,5 +118,44 @@ class NewsController extends Controller
         $newsArticle->delete();
 
         return redirect()->route('admin.news.index')->with('success', 'News article deleted successfully.');
+    }
+
+    /**
+     * Delete all news articles
+     */
+    public function destroyAll()
+    {
+        $articles = NewsContent::all();
+        foreach ($articles as $article) {
+            if ($article->image) {
+                Storage::disk('public')->delete($article->image);
+            }
+            $article->delete();
+        }
+
+        return redirect()->route('admin.news.index')->with('success', 'All news articles have been deleted successfully.');
+    }
+
+    /**
+     * Bulk delete selected news articles
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $idsJson = $request->input('ids');
+        $ids = json_decode($idsJson, true);
+
+        if (!is_array($ids) || empty($ids)) {
+            return redirect()->route('admin.news.index')->with('error', 'No news articles selected for deletion.');
+        }
+
+        $articles = NewsContent::whereIn('id', $ids)->get();
+        foreach ($articles as $article) {
+            if ($article->image) {
+                Storage::disk('public')->delete($article->image);
+            }
+            $article->delete();
+        }
+
+        return redirect()->route('admin.news.index')->with('success', 'Selected news articles (' . count($articles) . ') deleted successfully.');
     }
 }

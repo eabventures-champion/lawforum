@@ -148,9 +148,13 @@ body {
 /* Main Content Area */
 .main-content {
     margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    max-width: calc(100% - var(--sidebar-width));
+    min-width: 0;
     flex: 1;
     padding: 0 40px 40px 40px;
     min-height: 100vh;
+    box-sizing: border-box;
     background: radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
     transition: var(--transition-smooth);
 }
@@ -533,6 +537,8 @@ textarea.form-control {
 
 .main-content.collapsed-sidebar {
     margin-left: 70px;
+    width: calc(100% - 70px);
+    max-width: calc(100% - 70px);
 }
 
 /* Sidebar Toggle Button styling */

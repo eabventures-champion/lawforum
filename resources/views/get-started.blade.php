@@ -323,6 +323,48 @@
                 box-sizing: border-box;
             }
         }
+
+        /* Coming Soon Disabled Card State */
+        .card-disabled {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+            pointer-events: none;
+        }
+
+        .card-disabled:hover {
+            transform: none;
+            background: var(--surface);
+            box-shadow: none;
+        }
+
+        .coming-soon-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
+        .coming-soon-badge .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background: #f59e0b;
+            border-radius: 50%;
+            animation: pulse-coming-soon 2s infinite;
+        }
+
+        @keyframes pulse-coming-soon {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
     </style>
 </head>
 <body>
@@ -346,6 +388,9 @@
             @php
                 $targetUrl = request('redirect_to') ?: request('redirect') ?: session('url.intended') ?: ($redirectTo ?? null);
                 $redirParam = $targetUrl ? '&redirect_to=' . urlencode($targetUrl) : '';
+                $studentRegEnabled = \App\RegistrationSetting::get('student_registration_enabled', '1') === '1';
+                $lawyerRegEnabled = \App\RegistrationSetting::get('lawyer_registration_enabled', '1') === '1';
+                $researcherRegEnabled = \App\RegistrationSetting::get('researcher_registration_enabled', '1') === '1';
             @endphp
             
             <!-- Guest Card -->
@@ -369,6 +414,7 @@
             </form>
 
             <!-- Student Card -->
+            @if($studentRegEnabled)
             <a href="/register?role=student{{ $redirParam }}" class="card student-card">
                 <div class="icon-wrapper">
                     <i class="fa-solid fa-graduation-cap"></i>
@@ -381,8 +427,26 @@
                     Access student discounts and tailored legal resources for your studies.
                 </div>
             </a>
+            @else
+            <div class="card student-card card-disabled" title="Student registration is coming soon">
+                <div class="icon-wrapper">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="card-title">
+                    Sign Up as a Student
+                    <span class="coming-soon-badge">
+                        <span class="pulse-dot"></span>
+                        Coming Soon
+                    </span>
+                </div>
+                <div class="card-desc">
+                    Access student discounts and tailored legal resources for your studies.
+                </div>
+            </div>
+            @endif
 
             <!-- Lawyer Card -->
+            @if($lawyerRegEnabled)
             <a href="/register?role=lawyer{{ $redirParam }}" class="card lawyer-card">
                 <div class="icon-wrapper">
                     <i class="fa-solid fa-gavel"></i>
@@ -395,8 +459,26 @@
                     Full professional access to case laws, legislation, and legal tools.
                 </div>
             </a>
+            @else
+            <div class="card lawyer-card card-disabled" title="Lawyer registration is coming soon">
+                <div class="icon-wrapper">
+                    <i class="fa-solid fa-gavel"></i>
+                </div>
+                <div class="card-title">
+                    Sign Up as a Lawyer
+                    <span class="coming-soon-badge">
+                        <span class="pulse-dot"></span>
+                        Coming Soon
+                    </span>
+                </div>
+                <div class="card-desc">
+                    Full professional access to case laws, legislation, and legal tools.
+                </div>
+            </div>
+            @endif
 
             <!-- Researcher Card -->
+            @if($researcherRegEnabled)
             <a href="/register?role=researcher{{ $redirParam }}" class="card researcher-card">
                 <div class="icon-wrapper">
                     <i class="fa-solid fa-microscope"></i>
@@ -409,6 +491,23 @@
                     Deep access to legal databases, cross-references, and research tools.
                 </div>
             </a>
+            @else
+            <div class="card researcher-card card-disabled" title="Researcher registration is coming soon">
+                <div class="icon-wrapper">
+                    <i class="fa-solid fa-microscope"></i>
+                </div>
+                <div class="card-title">
+                    Sign Up as a Researcher
+                    <span class="coming-soon-badge">
+                        <span class="pulse-dot"></span>
+                        Coming Soon
+                    </span>
+                </div>
+                <div class="card-desc">
+                    Deep access to legal databases, cross-references, and research tools.
+                </div>
+            </div>
+            @endif
 
         </div>
 

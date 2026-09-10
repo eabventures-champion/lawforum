@@ -66,3 +66,21 @@ if (!function_exists('maintenance_setting')) {
         return $default;
     }
 }
+
+if (!function_exists('registration_setting')) {
+    /**
+     * Get registration setting value.
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    function registration_setting($key, $default = null) {
+        try {
+            return \App\RegistrationSetting::get($key, $default);
+        } catch (\Exception $e) {
+            // Fallback if table doesn't exist yet
+        }
+        return $default;
+    }
+}
