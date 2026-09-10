@@ -3,19 +3,21 @@
 @section('title', 'Guided Tour Content Management')
 
 @section('content')
-<div class="page-header">
-    <div>
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <div style="flex: 1; min-width: 280px; max-width: 680px;">
         <h1 class="page-title">Dashboard Guided Tour Content</h1>
-        <p class="page-subtitle">Fully customize and manage the welcome onboarding prompt and every walkthrough step displayed to users on the dashboard.</p>
+        <p class="page-subtitle" style="line-height: 1.5;">Fully customize and manage the welcome onboarding prompt and every walkthrough step displayed to users on the dashboard.</p>
     </div>
-    <div style="display: flex; gap: 10px;">
-        <button type="button" class="btn btn-secondary btn-action" onclick="document.getElementById('addStepModal').style.display='flex'">
-            <i class="fa-solid fa-plus"></i> Add New Step
+    <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-right: 16px;">
+        <button type="button" class="btn btn-primary" style="white-space: nowrap; padding: 10px 18px; font-size: 13.5px; border-radius: 10px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;" onclick="document.getElementById('addStepModal').style.display='flex'">
+            <i class="fa-solid fa-plus"></i>
+            <span>Add New Step</span>
         </button>
-        <form action="{{ route('admin.onboarding-tour.reset_defaults') }}" method="POST" onsubmit="return confirm('Are you sure you want to reset all tour steps to system defaults?')">
+        <form action="{{ route('admin.onboarding-tour.reset_defaults') }}" method="POST" style="margin: 0; display: inline-flex;" onsubmit="return confirm('Are you sure you want to reset all tour steps to system defaults?')">
             @csrf
-            <button type="submit" class="btn btn-action" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 8px 14px; border-radius: 8px; font-weight: 600; cursor: pointer;">
-                <i class="fa-solid fa-rotate-left"></i> Reset Defaults
+            <button type="submit" class="btn" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.25); padding: 10px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 13.5px; transition: var(--transition-smooth);" onmouseover="this.style.background='rgba(239, 68, 68, 0.2)';" onmouseout="this.style.background='rgba(239, 68, 68, 0.1)';">
+                <i class="fa-solid fa-rotate-left"></i>
+                <span>Reset Defaults</span>
             </button>
         </form>
     </div>
