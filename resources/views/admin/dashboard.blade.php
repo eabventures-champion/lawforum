@@ -8,7 +8,7 @@
         <h1 class="page-title">Welcome Back, {{ Auth::user()->name ?? 'Admin' }}</h1>
         <p class="page-subtitle">Here is what's happening on Lawsforum today.</p>
     </div>
-    <a href="{{ route('admin.profile.index') }}" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; padding: 10px 18px; border-radius: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #cbd5e1; text-decoration: none;">
+    <a href="{{ route('admin.profile.index') }}" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; padding: 10px 18px; border-radius: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #cbd5e1; text-decoration: none; margin-right: 16px;">
         <i class="fa-solid fa-user-gear"></i>
         <span>Admin Profile</span>
     </a>
