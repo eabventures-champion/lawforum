@@ -282,7 +282,7 @@
                 <div class="form-group">
                     <label class="form-label" for="email">Admin Email Address</label>
                     <div class="input-wrapper">
-                        <input id="email" type="email" class="form-input" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="name@admin.com">
+                        <input id="email" type="email" class="form-input" name="email" value="{{ old('email', Cookie::get('remember_email')) }}" required autocomplete="email" autofocus placeholder="name@admin.com">
                         <i class="fa-solid fa-envelope input-icon"></i>
                     </div>
                 </div>
@@ -298,7 +298,7 @@
 
                 <div class="form-options">
                     <label class="remember-me">
-                        <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                        <input type="checkbox" name="remember" id="remember" value="1" {{ old('remember') || Cookie::has('remember_email') ? 'checked' : '' }}>
                         <span>Remember session</span>
                     </label>
                 </div>

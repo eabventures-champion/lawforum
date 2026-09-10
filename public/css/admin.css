@@ -12,7 +12,7 @@
     --danger-glow: rgba(239, 68, 68, 0.2);
     --text-primary: #f3f4f6;
     --text-secondary: #9ca3af;
-    --sidebar-width: 260px;
+    --sidebar-width: 280px;
     --transition-speed: 0.3s;
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -48,20 +48,21 @@ body {
 }
 
 .sidebar-header {
-    padding: 24px;
+    padding: 20px 18px;
     border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 
 .sidebar-logo {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 800;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
     background: linear-gradient(to right, #3b82f6, #60a5fa);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    white-space: nowrap;
 }
 
 .sidebar-menu {
@@ -571,13 +572,14 @@ textarea.form-control {
     color: var(--text-secondary);
     cursor: pointer;
     margin-left: auto;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 6px;
     transition: var(--transition-smooth);
+    flex-shrink: 0;
 }
 
 .sidebar-toggle-btn:hover {

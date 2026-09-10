@@ -20,7 +20,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6;"></i>
+            <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; flex-shrink: 0;"></i>
             <div class="sidebar-logo">Lawsforum Admin</div>
             <button id="toggle-sidebar" class="sidebar-toggle-btn" title="Toggle Sidebar">
                 <i class="fa-solid fa-angles-left"></i>

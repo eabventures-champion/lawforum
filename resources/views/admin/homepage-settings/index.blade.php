@@ -83,7 +83,13 @@
                             </label>
                             <div>
                                 <span class="switch-label">{{ $setting->label }}</span>
-                                <small class="switch-desc">Toggle whether this slide is visible on the homepage.</small>
+                                <small class="switch-desc">
+                                    @if($setting->key === 'slide_1_stats_published')
+                                        Toggle whether the 4-box statistics counter card (Laws & Acts, Case Laws, Constitutions, Registered Users) is visible.
+                                    @else
+                                        Toggle whether this slide is visible on the homepage.
+                                    @endif
+                                </small>
                             </div>
                         </div>
                     @else

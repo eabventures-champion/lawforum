@@ -42,6 +42,16 @@ class LoginController extends Controller
             // Validate that the user is an administrator
             // (either isAdmin() returns true, or email is admin@admin.com, or ends with @admin.com)
             if ($user->isAdmin() || $user->email === 'admin@admin.com' || strpos($user->email, '@admin.com') !== false) {
+                if ($request->has('remember')) {
+                    \Illuminate\Support\Facades\Cookie::queue(
+                        \Illuminate\Support\Facades\Cookie::forever('remember_email', $request->input('email'))
+                    );
+                } else {
+                    \Illuminate\Support\Facades\Cookie::queue(
+                        \Illuminate\Support\Facades\Cookie::forget('remember_email')
+                    );
+                }
+
                 // Redirect directly to the main admin dashboard
                 return redirect()->route('admin.dashboard')
                     ->with('success', 'Welcome to Legals Forum Administration Portal!');

@@ -386,14 +386,14 @@
         @endif
 
         <!-- Login Form -->
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('login') }}" id="loginForm">
             @csrf
 
             <!-- Email Address -->
             <div class="form-group">
                 <label for="email" class="form-label">E-Mail Address</label>
                 <div class="input-wrapper">
-                    <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="admin@admin.com" required autocomplete="email" autofocus>
+                    <input id="email" type="email" class="form-control" name="email" value="{{ old('email', Cookie::get('remember_email')) }}" placeholder="admin@admin.com" required autocomplete="email" autofocus>
                     <i class="fa-solid fa-envelope input-icon"></i>
                 </div>
             </div>
@@ -411,7 +411,7 @@
             <!-- Options -->
             <div class="form-options">
                 <label class="remember-me" for="remember">
-                    <input class="remember-checkbox" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                    <input class="remember-checkbox" type="checkbox" name="remember" id="remember" value="1" {{ old('remember') || Cookie::has('remember_email') ? 'checked' : '' }}>
                     <span>Remember Me</span>
                 </label>
                 
@@ -461,6 +461,32 @@
                 icon.classList.add('fa-eye');
             }
         }
+
+        // Client-side Remember Me persistence
+        document.addEventListener('DOMContentLoaded', function() {
+            const rememberCheckbox = document.getElementById('remember');
+            const emailInput = document.getElementById('email');
+            const loginForm = document.getElementById('loginForm');
+
+            // If email is not set by server, check localStorage
+            if (emailInput && (!emailInput.value || emailInput.value.trim() === '')) {
+                const savedEmail = localStorage.getItem('lawsforum_remember_email');
+                if (savedEmail) {
+                    emailInput.value = savedEmail;
+                    if (rememberCheckbox) rememberCheckbox.checked = true;
+                }
+            }
+
+            if (loginForm) {
+                loginForm.addEventListener('submit', function() {
+                    if (rememberCheckbox && rememberCheckbox.checked && emailInput && emailInput.value.trim() !== '') {
+                        localStorage.setItem('lawsforum_remember_email', emailInput.value.trim());
+                    } else {
+                        localStorage.removeItem('lawsforum_remember_email');
+                    }
+                });
+            }
+        });
     </script>
 
 <!--Start of Tawk.to Script-->

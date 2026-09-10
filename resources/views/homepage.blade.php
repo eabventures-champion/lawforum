@@ -2407,6 +2407,52 @@
         </a>
     @endif
 
+    @php
+        $slides = [];
+        if (homepage_setting('slide_0_published', '1') == '1') {
+            $slides[] = [
+                'key' => 'slide_0',
+                'class' => 'slide-hero',
+                'label' => 'Home',
+                'icon' => 'fa-house',
+            ];
+        }
+        if (homepage_setting('slide_1_published', '1') == '1') {
+            $slides[] = [
+                'key' => 'slide_1',
+                'class' => 'slide-why',
+                'label' => 'Why Choose Us',
+                'icon' => 'fa-award',
+            ];
+        }
+        if (homepage_setting('slide_2_published', '1') == '1') {
+            $slides[] = [
+                'key' => 'slide_2',
+                'class' => 'slide-students',
+                'label' => 'Students Package',
+                'icon' => 'fa-graduation-cap',
+            ];
+        }
+
+        try {
+            $customSlides = \App\HomepageCustomSlide::where('is_published', 1)->orderBy('order', 'asc')->get();
+            foreach ($customSlides as $cSlide) {
+                $slides[] = [
+                    'key' => 'custom_' . $cSlide->id,
+                    'class' => 'slide-custom',
+                    'label' => $cSlide->title,
+                    'icon' => $cSlide->icon ?: 'fa-circle-dot',
+                    'is_custom' => true,
+                    'model' => $cSlide,
+                ];
+            }
+        } catch (\Exception $e) {
+            // Fallback if table doesn't exist
+        }
+
+        $totalSlides = count($slides);
+    @endphp
+
     <!-- ====== NAVIGATION ====== -->
     <nav class="nav-wrap" id="mainNav">
         <div class="nav-inner">
@@ -2421,7 +2467,14 @@
 
             <div class="nav-auth">
                 @guest
-                    <a href="javascript:void(0)" class="btn-login" onclick="goToSlide(1)">Why Choose Us</a>
+                    @if(homepage_setting('slide_1_published', '1') == '1')
+                        @php
+                            $slide1NavIdx = array_search('slide_1', array_column($slides, 'key'));
+                        @endphp
+                        @if($slide1NavIdx !== false)
+                            <a href="javascript:void(0)" class="btn-login" onclick="goToSlide({{ $slide1NavIdx }})">Why Choose Us</a>
+                        @endif
+                    @endif
                     @if(request()->cookie('guest_access'))
                         <a href="javascript:void(0)" onclick="openLoginModal()" class="btn-signup" style="background: rgba(255,255,255,0.08); box-shadow: none; cursor: pointer;">
                             <i class="fa-solid fa-user-secret" style="margin-right: 4px;"></i> Guest User
@@ -2471,7 +2524,14 @@
         @include('partials._nav_mobile_menu')
         <div style="height: 16px;"></div>
         @guest
-            <a href="javascript:void(0)" onclick="goToSlide(1); document.getElementById('mobileNav').classList.remove('open');">Why Choose Us</a>
+            @if(homepage_setting('slide_1_published', '1') == '1')
+                @php
+                    $slide1MobIdx = array_search('slide_1', array_column($slides, 'key'));
+                @endphp
+                @if($slide1MobIdx !== false)
+                    <a href="javascript:void(0)" onclick="goToSlide({{ $slide1MobIdx }}); document.getElementById('mobileNav').classList.remove('open');">Why Choose Us</a>
+                @endif
+            @endif
             @if(request()->cookie('guest_access'))
                 <a href="javascript:void(0)" onclick="openLoginModal(); document.getElementById('mobileNav').classList.remove('open');" style="color: var(--text-secondary); cursor: pointer;"><i class="fa-solid fa-user-secret"></i> Guest User</a>
             @else
@@ -2482,52 +2542,6 @@
             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="color: var(--rose);">Sign Out</a>
         @endguest
     </div>
-
-    @php
-        $slides = [];
-        if (homepage_setting('slide_0_published', '1') == '1') {
-            $slides[] = [
-                'key' => 'slide_0',
-                'class' => 'slide-hero',
-                'label' => 'Home',
-                'icon' => 'fa-house',
-            ];
-        }
-        if (homepage_setting('slide_1_published', '1') == '1') {
-            $slides[] = [
-                'key' => 'slide_1',
-                'class' => 'slide-why',
-                'label' => 'Why Choose Us',
-                'icon' => 'fa-award',
-            ];
-        }
-        if (homepage_setting('slide_2_published', '1') == '1') {
-            $slides[] = [
-                'key' => 'slide_2',
-                'class' => 'slide-students',
-                'label' => 'Students Package',
-                'icon' => 'fa-graduation-cap',
-            ];
-        }
-
-        try {
-            $customSlides = \App\HomepageCustomSlide::where('is_published', 1)->orderBy('order', 'asc')->get();
-            foreach ($customSlides as $cSlide) {
-                $slides[] = [
-                    'key' => 'custom_' . $cSlide->id,
-                    'class' => 'slide-custom',
-                    'label' => $cSlide->title,
-                    'icon' => $cSlide->icon ?: 'fa-circle-dot',
-                    'is_custom' => true,
-                    'model' => $cSlide,
-                ];
-            }
-        } catch (\Exception $e) {
-            // Fallback if table doesn't exist
-        }
-
-        $totalSlides = count($slides);
-    @endphp
 
     <div class="slider-container">
         <!-- Premium Vertical Indicators -->
@@ -2616,6 +2630,7 @@
                 @endphp
                 <div class="slide slide-why" id="slide-{{ $slide1Index }}">
                 <!-- ====== STATS BAR ====== -->
+    @if(homepage_setting('slide_1_stats_published', '1') == '1')
     <section class="stats-section">
         <div class="stats-bar reveal">
             <div class="stat-item">
@@ -2636,6 +2651,7 @@
             </div>
         </div>
     </section>
+    @endif
 
     <!-- ====== CATEGORIES ====== -->
     <section class="categories">

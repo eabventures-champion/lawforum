@@ -47,6 +47,17 @@ class LoginController extends Controller
      */
     protected function authenticated(\Illuminate\Http\Request $request, $user)
     {
+        // Persist or clear remembered email cookie for login form pre-population
+        if ($request->filled('remember')) {
+            \Illuminate\Support\Facades\Cookie::queue(
+                \Illuminate\Support\Facades\Cookie::forever('remember_email', $request->input('email'))
+            );
+        } else {
+            \Illuminate\Support\Facades\Cookie::queue(
+                \Illuminate\Support\Facades\Cookie::forget('remember_email')
+            );
+        }
+
         // 1. Admin users go straight to admin panel
         if ($user->isAdmin()) {
             return redirect()->intended('/admin');
