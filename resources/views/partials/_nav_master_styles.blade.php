@@ -402,32 +402,33 @@
 
     .mobile-nav-close {
         position: absolute !important;
-        top: 24px !important;
-        right: 24px !important;
-        background: none !important;
-        border: none !important;
-        padding: 0 !important;
+        top: 20px !important;
+        right: 20px !important;
+        left: auto !important;
+        bottom: auto !important;
         margin: 0 !important;
+        background: rgba(255, 255, 255, 0.06) !important;
+        border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12)) !important;
+        padding: 0 !important;
         line-height: 1 !important;
         color: var(--text-primary, #f8fafc) !important;
-        font-size: 28px !important;
+        font-size: 20px !important;
         cursor: pointer !important;
-        opacity: 0;
-        transform: rotate(-90deg) scale(0.5);
-        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s;
-        box-shadow: none !important;
-        outline: none !important;
-        width: 28px !important;
-        height: 28px !important;
+        border-radius: 12px !important;
+        width: 42px !important;
+        height: 42px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         z-index: 1000000 !important;
+        transition: all 0.2s ease !important;
     }
 
-    .mobile-nav-panel.open .mobile-nav-close {
-        opacity: 1 !important;
-        transform: rotate(0) scale(1) !important;
+    .mobile-nav-close:hover {
+        background: rgba(239, 68, 68, 0.2) !important;
+        color: #f87171 !important;
+        border-color: rgba(239, 68, 68, 0.4) !important;
+        transform: scale(1.08);
     }
 
     .nav-underline-premium {
@@ -478,6 +479,7 @@
         .nav-logo-text {
             font-size: 18px !important;
             letter-spacing: 0.2px !important;
+        }
     }
 </style>
 <script>
