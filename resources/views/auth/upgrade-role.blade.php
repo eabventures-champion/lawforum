@@ -138,6 +138,50 @@
             box-shadow: 0 10px 25px rgba(168, 85, 247, 0.25);
         }
 
+        .role-card.disabled {
+            opacity: 0.45;
+            cursor: not-allowed !important;
+            pointer-events: none !important;
+            filter: grayscale(0.25);
+            border-color: rgba(255, 255, 255, 0.05) !important;
+        }
+
+        .role-card.disabled:hover {
+            transform: none !important;
+            background: rgba(255, 255, 255, 0.03) !important;
+            border-color: rgba(255, 255, 255, 0.05) !important;
+            box-shadow: none !important;
+        }
+
+        .role-coming-soon {
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 12px;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .role-coming-soon .pulse-dot {
+            width: 5px;
+            height: 5px;
+            background: #f59e0b;
+            border-radius: 50%;
+            animation: pulse-coming-soon 2s infinite;
+        }
+
+        @keyframes pulse-coming-soon {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
         .role-icon-wrapper {
             width: 56px;
             height: 56px;
@@ -326,13 +370,46 @@
             </div>
         @endif
 
+        @php
+            $studentRegEnabled = $studentRegEnabled ?? (\App\RegistrationSetting::get('student_registration_enabled', '1') === '1');
+            $lawyerRegEnabled = $lawyerRegEnabled ?? (\App\RegistrationSetting::get('lawyer_registration_enabled', '1') === '1');
+            $researcherRegEnabled = $researcherRegEnabled ?? (\App\RegistrationSetting::get('researcher_registration_enabled', '1') === '1');
+
+            $oldRole = old('user_type');
+            if ($oldRole === 'student' && $studentRegEnabled) {
+                $defaultRole = 'student';
+            } elseif ($oldRole === 'lawyer' && $lawyerRegEnabled) {
+                $defaultRole = 'lawyer';
+            } elseif ($oldRole === 'researcher' && $researcherRegEnabled) {
+                $defaultRole = 'researcher';
+            } else {
+                if ($studentRegEnabled) {
+                    $defaultRole = 'student';
+                } elseif ($lawyerRegEnabled) {
+                    $defaultRole = 'lawyer';
+                } elseif ($researcherRegEnabled) {
+                    $defaultRole = 'researcher';
+                } else {
+                    $defaultRole = '';
+                }
+            }
+
+            $btnGradient = 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)';
+            if ($defaultRole === 'researcher') {
+                $btnGradient = 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)';
+            } elseif ($defaultRole === 'lawyer') {
+                $btnGradient = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
+            }
+        @endphp
+
         <form action="{{ route('account.upgrade.role.store') }}" method="POST" id="roleUpgradeForm">
             @csrf
-            <input type="hidden" name="user_type" id="selectedUserType" value="{{ old('user_type', 'student') }}" required>
+            <input type="hidden" name="user_type" id="selectedUserType" value="{{ $defaultRole }}" required>
 
             <div class="roles-grid">
                 <!-- Student Card -->
-                <div class="role-card student {{ old('user_type', 'student') === 'student' ? 'selected' : '' }}" onclick="selectRole('student', this)">
+                @if($studentRegEnabled)
+                <div class="role-card student {{ $defaultRole === 'student' ? 'selected' : '' }}" onclick="selectRole('student', this)">
                     <div class="role-check-indicator"><i class="fa-solid fa-check"></i></div>
                     <div class="role-icon-wrapper">
                         <i class="fa-solid fa-graduation-cap"></i>
@@ -340,9 +417,23 @@
                     <div class="role-card-title">Student</div>
                     <div class="role-card-desc">LLB, LLM & Law School students for academic studies</div>
                 </div>
+                @else
+                <div class="role-card student disabled" title="Student registration is coming soon">
+                    <div class="role-icon-wrapper">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div class="role-card-title">Student</div>
+                    <div class="role-card-desc">LLB, LLM & Law School students for academic studies</div>
+                    <span class="role-coming-soon">
+                        <span class="pulse-dot"></span>
+                        Coming Soon
+                    </span>
+                </div>
+                @endif
 
                 <!-- Lawyer Card -->
-                <div class="role-card lawyer {{ old('user_type') === 'lawyer' ? 'selected' : '' }}" onclick="selectRole('lawyer', this)">
+                @if($lawyerRegEnabled)
+                <div class="role-card lawyer {{ $defaultRole === 'lawyer' ? 'selected' : '' }}" onclick="selectRole('lawyer', this)">
                     <div class="role-check-indicator"><i class="fa-solid fa-check"></i></div>
                     <div class="role-icon-wrapper">
                         <i class="fa-solid fa-gavel"></i>
@@ -350,9 +441,23 @@
                     <div class="role-card-title">Lawyer</div>
                     <div class="role-card-desc">Practicing Advocates, Barristers & Legal Counsels</div>
                 </div>
+                @else
+                <div class="role-card lawyer disabled" title="Lawyer registration is coming soon">
+                    <div class="role-icon-wrapper">
+                        <i class="fa-solid fa-gavel"></i>
+                    </div>
+                    <div class="role-card-title">Lawyer</div>
+                    <div class="role-card-desc">Practicing Advocates, Barristers & Legal Counsels</div>
+                    <span class="role-coming-soon">
+                        <span class="pulse-dot"></span>
+                        Coming Soon
+                    </span>
+                </div>
+                @endif
 
                 <!-- Researcher Card -->
-                <div class="role-card researcher {{ old('user_type') === 'researcher' ? 'selected' : '' }}" onclick="selectRole('researcher', this)">
+                @if($researcherRegEnabled)
+                <div class="role-card researcher {{ $defaultRole === 'researcher' ? 'selected' : '' }}" onclick="selectRole('researcher', this)">
                     <div class="role-check-indicator"><i class="fa-solid fa-check"></i></div>
                     <div class="role-icon-wrapper">
                         <i class="fa-solid fa-microscope"></i>
@@ -360,10 +465,23 @@
                     <div class="role-card-title">Researcher</div>
                     <div class="role-card-desc">Legal Academics, Policy Analysts & Jurists</div>
                 </div>
+                @else
+                <div class="role-card researcher disabled" title="Researcher registration is coming soon">
+                    <div class="role-icon-wrapper">
+                        <i class="fa-solid fa-microscope"></i>
+                    </div>
+                    <div class="role-card-title">Researcher</div>
+                    <div class="role-card-desc">Legal Academics, Policy Analysts & Jurists</div>
+                    <span class="role-coming-soon">
+                        <span class="pulse-dot"></span>
+                        Coming Soon
+                    </span>
+                </div>
+                @endif
             </div>
 
             <!-- Researcher Subfields -->
-            <div class="researcher-subfields" id="researcherSubfields" style="{{ old('user_type') === 'researcher' ? 'display: block;' : '' }}">
+            <div class="researcher-subfields" id="researcherSubfields" style="{{ $defaultRole === 'researcher' ? 'display: block;' : 'display: none;' }}">
                 <label class="form-label" for="researcherTypeSelect">Specify Your Researcher Specialization *</label>
                 <select name="researcher_type" id="researcherTypeSelect" class="form-select" onchange="toggleResearcherOther(this.value)">
                     <option value="">-- Select Specialization --</option>
@@ -379,7 +497,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn-upgrade-submit">
+            <button type="submit" class="btn-upgrade-submit" style="background: {{ $btnGradient }};" {{ empty($defaultRole) ? 'disabled' : '' }}>
                 <span>Save Role & Activate Dashboard</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
@@ -396,7 +514,15 @@
     </div>
 
     <script>
+        const enabledRoles = {
+            student: {{ $studentRegEnabled ? 'true' : 'false' }},
+            lawyer: {{ $lawyerRegEnabled ? 'true' : 'false' }},
+            researcher: {{ $researcherRegEnabled ? 'true' : 'false' }}
+        };
+
         function selectRole(role, cardElement) {
+            if (!enabledRoles[role]) return;
+
             document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
             cardElement.classList.add('selected');
             document.getElementById('selectedUserType').value = role;

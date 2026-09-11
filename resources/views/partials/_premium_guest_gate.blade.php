@@ -1,5 +1,8 @@
 {{-- ====== PREMIUM GUEST UPGRADE MODAL & 10% SCROLL GATE ====== --}}
-@guest
+@php
+    $isGuestOrExpired = !auth()->check() || !auth()->user()->hasFullAccess();
+@endphp
+@if($isGuestOrExpired)
 <style>
     .notes-section, #notesSection, .notes-section-header,
     #btnViewSplit, #v-pills-split-tab, .tabPanedHide_split_view,
@@ -181,6 +184,47 @@
         opacity: 0.7;
     }
 
+    .premium-role-btn.disabled {
+        opacity: 0.5;
+        cursor: not-allowed !important;
+        pointer-events: none !important;
+        filter: grayscale(0.25);
+    }
+    .premium-role-btn.disabled:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    .premium-role-badge-soon {
+        margin-left: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(245, 158, 11, 0.15);
+        color: #f59e0b;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        font-size: 10.5px;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 20px;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        line-height: 1;
+    }
+
+    .premium-role-badge-soon .pulse-dot {
+        width: 6px;
+        height: 6px;
+        background: #f59e0b;
+        border-radius: 50%;
+        animation: pulse-coming-soon 2s infinite;
+    }
+
+    @keyframes pulse-coming-soon {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
     .premium-escape-btn {
         display: inline-flex;
         align-items: center;
@@ -314,23 +358,65 @@
         </p>
 
         <div class="premium-gate-roles">
-            <a href="/register?role=student" class="premium-role-btn student">
-                <span class="premium-role-icon"><i class="fa-solid fa-graduation-cap"></i></span>
-                <span>Sign Up as a Student</span>
-                <i class="fa-solid fa-chevron-right premium-role-arrow"></i>
-            </a>
+            @auth
+                @if(!auth()->user()->hasFullAccess())
+                <a href="/subscription" class="premium-role-btn" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-color: #60a5fa; color: #fff; margin-bottom: 12px; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);">
+                    <span class="premium-role-icon" style="background: rgba(255, 255, 255, 0.2); color: #fff;"><i class="fa-solid fa-credit-card"></i></span>
+                    <span><strong>Choose a Subscription Plan</strong></span>
+                    <i class="fa-solid fa-chevron-right premium-role-arrow"></i>
+                </a>
+                @endif
+            @endauth
 
-            <a href="/register?role=lawyer" class="premium-role-btn lawyer">
-                <span class="premium-role-icon"><i class="fa-solid fa-gavel"></i></span>
-                <span>Sign Up as a Lawyer</span>
-                <i class="fa-solid fa-chevron-right premium-role-arrow"></i>
-            </a>
+            @php
+                $studentRegEnabled = \App\RegistrationSetting::get('student_registration_enabled', '1') === '1';
+                $lawyerRegEnabled = \App\RegistrationSetting::get('lawyer_registration_enabled', '1') === '1';
+                $researcherRegEnabled = \App\RegistrationSetting::get('researcher_registration_enabled', '1') === '1';
+            @endphp
 
-            <a href="/register?role=researcher" class="premium-role-btn researcher">
-                <span class="premium-role-icon"><i class="fa-solid fa-microscope"></i></span>
-                <span>Sign Up as a Researcher</span>
-                <i class="fa-solid fa-chevron-right premium-role-arrow"></i>
-            </a>
+            @guest
+                @if($studentRegEnabled)
+                <a href="/register?role=student" class="premium-role-btn student">
+                    <span class="premium-role-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+                    <span>Sign Up as a Student</span>
+                    <i class="fa-solid fa-chevron-right premium-role-arrow"></i>
+                </a>
+                @else
+                <div class="premium-role-btn student disabled" title="Student registration is coming soon">
+                    <span class="premium-role-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+                    <span>Sign Up as a Student</span>
+                    <span class="premium-role-badge-soon"><span class="pulse-dot"></span>Coming Soon</span>
+                </div>
+                @endif
+
+                @if($lawyerRegEnabled)
+                <a href="/register?role=lawyer" class="premium-role-btn lawyer">
+                    <span class="premium-role-icon"><i class="fa-solid fa-gavel"></i></span>
+                    <span>Sign Up as a Lawyer</span>
+                    <i class="fa-solid fa-chevron-right premium-role-arrow"></i>
+                </a>
+                @else
+                <div class="premium-role-btn lawyer disabled" title="Lawyer registration is coming soon">
+                    <span class="premium-role-icon"><i class="fa-solid fa-gavel"></i></span>
+                    <span>Sign Up as a Lawyer</span>
+                    <span class="premium-role-badge-soon"><span class="pulse-dot"></span>Coming Soon</span>
+                </div>
+                @endif
+
+                @if($researcherRegEnabled)
+                <a href="/register?role=researcher" class="premium-role-btn researcher">
+                    <span class="premium-role-icon"><i class="fa-solid fa-microscope"></i></span>
+                    <span>Sign Up as a Researcher</span>
+                    <i class="fa-solid fa-chevron-right premium-role-arrow"></i>
+                </a>
+                @else
+                <div class="premium-role-btn researcher disabled" title="Researcher registration is coming soon">
+                    <span class="premium-role-icon"><i class="fa-solid fa-microscope"></i></span>
+                    <span>Sign Up as a Researcher</span>
+                    <span class="premium-role-badge-soon"><span class="pulse-dot"></span>Coming Soon</span>
+                </div>
+                @endif
+            @endguest
         </div>
 
         <button class="premium-escape-btn" onclick="returnToStartOfContent()" id="premiumEscapeBtn">
@@ -450,13 +536,20 @@
                 if (closeBtn) closeBtn.style.display = 'flex';
                 if (escapeBtn) {
                     escapeBtn.style.display = 'inline-flex';
-                    escapeBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i> Already have an account? Sign In';
-                    escapeBtn.onclick = function() {
-                        window.closePremiumGateModal();
-                        if (typeof window.openLoginModal === 'function') {
-                            window.openLoginModal();
-                        }
-                    };
+                    @auth
+                        escapeBtn.innerHTML = '<i class="fa-solid fa-credit-card"></i> View Subscription Plans';
+                        escapeBtn.onclick = function() {
+                            window.location.href = '/subscription';
+                        };
+                    @else
+                        escapeBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i> Already have an account? Sign In';
+                        escapeBtn.onclick = function() {
+                            window.closePremiumGateModal();
+                            if (typeof window.openLoginModal === 'function') {
+                                window.openLoginModal();
+                            }
+                        };
+                    @endauth
                 }
             }
 
@@ -567,9 +660,15 @@
                         sectionTitle = parts[parts.length - 1].trim();
                     }
 
+                    var isAuthUser = {{ auth()->check() ? 'true' : 'false' }};
+                    var gateHeading = isAuthUser ? (sectionTitle + ' Requires Active Subscription') : (sectionTitle + ' is Locked for Guests');
+                    var gateMsg = isAuthUser
+                        ? ('Your demo period has expired. Please subscribe to regain full access and view ' + sectionTitle + ' and all sections.')
+                        : ('As a guest, you can access full content for the first ' + maxFreeSections + ' sections. Please sign up as a Student, Lawyer, or Researcher to view ' + sectionTitle + ' and all remaining sections.');
+
                     openPremiumGateModal(
-                        sectionTitle + ' is Locked for Guests',
-                        'As a guest, you can access full content for the first ' + maxFreeSections + ' sections. Please sign up as a Student, Lawyer, or Researcher to view ' + sectionTitle + ' and all remaining sections.',
+                        gateHeading,
+                        gateMsg,
                         false,
                         true
                     );
@@ -581,9 +680,15 @@
         let ignoreGateUntil = 0;
 
         window.openNotesGateModal = function() {
+            var isAuthUser = {{ auth()->check() ? 'true' : 'false' }};
+            var notesHeading = isAuthUser ? 'Subscribe to Access Notes' : 'Create an Account of Your Choice';
+            var notesMsg = isAuthUser
+                ? 'Your demo period has expired. Please subscribe to regain full access to personal notes, bookmarks, and downloads.'
+                : 'Please select your preferred account type below as a Student, Lawyer, or Researcher to save personal notes, annotations, and organize your legal research.';
+
             openPremiumGateModal(
-                'Create an Account of Your Choice',
-                'Please select your preferred account type below as a Student, Lawyer, or Researcher to save personal notes, annotations, and organize your legal research.',
+                notesHeading,
+                notesMsg,
                 false,
                 true
             );
@@ -800,13 +905,19 @@
                         target.classList.add('content-blurred-by-gate');
                     });
 
+                    let isAuthUser = {{ auth()->check() ? 'true' : 'false' }};
                     let modalTitle = 'Reading Limit Reached (' + targetThreshold + '%)';
-                    let modalDesc = 'You have reached ' + targetThreshold + '% of this ' + docTypeName + '. Sign up as a Student, Lawyer, or Researcher to continue reading full laws and case judgments.';
+                    let modalDesc = '';
 
-                    if (isConstitution) {
-                        modalDesc = 'You have reached ' + targetThreshold + '% of the Constitution document in Expanded View. Sign up as a Student, Lawyer, or Researcher to continue reading full constitutional texts and legal documents.';
-                    } else if (isCaseLawPage) {
-                        modalDesc = 'You have reached ' + targetThreshold + '% of this case judgment. Sign up as a Student, Lawyer, or Researcher to continue reading full legal judgments and case laws.';
+                    if (isAuthUser) {
+                        modalDesc = 'You have reached ' + targetThreshold + '% of this ' + docTypeName + '. Your demo period has expired. Please subscribe to regain full access to read full laws and case judgments without limits.';
+                    } else {
+                        modalDesc = 'You have reached ' + targetThreshold + '% of this ' + docTypeName + '. Sign up as a Student, Lawyer, or Researcher to continue reading full laws and case judgments.';
+                        if (isConstitution) {
+                            modalDesc = 'You have reached ' + targetThreshold + '% of the Constitution document in Expanded View. Sign up as a Student, Lawyer, or Researcher to continue reading full constitutional texts and legal documents.';
+                        } else if (isCaseLawPage) {
+                            modalDesc = 'You have reached ' + targetThreshold + '% of this case judgment. Sign up as a Student, Lawyer, or Researcher to continue reading full legal judgments and case laws.';
+                        }
                     }
 
                     openPremiumGateModal(modalTitle, modalDesc, true);
@@ -822,6 +933,8 @@
         }
     })();
 </script>
+@guest
 @include('partials._login_modal')
 @endguest
+@endif
 

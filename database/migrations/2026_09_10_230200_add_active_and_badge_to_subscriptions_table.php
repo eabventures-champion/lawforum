@@ -1,0 +1,30 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('subscriptions', function (Blueprint $table) {
+            $table->boolean('is_active')->default(true)->after('duration');
+            $table->boolean('is_popular')->default(false)->after('is_active');
+            $table->string('badge')->nullable()->after('is_popular');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('subscriptions', function (Blueprint $table) {
+            $table->dropColumn(['is_active', 'is_popular', 'badge']);
+        });
+    }
+};

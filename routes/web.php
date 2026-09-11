@@ -644,6 +644,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::get('reading-limits', 'Admin\ReadingLimitSettingController@index')->name('admin.reading-limits.index');
     Route::post('reading-limits/update', 'Admin\ReadingLimitSettingController@update')->name('admin.reading-limits.update');
 
+    // Subscription Plans Management
+    Route::resource('subscriptions', 'Admin\SubscriptionController', ['as' => 'admin']);
+    Route::post('subscriptions/{subscription}/toggle-status', 'Admin\SubscriptionController@toggleStatus')->name('admin.subscriptions.toggle');
+    Route::post('subscriptions/{subscription}/toggle-button', 'Admin\SubscriptionController@toggleButton')->name('admin.subscriptions.toggle-button');
+    Route::post('subscriptions/toggle-all-buttons', 'Admin\SubscriptionController@toggleAllButtons')->name('admin.subscriptions.toggle-all-buttons');
+
     // Platform Feature Updates & Tours Management
     Route::resource('platform-updates', 'Admin\PlatformUpdateController', ['as' => 'admin']);
     Route::post('platform-updates/{id}/toggle-status', 'Admin\PlatformUpdateController@toggleStatus')->name('admin.platform-updates.toggle');

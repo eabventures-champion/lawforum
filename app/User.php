@@ -57,6 +57,31 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Check if user currently has an active, valid paid subscription.
+     */
+    public function hasActiveSubscription()
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+        return $this->check_subscription && $this->subscription_expiry && Carbon::parse($this->subscription_expiry)->isFuture();
+    }
+
+    /**
+     * Check if user has full platform access (Admin, Active Paid Subscription, or Active Demo).
+     */
+    public function hasFullAccess()
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+        if ($this->hasActiveSubscription()) {
+            return true;
+        }
+        return $this->isDemoActive() || $this->isDemoExtensionActive();
+    }
+
+    /**
      * Check if the user's main demo period is still active.
      */
     public function isDemoActive()
@@ -65,7 +90,7 @@ class User extends Authenticatable implements MustVerifyEmail
             return false;
         }
         $demoDays = (int) DemoSetting::get('demo_duration_days', 60);
-        return $this->demo_started_at->addDays($demoDays)->isFuture();
+        return $this->demo_started_at->copy()->addDays($demoDays)->isFuture();
     }
 
     /**
@@ -130,5 +155,57 @@ class User extends Authenticatable implements MustVerifyEmail
             'is_demo_mode' => false,
             'user_type' => null,
         ]);
+    }
+
+    /**
+     * Get demo duration stats: days done, total days, status, and formatted label.
+     */
+    public function getDemoDurationInfo()
+    {
+        if ($this->isAdmin()) {
+            return null;
+        }
+
+        $baseDays = (int) DemoSetting::get('demo_duration_days', 60);
+        $extDays = (int) DemoSetting::get('demo_extension_days', 15);
+        $totalDays = $baseDays + ($this->demo_extended ? $extDays : 0);
+
+        if (!$this->demo_started_at) {
+            return [
+                'days_done' => 0,
+                'total_days' => $baseDays,
+                'remaining' => 0,
+                'is_active' => false,
+                'is_expired' => false,
+                'is_not_started' => true,
+                'status' => 'not_started',
+                'label' => "0/{$baseDays} days",
+                'extended' => false,
+            ];
+        }
+
+        $endDate = $this->demo_started_at->copy()->addDays($totalDays);
+        $remaining = max(0, (int) now()->diffInDays($endDate, false));
+        
+        $isExpired = ($remaining <= 0) || !$this->is_demo_mode || $this->isDemoExpired();
+        $isActive = !$isExpired && $this->is_demo_mode && ($remaining > 0);
+
+        if ($isExpired) {
+            $daysDone = $totalDays;
+        } else {
+            $daysDone = max(0, min($totalDays, $totalDays - $remaining));
+        }
+
+        return [
+            'days_done' => $daysDone,
+            'total_days' => $totalDays,
+            'remaining' => $remaining,
+            'is_active' => $isActive,
+            'is_expired' => $isExpired,
+            'is_not_started' => false,
+            'status' => $isActive ? ($this->demo_extended ? 'extended' : 'active') : 'expired',
+            'label' => "{$daysDone}/{$totalDays} days",
+            'extended' => (bool) $this->demo_extended,
+        ];
     }
 }

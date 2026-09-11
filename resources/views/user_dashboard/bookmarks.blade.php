@@ -360,7 +360,8 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
+        gap: 14px;
+        flex-wrap: wrap;
     }
     #bookmarksListDashboard.view-linear .bookmark-card:hover {
         border-color: rgba(245, 158, 11, 0.4);
@@ -372,7 +373,7 @@
         display: flex;
         align-items: center;
         gap: 14px;
-        flex: 1 1 auto;
+        flex: 1 1 320px;
         min-width: 0;
     }
     #bookmarksListDashboard.view-linear .bookmark-card-top {
@@ -382,7 +383,7 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 3px;
-        min-width: 110px;
+        min-width: 105px;
     }
     #bookmarksListDashboard.view-linear .bookmark-card-top .bookmark-date {
         display: flex;
@@ -396,7 +397,7 @@
         min-width: 0;
     }
     #bookmarksListDashboard.view-linear .bookmark-section-title {
-        font-size: 14.5px;
+        font-size: 14px;
         margin-bottom: 2px;
         white-space: nowrap;
         overflow: hidden;
@@ -414,7 +415,8 @@
         flex-shrink: 0;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
+        margin-left: auto;
     }
     #bookmarksListDashboard.view-linear .bookmark-linear-date {
         display: none;
@@ -557,7 +559,24 @@
         flex-wrap: wrap !important;
     }
 
-    /* Responsive Grid */
+    /* Responsive Grid & Linear */
+    @media (max-width: 1280px) {
+        #bookmarksListDashboard.view-linear .bookmark-card {
+            padding: 10px 14px;
+            gap: 10px;
+        }
+        #bookmarksListDashboard.view-linear .bookmark-card-main-wrapper {
+            gap: 10px;
+        }
+        #bookmarksListDashboard.view-linear .btn-view-bookmark {
+            padding: 5px 10px;
+            font-size: 11.5px;
+        }
+        #bookmarksListDashboard.view-linear .btn-delete-bookmark {
+            padding: 5px 9px;
+            font-size: 11.5px;
+        }
+    }
     @media (max-width: 1100px) {
         #bookmarksListDashboard.view-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -573,7 +592,7 @@
             gap: 14px !important;
         }
         #bookmarksListDashboard .bookmark-card {
-            padding: 16px 16px !important;
+            padding: 14px 14px !important;
             display: flex !important;
             flex-direction: column !important;
             align-items: stretch !important;

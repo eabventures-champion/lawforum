@@ -312,7 +312,7 @@
         display: none;
     }
 
-    /* 2. LINEAR / LIST VIEW (Organized Horizontal Row) */
+    /* 2. LINEAR / LIST VIEW (Refined Table-Row Style) */
     #notesListDashboard.view-linear {
         grid-template-columns: 1fr;
         gap: 10px;
@@ -323,7 +323,8 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
+        gap: 14px;
+        flex-wrap: wrap;
     }
     #notesListDashboard.view-linear .note-dashboard-card:hover {
         border-color: rgba(59, 130, 246, 0.4);
@@ -335,7 +336,7 @@
         display: flex;
         align-items: center;
         gap: 14px;
-        flex: 1 1 auto;
+        flex: 1 1 380px;
         min-width: 0;
     }
     #notesListDashboard.view-linear .note-card-top {
@@ -345,7 +346,7 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 3px;
-        min-width: 110px;
+        min-width: 105px;
     }
     #notesListDashboard.view-linear .note-card-top .note-date {
         display: flex;
@@ -365,14 +366,16 @@
         margin-bottom: 3px;
         flex-wrap: nowrap;
         overflow: hidden;
+        min-width: 0;
     }
     #notesListDashboard.view-linear .note-section-title {
-        font-size: 14.5px;
+        font-size: 14px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        flex-shrink: 0;
-        max-width: 320px;
+        flex: 0 1 auto;
+        min-width: 80px;
+        max-width: 260px;
     }
     #notesListDashboard.view-linear .note-doc-subtitle {
         font-size: 11.5px;
@@ -380,12 +383,15 @@
         overflow: hidden;
         text-overflow: ellipsis;
         margin-bottom: 0;
+        flex: 1 1 auto;
+        min-width: 0;
     }
     #notesListDashboard.view-linear .note-linear-desc-row {
         display: flex;
         align-items: center;
         gap: 8px;
         overflow: hidden;
+        min-width: 0;
     }
     #notesListDashboard.view-linear .note-quote-box {
         display: inline-flex;
@@ -394,8 +400,9 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 240px;
-        flex-shrink: 0;
+        flex: 0 1 auto;
+        max-width: 200px;
+        min-width: 60px;
     }
     #notesListDashboard.view-linear .note-text-content {
         font-size: 12.5px;
@@ -403,6 +410,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         flex: 1 1 auto;
+        min-width: 0;
         color: #cbd5e1;
     }
     #notesListDashboard.view-linear .note-card-footer {
@@ -412,6 +420,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        margin-left: auto;
     }
     #notesListDashboard.view-linear .note-linear-date {
         display: none;
@@ -723,6 +732,33 @@
     }
 
     /* Responsive Breakpoints */
+    @media (max-width: 1280px) {
+        #notesListDashboard.view-linear .note-dashboard-card {
+            padding: 10px 14px;
+            gap: 10px;
+        }
+        #notesListDashboard.view-linear .note-card-main-wrapper {
+            gap: 10px;
+        }
+        #notesListDashboard.view-linear .btn-view-note {
+            padding: 5px 8px;
+            font-size: 11px;
+            gap: 4px;
+        }
+        #notesListDashboard.view-linear .btn-action-note {
+            padding: 5px 7px;
+            font-size: 11px;
+            gap: 3px;
+        }
+        #notesListDashboard.view-linear .btn-icon-square {
+            width: 26px;
+            height: 26px;
+            font-size: 11px;
+        }
+        #notesListDashboard.view-linear .note-card-footer {
+            gap: 5px;
+        }
+    }
     @media (max-width: 1060px) {
         #notesListDashboard.view-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -742,7 +778,7 @@
             gap: 14px !important;
         }
         #notesListDashboard .note-dashboard-card {
-            padding: 16px 16px !important;
+            padding: 14px 14px !important;
             display: flex !important;
             flex-direction: column !important;
             align-items: stretch !important;

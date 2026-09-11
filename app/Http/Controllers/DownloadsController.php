@@ -15,6 +15,10 @@ class DownloadsController extends Controller
     }
     //
     public function show_user_downloads($user_id){
+        $authUser = auth()->user();
+        if ($authUser && !$authUser->hasFullAccess()) {
+            return redirect('/subscription')->with('error', 'Your demo period has expired. Please subscribe to access downloads.');
+        }
 
         $order_by_sections = UserDownload::where(['user_id' => $user_id])
         ->where('user_act')
@@ -34,6 +38,17 @@ class DownloadsController extends Controller
     // FOR CASES AND New Laws------------------------------------------------------------------------------------------------------------------------------------------
 
     public function save_download_section($act_title, $section, $section_id, $user_name, $user_id, $user_section, $act_group, $act_id){
+        if (!auth()->check()) {
+            return response()->json(['success' => false, 'message' => 'Please sign in to download.'], 401);
+        }
+
+        if (!auth()->user()->hasFullAccess()) {
+            return response()->json([
+                'success' => false,
+                'expired' => true,
+                'message' => 'Your demo period has expired. Please subscribe to download documents.'
+            ], 403);
+        }
         
         if (UserDownload::where('user_section', '=', $user_section)->first())
             {
@@ -53,6 +68,18 @@ class DownloadsController extends Controller
     }
 
     public function save_download_act($act_title, $user_name, $user_id, $act_group, $act_id, $user_act){
+        if (!auth()->check()) {
+            return response()->json(['success' => false, 'message' => 'Please sign in to download.'], 401);
+        }
+
+        if (!auth()->user()->hasFullAccess()) {
+            return response()->json([
+                'success' => false,
+                'expired' => true,
+                'message' => 'Your demo period has expired. Please subscribe to download documents.'
+            ], 403);
+        }
+
         // DB::table('user_downloads')->truncate();
         if (UserDownload::where('user_act', '=', $user_act)->first())
             {

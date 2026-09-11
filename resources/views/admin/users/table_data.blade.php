@@ -22,7 +22,7 @@
                     <div style="font-weight: 600; color: #fff; font-size: 14px; margin-bottom: 5px;">
                         {{ $user->name }} {{ $user->lname }}
                     </div>
-                    <div>
+                    <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                         @if($user->isAdmin())
                             <span class="badge badge-accent" style="font-size: 11px; padding: 2px 8px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">
                                 <i class="fa-solid fa-shield-halved" style="font-size: 10px;"></i> Admin
@@ -43,6 +43,25 @@
                             <span class="badge" style="font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); display: inline-flex; align-items: center; gap: 4px;">
                                 <i class="fa-solid fa-triangle-exclamation" style="font-size: 10px;"></i> Legacy (No Role)
                             </span>
+                        @endif
+
+                        @php
+                            $demo = $user->getDemoDurationInfo();
+                        @endphp
+                        @if($demo)
+                            @if($demo['is_active'])
+                                <span class="badge" title="Demo Active: {{ $demo['days_done'] }} of {{ $demo['total_days'] }} days completed ({{ $demo['remaining'] }} day(s) remaining){{ $demo['extended'] ? ' [Extension Granted]' : '' }}" style="font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); display: inline-flex; align-items: center; gap: 4px; font-weight: 600;">
+                                    <i class="fa-regular fa-clock" style="font-size: 10px;"></i> Demo: {{ $demo['days_done'] }}/{{ $demo['total_days'] }} days
+                                </span>
+                            @elseif($demo['is_expired'])
+                                <span class="badge" title="Demo Expired: Completed {{ $demo['days_done'] }} of {{ $demo['total_days'] }} total days{{ $demo['extended'] ? ' (including extension)' : '' }}" style="font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); display: inline-flex; align-items: center; gap: 4px; font-weight: 600;">
+                                    <i class="fa-solid fa-hourglass-end" style="font-size: 10px;"></i> Demo: {{ $demo['days_done'] }}/{{ $demo['total_days'] }} days (Expired)
+                                </span>
+                            @else
+                                <span class="badge" title="Demo not started (Total allowance: {{ $demo['total_days'] }} days)" style="font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(148, 163, 184, 0.1); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.2); display: inline-flex; align-items: center; gap: 4px; font-weight: 500;">
+                                    <i class="fa-regular fa-clock" style="font-size: 10px;"></i> Demo: 0/{{ $demo['total_days'] }} days
+                                </span>
+                            @endif
                         @endif
                     </div>
                 </td>

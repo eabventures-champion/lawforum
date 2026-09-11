@@ -13,14 +13,22 @@ class DemoSetting extends Model
         'value',
     ];
 
+    protected static $cachedSettings = [];
+
     public static function get($key, $default = null)
     {
+        if (isset(static::$cachedSettings[$key])) {
+            return static::$cachedSettings[$key];
+        }
         $setting = self::where('key', $key)->first();
-        return $setting ? $setting->value : $default;
+        $val = $setting ? $setting->value : $default;
+        static::$cachedSettings[$key] = $val;
+        return $val;
     }
 
     public static function set($key, $value)
     {
+        static::$cachedSettings[$key] = $value;
         return self::updateOrCreate(
             ['key' => $key],
             ['value' => $value]

@@ -523,12 +523,11 @@
             z-index: 50;
         }
 
-        .top-header-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: -0.3px;
-            white-space: nowrap;
+        .top-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
         }
 
         /* Top Header Navigation Menus */
@@ -536,7 +535,7 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            margin: 0 16px;
+            margin: 0;
             flex-wrap: wrap;
         }
 
@@ -934,35 +933,26 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ── Welcome & Account Unified Row Card ───────────── */
+        /* ── Welcome & Account Unified Row (No Card Frame) ───────────── */
         .welcome-account-card {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.82) 0%, rgba(10, 15, 29, 0.92) 100%);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-top: 1px solid rgba(96, 165, 250, 0.35);
-            border-radius: 22px;
-            padding: 24px 30px;
-            margin-bottom: 28px;
-            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35), 0 0 25px rgba(59, 130, 246, 0.08);
-            transition: var(--transition-smooth);
+            background: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border: none !important;
+            border-radius: 0 !important;
+            padding: 4px 0 16px 0 !important;
+            margin-bottom: 24px;
+            box-shadow: none !important;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 24px;
             position: relative;
-            overflow: hidden;
         }
 
         .welcome-account-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent 0%, rgba(96, 165, 250, 0.6) 20%, rgba(245, 158, 11, 0.4) 80%, transparent 100%);
+            display: none !important;
         }
 
         .welcome-info-main {
@@ -1292,18 +1282,30 @@
         .countdown-ring .ring-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-top: 2px; }
 
         .demo-warning-banner {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 14px;
-            padding: 14px 18px;
-            border-radius: 12px;
-            margin-top: 20px;
+            gap: 10px;
+            padding: 8px 16px;
+            border-radius: 10px;
             font-size: 13px;
             font-weight: 500;
+            width: fit-content;
+            max-width: 100%;
         }
 
         .demo-warning-banner.extension-warn { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); color: #fbbf24; }
         .demo-warning-banner.expired-warn { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: #f87171; }
+        .demo-warning-banner a {
+            color: #60a5fa;
+            font-weight: 700;
+            text-decoration: underline;
+            margin-left: 4px;
+            transition: all 0.2s ease;
+        }
+        .demo-warning-banner a:hover {
+            color: #93c5fd;
+            text-decoration: underline;
+        }
 
         /* ── In-Dashboard Page Viewer ────────────────────── */
         .dashboard-viewer-container {
@@ -1678,9 +1680,9 @@
         }
 
         [data-theme="light"] .welcome-account-card {
-            background: #ffffff;
-            border-color: rgba(0, 0, 0, 0.08);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
         }
 
         [data-theme="light"] .welcome-card-divider {
@@ -1841,7 +1843,7 @@
                 display: none !important;
             }
             .top-header {
-                padding: 10px 14px !important;
+                padding: 10px 18px !important;
                 gap: 10px !important;
             }
             .top-header-actions {
@@ -1937,31 +1939,24 @@
                 display: block !important;
             }
             .dashboard-content {
-                padding: 14px 10px !important;
+                padding: 18px 20px 40px !important;
             }
             .welcome-account-card {
                 width: 100% !important;
-                padding: 20px 16px !important;
-                border-radius: 18px !important;
+                padding: 4px 0 16px 0 !important;
+                border-radius: 0 !important;
                 gap: 16px !important;
                 margin-bottom: 18px !important;
-                background: linear-gradient(145deg, rgba(17, 24, 39, 0.92) 0%, rgba(11, 17, 33, 0.98) 100%) !important;
-                border: 1px solid rgba(255, 255, 255, 0.12) !important;
-                border-top: 1px solid rgba(96, 165, 250, 0.4) !important;
-                box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(59, 130, 246, 0.08) !important;
+                background: none !important;
+                border: none !important;
+                box-shadow: none !important;
             }
             .welcome-info-main {
                 width: 100% !important;
                 gap: 14px !important;
-                padding-bottom: 16px !important;
+                padding-bottom: 0 !important;
                 margin-bottom: 2px !important;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-            }
-            .avatar-circle {
-                width: 52px !important;
-                height: 52px !important;
-                font-size: 20px !important;
-                border-width: 2px !important;
+                border-bottom: none !important;
             }
             .welcome-text h2 {
                 font-size: 18px !important;
@@ -2171,42 +2166,74 @@
                     </a>
                 </li>
 
+                @php
+                    $homeUserHasAccess = auth()->user()->hasFullAccess();
+                @endphp
                 <li class="menu-label">My Library</li>
                 <li class="menu-item">
-                    <a href="/accounts/bookmarks/{{ auth()->user()->id }}">
-                        <i class="fa-solid fa-bookmark"></i>
-                        <span>Bookmarks</span>
-                        @php
-                            $homeBookmarksCount = \App\UserBookmark::where('user_id', auth()->id())->count();
-                        @endphp
-                        @if($homeBookmarksCount > 0)
-                            <span class="menu-badge">{{ $homeBookmarksCount }}</span>
-                        @endif
-                    </a>
+                    @if($homeUserHasAccess)
+                        <a href="/accounts/bookmarks/{{ auth()->user()->id }}">
+                            <i class="fa-solid fa-bookmark"></i>
+                            <span>Bookmarks</span>
+                            @php
+                                $homeBookmarksCount = \App\UserBookmark::where('user_id', auth()->id())->count();
+                            @endphp
+                            @if($homeBookmarksCount > 0)
+                                <span class="menu-badge">{{ $homeBookmarksCount }}</span>
+                            @endif
+                        </a>
+                    @else
+                        <a href="/subscription" title="Demo expired - Subscribe to unlock bookmarks" style="opacity: 0.75;">
+                            <i class="fa-solid fa-bookmark"></i>
+                            <span>Bookmarks</span>
+                            <span class="menu-badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: rgba(239, 68, 68, 0.4); font-size: 10px; padding: 2px 6px;">
+                                <i class="fa-solid fa-lock" style="font-size: 9px; width: auto; margin-right: 2px;"></i> Lock
+                            </span>
+                        </a>
+                    @endif
                 </li>
                 <li class="menu-item">
-                    <a href="/accounts/notes/{{ auth()->user()->id }}">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                        <span>Notes</span>
-                        @php
-                            $homeNotesCount = \App\UserNote::where('user_id', auth()->id())->count();
-                        @endphp
-                        @if($homeNotesCount > 0)
-                            <span class="menu-badge">{{ $homeNotesCount }}</span>
-                        @endif
-                    </a>
+                    @if($homeUserHasAccess)
+                        <a href="/accounts/notes/{{ auth()->user()->id }}">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span>Notes</span>
+                            @php
+                                $homeNotesCount = \App\UserNote::where('user_id', auth()->id())->count();
+                            @endphp
+                            @if($homeNotesCount > 0)
+                                <span class="menu-badge">{{ $homeNotesCount }}</span>
+                            @endif
+                        </a>
+                    @else
+                        <a href="/subscription" title="Demo expired - Subscribe to unlock notes" style="opacity: 0.75;">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span>Notes</span>
+                            <span class="menu-badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: rgba(239, 68, 68, 0.4); font-size: 10px; padding: 2px 6px;">
+                                <i class="fa-solid fa-lock" style="font-size: 9px; width: auto; margin-right: 2px;"></i> Lock
+                            </span>
+                        </a>
+                    @endif
                 </li>
                 <li class="menu-item">
-                    <a href="/accounts/downloads/{{ auth()->user()->id }}">
-                        <i class="fa-solid fa-cloud-arrow-down"></i>
-                        <span>Downloads</span>
-                    </a>
+                    @if($homeUserHasAccess)
+                        <a href="/accounts/downloads/{{ auth()->user()->id }}">
+                            <i class="fa-solid fa-cloud-arrow-down"></i>
+                            <span>Downloads</span>
+                        </a>
+                    @else
+                        <a href="/subscription" title="Demo expired - Subscribe to unlock downloads" style="opacity: 0.75;">
+                            <i class="fa-solid fa-cloud-arrow-down"></i>
+                            <span>Downloads</span>
+                            <span class="menu-badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: rgba(239, 68, 68, 0.4); font-size: 10px; padding: 2px 6px;">
+                                <i class="fa-solid fa-lock" style="font-size: 9px; width: auto; margin-right: 2px;"></i> Lock
+                            </span>
+                        </a>
+                    @endif
                 </li>
                 <li class="menu-item {{ (request()->is('subscription*') || request()->is('accounts/subscription*')) ? 'active' : '' }}">
                     <a href="/subscription">
                         <i class="fa-solid fa-credit-card"></i>
                         <span>Subscription</span>
-                        <span class="menu-badge" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; margin-left: auto;">Coming Soon</span>
                     </a>
                 </li>
 
@@ -2337,13 +2364,12 @@
                         </div>
                         <span style="font-size: 17px; font-weight: 800; color: #fff; letter-spacing: -0.3px;">Legals Forum</span>
                     </a>
-                    <h1 class="top-header-title">Dashboard</h1>
-                </div>
 
-                <!-- Navigation Menus in Dashboard Header -->
-                <nav class="nav-menu-links-premium top-header-nav" aria-label="Portal Navigation">
-                    @include('partials._nav_desktop_menu')
-                </nav>
+                    <!-- Navigation Menus in Dashboard Header -->
+                    <nav class="nav-menu-links-premium top-header-nav" aria-label="Portal Navigation">
+                        @include('partials._nav_desktop_menu')
+                    </nav>
+                </div>
                 
                 <div class="top-header-actions">
                     <!-- Quick Search Button -->
@@ -2481,13 +2507,10 @@
 
                 <!-- Container for Dashboard Cards & Overview -->
                 <div id="dashboardCardsContainer" class="dashboard-cards-container">
-                    <!-- Unified Welcome & Account Single-Row Card -->
+                    <!-- Unified Welcome & Account Header (No Card Frame) -->
                     <div class="welcome-account-card">
-                        <!-- Left: Avatar & Welcome Info -->
+                        <!-- Left: Welcome Info -->
                         <div class="welcome-info-main">
-                            <div class="avatar-circle">
-                                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                            </div>
                             <div class="welcome-text">
                                 <h2>Welcome back, {{ auth()->user()->name }} {{ auth()->user()->lname }}!</h2>
                                 <p style="margin-bottom: 2px;">{{ auth()->user()->email }}</p>
@@ -2534,14 +2557,18 @@
                         </div>
 
                         @if($extensionActive)
-                            <div class="demo-warning-banner extension-warn" style="width: 100%; margin-top: 12px;">
-                                <i class="fa-solid fa-triangle-exclamation" style="font-size: 18px;"></i>
-                                <span>Your main demo period has ended. You have <strong>{{ $remaining }} day{{ $remaining !== 1 ? 's' : '' }}</strong> left in your extension. Subscribe to keep full access.</span>
+                            <div style="width: 100%; margin-top: 14px; display: flex;">
+                                <div class="demo-warning-banner extension-warn">
+                                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 15px;"></i>
+                                    <span>Your main demo period has ended. You have <strong>{{ $remaining }} day{{ $remaining !== 1 ? 's' : '' }}</strong> left in your extension. <a href="{{ url('/subscription') }}">Subscribe to keep full access</a>.</span>
+                                </div>
                             </div>
-                        @elseif($demoUsed && !$isDemo)
-                            <div class="demo-warning-banner expired-warn" style="width: 100%; margin-top: 12px;">
-                                <i class="fa-solid fa-lock" style="font-size: 18px;"></i>
-                                <span>Your demo period has expired. Subscribe to regain full access to all platform features.</span>
+                        @elseif($demoExpired || ($demoUsed && !$isDemo))
+                            <div style="width: 100%; margin-top: 14px; display: flex;">
+                                <div class="demo-warning-banner expired-warn">
+                                    <i class="fa-solid fa-lock" style="font-size: 14px;"></i>
+                                    <span>Your demo period has expired. <a href="{{ url('/subscription') }}">Subscribe to regain full access to all platform features</a>.</span>
+                                </div>
                             </div>
                         @endif
                     </div>

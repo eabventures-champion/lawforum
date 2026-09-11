@@ -31,7 +31,17 @@ class AccountUpgradeController extends Controller
         }
 
         $researcherTypes = ResearcherType::active()->get();
-        return view('auth.upgrade-role', compact('user', 'researcherTypes'));
+        $studentRegEnabled = \App\RegistrationSetting::get('student_registration_enabled', '1') === '1';
+        $lawyerRegEnabled = \App\RegistrationSetting::get('lawyer_registration_enabled', '1') === '1';
+        $researcherRegEnabled = \App\RegistrationSetting::get('researcher_registration_enabled', '1') === '1';
+
+        return view('auth.upgrade-role', compact(
+            'user',
+            'researcherTypes',
+            'studentRegEnabled',
+            'lawyerRegEnabled',
+            'researcherRegEnabled'
+        ));
     }
 
     /**
@@ -41,8 +51,19 @@ class AccountUpgradeController extends Controller
     {
         $user = Auth::user();
 
+        $studentRegEnabled = \App\RegistrationSetting::get('student_registration_enabled', '1') === '1';
+        $lawyerRegEnabled = \App\RegistrationSetting::get('lawyer_registration_enabled', '1') === '1';
+        $researcherRegEnabled = \App\RegistrationSetting::get('researcher_registration_enabled', '1') === '1';
+
+        $allowedRoles = [];
+        if ($studentRegEnabled) $allowedRoles[] = 'student';
+        if ($lawyerRegEnabled) $allowedRoles[] = 'lawyer';
+        if ($researcherRegEnabled) $allowedRoles[] = 'researcher';
+
+        $inList = !empty($allowedRoles) ? implode(',', $allowedRoles) : 'student,lawyer,researcher';
+
         $rules = [
-            'user_type' => ['required', 'string', 'in:student,lawyer,researcher'],
+            'user_type' => ['required', 'string', 'in:' . $inList],
         ];
 
         if ($request->user_type === 'researcher') {
@@ -52,7 +73,11 @@ class AccountUpgradeController extends Controller
             }
         }
 
-        $request->validate($rules);
+        $messages = [
+            'user_type.in' => 'The selected role is currently not available for selection.',
+        ];
+
+        $request->validate($rules, $messages);
 
         $user->user_type = $request->user_type;
         $user->researcher_type = $request->user_type === 'researcher' ? $request->researcher_type : null;

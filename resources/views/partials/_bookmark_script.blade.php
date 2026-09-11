@@ -120,6 +120,18 @@
     };
 
     window.triggerGuestGateForBookmark = function() {
+        @auth
+            @if(!auth()->user()->hasFullAccess())
+                if (typeof window.showBookmarkToast === 'function') {
+                    window.showBookmarkToast('Your demo period has expired. Redirecting to subscription...', 'error');
+                }
+                setTimeout(function() {
+                    window.location.href = '/subscription';
+                }, 800);
+                return;
+            @endif
+        @endauth
+
         if (typeof window.openPremiumGateModal === 'function') {
             window.openPremiumGateModal('Sign In to Bookmark', 'Create a free account or log in to bookmark sections and organize your legal research.');
             return;
@@ -157,7 +169,9 @@
         @endguest
 
         var isAuth = {{ auth()->check() ? 'true' : 'false' }};
-        if (!isAuth) {
+        var hasAccess = {{ (auth()->check() && auth()->user()->hasFullAccess()) ? 'true' : 'false' }};
+
+        if (!isAuth || !hasAccess) {
             btnEl.removeAttribute('data-busy');
             triggerGuestGateForBookmark();
             return;
@@ -222,8 +236,13 @@
             error: function(xhr) {
                 btnEl.removeAttribute('data-busy');
                 if (icon) icon.className = 'fa-regular fa-bookmark';
-                if (xhr && xhr.status === 401) {
+                if (xhr && (xhr.status === 401 || (xhr.responseJSON && xhr.responseJSON.guest))) {
                     triggerGuestGateForBookmark();
+                } else if (xhr && xhr.responseJSON && xhr.responseJSON.expired) {
+                    showBookmarkToast(xhr.responseJSON.message || 'Demo expired. Please subscribe.', 'error');
+                    setTimeout(function() {
+                        window.location.href = '/subscription';
+                    }, 1200);
                 } else {
                     showBookmarkToast('Unable to update bookmark. Please try again.', 'error');
                 }

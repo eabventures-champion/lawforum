@@ -140,6 +140,45 @@
         background: rgba(245, 158, 11, 0.06);
     }
 
+    .role-card-partial.card-disabled {
+        opacity: 0.5;
+        cursor: not-allowed !important;
+        pointer-events: none !important;
+        filter: grayscale(0.25);
+    }
+    .role-card-partial.card-disabled:hover {
+        transform: none !important;
+        box-shadow: none !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        background: rgba(17, 24, 39, 0.6) !important;
+    }
+
+    .coming-soon-badge-sm-partial {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(245, 158, 11, 0.15);
+        color: #f59e0b;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 12px;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+    }
+    .coming-soon-badge-sm-partial .pulse-dot {
+        width: 5px;
+        height: 5px;
+        background: #f59e0b;
+        border-radius: 50%;
+        animation: pulse-coming-soon 2s infinite;
+    }
+    @keyframes pulse-coming-soon {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
     .role-icon-partial {
         position: absolute;
         bottom: 14px;
@@ -317,7 +356,14 @@
 
     {{-- ROLE SIGNUP CARDS --}}
     <div class="roles-grid-partial">
+        @php
+            $studentRegEnabled = \App\RegistrationSetting::get('student_registration_enabled', '1') === '1';
+            $lawyerRegEnabled = \App\RegistrationSetting::get('lawyer_registration_enabled', '1') === '1';
+            $researcherRegEnabled = \App\RegistrationSetting::get('researcher_registration_enabled', '1') === '1';
+        @endphp
+
         {{-- Student --}}
+        @if($studentRegEnabled)
         <a href="/register?role=student" class="role-card-partial role-student-partial">
             <div class="role-icon-partial">
                 <i class="fa-solid fa-graduation-cap"></i>
@@ -331,8 +377,23 @@
                 <i class="fa-solid fa-arrow-right"></i>
             </div>
         </a>
+        @else
+        <div class="role-card-partial role-student-partial card-disabled" title="Student registration is coming soon">
+            <div class="role-icon-partial">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div class="role-info-partial">
+                <div class="role-name-partial">Student Account</div>
+                <div class="role-subtitle-partial">Academic research, course readings & case studies</div>
+            </div>
+            <div class="role-btn-text-partial">
+                <span class="coming-soon-badge-sm-partial"><span class="pulse-dot"></span>Coming Soon</span>
+            </div>
+        </div>
+        @endif
 
         {{-- Lawyer / Practitioner (Featured) --}}
+        @if($lawyerRegEnabled)
         <a href="/register?role=lawyer" class="role-card-partial role-lawyer-partial featured-partial">
             <span class="role-featured-tag-partial">Popular</span>
             <div class="role-icon-partial">
@@ -347,8 +408,23 @@
                 <i class="fa-solid fa-arrow-right"></i>
             </div>
         </a>
+        @else
+        <div class="role-card-partial role-lawyer-partial card-disabled" title="Lawyer registration is coming soon">
+            <div class="role-icon-partial">
+                <i class="fa-solid fa-scale-balanced"></i>
+            </div>
+            <div class="role-info-partial">
+                <div class="role-name-partial">Legal Practitioner</div>
+                <div class="role-subtitle-partial">Full law library, judgment citations & advanced research</div>
+            </div>
+            <div class="role-btn-text-partial">
+                <span class="coming-soon-badge-sm-partial"><span class="pulse-dot"></span>Coming Soon</span>
+            </div>
+        </div>
+        @endif
 
         {{-- Researcher --}}
+        @if($researcherRegEnabled)
         <a href="/register?role=researcher" class="role-card-partial role-researcher-partial">
             <div class="role-icon-partial">
                 <i class="fa-solid fa-microscope"></i>
@@ -362,6 +438,20 @@
                 <i class="fa-solid fa-arrow-right"></i>
             </div>
         </a>
+        @else
+        <div class="role-card-partial role-researcher-partial card-disabled" title="Researcher registration is coming soon">
+            <div class="role-icon-partial">
+                <i class="fa-solid fa-microscope"></i>
+            </div>
+            <div class="role-info-partial">
+                <div class="role-name-partial">Researcher</div>
+                <div class="role-subtitle-partial">Historical Acts, amendments & legal publications</div>
+            </div>
+            <div class="role-btn-text-partial">
+                <span class="coming-soon-badge-sm-partial"><span class="pulse-dot"></span>Coming Soon</span>
+            </div>
+        </div>
+        @endif
     </div>
 
     {{-- FOOTER --}}

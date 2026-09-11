@@ -132,6 +132,12 @@
                     <span>Reading Limits & Gates</span>
                 </a>
             </li>
+            <li class="menu-item {{ Request::is('admin/subscriptions*') ? 'active' : '' }}">
+                <a href="{{ route('admin.subscriptions.index') }}">
+                    <i class="fa-solid fa-credit-card"></i>
+                    <span>Subscription Plans</span>
+                </a>
+            </li>
             <li class="menu-item {{ Request::is('admin/maintenance-settings*') ? 'active' : '' }}">
                 <a href="{{ route('admin.maintenance-settings.index') }}">
                     <i class="fa-solid fa-shield-halved"></i>

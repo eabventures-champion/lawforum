@@ -2920,7 +2920,7 @@
                     <h4>Resources</h4>
                     <a href="/constitution/Republic/Ghana/1">Constitution</a>
                     <a href="/existing-laws">Existing Laws</a>
-                    <a href="/new-laws">Post-1992 Laws</a>
+                    <a href="/new-laws">New Laws</a>
                     <a href="/judgement/Ghana">Case Laws</a>
                     @if(homepage_setting('slide_1_news_coming_soon', '1') == '1')
                     <a href="javascript:void(0);" style="opacity: 0.6; cursor: default;" title="Coming Soon">Legal News <span style="font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); margin-left: 4px;">Soon</span></a>

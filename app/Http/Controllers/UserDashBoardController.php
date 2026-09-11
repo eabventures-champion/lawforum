@@ -55,6 +55,11 @@ class UserDashBoardController extends Controller
 
     //----------------------------------------------------------Bookmarks-------------------------------------------------------------
     public function show_user_bookmarks($user_id){
+        $authUser = auth()->user();
+        if (!$authUser->hasFullAccess()) {
+            return redirect('/subscription')->with('error', 'Your demo period has expired. Please subscribe to regain access to your bookmarks and full platform features.');
+        }
+
         $bookmarks = UserBookmark::where(['user_id' => $user_id])->orderBy('created_at', 'desc')->get();
         $order_by_dates = $bookmarks;
         return view('user_dashboard.bookmarks', compact('bookmarks', 'order_by_dates'));
@@ -210,6 +215,15 @@ class UserDashBoardController extends Controller
             ], 401);
         }
 
+        if (!auth()->user()->hasFullAccess()) {
+            return response()->json([
+                'success' => false,
+                'guest'   => true,
+                'expired' => true,
+                'message' => 'Your demo period has expired. Please subscribe to bookmark sections and access full platform features.'
+            ], 403);
+        }
+
         $request->validate([
             'act_title'     => 'required|string|max:500',
             'act_section'   => 'required|string|max:500',
@@ -345,7 +359,11 @@ class UserDashBoardController extends Controller
         // if (auth()->user()->check_subscription) {
         //     return redirect()->back();
         // }
-        $subscriptions = Subscription::all();
+        $subscriptions = Subscription::where('is_active', true)->orderBy('price', 'asc')->get();
+        // If no active plans found, fallback to all plans so page doesn't appear empty
+        if ($subscriptions->isEmpty()) {
+            $subscriptions = Subscription::orderBy('price', 'asc')->get();
+        }
         return view('user_dashboard.subscription', compact('subscriptions'));
     }
     
@@ -383,6 +401,14 @@ class UserDashBoardController extends Controller
                 'message' => 'You must be logged in to save notes.',
                 'require_login' => true
             ], 401);
+        }
+
+        if (!auth()->user()->hasFullAccess()) {
+            return response()->json([
+                'success' => false,
+                'expired' => true,
+                'message' => 'Your demo period has expired. Please subscribe to create notes and access full platform features.'
+            ], 403);
         }
 
         try {
@@ -468,6 +494,11 @@ class UserDashBoardController extends Controller
      */
     public function show_user_notes($user_id)
     {
+        $authUser = auth()->user();
+        if (!$authUser->hasFullAccess()) {
+            return redirect('/subscription')->with('error', 'Your demo period has expired. Please subscribe to regain access to your notes and full platform features.');
+        }
+
         $notes = UserNote::where('user_id', $user_id)
             ->orderBy('created_at', 'desc')
             ->get();
@@ -577,6 +608,10 @@ class UserDashBoardController extends Controller
      */
     public function download_note_pdf($id)
     {
+        if (!auth()->user()->hasFullAccess()) {
+            return redirect('/subscription')->with('error', 'Your demo period has expired. Please subscribe to download notes and access full platform features.');
+        }
+
         $note = UserNote::where('id', $id)
             ->where('user_id', auth()->id())
             ->firstOrFail();
@@ -596,6 +631,10 @@ class UserDashBoardController extends Controller
      */
     public function download_note_word($id)
     {
+        if (!auth()->user()->hasFullAccess()) {
+            return redirect('/subscription')->with('error', 'Your demo period has expired. Please subscribe to download notes and access full platform features.');
+        }
+
         $note = UserNote::where('id', $id)
             ->where('user_id', auth()->id())
             ->firstOrFail();
@@ -617,6 +656,10 @@ class UserDashBoardController extends Controller
      */
     public function download_all_notes_pdf()
     {
+        if (!auth()->user()->hasFullAccess()) {
+            return redirect('/subscription')->with('error', 'Your demo period has expired. Please subscribe to download notes and access full platform features.');
+        }
+
         $notes = UserNote::where('user_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->get();
@@ -639,6 +682,10 @@ class UserDashBoardController extends Controller
      */
     public function download_all_notes_word()
     {
+        if (!auth()->user()->hasFullAccess()) {
+            return redirect('/subscription')->with('error', 'Your demo period has expired. Please subscribe to download notes and access full platform features.');
+        }
+
         $notes = UserNote::where('user_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->get();

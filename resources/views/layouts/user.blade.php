@@ -52,6 +52,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         body {
@@ -123,18 +124,18 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
             background: var(--accent-gradient);
-            box-shadow: 0 6px 16px var(--accent-glow);
-            font-size: 16px;
+            box-shadow: 0 6px 18px var(--accent-glow);
+            font-size: 18px;
             color: #fff;
             flex-shrink: 0;
         }
 
         .sidebar-logo-text {
-            font-size: 17px;
+            font-size: 18px;
             font-weight: 800;
             color: #fff;
             letter-spacing: -0.4px;
@@ -396,6 +397,8 @@
             justify-content: center;
             align-items: center;
             background: transparent;
+            overflow: visible !important;
+            position: relative;
         }
 
         .sidebar-user-card {
@@ -410,6 +413,9 @@
             margin-bottom: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
             transition: var(--transition-smooth);
+            cursor: pointer;
+            user-select: none;
+            position: relative;
         }
 
         .sidebar-user-card:hover {
@@ -420,15 +426,16 @@
         .sidebar.collapsed .sidebar-user-card {
             width: 44px;
             height: 44px;
-            padding: 0;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto;
-            border: none;
-            background: transparent;
-            box-shadow: none;
+            padding: 0 !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            margin: 0 auto !important;
+            border: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            overflow: visible !important;
         }
 
         .sidebar-avatar {
@@ -437,7 +444,7 @@
             border-radius: 50%;
             background: rgba(59, 130, 246, 0.1);
             border: 1px solid rgba(59, 130, 246, 0.2);
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             font-size: 14px;
@@ -445,6 +452,8 @@
             color: var(--accent-color);
             flex-shrink: 0;
             transition: var(--transition-smooth);
+            line-height: 1;
+            text-align: center;
         }
 
         .sidebar.collapsed .sidebar-avatar {
@@ -454,9 +463,14 @@
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(29, 78, 216, 0.15) 100%);
             border: 1.5px solid rgba(59, 130, 246, 0.4);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
         }
 
-        .sidebar.collapsed .sidebar-user-card:hover .sidebar-avatar {
+        .sidebar.collapsed .sidebar-user-card:hover .sidebar-avatar,
+        .sidebar.collapsed .sidebar-user-card.active .sidebar-avatar {
             border-color: #60a5fa;
             transform: scale(1.06);
             box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
@@ -469,6 +483,10 @@
         }
 
         .sidebar.collapsed .sidebar-user-info {
+            display: none !important;
+        }
+
+        .sidebar.collapsed .sidebar-user-chevron {
             display: none !important;
         }
 
@@ -518,20 +536,12 @@
             flex-shrink: 0;
         }
 
-        .top-header-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: -0.3px;
-            white-space: nowrap;
-        }
-
         /* Top Header Navigation Menus */
         .top-header-nav {
             display: flex;
             align-items: center;
             gap: 4px;
-            margin: 0 16px;
+            margin: 0;
             flex-wrap: wrap;
         }
 
@@ -718,15 +728,16 @@
 
         /* Header Icon Buttons */
         .header-icon-btn {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--text-secondary);
+            font-size: 18px;
             cursor: pointer;
             transition: var(--transition-smooth);
             position: relative;
@@ -734,9 +745,10 @@
         }
 
         .header-icon-btn:hover {
-            background: rgba(255, 255, 255, 0.07);
+            background: rgba(255, 255, 255, 0.08);
             color: #fff;
-            border-color: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
         }
 
         .header-icon-badge {
@@ -754,30 +766,30 @@
         .quick-search-header-btn {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            padding: 7px 14px;
-            border-radius: 10px;
-            background: rgba(59, 130, 246, 0.12);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            color: #60a5fa;
-            font-size: 12.5px;
-            font-weight: 600;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 12px;
+            background: rgba(59, 130, 246, 0.14);
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            color: #93c5fd;
+            font-size: 13.5px;
+            font-weight: 650;
             text-decoration: none !important;
             transition: var(--transition-smooth);
             margin-right: 4px;
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.12);
         }
 
         .quick-search-header-btn:hover {
-            background: rgba(59, 130, 246, 0.24);
-            border-color: rgba(59, 130, 246, 0.6);
+            background: rgba(59, 130, 246, 0.28);
+            border-color: rgba(59, 130, 246, 0.7);
             color: #fff;
             transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
         }
 
         .quick-search-header-btn i {
-            font-size: 12px;
+            font-size: 14px;
         }
 
         [data-theme="light"] .quick-search-header-btn {
@@ -839,7 +851,7 @@
             visibility: hidden;
             transform: translateY(-8px) scale(0.97);
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 999;
+            z-index: 1000;
             overflow: hidden;
         }
 
@@ -850,24 +862,24 @@
         }
 
         .profile-dropdown-header {
-            padding: 16px 18px;
+            padding: 16px 18px 14px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            background: rgba(255, 255, 255, 0.02);
         }
 
         .profile-header-name {
-            font-size: 14.5px;
+            font-size: 15px;
             font-weight: 700;
             color: #ffffff;
-            margin-bottom: 2px;
+            letter-spacing: -0.2px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         .profile-header-email {
-            font-size: 12px;
-            color: #94a3b8;
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            margin-top: 3px;
             margin-bottom: 10px;
             white-space: nowrap;
             overflow: hidden;
@@ -1338,7 +1350,6 @@
 
         [data-theme="light"] .profile-dropdown-header {
             border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-            background: rgba(0, 0, 0, 0.02);
         }
 
         [data-theme="light"] .profile-header-name {
@@ -1523,25 +1534,39 @@
                 display: none !important;
             }
             .top-header {
-                padding: 10px 14px !important;
+                padding: 10px 18px !important;
                 gap: 10px !important;
             }
             .top-header-actions {
                 flex: 1;
                 justify-content: flex-end;
-                gap: 8px !important;
+                gap: 10px !important;
             }
             .quick-search-header-btn {
-                padding: 7px 12px !important;
+                padding: 8px 14px !important;
                 flex: 1;
-                max-width: 160px;
+                max-width: 165px;
                 justify-content: center;
-                gap: 6px !important;
+                gap: 7px !important;
+                border-radius: 10px !important;
             }
             .quick-search-header-btn span {
                 display: inline !important;
-                font-size: 12px !important;
+                font-size: 13px !important;
+                font-weight: 700 !important;
                 white-space: nowrap;
+            }
+            .quick-search-header-btn i {
+                font-size: 13.5px !important;
+            }
+            .header-icon-btn {
+                width: 42px !important;
+                height: 42px !important;
+                font-size: 18px !important;
+                border-radius: 11px !important;
+            }
+            .mobile-menu-toggle i {
+                font-size: 18px !important;
             }
             .main-content-area {
                 margin-left: 0 !important;
@@ -1602,7 +1627,11 @@
                 display: block !important;
             }
             .dashboard-content {
-                padding: 14px 10px !important;
+                padding: 14px 10px 36px !important;
+            }
+            .content-card {
+                padding: 18px 12px !important;
+                border-radius: 14px !important;
             }
             .profile-dropdown-container {
                 display: none !important;
@@ -1633,6 +1662,29 @@
         }
         .sidebar-user-dropdown.show {
             display: block;
+        }
+        .sidebar.collapsed .sidebar-user-dropdown {
+            position: absolute !important;
+            left: calc(100% + 14px) !important;
+            bottom: 8px !important;
+            width: 270px !important;
+            z-index: 1000 !important;
+            margin-bottom: 0 !important;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 25px rgba(59, 130, 246, 0.15) !important;
+            animation: flyoutIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+        @keyframes flyoutIn {
+            from { opacity: 0; transform: translateX(-8px) scale(0.97); }
+            to { opacity: 1; transform: translateX(0) scale(1); }
+        }
+        [data-theme="light"] .sidebar-user-dropdown {
+            background: #ffffff;
+            border-color: rgba(0, 0, 0, 0.1);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15), 0 0 20px rgba(59, 130, 246, 0.08);
+        }
+        [data-theme="light"] .sidebar-user-link-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: #0f172a;
         }
         .sidebar-user-card.active .sidebar-user-chevron {
             transform: rotate(180deg);
@@ -1695,42 +1747,74 @@
                     </a>
                 </li>
 
+                @php
+                    $sidebarUserHasAccess = auth()->user()->hasFullAccess();
+                @endphp
                 <li class="menu-label">My Library</li>
                 <li class="menu-item {{ (request()->is('accounts/bookmarks*') || request()->is('bookmarks*')) ? 'active' : '' }}">
-                    <a href="/accounts/bookmarks/{{ auth()->user()->id }}">
-                        <i class="fa-solid fa-bookmark"></i>
-                        <span>Bookmarks</span>
-                        @php
-                            $sidebarBookmarksCount = \App\UserBookmark::where('user_id', auth()->id())->count();
-                        @endphp
-                        @if($sidebarBookmarksCount > 0)
-                            <span class="menu-badge">{{ $sidebarBookmarksCount }}</span>
-                        @endif
-                    </a>
+                    @if($sidebarUserHasAccess)
+                        <a href="/accounts/bookmarks/{{ auth()->user()->id }}">
+                            <i class="fa-solid fa-bookmark"></i>
+                            <span>Bookmarks</span>
+                            @php
+                                $sidebarBookmarksCount = \App\UserBookmark::where('user_id', auth()->id())->count();
+                            @endphp
+                            @if($sidebarBookmarksCount > 0)
+                                <span class="menu-badge">{{ $sidebarBookmarksCount }}</span>
+                            @endif
+                        </a>
+                    @else
+                        <a href="/subscription" title="Demo expired - Subscribe to unlock bookmarks" style="opacity: 0.75;">
+                            <i class="fa-solid fa-bookmark"></i>
+                            <span>Bookmarks</span>
+                            <span class="menu-badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: rgba(239, 68, 68, 0.4); font-size: 10px; padding: 2px 6px;">
+                                <i class="fa-solid fa-lock" style="font-size: 9px; width: auto; margin-right: 2px;"></i> Lock
+                            </span>
+                        </a>
+                    @endif
                 </li>
                 <li class="menu-item {{ (request()->is('accounts/notes*') || request()->is('notes*')) ? 'active' : '' }}">
-                    <a href="/accounts/notes/{{ auth()->user()->id }}">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                        <span>Notes</span>
-                        @php
-                            $sidebarNotesCount = \App\UserNote::where('user_id', auth()->id())->count();
-                        @endphp
-                        @if($sidebarNotesCount > 0)
-                            <span class="menu-badge">{{ $sidebarNotesCount }}</span>
-                        @endif
-                    </a>
+                    @if($sidebarUserHasAccess)
+                        <a href="/accounts/notes/{{ auth()->user()->id }}">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span>Notes</span>
+                            @php
+                                $sidebarNotesCount = \App\UserNote::where('user_id', auth()->id())->count();
+                            @endphp
+                            @if($sidebarNotesCount > 0)
+                                <span class="menu-badge">{{ $sidebarNotesCount }}</span>
+                            @endif
+                        </a>
+                    @else
+                        <a href="/subscription" title="Demo expired - Subscribe to unlock notes" style="opacity: 0.75;">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span>Notes</span>
+                            <span class="menu-badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: rgba(239, 68, 68, 0.4); font-size: 10px; padding: 2px 6px;">
+                                <i class="fa-solid fa-lock" style="font-size: 9px; width: auto; margin-right: 2px;"></i> Lock
+                            </span>
+                        </a>
+                    @endif
                 </li>
                 <li class="menu-item {{ (request()->is('accounts/downloads*') || request()->is('downloads*')) ? 'active' : '' }}">
-                    <a href="/accounts/downloads/{{ auth()->user()->id }}">
-                        <i class="fa-solid fa-cloud-arrow-down"></i>
-                        <span>Downloads</span>
-                    </a>
+                    @if($sidebarUserHasAccess)
+                        <a href="/accounts/downloads/{{ auth()->user()->id }}">
+                            <i class="fa-solid fa-cloud-arrow-down"></i>
+                            <span>Downloads</span>
+                        </a>
+                    @else
+                        <a href="/subscription" title="Demo expired - Subscribe to unlock downloads" style="opacity: 0.75;">
+                            <i class="fa-solid fa-cloud-arrow-down"></i>
+                            <span>Downloads</span>
+                            <span class="menu-badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: rgba(239, 68, 68, 0.4); font-size: 10px; padding: 2px 6px;">
+                                <i class="fa-solid fa-lock" style="font-size: 9px; width: auto; margin-right: 2px;"></i> Lock
+                            </span>
+                        </a>
+                    @endif
                 </li>
                 <li class="menu-item {{ (request()->is('subscription*') || request()->is('accounts/subscription*')) ? 'active' : '' }}">
                     <a href="/subscription">
                         <i class="fa-solid fa-credit-card"></i>
                         <span>Subscription</span>
-                        <span class="menu-badge" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; margin-left: auto;">Coming Soon</span>
                     </a>
                 </li>
 
@@ -1827,18 +1911,17 @@
             <div class="top-header">
                 <div class="top-header-left">
                     <a href="/home" class="mobile-brand-header">
-                        <div class="sidebar-logo-icon" style="width: 32px; height: 32px; font-size: 14px;">
+                        <div class="sidebar-logo-icon" style="width: 38px; height: 38px; font-size: 17px;">
                             <i class="fa fa-balance-scale"></i>
                         </div>
-                        <span style="font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -0.3px;">Legals Forum</span>
+                        <span style="font-size: 17px; font-weight: 800; color: #fff; letter-spacing: -0.3px;">Legals Forum</span>
                     </a>
-                    <h1 class="top-header-title">@yield('title', 'Dashboard')</h1>
-                </div>
 
-                <!-- Navigation Menus in Dashboard Header -->
-                <nav class="nav-menu-links-premium top-header-nav" aria-label="Portal Navigation">
-                    @include('partials._nav_desktop_menu')
-                </nav>
+                    <!-- Navigation Menus in Dashboard Header -->
+                    <nav class="nav-menu-links-premium top-header-nav" aria-label="Portal Navigation">
+                        @include('partials._nav_desktop_menu')
+                    </nav>
+                </div>
                 
                 <div class="top-header-actions">
                     <!-- Quick Search Button -->
