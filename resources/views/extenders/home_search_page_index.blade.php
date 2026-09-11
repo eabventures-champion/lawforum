@@ -180,7 +180,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            flex: 0 0 auto;
+            flex: 0 0 180px;
             transition: var(--transition);
         }
         .brand-link:hover { opacity: 0.85; }
@@ -209,7 +209,7 @@
 
         .header-search-form {
             flex: 1 1 auto;
-            max-width: 580px;
+            max-width: 760px;
             margin: 0 auto;
             position: relative;
             min-width: 0;
@@ -224,22 +224,22 @@
 
         .search-input-wrap .search-icon {
             position: absolute;
-            left: 16px;
+            left: 17px;
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 15px;
             pointer-events: none;
         }
 
         .search-input-wrap input {
             width: 100%;
-            height: 42px;
-            padding: 10px 18px 10px 42px;
+            height: 46px;
+            padding: 10px 18px 10px 46px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             color: var(--text-primary);
             font-family: var(--font);
-            font-size: 16px;
+            font-size: 15px;
             outline: none;
             transition: var(--transition);
         }
@@ -415,8 +415,9 @@
         .header-actions {
             display: flex;
             align-items: center;
+            justify-content: flex-end;
             gap: 10px;
-            flex-shrink: 0;
+            flex: 0 0 180px;
         }
 
         .user-greeting {
@@ -468,6 +469,108 @@
         .btn-guest-user i {
             font-size: 14px;
             color: #fff;
+        }
+
+        /* Mobile Menu Toggle Button (Hamburger) */
+        .mobile-menu-toggle {
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        .mobile-menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Mobile Navigation Overlay Panel */
+        .mobile-nav-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            height: 100dvh;
+            background: rgba(6, 10, 19, 0.98);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 60px 20px;
+            overflow-y: auto;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.35s;
+        }
+
+        .mobile-nav-panel.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-nav-panel a {
+            font-size: 19px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding: 10px 24px;
+            border-radius: 12px;
+            line-height: 1.5;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+            text-decoration: none !important;
+        }
+
+        .mobile-nav-panel.open a {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .mobile-nav-panel a:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        .mobile-nav-close {
+            position: absolute !important;
+            top: 20px !important;
+            right: 20px !important;
+            background: rgba(255, 255, 255, 0.06) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+            font-size: 20px !important;
+            cursor: pointer !important;
+            border-radius: 12px !important;
+            width: 42px !important;
+            height: 42px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 1000000 !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .mobile-nav-close:hover {
+            background: rgba(239, 68, 68, 0.2) !important;
+            color: #f87171 !important;
+            border-color: rgba(239, 68, 68, 0.4) !important;
+            transform: scale(1.08);
         }
 
         /* ============================================
@@ -1489,8 +1592,8 @@
             }
 
             .search-input-wrap input {
-                height: 38px !important;
-                padding: 8px 12px 8px 34px !important;
+                height: 42px !important;
+                padding: 8px 12px 8px 36px !important;
                 font-size: 16px !important; /* Prevents mobile browser auto-zoom on input focus */
                 border-radius: 10px !important;
                 width: 100% !important;
@@ -1502,36 +1605,32 @@
             }
 
             .search-input-wrap .search-icon {
-                left: 11px !important;
-                font-size: 12px !important;
+                left: 12px !important;
+                font-size: 13px !important;
             }
 
             .header-actions {
                 flex: 0 0 38px !important;
+                width: 38px !important;
+                min-width: 38px !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
             }
 
             .btn-guest-user {
-                padding: 0 !important;
-                width: 38px !important;
-                height: 38px !important;
-                min-width: 38px !important;
-                display: inline-flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                border-radius: 10px !important;
-                flex-shrink: 0 !important;
-            }
-
-            .btn-guest-user span {
                 display: none !important;
             }
 
-            .btn-guest-user i {
-                font-size: 15px !important;
-                margin: 0 !important;
+            .mobile-menu-toggle {
+                width: 38px !important;
+                height: 38px !important;
+                border-radius: 10px !important;
+                font-size: 16px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                flex-shrink: 0 !important;
             }
 
             /* Responsive Search History Dropdown */
@@ -1702,18 +1801,38 @@
                             <span>Sign Up Free</span>
                         </a>
                     @endif
-                @else
-                    <span class="user-greeting">Hi, {{ Auth::user()->name }}</span>
-                    <a href="#" class="btn-header-logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
                 @endguest
+
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="document.getElementById('mobileNav').classList.add('open')" title="Open Navigation Menu" type="button">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
             </div>
         </div>
     </header>
+
+    <!-- Mobile Navigation Overlay Panel -->
+    <div class="mobile-nav-panel" id="mobileNav">
+        <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('open')" title="Close Menu" type="button">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        @include('partials._nav_mobile_menu')
+        <div style="height: 16px;"></div>
+        @guest
+            <a href="/">Why Choose Us</a>
+            @if(request()->cookie('guest_access'))
+                <a href="javascript:void(0)" onclick="openLoginModal(); document.getElementById('mobileNav').classList.remove('open');" style="color: var(--text-secondary); cursor: pointer;"><i class="fa-solid fa-user-secret"></i> Guest User</a>
+            @else
+                <a href="/get-started" style="color: var(--accent-light);">Sign Up Free</a>
+            @endif
+        @else
+            <a href="/home">Dashboard</a>
+            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="color: #f43f5e;">Sign Out</a>
+        @endguest
+    </div>
 
     <!-- ============================================
          SEARCH SUMMARY STRIP
@@ -2909,6 +3028,13 @@
                     if (!srpHistoryEl.contains(e.target) && e.target !== srpSearchInput) {
                         srpHistoryEl.classList.remove('visible');
                     }
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    const mobNav = document.getElementById('mobileNav');
+                    if (mobNav && mobNav.classList.contains('open')) mobNav.classList.remove('open');
                 }
             });
         })();
