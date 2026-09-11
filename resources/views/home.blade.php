@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Dashboard | Legals Forum</title>
     
@@ -65,7 +65,8 @@
         .sidebar {
             width: var(--sidebar-width);
             height: 100vh;
-            max-height: 100vh;
+            height: 100dvh;
+            max-height: 100dvh;
             background: rgba(8, 12, 28, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -378,6 +379,7 @@
         /* Sidebar Footer */
         .sidebar-footer {
             padding: 14px 16px 24px 16px;
+            padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
             border-top: 1px solid var(--border-color);
             margin-top: auto;
             flex-shrink: 0;
@@ -1772,6 +1774,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
+            height: 100dvh;
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
@@ -1892,6 +1895,7 @@
                 left: -290px !important;
                 bottom: 0 !important;
                 height: 100vh !important;
+                height: 100dvh !important;
                 z-index: 200 !important;
                 transform: none !important;
                 transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s !important;
