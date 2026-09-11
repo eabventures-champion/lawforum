@@ -2,6 +2,23 @@
 
 @section('title', 'Write News Article')
 
+@section('styles')
+<style>
+    select.form-control, #news_category {
+        color-scheme: dark;
+        background-color: #121824 !important;
+        color: #f3f4f6 !important;
+    }
+    #news_category option {
+        background-color: #121824 !important;
+        color: #f3f4f6 !important;
+    }
+    #news_category option:disabled {
+        color: #6b7280 !important;
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="page-header">
     <div>

@@ -1,4 +1,5 @@
 :root {
+    color-scheme: dark;
     --bg-primary: #0b0f17;
     --bg-secondary: #121824;
     --card-bg: rgba(20, 26, 40, 0.6);
@@ -470,6 +471,33 @@ body {
     border-color: var(--accent-color);
     box-shadow: 0 0 0 4px var(--accent-glow);
     background: rgba(255, 255, 255, 0.05);
+}
+
+select.form-control,
+select {
+    color-scheme: dark;
+    background-color: #121824;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+select.form-control option,
+select option {
+    background-color: #121824 !important;
+    color: #f3f4f6 !important;
+    padding: 10px 14px;
+}
+
+select.form-control option:disabled,
+select option:disabled {
+    color: #6b7280 !important;
+    background-color: #0b0f17 !important;
+}
+
+select.form-control option:checked,
+select option:checked {
+    background-color: #1d4ed8 !important;
+    color: #ffffff !important;
 }
 
 textarea.form-control {
