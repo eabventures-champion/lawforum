@@ -49,6 +49,12 @@
             box-sizing: border-box;
         }
 
+        html {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+
         body {
             font-family: var(--font-main);
             background-color: var(--bg-primary);
@@ -58,6 +64,8 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
             -webkit-font-smoothing: antialiased;
         }
 

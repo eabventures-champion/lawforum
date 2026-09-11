@@ -11,6 +11,15 @@
         grid-template-columns: 2.3fr 1fr;
         gap: 40px;
         margin-top: 10px;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .article-main-column {
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: hidden;
     }
 
     .article-breadcrumbs {
@@ -21,10 +30,20 @@
         color: var(--text-muted);
         margin-bottom: 16px;
         flex-wrap: wrap;
+        max-width: 100%;
+        overflow: hidden;
     }
 
     .article-breadcrumbs a:hover {
         color: var(--accent-light);
+    }
+
+    .article-breadcrumb-current {
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 280px;
     }
 
     .article-header {
@@ -48,12 +67,14 @@
     }
 
     .article-headline {
-        font-size: clamp(24px, 3.2vw, 38px);
+        font-size: clamp(22px, 3.2vw, 38px);
         font-weight: 800;
         line-height: 1.3;
         letter-spacing: -0.6px;
         color: #fff;
         margin-bottom: 18px;
+        word-break: break-word;
+        overflow-wrap: break-word;
     }
 
     .article-meta-row {
@@ -66,6 +87,8 @@
         border-bottom: 1px solid var(--border-color);
         font-size: 13px;
         color: var(--text-muted);
+        width: 100%;
+        max-width: 100%;
     }
 
     .meta-left {
@@ -141,10 +164,38 @@
         font-size: 16.5px;
         line-height: 1.8;
         letter-spacing: -0.1px;
+        max-width: 100%;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+
+    .article-prose img {
+        max-width: 100% !important;
+        height: auto !important;
+        border-radius: 12px;
+        margin: 20px 0;
+        display: block;
+    }
+
+    .article-prose iframe,
+    .article-prose video,
+    .article-prose table {
+        max-width: 100% !important;
+        width: 100% !important;
+        overflow-x: auto;
+        display: block;
+    }
+
+    .article-prose pre,
+    .article-prose code {
+        max-width: 100% !important;
+        white-space: pre-wrap !important;
+        word-break: break-all !important;
     }
 
     .article-prose p {
         margin-bottom: 22px;
+        max-width: 100%;
     }
 
     .article-prose h2, .article-prose h3 {
@@ -152,6 +203,7 @@
         font-weight: 700;
         margin: 32px 0 16px;
         line-height: 1.35;
+        word-break: break-word;
     }
 
     .article-prose blockquote {
@@ -162,6 +214,7 @@
         margin: 28px 0;
         font-style: italic;
         color: #f1f5f9;
+        max-width: 100%;
     }
 
     .article-bottom-actions {
@@ -373,12 +426,26 @@
     }
 
     @media (max-width: 1024px) {
-        .article-page-layout { grid-template-columns: 1fr; }
+        .article-page-layout { grid-template-columns: 1fr; gap: 32px; }
         .related-grid { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 640px) {
+        .article-page-layout { gap: 24px; margin-top: 4px; }
         .related-grid { grid-template-columns: 1fr; }
+        .article-breadcrumbs { font-size: 11.5px; gap: 6px; margin-bottom: 12px; }
+        .article-breadcrumb-current { max-width: 140px !important; }
+        .article-headline { font-size: 21px !important; line-height: 1.35; margin-bottom: 14px; }
+        .article-meta-row { flex-direction: column; align-items: flex-start; gap: 12px; padding-bottom: 14px; }
+        .meta-left { gap: 6px 10px; font-size: 12px; }
+        .social-share-group { width: 100%; justify-content: flex-start; gap: 6px; }
+        .article-featured-media { border-radius: 12px; margin-bottom: 20px; max-height: 260px; }
+        .article-featured-img { max-height: 260px; }
+        .article-img-fallback { height: 180px; }
+        .article-prose { font-size: 15px; line-height: 1.75; }
+        .article-bottom-actions { flex-direction: column; align-items: flex-start; gap: 16px; margin-top: 28px; }
+        .btn-back-news { width: 100%; justify-content: center; }
+        .sidebar-widget { padding: 18px 14px; }
     }
 </style>
 @endsection
@@ -403,7 +470,7 @@
             <span>/</span>
             <a href="/News/{{ $newsContent['news_category'] }}/1">{{ $cleanCat }}</a>
             <span>/</span>
-            <span style="color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px;">{{ $newsContent['title'] }}</span>
+            <span class="article-breadcrumb-current">{{ $newsContent['title'] }}</span>
         </nav>
 
         <!-- Article Header -->
