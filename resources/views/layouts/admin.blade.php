@@ -13,16 +13,53 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom Admin CSS -->
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}?v={{ filemtime(public_path('css/admin.css')) }}">
+    <style>
+        :root {
+            --sidebar-width: 280px !important;
+        }
+        .sidebar {
+            width: 280px !important;
+        }
+        .main-content {
+            margin-left: 280px !important;
+            width: calc(100% - 280px) !important;
+            max-width: calc(100% - 280px) !important;
+        }
+        .sidebar.collapsed {
+            width: 70px !important;
+        }
+        .main-content.collapsed-sidebar {
+            margin-left: 70px !important;
+            width: calc(100% - 70px) !important;
+            max-width: calc(100% - 70px) !important;
+        }
+        .sidebar-header {
+            padding: 20px 18px !important;
+            gap: 10px !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+        .sidebar-logo {
+            font-size: 18px !important;
+            white-space: nowrap !important;
+            overflow: visible !important;
+            line-height: 1.2 !important;
+        }
+        .sidebar-toggle-btn {
+            flex-shrink: 0 !important;
+            margin-left: auto !important;
+        }
+    </style>
     @yield('styles')
 </head>
 <body>
 
     <!-- Sidebar -->
     <aside class="sidebar">
-        <div class="sidebar-header">
+        <div class="sidebar-header" style="padding: 20px 18px; gap: 10px;">
             <i class="fa fa-balance-scale fa-lg" style="color: #3b82f6; flex-shrink: 0;"></i>
-            <div class="sidebar-logo">Lawsforum Admin</div>
-            <button id="toggle-sidebar" class="sidebar-toggle-btn" title="Toggle Sidebar">
+            <div class="sidebar-logo" style="font-size: 18px; white-space: nowrap !important; line-height: 1.2;">Lawsforum Admin</div>
+            <button id="toggle-sidebar" class="sidebar-toggle-btn" title="Toggle Sidebar" style="flex-shrink: 0; margin-left: auto;">
                 <i class="fa-solid fa-angles-left"></i>
             </button>
         </div>
