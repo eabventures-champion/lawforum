@@ -1006,8 +1006,8 @@
         .welcome-meta-item {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
+            align-items: flex-start;
+            text-align: left;
             gap: 6px;
         }
 
@@ -1017,13 +1017,13 @@
             text-transform: uppercase;
             letter-spacing: 0.9px;
             color: #94a3b8;
-            text-align: center;
+            text-align: left;
         }
 
         .welcome-meta-item .meta-value {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 8px;
             font-size: 15px;
             font-weight: 650;
@@ -1282,6 +1282,10 @@
         .countdown-ring .ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .countdown-ring .ring-days { font-size: 20px; font-weight: 800; line-height: 1; }
         .countdown-ring .ring-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-top: 2px; }
+        .countdown-ring.ring-sm { width: 22px !important; height: 22px !important; }
+        .countdown-ring.ring-sm svg { width: 22px !important; height: 22px !important; }
+        .countdown-ring.ring-sm .ring-days { font-size: 8.5px !important; }
+        .countdown-ring.ring-sm .ring-label { font-size: 4px !important; margin-top: 0 !important; }
 
         .demo-warning-banner {
             display: inline-flex;
@@ -1984,44 +1988,45 @@
             }
             .welcome-meta-row {
                 width: 100% !important;
-                display: grid !important;
-                grid-template-columns: 1fr 1fr !important;
-                align-items: center !important;
-                justify-items: center !important;
-                gap: 14px !important;
+                display: flex !important;
+                flex-wrap: wrap !important;
+                align-items: flex-start !important;
+                justify-content: flex-start !important;
+                gap: 14px 22px !important;
                 margin-left: 0 !important;
-                padding-top: 6px !important;
+                padding-top: 8px !important;
             }
             .welcome-meta-divider {
                 display: none !important;
             }
             .welcome-meta-item {
                 min-width: 0 !important;
-                width: 100% !important;
+                width: auto !important;
                 display: flex !important;
                 flex-direction: column !important;
-                align-items: center !important;
-                text-align: center !important;
+                align-items: flex-start !important;
+                text-align: left !important;
                 gap: 5px !important;
             }
             .welcome-meta-item .meta-label {
-                font-size: 10px !important;
+                font-size: 10.5px !important;
                 letter-spacing: 0.6px !important;
                 white-space: nowrap !important;
                 text-transform: uppercase !important;
                 color: #94a3b8 !important;
                 font-weight: 750 !important;
-                text-align: center !important;
+                text-align: left !important;
             }
             .welcome-meta-item .meta-value {
                 font-size: 13.5px !important;
                 font-weight: 650 !important;
                 white-space: nowrap !important;
-                overflow: hidden !important;
-                text-overflow: ellipsis !important;
-                justify-content: center !important;
-                width: 100% !important;
-                gap: 5px !important;
+                overflow: visible !important;
+                text-overflow: clip !important;
+                justify-content: flex-start !important;
+                text-align: left !important;
+                width: auto !important;
+                gap: 6px !important;
             }
             .type-badge {
                 padding: 4px 10px !important;
@@ -2526,7 +2531,7 @@
                             </div>
                         </div>
 
-                        <!-- Right: Meta Row (Account Type, Profession) -->
+                        <!-- Right: Meta Row (Account Type, Profession, Trial Validity) -->
                         <div class="welcome-meta-row">
                             @if($userType)
                             <div class="welcome-meta-item">
@@ -2554,6 +2559,48 @@
                                     <span class="type-badge profession-badge">
                                         <i class="fa-solid fa-briefcase"></i>
                                         {{ $researcherTypeLabel }}
+                                    </span>
+                                </div>
+                            </div>
+                            @endif
+
+                            @if($isDemo && $demoStarted)
+                            <div class="welcome-meta-divider"></div>
+                            <div class="welcome-meta-item">
+                                <span class="meta-label">Trial Validity</span>
+                                <div class="meta-value">
+                                    <span class="type-badge trial-badge" style="background: rgba(59, 130, 246, 0.12); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); display: inline-flex; align-items: center; gap: 7px; padding: 4px 10px; border-radius: 100px;">
+                                        <div class="countdown-ring ring-sm" style="flex-shrink: 0;">
+                                            <svg viewBox="0 0 64 64" style="transform: rotate(-90deg);">
+                                                <circle class="ring-bg" cx="32" cy="32" r="28"></circle>
+                                                <circle class="ring-progress" cx="32" cy="32" r="28"
+                                                    stroke="{{ $extensionActive ? '#f59e0b' : '#3b82f6' }}"
+                                                    stroke-dasharray="{{ 2 * 3.14159 * 28 }}"
+                                                    stroke-dashoffset="{{ (2 * 3.14159 * 28) - ($progressPct / 100) * (2 * 3.14159 * 28) }}"></circle>
+                                            </svg>
+                                            <div class="ring-text">
+                                                <span class="ring-days" style="color: {{ $extensionActive ? '#fbbf24' : '#60a5fa' }};">{{ $remaining }}</span>
+                                                <span class="ring-label">{{ $remaining === 1 ? 'DAY' : 'DAYS' }}</span>
+                                            </div>
+                                        </div>
+                                        <span style="font-size: 12px; font-weight: 700; color: #f8fafc; white-space: nowrap;">
+                                            {{ $remaining }} {{ $remaining === 1 ? 'Day' : 'Days' }} Left
+                                        </span>
+                                        <span class="demo-status-badge {{ $extensionActive ? 'extension' : ($demoActive ? 'active' : 'expired') }}" style="font-size: 9px; padding: 2px 6px; white-space: nowrap; margin-left: 2px;">
+                                            <i class="fa-solid {{ $extensionActive ? 'fa-clock' : ($demoActive ? 'fa-circle-play' : 'fa-circle-xmark') }}"></i>
+                                            {{ $extensionActive ? 'Extension' : ($demoActive ? 'Active' : 'Expired') }}
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                            @elseif($hasSubscription)
+                            <div class="welcome-meta-divider"></div>
+                            <div class="welcome-meta-item">
+                                <span class="meta-label">Subscription</span>
+                                <div class="meta-value">
+                                    <span class="type-badge" style="background: rgba(16, 185, 129, 0.14); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);">
+                                        <i class="fa-solid fa-circle-check"></i>
+                                        Active Member
                                     </span>
                                 </div>
                             </div>
