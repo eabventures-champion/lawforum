@@ -51,8 +51,10 @@
             background-color: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
-            padding-top: 90px; /* offset for fixed navbar */
-            padding-bottom: 40px;
+            overflow-x: hidden;
+            overflow-y: auto !important;
+            padding-top: 96px !important;
+            padding-bottom: 80px !important;
         }
 
         /* ============================================
@@ -285,7 +287,7 @@
             margin-bottom: 24px;
             flex-wrap: nowrap !important;
             position: sticky;
-            top: 62px;
+            top: 76px;
             z-index: 99;
             scrollbar-width: none !important;
             -ms-overflow-style: none !important;
@@ -606,7 +608,7 @@
     </style>
       @include('partials._nav_subdropdown_styles')
   </head>
-  <body class="has-scrollable-wrapper">
+  <body>
       
     <!-- ====== PREMIUM NAVIGATION ====== -->
     <nav class="nav-wrap" id="mainNav">
@@ -678,9 +680,7 @@
         @endguest
     </div>
 
-    <!-- ====== MAIN SCROLLABLE WRAPPER ======
-    <div class="main-wrapper-scrollable">
-        <!-- ====== MAIN PORTAL AREA ====== -->
+    <!-- ====== MAIN PORTAL AREA ====== -->
     <div class="container-fluid px-md-5 mt-4">
         
         <div class="row">
@@ -914,8 +914,6 @@
             });
         });
     </script>
-    </div>
-    <!-- End Main Scrollable Wrapper -->
   @include('partials._premium_guest_gate')
 
 <!--Start of Tawk.to Script-->
