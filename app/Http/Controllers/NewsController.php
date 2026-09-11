@@ -78,7 +78,9 @@ class NewsController extends Controller
     // Display of News_Content
     public function news_content($category, $title, $id){
         if (homepage_setting('slide_1_news_coming_soon', '1') == '1') {
-            return view('news.coming_soon');
+            if (!auth()->check() || !auth()->user()->isAdmin()) {
+                return view('news.coming_soon');
+            }
         }
 
         $newsCategories = NewsCategory::where('is_enabled', true)->get()->map(function($cat) {

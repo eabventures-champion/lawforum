@@ -7,6 +7,7 @@ use App\NewsContent;
 use App\NewsCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class NewsController extends Controller
 {
@@ -73,6 +74,47 @@ class NewsController extends Controller
         ]);
 
         return redirect()->route('admin.news.index')->with('success', 'News article created successfully.');
+    }
+
+    /**
+     * Display or fetch preview for a specific news article
+     */
+    public function show($id)
+    {
+        $article = NewsContent::findOrFail($id);
+
+        $imageUrl = null;
+        if ($article->image) {
+            if (Str::startsWith($article->image, 'http')) {
+                $imageUrl = $article->image;
+            } elseif (Str::startsWith($article->image, 'storage/')) {
+                $imageUrl = asset($article->image);
+            } else {
+                $imageUrl = asset('storage/' . $article->image);
+            }
+        }
+
+        $publicUrl = url('/News/' . urlencode($article->news_category) . '/' . urlencode($article->title) . '/' . $article->id);
+
+        if (request()->expectsJson() || request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'article' => [
+                    'id' => $article->id,
+                    'title' => $article->title,
+                    'extract' => $article->extract,
+                    'content' => $article->content,
+                    'news_category' => $article->news_category,
+                    'image_url' => $imageUrl,
+                    'date_formatted' => $article->created_at ? $article->created_at->format('M d, Y • h:i A') : 'N/A',
+                    'date_relative' => $article->created_at ? $article->created_at->diffForHumans() : '',
+                    'edit_url' => route('admin.news.edit', $article->id),
+                    'public_url' => $publicUrl,
+                ]
+            ]);
+        }
+
+        return redirect()->route('admin.news.index', ['preview_id' => $id]);
     }
 
     public function edit($id)

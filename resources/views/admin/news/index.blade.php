@@ -2,6 +2,107 @@
 
 @section('title', 'News & Articles')
 
+@section('styles')
+<style>
+    @keyframes previewModalFadeIn {
+        from { opacity: 0; transform: scale(0.96) translateY(8px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .preview-modal-dialog {
+        animation: previewModalFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .preview-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+    .preview-scroll::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.02);
+    }
+    .preview-scroll::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 4px;
+    }
+    .preview-scroll::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.25);
+    }
+    .preview-prose p {
+        margin-bottom: 16px;
+    }
+    .preview-prose h1, .preview-prose h2, .preview-prose h3, .preview-prose h4 {
+        color: #fff;
+        margin-top: 24px;
+        margin-bottom: 12px;
+        font-weight: 700;
+    }
+    .preview-prose blockquote {
+        border-left: 3px solid #3b82f6;
+        padding: 10px 16px;
+        background: rgba(59, 130, 246, 0.08);
+        border-radius: 0 8px 8px 0;
+        margin: 16px 0;
+        color: #e2e8f0;
+        font-style: italic;
+    }
+    .preview-prose img {
+        max-width: 100%;
+        border-radius: 8px;
+        margin: 16px 0;
+    }
+
+    /* Main Tab Navigation Buttons */
+    .news-tab-nav-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 18px;
+        border-radius: 10px;
+        font-size: 13.5px;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text-secondary);
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        user-select: none;
+    }
+    .news-tab-nav-btn:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.16);
+    }
+    .news-tab-nav-btn.active {
+        background: var(--accent-gradient, linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%));
+        color: #fff;
+        border-color: #3b82f6;
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+    }
+    .news-tab-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 7px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.12);
+        color: #cbd5e1;
+        transition: all 0.2s ease;
+    }
+    .news-tab-nav-btn.active .news-tab-badge {
+        background: rgba(255, 255, 255, 0.25);
+        color: #fff;
+    }
+    .news-tab-content-panel {
+        animation: tabContentFadeIn 0.22s ease-out;
+    }
+    @keyframes tabContentFadeIn {
+        from { opacity: 0; transform: translateY(4px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
     <div>
@@ -9,7 +110,7 @@
         <p class="page-subtitle">Manage legal news, articles, and blog updates.</p>
     </div>
     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-        <a href="{{ route('admin.news.create') }}" class="btn btn-primary" style="padding: 10px 20px; font-size: 13.5px; border-radius: 10px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+        <a href="{{ route('admin.news.create') }}" class="btn btn-primary" style="margin-right: 28px; padding: 10px 20px; font-size: 13.5px; border-radius: 10px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
             <i class="fa-solid fa-plus"></i>
             <span>Write New Article</span>
         </a>
@@ -39,411 +140,423 @@
             $formattedCountdownTarget = null;
         }
     }
-@endphp
-
-<!-- Legal News Dynamic Coming Soon Control Card -->
-<div style="background: {{ $isNewsComingSoon ? 'rgba(244, 63, 94, 0.06)' : 'rgba(16, 185, 129, 0.06)' }}; border: 1px solid {{ $isNewsComingSoon ? 'rgba(244, 63, 94, 0.3)' : 'rgba(16, 185, 129, 0.3)' }}; border-radius: 14px; padding: 18px 24px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
-    <div style="display: flex; align-items: center; gap: 14px;">
-        <div style="width: 44px; height: 44px; border-radius: 12px; background: {{ $isNewsComingSoon ? 'rgba(244, 63, 94, 0.15)' : 'rgba(16, 185, 129, 0.15)' }}; color: {{ $isNewsComingSoon ? '#fb7185' : '#34d399' }}; display: flex; align-items: center; justify-content: center; font-size: 20px;">
-            <i class="fa-solid {{ $isNewsComingSoon ? 'fa-clock' : 'fa-globe' }}"></i>
-        </div>
-        <div>
-            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                <span style="font-size: 15px; font-weight: 700; color: #fff;">Legal News Public Status:</span>
-                @if($isNewsComingSoon)
-                    <span style="background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
-                        <span style="width: 6px; height: 6px; border-radius: 50%; background: #fb7185; display: inline-block;"></span> COMING SOON MODE (ACTIVE)
-                    </span>
-                @else
-                    <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
-                        <span style="width: 6px; height: 6px; border-radius: 50%; background: #34d399; display: inline-block;"></span> LIVE & PUBLIC
-                    </span>
-                @endif
-            </div>
-            <p style="color: var(--text-secondary); font-size: 12.5px; margin: 4px 0 0;">
-                @if($isNewsComingSoon)
-                    Homepage card is currently disabled with a Coming Soon badge, and public navigation to news content is blocked.
-                @else
-                    Legal News is fully live: visitors can click through from the homepage and browse all published news articles.
-                @endif
-            </p>
-        </div>
-    </div>
-    <form action="{{ route('admin.news.toggle-coming-soon') }}" method="POST" style="margin: 0;">
-        @csrf
-        <button type="submit" class="btn" style="height: 38px; padding: 0 18px; border-radius: 8px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s; {{ $isNewsComingSoon ? 'background: #10b981; color: #fff; border: 1px solid #10b981;' : 'background: rgba(244, 63, 94, 0.18); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.4);' }}">
-            <i class="fa-solid {{ $isNewsComingSoon ? 'fa-globe' : 'fa-lock' }}"></i>
-            <span>{{ $isNewsComingSoon ? 'Switch to Live Mode' : 'Switch to Coming Soon' }}</span>
-        </button>
-    </form>
-</div>
-
-<!-- Coming Soon Countdown Timer Settings Card -->
-<div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
-        <div style="display: flex; align-items: center; gap: 14px;">
-            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; display: flex; align-items: center; justify-content: center; font-size: 20px;">
-                <i class="fa-solid fa-stopwatch"></i>
-            </div>
-            <div>
-                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <span style="font-size: 15px; font-weight: 700; color: #fff;">Coming Soon Launch Countdown Timer:</span>
-                    @if($formattedCountdownTarget)
-                        <span style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
-                            <i class="fa-solid fa-calendar-check"></i> {{ $formattedCountdownTarget }} ({{ $diffCountdownTarget }})
-                        </span>
-                    @else
-                        <span style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
-                            <i class="fa-solid fa-clock-rotate-left"></i> Default Rolling (+28 Days)
-                        </span>
-                    @endif
-                </div>
-                <p style="color: var(--text-secondary); font-size: 12.5px; margin: 4px 0 0;">
-                    Controls the live Days / Hours / Minutes / Seconds countdown clock shown to visitors on the Coming Soon page.
-                </p>
-            </div>
-        </div>
-
-        <!-- Quick Reset to Default Form -->
-        <form action="{{ route('admin.news.update-countdown') }}" method="POST" style="margin: 0;">
-            @csrf
-            <input type="hidden" name="action" value="reset_default">
-            <button type="submit" class="btn" style="height: 36px; padding: 0 14px; border-radius: 8px; font-size: 12px; font-weight: 600; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); color: var(--text-secondary); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.color='#fff'; this.style.borderColor='rgba(255,255,255,0.3)';" onmouseout="this.style.color='var(--text-secondary)'; this.style.borderColor='rgba(255,255,255,0.15)';">
-                <i class="fa-solid fa-rotate-left"></i>
-                <span>Reset to Default (+28 Days)</span>
-            </button>
-        </form>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; align-items: center; background: rgba(0, 0, 0, 0.2); padding: 14px 18px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.05);">
-        <!-- Quick Presets -->
-        <div>
-            <span style="display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">
-                <i class="fa-solid fa-bolt" style="color: #f59e0b; margin-right: 4px;"></i> Quick Reset Presets:
-            </span>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                @foreach([7 => '7 Days', 14 => '14 Days', 21 => '21 Days', 30 => '30 Days', 60 => '60 Days'] as $days => $label)
-                <form action="{{ route('admin.news.update-countdown') }}" method="POST" style="margin: 0; display: inline-block;">
-                    @csrf
-                    <input type="hidden" name="preset_days" value="{{ $days }}">
-                    <button type="submit" style="background: rgba(59, 130, 246, 0.12); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 6px; padding: 6px 12px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#3b82f6'; this.style.color='#fff';" onmouseout="this.style.background='rgba(59, 130, 246, 0.12)'; this.style.color='#93c5fd';">
-                        +{{ $label }}
-                    </button>
-                </form>
-                @endforeach
-            </div>
-        </div>
-
-        <!-- Custom Date & Time Picker -->
-        <form action="{{ route('admin.news.update-countdown') }}" method="POST" style="margin: 0; display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
-            @csrf
-            <div style="flex: 1; min-width: 200px;">
-                <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px;">
-                    <i class="fa-regular fa-calendar" style="margin-right: 4px;"></i> Pick Exact Target Date & Time:
-                </label>
-                <input type="datetime-local" name="countdown_target" value="{{ $inputCountdownTarget }}" required min="{{ now()->format('Y-m-d\TH:i') }}" style="width: 100%; height: 36px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 6px; padding: 0 10px; color: #fff; font-size: 12.5px; font-family: inherit; outline: none;">
-            </div>
-            <button type="submit" class="btn btn-primary" style="height: 36px; padding: 0 16px; border-radius: 6px; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
-                <i class="fa-solid fa-check"></i>
-                <span>Set Date</span>
-            </button>
-        </form>
-    </div>
-</div>
-
-<!-- Newsroom Navigation Tabs Dynamic Controls -->
-@if(isset($categories) && count($categories) > 0)
-<div class="card-table" style="width: 100%; margin-bottom: 28px; padding: 22px 24px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; display: flex; align-items: center; justify-content: center; font-size: 18px;">
-                <i class="fa-solid fa-layer-group"></i>
-            </div>
-            <div>
-                <h2 style="font-size: 17px; font-weight: 700; color: #fff; margin: 0;">Newsroom Navigation Tabs</h2>
-                <p style="font-size: 12.5px; color: var(--text-secondary); margin: 2px 0 0;">
-                    Dynamically enable or disable category tabs in the public newsroom header and mobile navigation. Disabled tabs are hidden from visitors.
-                </p>
-            </div>
-        </div>
-        <div style="font-size: 12px; color: var(--text-muted);">
-            <i class="fa-solid fa-circle-info" style="color: #60a5fa; margin-right: 4px;"></i> Click any button to toggle tab visibility instantly
-        </div>
-    </div>
-
-    <!-- Category Pills Grid -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;">
-        @foreach($categories as $cat)
-        @php
-            $isEnabled = (bool)$cat->is_enabled;
-            $cleanName = str_replace('-', ' ', $cat->name);
-        @endphp
-        <div id="cat-card-{{ $cat->id }}" style="background: {{ $isEnabled ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.01)' }}; border: 1px solid {{ $isEnabled ? 'rgba(59, 130, 246, 0.3)' : 'rgba(255, 255, 255, 0.08)' }}; border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px; transition: all 0.25s ease;">
-            <!-- Top Row: Icon, Category Name, Article Count, and Status Badge -->
-            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;">
-                <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
-                    <div id="cat-icon-{{ $cat->id }}" style="width: 38px; height: 38px; border-radius: 10px; background: {{ $isEnabled ? 'rgba(59, 130, 246, 0.15)' : 'rgba(255, 255, 255, 0.05)' }}; color: {{ $isEnabled ? '#60a5fa' : 'var(--text-muted)' }}; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
-                        @if(str_contains(strtolower($cat->name), 'ghana'))
-                            <i class="fa-solid fa-flag"></i>
-                        @elseif(str_contains(strtolower($cat->name), 'africa'))
-                            <i class="fa-solid fa-earth-africa"></i>
-                        @elseif(str_contains(strtolower($cat->name), 'europe'))
-                            <i class="fa-solid fa-earth-europe"></i>
-                        @elseif(str_contains(strtolower($cat->name), 'america'))
-                            <i class="fa-solid fa-earth-americas"></i>
-                        @elseif(str_contains(strtolower($cat->name), 'asia'))
-                            <i class="fa-solid fa-earth-asia"></i>
-                        @else
-                            <i class="fa-regular fa-newspaper"></i>
-                        @endif
-                    </div>
-                    <div style="min-width: 0;">
-                        <div id="cat-name-{{ $cat->id }}" style="font-size: 15px; font-weight: 700; color: {{ $isEnabled ? '#fff' : 'var(--text-muted)' }}; white-space: nowrap; line-height: 1.2;">
-                            {{ $cleanName }}
-                        </div>
-                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px; display: flex; align-items: center; gap: 5px; white-space: nowrap;">
-                            <i class="fa-regular fa-newspaper" style="font-size: 10.5px; opacity: 0.7;"></i>
-                            <span>{{ $cat->articles_count ?? 0 }} articles</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Status Badge -->
-                <span id="cat-badge-{{ $cat->id }}" style="font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; white-space: nowrap; {{ $isEnabled ? 'background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);' : 'background: rgba(100, 116, 139, 0.15); color: #94a3b8; border: 1px solid rgba(100, 116, 139, 0.3);' }}">
-                    {{ $isEnabled ? 'Visible' : 'Hidden' }}
-                </span>
-            </div>
-
-            <!-- Bottom Row: Header Tab status indicator & Toggle Action Button -->
-            <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.05); gap: 10px;">
-                <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); white-space: nowrap;">
-                    <span id="cat-dot-{{ $cat->id }}" style="width: 7px; height: 7px; border-radius: 50%; background: {{ $isEnabled ? '#34d399' : '#94a3b8' }}; display: inline-block;"></span>
-                    <span>Header Tab</span>
-                </div>
-                <form action="{{ route('admin.news.categories.toggle', $cat->id) }}" method="POST" class="cat-toggle-form" data-id="{{ $cat->id }}" style="margin: 0;">
-                    @csrf
-                    <button type="submit" id="cat-toggle-btn-{{ $cat->id }}" class="btn" style="height: 30px; padding: 0 12px; border-radius: 6px; font-size: 11.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s; white-space: nowrap; {{ $isEnabled ? 'background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35);' : 'background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);' }}">
-                        <i class="fa-solid {{ $isEnabled ? 'fa-eye-slash' : 'fa-eye' }}"></i>
-                        <span>{{ $isEnabled ? 'Disable Tab' : 'Enable Tab' }}</span>
-                    </button>
-                </form>
-            </div>
-        </div>
-        @endforeach
-    </div>
-</div>
-@endif
-
-<!-- Audience & Subscribers Management Card -->
-@php
     $subscriberList = $launchInvitations ?? collect();
     $digestCount = $subscriberList->where('source', 'digest')->count();
     $launchCount = $subscriberList->where('source', 'launch')->count();
     $allEmailsString = $subscriberList->pluck('email')->implode(', ');
 @endphp
-<div class="card-table" style="width: 100%; margin-bottom: 28px; padding: 22px 24px; border: 1px solid rgba(59, 130, 246, 0.25); background: rgba(15, 23, 42, 0.65); border-radius: 14px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 18px;">
+
+<!-- Main Tabs Navigation Bar -->
+<div class="news-main-tabs-nav" style="display: flex; gap: 10px; align-items: center; margin-bottom: 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 14px; flex-wrap: wrap;">
+    <button type="button" id="tab-btn-articles" onclick="switchNewsTab('articles')" class="news-tab-nav-btn active">
+        <i class="fa-solid fa-newspaper"></i>
+        <span>All News Articles</span>
+        <span class="news-tab-badge" id="nav-articles-badge">{{ number_format($news->total()) }}</span>
+    </button>
+    <button type="button" id="tab-btn-controls" onclick="switchNewsTab('controls')" class="news-tab-nav-btn">
+        <i class="fa-solid fa-sliders"></i>
+        <span>Controls & Audience</span>
+        @if($subscriberList->count() > 0)
+            <span class="news-tab-badge">{{ $subscriberList->count() }} Subs</span>
+        @endif
+    </button>
+</div>
+
+<!-- ========================================== -->
+<!-- TAB 1: ALL NEWS ARTICLES (FIRST TO SEE)    -->
+<!-- ========================================== -->
+<div id="tab-panel-articles" class="news-tab-content-panel" style="display: block;">
+    <div class="card-table" style="width: 100%; margin-bottom: 40px;">
+        <!-- Header with Title, Actions & Search -->
+        <div class="table-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 20px 24px;">
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <h2 class="table-title" style="margin-bottom: 0; font-size: 20px;">All News Articles</h2>
+                <span style="background: rgba(59, 130, 246, 0.12); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-newspaper" style="font-size: 11px;"></i> <span id="news-total-count">{{ number_format($news->total()) }}</span> Articles
+                </span>
+
+                <!-- Delete All Button -->
+                <form action="{{ route('admin.news.destroy-all') }}" method="POST" id="delete-all-form" style="display: {{ $news->total() > 0 ? 'inline-block' : 'none' }}; margin: 0;" onsubmit="return confirm('⚠️ CAUTION: Are you sure you want to delete ALL news articles? This will permanently remove all articles and images.')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" id="delete-all-btn" class="btn btn-danger btn-action" style="height: 38px; padding: 0 16px; border-radius: 8px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 7px;">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>Delete All (<span id="delete-all-count">{{ $news->total() }}</span>)</span>
+                    </button>
+                </form>
+
+                <!-- Bulk Delete Selected Button -->
+                <button type="button" id="bulk-delete-btn" class="btn btn-danger btn-action" style="display: none; height: 38px; padding: 0 16px; border-radius: 8px; font-size: 13px; font-weight: 600; align-items: center; gap: 7px;" onclick="submitBulkDelete()">
+                    <i class="fa-solid fa-trash"></i>
+                    <span>Delete Selected (<span id="selected-count">0</span>)</span>
+                </button>
+            </div>
+            
+            <!-- Live Search Form -->
+            <form id="news-search-form" action="{{ route('admin.news.index') }}" method="GET" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;" onsubmit="event.preventDefault(); fetchNews();">
+                <div style="position: relative; width: 280px;">
+                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 13px; pointer-events: none;"></i>
+                    <input type="text" name="search" id="news-search-input" class="form-control" placeholder="Search news by title or content..." value="{{ request('search') }}" autocomplete="off" style="padding-left: 38px; padding-right: 32px; height: 38px; border-radius: 8px; font-size: 13px; width: 100%;">
+                    <span id="search-spinner" style="display: none; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--accent-color); font-size: 12px;">
+                        <i class="fa-solid fa-circle-notch fa-spin"></i>
+                    </span>
+                </div>
+                <button type="submit" class="btn btn-primary btn-action" style="height: 38px; padding: 0 16px; border-radius: 8px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                    <span>Search</span>
+                </button>
+                <button type="button" id="news-clear-search-btn" onclick="clearNewsSearch()" class="btn btn-secondary btn-action" style="display: {{ request('search') ? 'inline-flex' : 'none' }}; height: 38px; padding: 0 14px; border-radius: 8px; font-size: 13px; align-items: center; gap: 6px; color: var(--text-secondary); background: rgba(255,255,255,0.04); border: 1px solid var(--border-color);">
+                    <i class="fa-solid fa-rotate-left"></i> Clear
+                </button>
+            </form>
+        </div>
+
+        <!-- Table Container (Dynamically updated via Live Search) -->
+        <div id="news-table-wrapper">
+            @include('admin.news.table_data')
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================================= -->
+<!-- TAB 2: CONTROLS & AUDIENCE (Public Status, Countdown, Tabs & Subscribers) -->
+<!-- ========================================================================= -->
+<div id="tab-panel-controls" class="news-tab-content-panel" style="display: none;">
+
+    <!-- Legal News Dynamic Coming Soon Control Card -->
+    <div style="background: {{ $isNewsComingSoon ? 'rgba(244, 63, 94, 0.06)' : 'rgba(16, 185, 129, 0.06)' }}; border: 1px solid {{ $isNewsComingSoon ? 'rgba(244, 63, 94, 0.3)' : 'rgba(16, 185, 129, 0.3)' }}; border-radius: 14px; padding: 18px 24px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
         <div style="display: flex; align-items: center; gap: 14px;">
-            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; display: flex; align-items: center; justify-content: center; font-size: 20px;">
-                <i class="fa-solid fa-users-viewfinder"></i>
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: {{ $isNewsComingSoon ? 'rgba(244, 63, 94, 0.15)' : 'rgba(16, 185, 129, 0.15)' }}; color: {{ $isNewsComingSoon ? '#fb7185' : '#34d399' }}; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                <i class="fa-solid {{ $isNewsComingSoon ? 'fa-clock' : 'fa-globe' }}"></i>
             </div>
             <div>
                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <h2 style="font-size: 17px; font-weight: 700; color: #fff; margin: 0;">Subscribers & Audience Lists</h2>
-                    @if($subscriberList->count() > 0)
-                        <span style="background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
-                            <i class="fa-solid fa-envelope"></i> {{ $subscriberList->count() }} Total {{ Str::plural('Subscriber', $subscriberList->count()) }}
-                        </span>
-                        <span style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
-                            <i class="fa-solid fa-newspaper"></i> {{ $digestCount }} Digest
-                        </span>
-                        <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
-                            <i class="fa-solid fa-rocket"></i> {{ $launchCount }} Launch VIP
+                    <span style="font-size: 15px; font-weight: 700; color: #fff;">Legal News Public Status:</span>
+                    @if($isNewsComingSoon)
+                        <span style="background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #fb7185; display: inline-block;"></span> COMING SOON MODE (ACTIVE)
                         </span>
                     @else
-                        <span style="background: rgba(148, 163, 184, 0.12); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.25); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
-                            0 Subscribers
+                        <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #34d399; display: inline-block;"></span> LIVE & PUBLIC
                         </span>
                     @endif
                 </div>
-                <p style="font-size: 12.5px; color: var(--text-secondary); margin: 3px 0 0;">
-                    All audiences collected from the <strong>Legal Intelligence Digest</strong> weekly newsletter widget and the <strong>Coming Soon</strong> Launch Day invitation form.
+                <p style="color: var(--text-secondary); font-size: 12.5px; margin: 4px 0 0;">
+                    @if($isNewsComingSoon)
+                        Homepage card is currently disabled with a Coming Soon badge, and public navigation to news content is blocked.
+                    @else
+                        Legal News is fully live: visitors can click through from the homepage and browse all published news articles.
+                    @endif
                 </p>
             </div>
         </div>
-
-        @if($subscriberList->count() > 0)
-        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-            <!-- Copy All Button -->
-            <button type="button" onclick="copyAllSubscriberEmails()" id="btnCopyAllEmails" class="btn btn-secondary btn-action" style="height: 36px; padding: 0 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; background: rgba(59, 130, 246, 0.12); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3);">
-                <i class="fa-regular fa-copy"></i>
-                <span id="btnCopyText">Copy Filtered Emails</span>
-            </button>
-
-            <!-- Mailto Button -->
-            <a id="btnSendEmail" href="mailto:?bcc={{ rawurlencode($allEmailsString) }}&subject={{ rawurlencode('Legals Forum Update & Intelligence') }}" class="btn btn-primary btn-action" style="height: 36px; padding: 0 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
-                <i class="fa-solid fa-paper-plane"></i>
-                <span>Send Email</span>
-            </a>
-        </div>
-        @endif
-    </div>
-
-    @if($subscriberList->count() > 0)
-        <!-- Audience Filter Pills -->
-        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 16px;">
-            <span style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-right: 4px;">Filter Audience:</span>
-            <button type="button" onclick="filterSubscriberList('all')" id="sub-filter-all" class="sub-filter-btn" style="background: #3b82f6; color: #fff; border: 1px solid #3b82f6; border-radius: 20px; padding: 4px 14px; font-size: 11.5px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
-                All ({{ $subscriberList->count() }})
-            </button>
-            <button type="button" onclick="filterSubscriberList('digest')" id="sub-filter-digest" class="sub-filter-btn" style="background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 4px 14px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                <i class="fa-solid fa-newspaper" style="margin-right: 4px;"></i> Legal Intelligence Digest ({{ $digestCount }})
-            </button>
-            <button type="button" onclick="filterSubscriberList('launch')" id="sub-filter-launch" class="sub-filter-btn" style="background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 4px 14px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                <i class="fa-solid fa-rocket" style="margin-right: 4px;"></i> Launch Day VIP ({{ $launchCount }})
-            </button>
-        </div>
-
-        <div style="overflow-x: auto; width: 100%; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.06);">
-            <table class="custom-table" style="width: 100%; margin-bottom: 0;">
-                <thead>
-                    <tr>
-                        <th style="width: 50px; text-align: center;">#</th>
-                        <th style="min-width: 260px;">Subscriber Email</th>
-                        <th style="width: 200px;">Registered Date</th>
-                        <th style="width: 140px;">IP Address</th>
-                        <th style="width: 110px;">Status</th>
-                        <th style="width: 100px; text-align: right; padding-right: 20px;">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="subscriber-table-body">
-                    @foreach($subscriberList as $index => $invitation)
-                        <tr class="subscriber-row" data-source="{{ $invitation->source ?? 'launch' }}" data-email="{{ $invitation->email }}">
-                            <td style="text-align: center; color: var(--text-muted); font-size: 12.5px;">
-                                {{ $index + 1 }}
-                            </td>
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <div style="width: 34px; height: 34px; border-radius: 50%; background: {{ ($invitation->source === 'digest') ? 'rgba(168, 85, 247, 0.18)' : 'rgba(16, 185, 129, 0.18)' }}; color: {{ ($invitation->source === 'digest') ? '#c084fc' : '#34d399' }}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; text-transform: uppercase; flex-shrink: 0;">
-                                        {{ substr($invitation->email, 0, 2) }}
-                                    </div>
-                                    <div>
-                                        <div style="display: flex; align-items: center; gap: 6px;">
-                                            <a href="mailto:{{ $invitation->email }}" style="font-weight: 600; color: #fff; font-size: 13.5px; text-decoration: none;" onmouseover="this.style.color='#60a5fa'" onmouseout="this.style.color='#fff'">
-                                                {{ $invitation->email }}
-                                            </a>
-                                            <button type="button" onclick="navigator.clipboard.writeText('{{ $invitation->email }}'); this.innerHTML='<i class=\'fa-solid fa-check\'></i>'; setTimeout(() => this.innerHTML='<i class=\'fa-regular fa-copy\'></i>', 1200);" title="Copy email" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 2px 4px; font-size: 11px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">
-                                                <i class="fa-regular fa-copy"></i>
-                                            </button>
-                                        </div>
-                                        <div style="margin-top: 4px;">
-                                            @if($invitation->source === 'digest')
-                                                <span style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.35); font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px;">
-                                                    <i class="fa-solid fa-newspaper" style="font-size: 10px;"></i> Legal Intelligence Digest
-                                                </span>
-                                            @else
-                                                <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px;">
-                                                    <i class="fa-solid fa-rocket" style="font-size: 10px;"></i> Launch Day VIP
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div style="color: #e2e8f0; font-weight: 500; font-size: 12.5px; white-space: nowrap;">
-                                    {{ $invitation->created_at ? $invitation->created_at->format('M d, Y h:i A') : 'N/A' }}
-                                </div>
-                                <div style="color: var(--text-secondary); font-size: 11px; margin-top: 2px; white-space: nowrap;">
-                                    {{ $invitation->created_at ? $invitation->created_at->diffForHumans() : '' }}
-                                </div>
-                            </td>
-                            <td>
-                                <span style="font-family: monospace; font-size: 11.5px; color: var(--text-secondary); background: rgba(255, 255, 255, 0.04); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.06);">
-                                    {{ $invitation->ip_address ?? '—' }}
-                                </span>
-                            </td>
-                            <td>
-                                <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px;">
-                                    <i class="fa-solid fa-circle-check" style="font-size: 10px;"></i> Active
-                                </span>
-                            </td>
-                            <td style="text-align: right; padding-right: 20px;">
-                                <form action="{{ route('admin.news.launch-invitations.destroy', $invitation->id) }}" method="POST" style="margin: 0; display: inline-block;" onsubmit="return confirm('Remove {{ $invitation->email }} from {{ $invitation->source === "digest" ? "Legal Intelligence Digest" : "VIP Launch list" }}?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-action" style="padding: 5px 10px; font-size: 11.5px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;" title="Remove subscriber">
-                                        <i class="fa-regular fa-trash-can"></i>
-                                        <span>Remove</span>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    @else
-        <div style="text-align: center; padding: 36px 16px; background: rgba(0, 0, 0, 0.15); border-radius: 8px; border: 1px dashed rgba(255, 255, 255, 0.1);">
-            <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); color: var(--text-muted); display: inline-flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px;">
-                <i class="fa-regular fa-envelope"></i>
-            </div>
-            <h4 style="font-size: 14.5px; font-weight: 600; color: #fff; margin-bottom: 6px;">No Subscribers Recorded Yet</h4>
-            <p style="font-size: 12.5px; color: var(--text-secondary); max-width: 480px; margin: 0 auto;">
-                When visitors subscribe to the <strong>Legal Intelligence Digest</strong> or register on the <strong>Coming Soon</strong> Launch Day card, their emails and registration details will appear here automatically.
-            </p>
-        </div>
-    @endif
-</div>
-
-<div class="card-table" style="width: 100%; margin-bottom: 40px;">
-    <!-- Header with Title, Actions & Search -->
-    <div class="table-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 20px 24px;">
-        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-            <h2 class="table-title" style="margin-bottom: 0; font-size: 20px;">All News Articles</h2>
-            <span style="background: rgba(59, 130, 246, 0.12); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
-                <i class="fa-solid fa-newspaper" style="font-size: 11px;"></i> <span id="news-total-count">{{ number_format($news->total()) }}</span> Articles
-            </span>
-
-            <!-- Delete All Button -->
-            <form action="{{ route('admin.news.destroy-all') }}" method="POST" id="delete-all-form" style="display: {{ $news->total() > 0 ? 'inline-block' : 'none' }}; margin: 0;" onsubmit="return confirm('⚠️ CAUTION: Are you sure you want to delete ALL news articles? This will permanently remove all articles and images.')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" id="delete-all-btn" class="btn btn-danger btn-action" style="height: 38px; padding: 0 16px; border-radius: 8px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 7px;">
-                    <i class="fa-solid fa-trash-can"></i>
-                    <span>Delete All (<span id="delete-all-count">{{ $news->total() }}</span>)</span>
-                </button>
-            </form>
-
-            <!-- Bulk Delete Selected Button -->
-            <button type="button" id="bulk-delete-btn" class="btn btn-danger btn-action" style="display: none; height: 38px; padding: 0 16px; border-radius: 8px; font-size: 13px; font-weight: 600; align-items: center; gap: 7px;" onclick="submitBulkDelete()">
-                <i class="fa-solid fa-trash"></i>
-                <span>Delete Selected (<span id="selected-count">0</span>)</span>
-            </button>
-        </div>
-        
-        <!-- Live Search Form -->
-        <form id="news-search-form" action="{{ route('admin.news.index') }}" method="GET" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;" onsubmit="event.preventDefault(); fetchNews();">
-            <div style="position: relative; width: 280px;">
-                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 13px; pointer-events: none;"></i>
-                <input type="text" name="search" id="news-search-input" class="form-control" placeholder="Search news by title or content..." value="{{ request('search') }}" autocomplete="off" style="padding-left: 38px; padding-right: 32px; height: 38px; border-radius: 8px; font-size: 13px; width: 100%;">
-                <span id="search-spinner" style="display: none; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--accent-color); font-size: 12px;">
-                    <i class="fa-solid fa-circle-notch fa-spin"></i>
-                </span>
-            </div>
-            <button type="submit" class="btn btn-primary btn-action" style="height: 38px; padding: 0 16px; border-radius: 8px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
-                <span>Search</span>
-            </button>
-            <button type="button" id="news-clear-search-btn" onclick="clearNewsSearch()" class="btn btn-secondary btn-action" style="display: {{ request('search') ? 'inline-flex' : 'none' }}; height: 38px; padding: 0 14px; border-radius: 8px; font-size: 13px; align-items: center; gap: 6px; color: var(--text-secondary); background: rgba(255,255,255,0.04); border: 1px solid var(--border-color);">
-                <i class="fa-solid fa-rotate-left"></i> Clear
+        <form action="{{ route('admin.news.toggle-coming-soon') }}#controls" method="POST" style="margin: 0;">
+            @csrf
+            <button type="submit" class="btn" style="height: 38px; padding: 0 18px; border-radius: 8px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s; {{ $isNewsComingSoon ? 'background: #10b981; color: #fff; border: 1px solid #10b981;' : 'background: rgba(244, 63, 94, 0.18); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.4);' }}">
+                <i class="fa-solid {{ $isNewsComingSoon ? 'fa-globe' : 'fa-lock' }}"></i>
+                <span>{{ $isNewsComingSoon ? 'Switch to Live Mode' : 'Switch to Coming Soon' }}</span>
             </button>
         </form>
     </div>
 
-    <!-- Table Container (Dynamically updated via Live Search) -->
-    <div id="news-table-wrapper">
-        @include('admin.news.table_data')
+    <!-- Coming Soon Countdown Timer Settings Card -->
+    <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="fa-solid fa-stopwatch"></i>
+                </div>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <span style="font-size: 15px; font-weight: 700; color: #fff;">Coming Soon Launch Countdown Timer:</span>
+                        @if($formattedCountdownTarget)
+                            <span style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                                <i class="fa-regular fa-clock"></i> Target: {{ $formattedCountdownTarget }} ({{ $diffCountdownTarget }})
+                            </span>
+                        @else
+                            <span style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-rotate"></i> Default Rolling (+28 Days)
+                            </span>
+                        @endif
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 12.5px; margin: 4px 0 0;">
+                        Controls the live Days / Hours / Minutes / Seconds countdown clock shown to visitors on the Coming Soon page.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Quick Reset to Default Form -->
+            <form action="{{ route('admin.news.update-countdown') }}#controls" method="POST" style="margin: 0;">
+                @csrf
+                <input type="hidden" name="action" value="reset_default">
+                <button type="submit" class="btn" style="height: 36px; padding: 0 14px; border-radius: 8px; font-size: 12px; font-weight: 600; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); color: var(--text-secondary); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.color='#fff'; this.style.borderColor='rgba(255,255,255,0.3)';" onmouseout="this.style.color='var(--text-secondary)'; this.style.borderColor='rgba(255,255,255,0.15)';">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span>Reset to Default (+28 Days)</span>
+                </button>
+            </form>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; align-items: center; background: rgba(0, 0, 0, 0.2); padding: 14px 18px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.05);">
+            <!-- Quick Presets -->
+            <div>
+                <span style="display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">
+                    <i class="fa-solid fa-bolt" style="color: #f59e0b; margin-right: 4px;"></i> Quick Reset Presets:
+                </span>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    @foreach([7 => '7 Days', 14 => '14 Days', 21 => '21 Days', 30 => '30 Days', 60 => '60 Days'] as $days => $label)
+                    <form action="{{ route('admin.news.update-countdown') }}#controls" method="POST" style="margin: 0; display: inline-block;">
+                        @csrf
+                        <input type="hidden" name="preset_days" value="{{ $days }}">
+                        <button type="submit" style="background: rgba(59, 130, 246, 0.12); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 6px; padding: 6px 12px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#3b82f6'; this.style.color='#fff';" onmouseout="this.style.background='rgba(59, 130, 246, 0.12)'; this.style.color='#93c5fd';">
+                            +{{ $label }}
+                        </button>
+                    </form>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Custom Date & Time Picker -->
+            <form action="{{ route('admin.news.update-countdown') }}#controls" method="POST" style="margin: 0; display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+                @csrf
+                <div style="flex: 1; min-width: 200px;">
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px;">
+                        <i class="fa-regular fa-calendar" style="margin-right: 4px;"></i> Pick Exact Target Date & Time:
+                    </label>
+                    <input type="datetime-local" name="countdown_target" value="{{ $inputCountdownTarget }}" required min="{{ now()->format('Y-m-d\TH:i') }}" style="width: 100%; height: 36px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 6px; padding: 0 10px; color: #fff; font-size: 12.5px; font-family: inherit; outline: none;">
+                </div>
+                <button type="submit" class="btn btn-primary" style="height: 36px; padding: 0 16px; border-radius: 6px; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
+                    <i class="fa-solid fa-check"></i>
+                    <span>Set Date</span>
+                </button>
+            </form>
+        </div>
     </div>
+
+    <!-- Newsroom Navigation Tabs Dynamic Controls -->
+    @if(isset($categories) && count($categories) > 0)
+    <div class="card-table" style="width: 100%; margin-bottom: 28px; padding: 22px 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <div>
+                    <h2 style="font-size: 17px; font-weight: 700; color: #fff; margin: 0;">Newsroom Navigation Tabs</h2>
+                    <p style="font-size: 12.5px; color: var(--text-secondary); margin: 2px 0 0;">
+                        Dynamically enable or disable category tabs in the public newsroom header and mobile navigation. Disabled tabs are hidden from visitors.
+                    </p>
+                </div>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted);">
+                <i class="fa-solid fa-circle-info" style="color: #60a5fa; margin-right: 4px;"></i> Click any button to toggle tab visibility instantly
+            </div>
+        </div>
+
+        <!-- Category Pills Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;">
+            @foreach($categories as $cat)
+            @php
+                $isEnabled = (bool)$cat->is_enabled;
+                $cleanName = str_replace('-', ' ', $cat->name);
+            @endphp
+            <div id="cat-card-{{ $cat->id }}" style="background: {{ $isEnabled ? 'rgba(59, 130, 246, 0.05)' : 'rgba(255, 255, 255, 0.02)' }}; border: 1px solid {{ $isEnabled ? 'rgba(59, 130, 246, 0.25)' : 'rgba(255, 255, 255, 0.07)' }}; border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; transition: all 0.25s ease;">
+                <!-- Top Row: Icon, Name & Status Badge -->
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+                        <div id="cat-icon-{{ $cat->id }}" style="width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; {{ $isEnabled ? 'background: rgba(59, 130, 246, 0.15); color: #60a5fa;' : 'background: rgba(255, 255, 255, 0.05); color: var(--text-muted);' }}">
+                            <i class="fa-solid fa-folder"></i>
+                        </div>
+                        <div style="min-width: 0;">
+                            <div id="cat-name-{{ $cat->id }}" style="font-size: 15px; font-weight: 700; color: {{ $isEnabled ? '#fff' : 'var(--text-muted)' }}; white-space: nowrap; line-height: 1.2;">
+                                {{ $cleanName }}
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px; display: flex; align-items: center; gap: 5px; white-space: nowrap;">
+                                <i class="fa-regular fa-newspaper" style="font-size: 10.5px; opacity: 0.7;"></i>
+                                <span>{{ $cat->articles_count ?? 0 }} articles</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Badge -->
+                    <span id="cat-badge-{{ $cat->id }}" style="font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; white-space: nowrap; {{ $isEnabled ? 'background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);' : 'background: rgba(100, 116, 139, 0.15); color: #94a3b8; border: 1px solid rgba(100, 116, 139, 0.3);' }}">
+                        {{ $isEnabled ? 'Visible' : 'Hidden' }}
+                    </span>
+                </div>
+
+                <!-- Bottom Row: Header Tab status indicator & Toggle Action Button -->
+                <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.05); gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); white-space: nowrap;">
+                        <span id="cat-dot-{{ $cat->id }}" style="width: 7px; height: 7px; border-radius: 50%; background: {{ $isEnabled ? '#34d399' : '#94a3b8' }}; display: inline-block;"></span>
+                        <span>Header Tab</span>
+                    </div>
+                    <form action="{{ route('admin.news.categories.toggle', $cat->id) }}#controls" method="POST" class="cat-toggle-form" data-id="{{ $cat->id }}" style="margin: 0;">
+                        @csrf
+                        <button type="submit" id="cat-toggle-btn-{{ $cat->id }}" class="btn" style="height: 30px; padding: 0 12px; border-radius: 6px; font-size: 11.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s; white-space: nowrap; {{ $isEnabled ? 'background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35);' : 'background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);' }}">
+                            <i class="fa-solid {{ $isEnabled ? 'fa-eye-slash' : 'fa-eye' }}"></i>
+                            <span>{{ $isEnabled ? 'Disable Tab' : 'Enable Tab' }}</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
+    <!-- Audience & Subscribers Management Card -->
+    <div class="card-table" style="width: 100%; margin-bottom: 28px; padding: 22px 24px; border: 1px solid rgba(59, 130, 246, 0.25); background: rgba(15, 23, 42, 0.65); border-radius: 14px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 18px;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="fa-solid fa-users-viewfinder"></i>
+                </div>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <h2 style="font-size: 17px; font-weight: 700; color: #fff; margin: 0;">Subscribers & Audience Lists</h2>
+                        @if($subscriberList->count() > 0)
+                            <span style="background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-envelope"></i> {{ $subscriberList->count() }} Total {{ Str::plural('Subscriber', $subscriberList->count()) }}
+                            </span>
+                            <span style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-newspaper"></i> {{ $digestCount }} Digest
+                            </span>
+                            <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-rocket"></i> {{ $launchCount }} Launch VIP
+                            </span>
+                        @else
+                            <span style="background: rgba(148, 163, 184, 0.12); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.25); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                                0 Subscribers
+                            </span>
+                        @endif
+                    </div>
+                    <p style="font-size: 12.5px; color: var(--text-secondary); margin: 3px 0 0;">
+                        All audiences collected from the <strong>Legal Intelligence Digest</strong> weekly newsletter widget and the <strong>Coming Soon</strong> Launch Day invitation form.
+                    </p>
+                </div>
+            </div>
+
+            @if($subscriberList->count() > 0)
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <!-- Copy All Button -->
+                <button type="button" onclick="copyAllSubscriberEmails()" id="btnCopyAllEmails" class="btn btn-secondary btn-action" style="height: 36px; padding: 0 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; background: rgba(59, 130, 246, 0.12); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3);">
+                    <i class="fa-regular fa-copy"></i>
+                    <span id="btnCopyText">Copy Filtered Emails</span>
+                </button>
+
+                <!-- Mailto Button -->
+                <a id="btnSendEmail" href="mailto:?bcc={{ rawurlencode($allEmailsString) }}&subject={{ rawurlencode('Legals Forum Update & Intelligence') }}" class="btn btn-primary btn-action" style="height: 36px; padding: 0 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Send Email</span>
+                </a>
+            </div>
+            @endif
+        </div>
+
+        @if($subscriberList->count() > 0)
+            <!-- Audience Filter Pills -->
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 16px;">
+                <span style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-right: 4px;">Filter Audience:</span>
+                <button type="button" onclick="filterSubscriberList('all')" id="sub-filter-all" class="sub-filter-btn" style="background: #3b82f6; color: #fff; border: 1px solid #3b82f6; border-radius: 20px; padding: 4px 14px; font-size: 11.5px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+                    All ({{ $subscriberList->count() }})
+                </button>
+                <button type="button" onclick="filterSubscriberList('digest')" id="sub-filter-digest" class="sub-filter-btn" style="background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 4px 14px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                    <i class="fa-solid fa-newspaper" style="margin-right: 4px;"></i> Legal Intelligence Digest ({{ $digestCount }})
+                </button>
+                <button type="button" onclick="filterSubscriberList('launch')" id="sub-filter-launch" class="sub-filter-btn" style="background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 4px 14px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                    <i class="fa-solid fa-rocket" style="margin-right: 4px;"></i> Launch VIP Invitations ({{ $launchCount }})
+                </button>
+            </div>
+
+            <!-- Subscribers Table -->
+            <div style="overflow-x: auto; width: 100%; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 10px;">
+                <table class="custom-table" style="width: 100%; min-width: 680px; margin: 0;">
+                    <thead>
+                        <tr style="background: rgba(0, 0, 0, 0.25);">
+                            <th style="width: 45px; text-align: center; padding-left: 18px;">#</th>
+                            <th style="min-width: 220px;">Subscriber Email</th>
+                            <th style="width: 150px;">Source / Context</th>
+                            <th style="width: 160px;">Date Joined</th>
+                            <th style="width: 100px;">IP Address</th>
+                            <th style="width: 80px;">Status</th>
+                            <th style="width: 80px; text-align: right; padding-right: 20px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subscriber-table-body">
+                        @foreach($subscriberList as $idx => $invitation)
+                            <tr class="subscriber-row" data-source="{{ $invitation->source ?? 'launch' }}" data-email="{{ $invitation->email }}">
+                                <td style="text-align: center; padding-left: 18px; color: var(--text-muted); font-size: 12px;">
+                                    {{ $idx + 1 }}
+                                </td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div style="width: 28px; height: 28px; border-radius: 50%; background: {{ $invitation->source === 'digest' ? 'rgba(168, 85, 247, 0.2)' : 'rgba(59, 130, 246, 0.2)' }}; color: {{ $invitation->source === 'digest' ? '#c084fc' : '#60a5fa' }}; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700;">
+                                            {{ strtoupper(substr($invitation->email, 0, 2)) }}
+                                        </div>
+                                        <a href="mailto:{{ $invitation->email }}" style="color: #fff; font-weight: 600; font-size: 13px; text-decoration: none;" onmouseover="this.style.color='#60a5fa';" onmouseout="this.style.color='#fff';">
+                                            {{ $invitation->email }}
+                                        </a>
+                                        <button type="button" onclick="navigator.clipboard.writeText('{{ $invitation->email }}')" title="Copy Email" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 2px 4px; font-size: 11px;" onmouseover="this.style.color='#fff';" onmouseout="this.style.color='var(--text-muted)';">
+                                            <i class="fa-regular fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if($invitation->source === 'digest')
+                                        <span style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 5px;">
+                                            <i class="fa-solid fa-newspaper" style="font-size: 10px;"></i> Weekly Digest
+                                        </span>
+                                    @else
+                                        <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 5px;">
+                                            <i class="fa-solid fa-rocket" style="font-size: 10px;"></i> Launch Day VIP
+                                        </span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <div style="font-size: 12.5px; color: #e2e8f0;">
+                                        {{ $invitation->created_at ? $invitation->created_at->format('M d, Y h:i A') : 'N/A' }}
+                                    </div>
+                                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                                        {{ $invitation->created_at ? $invitation->created_at->diffForHumans() : '' }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="font-size: 11.5px; color: var(--text-secondary); font-family: monospace; background: rgba(255, 255, 255, 0.04); padding: 2px 6px; border-radius: 4px;">
+                                        {{ $invitation->ip_address ?? '127.0.0.1' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="background: rgba(16, 185, 129, 0.12); color: #34d399; font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 4px;">
+                                        Active
+                                    </span>
+                                </td>
+                                <td style="text-align: right; padding-right: 20px;">
+                                    <form action="{{ route('admin.news.launch-invitations.destroy', $invitation->id) }}#controls" method="POST" style="margin: 0; display: inline-block;" onsubmit="return confirm('Remove {{ $invitation->email }} from {{ $invitation->source === "digest" ? "Legal Intelligence Digest" : "VIP Launch list" }}?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-action" style="padding: 5px 10px; font-size: 11.5px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;" title="Remove subscriber">
+                                            <i class="fa-regular fa-trash-can"></i>
+                                            <span>Remove</span>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <div style="text-align: center; padding: 36px 16px; background: rgba(0, 0, 0, 0.15); border-radius: 8px; border: 1px dashed rgba(255, 255, 255, 0.1);">
+                <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); color: var(--text-muted); display: inline-flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px;">
+                    <i class="fa-regular fa-envelope"></i>
+                </div>
+                <h4 style="font-size: 14.5px; font-weight: 600; color: #fff; margin-bottom: 6px;">No Subscribers Recorded Yet</h4>
+                <p style="font-size: 12.5px; color: var(--text-secondary); max-width: 480px; margin: 0 auto;">
+                    When visitors subscribe to the <strong>Legal Intelligence Digest</strong> or register on the <strong>Coming Soon</strong> Launch Day card, their emails and registration details will appear here automatically.
+                </p>
+            </div>
+        @endif
+    </div>
+
 </div>
 
 <!-- Bulk Delete Form -->
@@ -452,10 +565,137 @@
     @method('DELETE')
     <input type="hidden" name="ids" id="bulk-delete-ids">
 </form>
+<!-- News Article Preview Modal -->
+<div id="news-preview-modal" style="display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(0, 0, 0, 0.82); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;" onclick="if(event.target === this) closeNewsPreviewModal();">
+    <div class="preview-modal-dialog" style="background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 16px; width: 100%; max-width: 860px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.85); overflow: hidden;">
+        
+        <!-- Modal Header -->
+        <div style="padding: 18px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.02); gap: 14px; flex-shrink: 0;">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 12px; border-radius: 6px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.35);">
+                    <i class="fa-solid fa-eye"></i> Article Preview
+                </span>
+                <span id="preview-modal-category" class="badge badge-accent" style="font-size: 11px; padding: 4px 10px;">
+                    Category
+                </span>
+                <span id="preview-modal-date" style="font-size: 12px; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 5px;">
+                    <i class="fa-regular fa-calendar"></i> <span id="preview-date-text">Date</span>
+                </span>
+            </div>
+            <button type="button" onclick="closeNewsPreviewModal()" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.color='#fff'; this.style.background='rgba(255,255,255,0.1)';" onmouseout="this.style.color='var(--text-secondary)'; this.style.background='rgba(255,255,255,0.05)';" title="Close Preview (Esc)">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body (Scrollable) -->
+        <div id="preview-modal-body" class="preview-scroll" style="padding: 24px 30px; overflow-y: auto; flex: 1;">
+            
+            <!-- Loading State -->
+            <div id="preview-modal-loading" style="display: none; text-align: center; padding: 70px 20px; color: var(--text-secondary);">
+                <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 34px; color: #3b82f6; margin-bottom: 14px;"></i>
+                <div style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Loading article preview...</div>
+            </div>
+
+            <!-- Content Area -->
+            <div id="preview-modal-content-area" style="display: block;">
+                <!-- Article Headline -->
+                <h1 id="preview-modal-title" style="font-size: 24px; font-weight: 800; color: #fff; line-height: 1.35; margin: 0 0 20px; letter-spacing: -0.3px;">
+                    Article Title
+                </h1>
+
+                <!-- Featured Image -->
+                <div id="preview-modal-image-container" style="width: 100%; max-height: 420px; border-radius: 12px; overflow: hidden; margin-bottom: 24px; background: #0b0f17; border: 1px solid rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center;">
+                    <img id="preview-modal-image" src="" alt="Article Feature Image" style="width: 100%; max-height: 420px; object-fit: cover; display: block;">
+                </div>
+
+                <!-- Extract / Summary Callout -->
+                <div id="preview-modal-extract-container" style="background: rgba(59, 130, 246, 0.08); border-left: 4px solid #3b82f6; border-radius: 0 10px 10px 0; padding: 14px 20px; margin-bottom: 24px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #93c5fd; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
+                        <i class="fa-solid fa-quote-left" style="margin-right: 4px;"></i> Summary / Extract
+                    </div>
+                    <div id="preview-modal-extract" style="font-size: 14px; color: #e2e8f0; line-height: 1.6; font-style: italic;">
+                    </div>
+                </div>
+
+                <!-- Full Article Content -->
+                <div>
+                    <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-regular fa-file-lines"></i> Full Article Content
+                    </div>
+                    <div id="preview-modal-body-text" class="preview-prose" style="color: #cbd5e1; font-size: 15px; line-height: 1.85; word-break: break-word;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div style="padding: 16px 24px; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.02); gap: 12px; flex-wrap: wrap; flex-shrink: 0;">
+            <div>
+                <a id="preview-modal-public-btn" href="#" target="_blank" class="btn" style="height: 38px; padding: 0 16px; border-radius: 8px; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 7px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); color: #cbd5e1; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.color='#fff'; this.style.borderColor='rgba(255,255,255,0.3)';" onmouseout="this.style.color='#cbd5e1'; this.style.borderColor='rgba(255,255,255,0.15)';">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Article
+                </a>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <a id="preview-modal-edit-btn" href="#" class="btn btn-primary" style="height: 38px; padding: 0 16px; border-radius: 8px; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;">
+                    <i class="fa-solid fa-pen-to-square"></i> Edit Article
+                </a>
+                <button type="button" onclick="closeNewsPreviewModal()" class="btn btn-secondary btn-action" style="height: 38px; padding: 0 16px; border-radius: 8px; font-size: 12.5px; font-weight: 600; cursor: pointer;">
+                    Close
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
 @endsection
 
 @section('scripts')
 <script>
+    // Tab switching handler
+    function switchNewsTab(tabId) {
+        const articlesPanel = document.getElementById('tab-panel-articles');
+        const controlsPanel = document.getElementById('tab-panel-controls');
+        const btnArticles = document.getElementById('tab-btn-articles');
+        const btnControls = document.getElementById('tab-btn-controls');
+
+        if (tabId === 'controls') {
+            if (articlesPanel) articlesPanel.style.display = 'none';
+            if (controlsPanel) controlsPanel.style.display = 'block';
+            if (btnArticles) btnArticles.classList.remove('active');
+            if (btnControls) btnControls.classList.add('active');
+            try {
+                history.replaceState(null, null, window.location.pathname + (window.location.search ? window.location.search : '') + '#controls');
+            } catch(e) {}
+        } else {
+            if (articlesPanel) articlesPanel.style.display = 'block';
+            if (controlsPanel) controlsPanel.style.display = 'none';
+            if (btnArticles) btnArticles.classList.add('active');
+            if (btnControls) btnControls.classList.remove('active');
+            try {
+                history.replaceState(null, null, window.location.pathname + (window.location.search ? window.location.search : '') + '#articles');
+            } catch(e) {}
+        }
+    }
+
+    // Auto-select tab based on hash or query parameter
+    (function() {
+        const hash = window.location.hash;
+        const tabParam = new URLSearchParams(window.location.search).get('tab');
+        if (hash === '#controls' || tabParam === 'controls') {
+            switchNewsTab('controls');
+        } else {
+            switchNewsTab('articles');
+        }
+    })();
+
+    window.addEventListener('hashchange', function() {
+        if (window.location.hash === '#controls') {
+            switchNewsTab('controls');
+        } else if (window.location.hash === '#articles') {
+            switchNewsTab('articles');
+        }
+    });
+
     let activeAjax = null;
     let debounceTimer = null;
 
@@ -466,6 +706,7 @@
         const clearBtn = document.getElementById('news-clear-search-btn');
         const bulkBtn = document.getElementById('bulk-delete-btn');
         const totalCountSpan = document.getElementById('news-total-count');
+        const navArticlesBadge = document.getElementById('nav-articles-badge');
         const deleteAllForm = document.getElementById('delete-all-form');
         const deleteAllCountSpan = document.getElementById('delete-all-count');
 
@@ -512,6 +753,10 @@
 
             if (totalCountSpan && data.total !== undefined) {
                 totalCountSpan.textContent = Number(data.total).toLocaleString();
+            }
+
+            if (navArticlesBadge && data.total !== undefined) {
+                navArticlesBadge.textContent = Number(data.total).toLocaleString();
             }
 
             if (deleteAllCountSpan && data.total !== undefined) {
@@ -752,5 +997,127 @@
             }
         });
     }
+
+    // News Article Quick Preview Modal
+    function openNewsPreview(id) {
+        const modal = document.getElementById('news-preview-modal');
+        const loading = document.getElementById('preview-modal-loading');
+        const contentArea = document.getElementById('preview-modal-content-area');
+        
+        if (!modal) return;
+        
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        
+        if (loading) {
+            loading.style.display = 'block';
+            loading.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" style="font-size: 34px; color: #3b82f6; margin-bottom: 14px;"></i><div style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Loading article preview...</div>';
+        }
+        if (contentArea) contentArea.style.display = 'none';
+        
+        fetch("{{ url('admin/news') }}/" + id, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(res => {
+            if (!res.ok) throw new Error('Failed to fetch article details');
+            return res.json();
+        })
+        .then(data => {
+            if (data && data.article) {
+                const art = data.article;
+                
+                const titleEl = document.getElementById('preview-modal-title');
+                if (titleEl) titleEl.textContent = art.title || 'Untitled';
+                
+                const catEl = document.getElementById('preview-modal-category');
+                if (catEl) {
+                    catEl.textContent = (art.news_category || 'General').replace(/-/g, ' ');
+                }
+                
+                const dateEl = document.getElementById('preview-date-text');
+                if (dateEl) {
+                    dateEl.textContent = (art.date_formatted || '') + (art.date_relative ? ' (' + art.date_relative + ')' : '');
+                }
+                
+                // Featured Image
+                const imgContainer = document.getElementById('preview-modal-image-container');
+                const imgEl = document.getElementById('preview-modal-image');
+                if (art.image_url) {
+                    imgEl.src = art.image_url;
+                    imgContainer.style.display = 'flex';
+                } else {
+                    imgContainer.style.display = 'none';
+                }
+                
+                // Extract / Summary
+                const extractContainer = document.getElementById('preview-modal-extract-container');
+                const extractEl = document.getElementById('preview-modal-extract');
+                if (art.extract && art.extract.trim()) {
+                    extractEl.textContent = art.extract;
+                    extractContainer.style.display = 'block';
+                } else {
+                    extractContainer.style.display = 'none';
+                }
+                
+                // Body Content
+                const bodyEl = document.getElementById('preview-modal-body-text');
+                if (art.content) {
+                    if (/<[a-z][\s\S]*>/i.test(art.content)) {
+                        bodyEl.innerHTML = art.content;
+                    } else {
+                        // Plain text: escape HTML and convert newlines to paragraphs/breaks
+                        const safeDiv = document.createElement('div');
+                        safeDiv.textContent = art.content;
+                        bodyEl.innerHTML = '<p>' + safeDiv.innerHTML.replace(/\n\n+/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
+                    }
+                } else {
+                    bodyEl.innerHTML = '<p style="color: var(--text-muted); font-style: italic;">No content available for this article.</p>';
+                }
+                
+                // Action Buttons
+                const publicBtn = document.getElementById('preview-modal-public-btn');
+                if (publicBtn) publicBtn.href = art.public_url || '#';
+                
+                const editBtn = document.getElementById('preview-modal-edit-btn');
+                if (editBtn) editBtn.href = art.edit_url || '#';
+                
+                if (loading) loading.style.display = 'none';
+                if (contentArea) contentArea.style.display = 'block';
+            }
+        })
+        .catch(err => {
+            console.error('Error fetching preview:', err);
+            if (loading) {
+                loading.innerHTML = '<div style="color: #f87171;"><i class="fa-solid fa-triangle-exclamation" style="font-size: 32px; margin-bottom: 12px; display: block;"></i><div style="font-size: 15px; font-weight: 600; margin-bottom: 8px;">Failed to load article preview</div><div style="font-size: 13px; color: var(--text-muted);">Please try again or view the article directly.</div></div>';
+            }
+        });
+    }
+
+    function closeNewsPreviewModal() {
+        const modal = document.getElementById('news-preview-modal');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    }
+
+    // Escape key closes preview
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeNewsPreviewModal();
+        }
+    });
+
+    // Auto open preview if preview_id URL parameter is present
+    (function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const previewId = urlParams.get('preview_id');
+        if (previewId) {
+            openNewsPreview(previewId);
+        }
+    })();
 </script>
 @endsection
