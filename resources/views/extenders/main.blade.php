@@ -213,7 +213,11 @@
                     </div>
                     
                     <div class="collapse navbar-collapse container-fluid pull-right" style="padding-top:13px;" id="bs-example-navbar-collapse-2">
-                        {{ menu('main', 'bootstrap') }} 
+                        @if(function_exists('menu'))
+                            {{ menu('main', 'bootstrap') }}
+                        @elseif(isset($headerMenus) && count($headerMenus) > 0)
+                            @include('partials._nav_desktop_menu')
+                        @endif
                     
                         <div class="pull-right" style="margin-top: 7px;">
                             @if (Route::has('login'))

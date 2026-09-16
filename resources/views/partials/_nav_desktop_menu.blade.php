@@ -37,7 +37,7 @@
                 $isMenuActive = true;
             } elseif ($activeSection === 'existing_laws' && (strpos($titleLower, 'existing') !== false || strpos($titleLower, 'pre-1992') !== false || strpos($titleLower, 'pre 1992') !== false)) {
                 $isMenuActive = true;
-            } elseif ($activeSection === 'new_laws' && (strpos($titleLower, 'new') !== false || strpos($titleLower, 'post-1992') !== false || strpos($titleLower, 'post 1992') !== false)) {
+            } elseif ($activeSection === 'new_laws' && strpos($titleLower, 'news') === false && (strpos($titleLower, 'new') !== false || strpos($titleLower, 'post-1992') !== false || strpos($titleLower, 'post 1992') !== false)) {
                 $isMenuActive = true;
             } elseif ($activeSection === 'news' && ($titleLower === 'news' || strpos($titleLower, 'news') !== false)) {
                 $isMenuActive = true;

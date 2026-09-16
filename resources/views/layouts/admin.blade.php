@@ -103,10 +103,22 @@
                     <span>News & Articles</span>
                 </a>
             </li>
+            <li class="menu-item {{ Request::is('admin/constitutions*') ? 'active' : '' }}">
+                <a href="{{ route('admin.constitutions.index') }}">
+                    <i class="fa-solid fa-landmark-flag"></i>
+                    <span>The Constitution</span>
+                </a>
+            </li>
             <li class="menu-item {{ Request::is('admin/laws*') ? 'active' : '' }}">
                 <a href="{{ route('admin.laws.index') }}">
                     <i class="fa-solid fa-book-bookmark"></i>
                     <span>Laws & Acts</span>
+                </a>
+            </li>
+            <li class="menu-item {{ Request::is('admin/case-laws*') ? 'active' : '' }}">
+                <a href="{{ route('admin.case-laws.index') }}">
+                    <i class="fa-solid fa-gavel"></i>
+                    <span>Case Laws</span>
                 </a>
             </li>
             <li class="menu-item {{ Request::is('admin/homepage-settings*') ? 'active' : '' }}">

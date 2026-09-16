@@ -606,11 +606,46 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::post('news/categories/{id}/toggle', 'Admin\NewsController@toggleCategoryStatus')->name('admin.news.categories.toggle');
     Route::resource('news', 'Admin\NewsController', ['as' => 'admin']);
     Route::get('laws', 'Admin\LawController@index')->name('admin.laws.index');
+    Route::get('laws/taxonomies', 'Admin\LawController@taxonomies')->name('admin.laws.taxonomies');
+    Route::post('laws/groups/store', 'Admin\LawController@storeGroup')->name('admin.laws.groups.store');
+    Route::put('laws/groups/{id}/update', 'Admin\LawController@updateGroup')->name('admin.laws.groups.update');
+    Route::delete('laws/groups/{id}/delete', 'Admin\LawController@destroyGroup')->name('admin.laws.groups.destroy');
+    Route::post('laws/categories/store', 'Admin\LawController@storeCategory')->name('admin.laws.categories.store');
+    Route::put('laws/categories/{id}/update', 'Admin\LawController@updateCategory')->name('admin.laws.categories.update');
+    Route::delete('laws/categories/{id}/delete', 'Admin\LawController@destroyCategory')->name('admin.laws.categories.destroy');
     Route::get('laws/create/{type}', 'Admin\LawController@create')->name('admin.laws.create');
     Route::post('laws/store/{type}', 'Admin\LawController@store')->name('admin.laws.store');
     Route::get('laws/{id}/edit/{type}', 'Admin\LawController@edit')->name('admin.laws.edit');
     Route::put('laws/{id}/update/{type}', 'Admin\LawController@update')->name('admin.laws.update');
     Route::delete('laws/{id}/delete/{type}', 'Admin\LawController@destroy')->name('admin.laws.destroy');
+    Route::get('laws/{id}/preview/{type}', 'Admin\LawController@previewAct')->name('admin.laws.preview');
+    Route::get('laws/{id}/sections/{type}', 'Admin\LawController@sections')->name('admin.laws.sections');
+    Route::post('laws/{id}/sections/{type}/store', 'Admin\LawController@storeSection')->name('admin.laws.sections.store');
+    Route::put('laws/{id}/sections/{sectionId}/{type}/update', 'Admin\LawController@updateSection')->name('admin.laws.sections.update');
+    Route::delete('laws/{id}/sections/{sectionId}/{type}/delete', 'Admin\LawController@destroySection')->name('admin.laws.sections.destroy');
+
+    // The Constitution Management
+    Route::get('constitutions', 'Admin\ConstitutionController@index')->name('admin.constitutions.index');
+    Route::put('constitutions/act/{target}/update', 'Admin\ConstitutionController@updateAct')->name('admin.constitutions.act.update');
+    Route::get('constitutions/articles/{target}', 'Admin\ConstitutionController@articles')->name('admin.constitutions.articles');
+    Route::post('constitutions/articles/{target}/store', 'Admin\ConstitutionController@storeArticle')->name('admin.constitutions.articles.store');
+    Route::put('constitutions/articles/{target}/{articleId}/update', 'Admin\ConstitutionController@updateArticle')->name('admin.constitutions.articles.update');
+    Route::delete('constitutions/articles/{target}/{articleId}/delete', 'Admin\ConstitutionController@destroyArticle')->name('admin.constitutions.articles.destroy');
+    Route::get('constitutions/foreign/create', 'Admin\ConstitutionController@createForeign')->name('admin.constitutions.foreign.create');
+    Route::post('constitutions/foreign/store', 'Admin\ConstitutionController@storeForeign')->name('admin.constitutions.foreign.store');
+    Route::get('constitutions/foreign/{id}/edit', 'Admin\ConstitutionController@editForeign')->name('admin.constitutions.foreign.edit');
+    Route::put('constitutions/foreign/{id}/update', 'Admin\ConstitutionController@updateForeign')->name('admin.constitutions.foreign.update');
+    Route::delete('constitutions/foreign/{id}/delete', 'Admin\ConstitutionController@destroyForeign')->name('admin.constitutions.foreign.destroy');
+    Route::get('constitutions/foreign/{id}/preview', 'Admin\ConstitutionController@previewForeign')->name('admin.constitutions.foreign.preview');
+
+    // Case Laws (Judgments) Management
+    Route::get('case-laws', 'Admin\CaseLawController@index')->name('admin.case-laws.index');
+    Route::get('case-laws/create', 'Admin\CaseLawController@create')->name('admin.case-laws.create');
+    Route::post('case-laws/store', 'Admin\CaseLawController@store')->name('admin.case-laws.store');
+    Route::get('case-laws/{id}/edit', 'Admin\CaseLawController@edit')->name('admin.case-laws.edit');
+    Route::put('case-laws/{id}/update', 'Admin\CaseLawController@update')->name('admin.case-laws.update');
+    Route::delete('case-laws/{id}/delete', 'Admin\CaseLawController@destroy')->name('admin.case-laws.destroy');
+    Route::get('case-laws/{id}/preview', 'Admin\CaseLawController@preview')->name('admin.case-laws.preview');
 
     // Homepage Settings Management
     Route::get('homepage-settings', 'Admin\HomepageSettingController@index')->name('admin.homepage-settings.index');

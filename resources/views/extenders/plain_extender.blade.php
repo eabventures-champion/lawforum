@@ -145,7 +145,11 @@
                     </div>
                     
                     <div class="collapse navbar-collapse container-fluid pull-right" id="bs-example-navbar-collapse-2">
-                        {{ menu('main', 'bootstrap') }}
+                        @if(function_exists('menu'))
+                            {{ menu('main', 'bootstrap') }}
+                        @elseif(isset($headerMenus) && count($headerMenus) > 0)
+                            @include('partials._nav_desktop_menu')
+                        @endif
                         {{-- <form action="/keyword-search" method="GET" class="pull-right search-form" target="_blank" style="padding-top: 5px;">
                             {{ csrf_field() }}
                             <div class="form-group has-feedback">

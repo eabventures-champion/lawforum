@@ -1335,21 +1335,23 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 0 10px;
-            height: 34px;
-            width: 160px;
-            max-width: 170px;
+            height: 36px;
+            width: 260px;
+            min-width: 220px;
+            max-width: 340px;
             transition: all 0.3s ease;
         }
 
         .content-search-box:focus-within {
             border-color: var(--accent);
             box-shadow: 0 0 0 2px var(--accent-glow);
-            width: 200px;
+            width: 300px;
         }
 
         .content-search-box i {
             color: var(--text-muted);
             font-size: 13px;
+            flex-shrink: 0;
         }
 
         .content-search-box input {
@@ -1360,6 +1362,8 @@
             font-size: 13px;
             outline: none;
             width: 100%;
+            flex: 1 1 auto;
+            min-width: 80px;
         }
 
         .search-matches-count {
@@ -2760,7 +2764,7 @@
                 </div>
 
                 <!-- Toolbar Center: Keyword Search Box & Integrated Audio controls -->
-                <div class="toolbar-center" style="display: flex; align-items: center; gap: 15px; flex-grow: 1; justify-content: center; max-width: 50%;">
+                <div class="toolbar-center" style="display: flex; align-items: center; gap: 12px; flex-grow: 1; justify-content: center; max-width: 65%;">
                     <div class="content-search-box" style="flex-shrink: 0; visibility: hidden;">
                         <i class="fa-solid fa-magnifying-glass"></i>
                         <input type="text" id="keywordSearch" placeholder="Find in document...">

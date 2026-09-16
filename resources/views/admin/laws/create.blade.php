@@ -8,7 +8,7 @@
         <h1 class="page-title" style="text-transform: capitalize;">Add New {{ str_replace('_', ' ', $type) }}</h1>
         <p class="page-subtitle">Add a new legislation entry to the database.</p>
     </div>
-    <a href="{{ route('admin.laws.index', ['type' => $type]) }}" class="btn btn-secondary">
+    <a href="{{ route('admin.laws.index', ['type' => $type]) }}" class="btn btn-secondary" style="margin-right: 28px;">
         <i class="fa-solid fa-arrow-left"></i> Back to List
     </a>
 </div>
@@ -34,7 +34,14 @@
             @if($type === 'post1992')
                 <div class="form-group">
                     <label for="post_group" class="form-label">Post 1992 Group</label>
-                    <input type="text" id="post_group" name="post_group" class="form-control" value="{{ old('post_group') }}" placeholder="e.g. ACTS OF PARLIAMENT" required>
+                    <select id="post_group" name="post_group" class="form-control" required>
+                        <option value="" disabled {{ old('post_group') ? '' : 'selected' }}>Select Group...</option>
+                        @foreach($postGroups as $group)
+                            <option value="{{ $group->name }}" {{ old('post_group') == $group->name ? 'selected' : '' }}>
+                                {{ $group->name }}
+                            </option>
+                        @endforeach
+                    </select>
                     @error('post_group') <small style="color: var(--danger-color);">{{ $message }}</small> @enderror
                 </div>
             @elseif($type === 'pre1992')
@@ -62,7 +69,14 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                 <div class="form-group">
                     <label for="post_category" class="form-label">Post Category</label>
-                    <input type="text" id="post_category" name="post_category" class="form-control" value="{{ old('post_category') }}" placeholder="e.g. Finance" required>
+                    <select id="post_category" name="post_category" class="form-control" required>
+                        <option value="" disabled {{ old('post_category') ? '' : 'selected' }}>Select Category...</option>
+                        @foreach($postCategories as $category)
+                            <option value="{{ $category->name }}" {{ old('post_category') == $category->name ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
                     @error('post_category') <small style="color: var(--danger-color);">{{ $message }}</small> @enderror
                 </div>
 
