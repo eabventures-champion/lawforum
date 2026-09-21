@@ -2933,12 +2933,12 @@
                     <a href="{{ route('login') }}">Log In</a>
                     <a href="{{ route('register') }}">Sign Up</a>
                     <a href="/subscription">Subscription</a>
-                    <a href="{{ route('admin.login') }}" style="color: #3b82f6 !important; font-weight: 600;">Admin Login</a>
+                    <!-- <a href="{{ route('admin.login') }}" style="color: #3b82f6 !important; font-weight: 600;">Admin Login</a> -->
                 </div>
                 <div class="footer-col">
                     <h4>Contact</h4>
                     <a href="mailto:info@legalsforum.com"><i class="fa-solid fa-envelope" style="width: 16px;"></i> info@legalsforum.com</a>
-                    <a href="tel:+233000000000"><i class="fa-solid fa-phone" style="width: 16px;"></i> Contact Us</a>
+                    <a href="tel:+233550688597"><i class="fa-solid fa-phone" style="width: 16px;"></i> Contact Us</a>
                 </div>
             </div>
             <div class="footer-bottom">

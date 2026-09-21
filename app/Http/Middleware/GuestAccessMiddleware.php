@@ -30,6 +30,12 @@ class GuestAccessMiddleware
         'search-history/*',
         'search-autocomplete',
         'search-autocomplete/*',
+        'chatroom',
+        'chatroom/*',
+        'marketplace',
+        'marketplace/*',
+        'jobs',
+        'jobs/*',
     ];
 
     /**

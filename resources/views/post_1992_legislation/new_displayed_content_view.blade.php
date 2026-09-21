@@ -291,6 +291,14 @@
             border: 1px solid rgba(59, 130, 246, 0.2);
         }
 
+        .content-act-header {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
         .content-act-title {
             font-family: var(--font-ui);
             font-size: 22px;
@@ -298,7 +306,45 @@
             color: var(--text-primary);
             line-height: 1.3;
             letter-spacing: -0.5px;
-            margin-bottom: 10px;
+            margin-bottom: 0;
+            display: inline;
+        }
+
+        .content-act-bookmark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+            text-decoration: none !important;
+            vertical-align: middle;
+            font-size: 14px;
+        }
+
+        .content-act-bookmark:hover {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: rgba(245, 158, 11, 0.5);
+            color: #f59e0b;
+            transform: scale(1.08);
+        }
+
+        .content-act-bookmark.is-bookmarked {
+            background: rgba(245, 158, 11, 0.18) !important;
+            border-color: #f59e0b !important;
+            color: #f59e0b !important;
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.25) !important;
+        }
+
+        .content-act-bookmark i {
+            font-size: 14px;
+            color: inherit;
         }
 
         .content-section-title {
@@ -314,73 +360,6 @@
         .content-section-title i {
             color: var(--gold);
             font-size: 14px;
-        }
-
-        /* ============================================
-           ACTION TOOLBAR
-           ============================================ */
-        .content-actions-bar {
-            display: flex !important;
-            align-items: center !important;
-            gap: 12px !important;
-            margin-top: 20px !important;
-            padding-top: 18px !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-            flex-wrap: wrap !important;
-        }
-
-        .content-actions-bar .content-action-btn,
-        .content-actions-bar button.btn-bookmark-toggle,
-        .content-actions-bar button.content-action-btn {
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            gap: 8px !important;
-            width: auto !important;
-            min-width: 90px !important;
-            max-width: unset !important;
-            height: 38px !important;
-            padding: 0 16px !important;
-            border-radius: 10px !important;
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.12) !important;
-            color: #cbd5e1 !important;
-            font-size: 13px !important;
-            font-weight: 600 !important;
-            cursor: pointer !important;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            font-family: var(--font-ui) !important;
-            text-decoration: none !important;
-            white-space: nowrap !important;
-            margin: 0 !important;
-            transform: none !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
-        }
-
-        .content-actions-bar .content-action-btn:hover,
-        .content-actions-bar button.btn-bookmark-toggle:hover,
-        .content-actions-bar button.content-action-btn:hover {
-            background: rgba(255, 255, 255, 0.1) !important;
-            border-color: rgba(255, 255, 255, 0.25) !important;
-            color: #ffffff !important;
-            transform: translateY(-1px) !important;
-        }
-
-        .content-actions-bar .content-action-btn.is-bookmarked,
-        .content-actions-bar button.btn-bookmark-toggle.is-bookmarked {
-            background: rgba(245, 158, 11, 0.15) !important;
-            border-color: rgba(245, 158, 11, 0.45) !important;
-            color: #f59e0b !important;
-        }
-
-        .content-actions-bar .content-action-btn.is-bookmarked:hover,
-        .content-actions-bar button.btn-bookmark-toggle.is-bookmarked:hover {
-            background: rgba(245, 158, 11, 0.22) !important;
-        }
-
-        .content-actions-bar .content-action-btn i {
-            font-size: 13px !important;
-            color: inherit !important;
         }
 
         /* ============================================
@@ -539,25 +518,10 @@
             .content-meta-header { padding: 16px 14px !important; border-radius: 12px !important; width: 100% !important; box-sizing: border-box !important; margin-bottom: 20px !important; }
             .content-meta-badges { margin-bottom: 12px !important; gap: 6px !important; }
             .content-badge { font-size: 10px !important; padding: 3px 8px !important; }
-            .content-act-title { font-size: 16px !important; word-break: break-word !important; margin-bottom: 8px !important; line-height: 1.35 !important; }
+            .content-act-header { gap: 8px !important; margin-bottom: 8px !important; }
+            .content-act-title { font-size: 16px !important; word-break: break-word !important; margin-bottom: 0 !important; line-height: 1.35 !important; }
+            .content-act-bookmark { width: 28px !important; height: 28px !important; font-size: 12px !important; }
             .content-section-title { font-size: 13.5px !important; word-break: break-word !important; }
-            
-            .content-actions-bar {
-                flex-wrap: wrap !important;
-                gap: 8px !important;
-                margin-top: 14px !important;
-                padding-top: 14px !important;
-                justify-content: flex-start !important;
-            }
-            .content-actions-bar .content-action-btn,
-            .content-actions-bar button.btn-bookmark-toggle,
-            .content-actions-bar button.content-action-btn {
-                min-width: 70px !important;
-                height: 34px !important;
-                padding: 0 10px !important;
-                font-size: 11.5px !important;
-                gap: 6px !important;
-            }
 
             .premium-article-container { padding: 0 12px 40px !important; width: 100% !important; box-sizing: border-box !important; }
             .article-card { padding: 18px 14px !important; border-radius: 12px !important; width: 100% !important; box-sizing: border-box !important; word-break: break-word !important; }
@@ -630,10 +594,43 @@
                 <span class="content-nav-logo-text">Legals Forum</span>
             </a>
 
-            <form action="{{ url('main_home_search') }}" method="GET" class="content-nav-search">
+            <div class="content-nav-search">
                 <i class="fa-solid fa-magnifying-glass content-nav-search-icon"></i>
-                <input type="text" name="search_text" class="content-nav-search-input" placeholder="Search laws, cases, documents..." value="{{ $searchText }}">
-            </form>
+                <input type="text"
+                       id="contentSearchInput"
+                       class="content-nav-search-input"
+                       placeholder="Find in this section or search laws..."
+                       value="{{ $searchText }}"
+                       autocomplete="off"
+                       spellcheck="false">
+
+                <!-- In-page match navigation tools -->
+                <div class="content-search-tools" id="contentSearchTools" style="display: none;">
+                    <span class="content-search-count" id="contentSearchCount">0/0</span>
+                    <button type="button" class="content-search-btn" id="contentSearchPrev" title="Previous match (Shift+Enter)">
+                        <i class="fa-solid fa-chevron-up"></i>
+                    </button>
+                    <button type="button" class="content-search-btn" id="contentSearchNext" title="Next match (Enter)">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <button type="button" class="content-search-btn content-search-clear" id="contentSearchClear" title="Clear search">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Live Search Dropdown -->
+                <div class="content-search-dropdown" id="contentSearchDropdown" style="display: none;">
+                    <div class="dropdown-header" id="dropdownHeader">
+                        <span id="dropdownSectionMatches"></span>
+                    </div>
+                    <div class="dropdown-results" id="dropdownResults"></div>
+                    <div class="dropdown-footer" id="dropdownFooter">
+                        <a href="javascript:void(0)" id="viewAllResultsLink" class="view-all-link">
+                            View all search results <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
 
             <div class="content-nav-actions">
                 @guest
@@ -697,36 +694,27 @@
                 @endif
             </div>
 
-            <h1 class="content-act-title">{{ $actTitle }}</h1>
+            @php
+                $isBookmarked = false;
+                $postAct = \App\Post1992Act::where('title', $allPost1992Article['post_act'])->first();
+                $postGroup = ($postAct && !empty($postAct->post_group)) ? $postAct->post_group : ($allPost1992Article['act_group'] ?? 'Acts of Parliament');
+                $postActId = $postAct ? $postAct->id : ($allPost1992Article['act_id'] ?? 1);
+                $postPageUrl = "/new-laws/table-of-content/" . rawurlencode($postGroup) . "/" . rawurlencode($allPost1992Article['post_act']) . "/" . $postActId . "#section-" . $allPost1992Article['id'];
 
-            @if($sectionTitle)
-                <div class="content-section-title">
-                    <i class="fa-solid fa-balance-scale"></i>
-                    <span>{{ $sectionTitle }}</span>
-                </div>
-            @endif
+                if (auth()->check()) {
+                    $isBookmarked = \App\UserBookmark::where('user_id', auth()->id())
+                        ->where(function($q) use ($allPost1992Article, $postActId) {
+                            $q->where('section_id', $allPost1992Article['id'])
+                              ->orWhere('user_section', auth()->id() . '_legislation_' . $postActId . '_' . $allPost1992Article['id'])
+                              ->orWhere('user_section', auth()->id() . '_legislation_' . $allPost1992Article['act_id'] . '_' . $allPost1992Article['id']);
+                        })->exists();
+                }
+            @endphp
 
-            <!-- Action Buttons -->
-            <div class="content-actions-bar">
-                @php
-                    $isBookmarked = false;
-                    $postAct = \App\Post1992Act::where('title', $allPost1992Article['post_act'])->first();
-                    $postGroup = ($postAct && !empty($postAct->post_group)) ? $postAct->post_group : ($allPost1992Article['act_group'] ?? 'Acts of Parliament');
-                    $postActId = $postAct ? $postAct->id : ($allPost1992Article['act_id'] ?? 1);
-                    $postPageUrl = "/new-laws/table-of-content/" . rawurlencode($postGroup) . "/" . rawurlencode($allPost1992Article['post_act']) . "/" . $postActId . "#section-" . $allPost1992Article['id'];
-
-                    if (auth()->check()) {
-                        $isBookmarked = \App\UserBookmark::where('user_id', auth()->id())
-                            ->where(function($q) use ($allPost1992Article, $postActId) {
-                                $q->where('section_id', $allPost1992Article['id'])
-                                  ->orWhere('user_section', auth()->id() . '_legislation_' . $postActId . '_' . $allPost1992Article['id'])
-                                  ->orWhere('user_section', auth()->id() . '_legislation_' . $allPost1992Article['act_id'] . '_' . $allPost1992Article['id']);
-                            })->exists();
-                    }
-                @endphp
-
+            <div class="content-act-header">
+                <h1 class="content-act-title">{{ $actTitle }}</h1>
                 <button type="button"
-                        class="content-action-btn btn-bookmark-toggle {{ $isBookmarked ? 'is-bookmarked' : '' }}"
+                        class="btn-bookmark-toggle content-act-bookmark {{ $isBookmarked ? 'is-bookmarked' : '' }}"
                         data-act-title="{{ $allPost1992Article['post_act'] }}"
                         data-act-section="{{ $allPost1992Article['section'] }}"
                         data-section-id="{{ $allPost1992Article['id'] }}"
@@ -735,18 +723,18 @@
                         data-doc-type="legislation"
                         data-page-url="{{ $postPageUrl }}"
                         title="{{ $isBookmarked ? 'Remove Bookmark' : 'Bookmark this section' }}"
+                        aria-label="Bookmark"
                         onclick="toggleBookmark(this)">
                     <i class="{{ $isBookmarked ? 'fa-solid' : 'fa-regular' }} fa-bookmark"></i>
                 </button>
-
-                <button type="button" class="content-action-btn" onclick="window.print()">
-                    <i class="fa-solid fa-print"></i> Print
-                </button>
-
-                <button type="button" class="content-action-btn" id="copyContentBtn" onclick="copyLegalContent()">
-                    <i class="fa-regular fa-copy"></i> Copy
-                </button>
             </div>
+
+            @if($sectionTitle)
+                <div class="content-section-title">
+                    <i class="fa-solid fa-balance-scale"></i>
+                    <span>{{ $sectionTitle }}</span>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -787,119 +775,9 @@
             }
         });
 
-        // Copy content
-        function copyLegalContent() {
-            const contentEl = document.querySelector('.article-card .content');
-            if (!contentEl) return;
-
-            const text = contentEl.innerText || contentEl.textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                const btn = document.getElementById('copyContentBtn');
-                if (btn) {
-                    const original = btn.innerHTML;
-                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
-                    btn.style.color = 'var(--emerald)';
-                    btn.style.borderColor = 'rgba(16, 185, 129, 0.3)';
-                    setTimeout(() => {
-                        btn.innerHTML = original;
-                        btn.style.color = '';
-                        btn.style.borderColor = '';
-                    }, 2000);
-                }
-            }).catch(() => {
-                // Fallback for older browsers
-                const range = document.createRange();
-                range.selectNodeContents(contentEl);
-                const sel = window.getSelection();
-                sel.removeAllRanges();
-                sel.addRange(range);
-                document.execCommand('copy');
-                sel.removeAllRanges();
-            });
-        }
     </script>
 
-    <!-- Highlight keyword from search query parameter -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const searchText = urlParams.get('search_text');
-            if (searchText) {
-                highlightWord(searchText);
-            }
-        });
-
-        function highlightWord(word) {
-            if (!word) return;
-            const contentContainer = document.querySelector('.content');
-            if (!contentContainer) return;
-            
-            const cleanWord = word.trim();
-            if (!cleanWord) return;
-            
-            const escapedWord = cleanWord.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-            const regexPattern = escapedWord.replace(/(\\-| )/g, '[ \\-]');
-            const regex = new RegExp(`(${regexPattern})`, 'gi');
-            
-            const walk = document.createTreeWalker(contentContainer, NodeFilter.SHOW_TEXT, null, false);
-            let node;
-            const textNodes = [];
-            
-            while (node = walk.nextNode()) {
-                textNodes.push(node);
-            }
-            
-            textNodes.forEach(textNode => {
-                const parent = textNode.parentNode;
-                if (parent) {
-                    const tagName = parent.tagName.toUpperCase();
-                    if (tagName !== 'SCRIPT' && 
-                        tagName !== 'STYLE' && 
-                        tagName !== 'NOSCRIPT' && 
-                        tagName !== 'IFRAME' && 
-                        tagName !== 'TEXTAREA' && 
-                        tagName !== 'MARK' &&
-                        !parent.classList.contains('search-highlight')) {
-                        
-                        const text = textNode.nodeValue;
-                        const newHTML = text.replace(regex, '<mark class="search-highlight">$1</mark>');
-                        
-                        if (newHTML !== text) {
-                            const tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = newHTML;
-                            
-                            while (tempDiv.firstChild) {
-                                parent.insertBefore(tempDiv.firstChild, textNode);
-                            }
-                            parent.removeChild(textNode);
-                        }
-                    }
-                }
-            });
-
-            setTimeout(function() {
-                const firstHighlight = contentContainer.querySelector('.search-highlight');
-                if (firstHighlight) {
-                    firstHighlight.classList.add('active-highlight');
-                    firstHighlight.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center',
-                        inline: 'nearest'
-                    });
-                    const scrollContainer = document.querySelector('.main-wrapper-scrollable');
-                    if (scrollContainer && scrollContainer.scrollHeight > scrollContainer.clientHeight) {
-                        const containerRect = scrollContainer.getBoundingClientRect();
-                        const activeRect = firstHighlight.getBoundingClientRect();
-                        const targetTop = scrollContainer.scrollTop + (activeRect.top - containerRect.top) - (containerRect.height / 2);
-                        scrollContainer.scrollTo({
-                            top: Math.max(0, targetTop),
-                            behavior: 'smooth'
-                        });
-                    }
-                }
-            }, 50);
-        }
-    </script>
+    @include('partials._content_search_system')
 
 @include('partials._premium_guest_gate')
 

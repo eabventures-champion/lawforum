@@ -13,5 +13,8 @@ class EncryptCookies extends Middleware
      */
     protected $except = [
         'guest_access',
+        'guest_chat_name',
+        'guest_chat_email',
+        'guest_chat_contact',
     ];
 }

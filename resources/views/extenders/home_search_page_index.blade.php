@@ -2112,7 +2112,7 @@
                     </div>
                     <div class="result-act-title">${highlightedParentTitle}</div>
                     <div class="result-section-title">
-                        <a href="${finalLink}" target="_blank">${highlightedSubtitle}</a>
+                        <a href="${finalLink}">${highlightedSubtitle}</a>
                     </div>
                     <div class="result-content">
                         ${item.snippet}

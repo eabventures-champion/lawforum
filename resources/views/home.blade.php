@@ -239,7 +239,7 @@
             margin-bottom: 0;
         }
 
-        .sidebar-menu .menu-item a {
+        .sidebar-menu .menu-item > a {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -253,25 +253,25 @@
             white-space: nowrap;
         }
 
-        .sidebar-menu .menu-item a i {
+        .sidebar-menu .menu-item > a i {
             width: 20px;
             text-align: center;
             font-size: 16px;
             flex-shrink: 0;
         }
 
-        .sidebar-menu .menu-item a:hover {
+        .sidebar-menu .menu-item > a:hover {
             background: rgba(255, 255, 255, 0.04);
             color: var(--text-primary);
         }
 
-        .sidebar-menu .menu-item.active a {
+        .sidebar-menu .menu-item.active > a {
             background: rgba(59, 130, 246, 0.1);
             color: var(--accent-color);
             font-weight: 600;
         }
 
-        .sidebar-menu .menu-item a .menu-badge {
+        .sidebar-menu .menu-item > a .menu-badge {
             margin-left: auto;
             background: rgba(59, 130, 246, 0.18);
             color: #60a5fa;
@@ -285,7 +285,7 @@
             display: inline-block;
         }
 
-        .sidebar-menu .menu-item.active a .menu-badge {
+        .sidebar-menu .menu-item.active > a .menu-badge {
             background: #3b82f6;
             color: #ffffff;
             border-color: #3b82f6;
@@ -296,12 +296,12 @@
             padding: 16px 8px;
         }
 
-        .sidebar.collapsed .sidebar-menu .menu-item a {
+        .sidebar.collapsed .sidebar-menu .menu-item > a {
             justify-content: center;
             padding: 12px 0;
         }
 
-        .sidebar.collapsed .sidebar-menu .menu-item a span {
+        .sidebar.collapsed .sidebar-menu .menu-item > a span {
             display: none !important;
         }
 
@@ -312,7 +312,7 @@
         }
         .sidebar-submenu-toggle .submenu-arrow {
             margin-left: auto;
-            font-size: 10px;
+            font-size: 11px;
             color: var(--text-muted);
             transition: transform 0.25s ease;
         }
@@ -323,13 +323,17 @@
         .sidebar-submenu-list {
             display: none;
             list-style: none;
-            padding: 4px 0 6px 0;
-            margin: 4px 0 6px 14px;
-            border-left: 2px solid rgba(59, 130, 246, 0.25);
+            padding: 6px;
+            margin: 4px 6px 8px 14px;
+            background: rgba(15, 23, 42, 0.45);
+            border-radius: 10px;
+            border-left: 2px solid rgba(59, 130, 246, 0.35);
         }
         .sidebar-submenu-list.show {
-            display: block;
-            animation: fadeInSubmenu 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            animation: fadeInSubmenu 0.2s ease;
         }
         @keyframes fadeInSubmenu {
             from { opacity: 0; transform: translateY(-4px); }
@@ -341,23 +345,62 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: #60a5fa;
-            padding: 6px 12px 2px;
+            padding: 6px 10px 3px;
             opacity: 0.85;
         }
         .sidebar-submenu-link {
-            display: flex;
-            align-items: center;
-            padding: 6px 12px !important;
-            font-size: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            padding: 8px 10px !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
             color: var(--text-secondary) !important;
-            border-radius: 6px !important;
+            border-radius: 8px !important;
             text-decoration: none !important;
             transition: all 0.2s ease !important;
+            background: transparent;
+            border: 1px solid transparent;
+            white-space: nowrap;
         }
         .sidebar-submenu-link:hover {
             color: #ffffff !important;
             background: rgba(255, 255, 255, 0.06) !important;
-            padding-left: 15px !important;
+        }
+        .sidebar-submenu-link.active {
+            color: #ffffff !important;
+            background: rgba(59, 130, 246, 0.16) !important;
+            border-color: rgba(59, 130, 246, 0.35) !important;
+            font-weight: 600 !important;
+        }
+        .submenu-icon-wrap {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 11px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.2s ease;
+        }
+        .sidebar-submenu-link:hover .submenu-icon-wrap {
+            transform: scale(1.08);
+        }
+        .sidebar-submenu-link.active .submenu-icon-wrap {
+            background: rgba(59, 130, 246, 0.25);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+        .submenu-active-dot {
+            margin-left: auto;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #3b82f6;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.8);
+            flex-shrink: 0;
         }
         .sidebar.collapsed .sidebar-submenu-list,
         .sidebar.collapsed .submenu-arrow {
@@ -1314,106 +1357,35 @@
         }
 
         /* ── In-Dashboard Page Viewer ────────────────────── */
+        /* ── In-Dashboard Page Viewer Workspace ────────────────────── */
         .dashboard-viewer-container {
             display: flex;
             flex-direction: column;
-            gap: 14px;
-            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             width: 100%;
+            height: 100%;
+            animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .dashboard-viewer-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 10px 18px;
-            gap: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .btn-viewer-back {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 7px 14px;
-            border-radius: 8px;
-            background: rgba(59, 130, 246, 0.12);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            color: #60a5fa;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            text-decoration: none;
-        }
-
-        .btn-viewer-back:hover {
-            background: rgba(59, 130, 246, 0.22);
-            color: #fff;
-            transform: translateX(-2px);
-        }
-
-        .viewer-title-wrap {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-
-        .viewer-actions-wrap {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-viewer-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            text-decoration: none;
-            font-size: 13px;
-        }
-
-        .btn-viewer-icon:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: #fff;
-            border-color: rgba(255, 255, 255, 0.15);
+        .dashboard-content.has-viewer {
+            padding: 0 !important;
         }
 
         .viewer-frame-wrapper {
             position: relative;
             width: 100%;
-            height: calc(100vh - 180px);
-            min-height: 560px;
-            border-radius: 18px;
+            height: calc(100vh - 78px);
+            min-height: calc(100vh - 78px);
+            border-radius: 0 !important;
             overflow: hidden;
-            border: 1px solid var(--border-color);
-            background: var(--bg-primary);
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+            border: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
         }
 
         .dashboard-viewer-frame {
             width: 100%;
             height: 100%;
-            border: none;
+            border: none !important;
             display: block;
             background: transparent;
         }
@@ -2245,6 +2217,8 @@
                         <span>Subscription</span>
                     </a>
                 </li>
+                {{-- Additional Menus for Researcher (Chatroom, Marketplace, Jobs) --}}
+                @include('partials._sidebar_additional_menus')
 
                 {{-- Legal Library Category Menus (Constitution, Existing Laws, New Laws, Case Laws) --}}
                 @include('partials._sidebar_legal_library')
@@ -2376,7 +2350,7 @@
 
                     <!-- Navigation Menus in Dashboard Header -->
                     <nav class="nav-menu-links-premium top-header-nav" aria-label="Portal Navigation">
-                        @include('partials._nav_desktop_menu')
+                        @include('partials._nav_desktop_menu', ['inDashboardHeader' => true])
                     </nav>
                 </div>
                 
@@ -2512,10 +2486,10 @@
             </div>
 
             <!-- Dashboard Content -->
-            <div class="dashboard-content">
+            <div class="dashboard-content {{ request('view') ? 'has-viewer' : '' }}">
 
                 <!-- Container for Dashboard Cards & Overview -->
-                <div id="dashboardCardsContainer" class="dashboard-cards-container">
+                <div id="dashboardCardsContainer" class="dashboard-cards-container" {!! request('view') ? 'style="display: none;"' : '' !!}>
                     <!-- Unified Welcome & Account Header (No Card Frame) -->
                     <div class="welcome-account-card">
                         <!-- Left: Welcome Info -->
@@ -2623,35 +2597,47 @@
                             </div>
                         @endif
                     </div>
-                </div>
 
-                <!-- In-Dashboard Page Viewer Workspace -->
-                <div id="dashboardViewerContainer" class="dashboard-viewer-container" style="display: none;">
-                    <div class="dashboard-viewer-bar">
-                        <button type="button" class="btn-viewer-back" id="closeViewerBtn">
-                            <i class="fa-solid fa-arrow-left"></i>
-                            <span>Dashboard Hub</span>
-                        </button>
-                        <div class="viewer-title-wrap">
-                            <i class="fa-solid fa-book-open" style="color: #60a5fa;"></i>
-                            <span id="viewerPageTitle">Legal Records</span>
+                    <!-- Community Chatroom & Discussions Hub Card -->
+                    <div style="background: rgba(17, 24, 39, 0.6); border: 1px solid var(--border-color); border-radius: 18px; padding: 24px; margin-top: 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px;">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <div style="width: 52px; height: 52px; border-radius: 14px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #60a5fa;">
+                                <i class="fa-solid fa-comments"></i>
+                            </div>
+                            <div>
+                                <h3 style="font-size: 17px; font-weight: 700; color: #fff; margin: 0 0 4px 0;">
+                                    Community Chatrooms & Discussion Threads
+                                </h3>
+                                <p style="color: var(--text-secondary); font-size: 13px; margin: 0;">
+                                    Start a topic or join active threads in General, Student, Lawyer, and Researcher chatrooms.
+                                </p>
+                            </div>
                         </div>
-                        <div class="viewer-actions-wrap">
-                            <button type="button" class="btn-viewer-icon" id="reloadViewerBtn" title="Reload View">
-                                <i class="fa-solid fa-rotate-right"></i>
+
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <button type="button" onclick="document.getElementById('createChatroomModal').style.display='flex'" 
+                                    style="background: var(--accent-gradient); border: none; color: #fff; padding: 10px 20px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px var(--accent-glow);">
+                                <i class="fa-solid fa-plus"></i> Start a Discussion
                             </button>
-                            <a href="#" id="openNewTabBtn" target="_blank" class="btn-viewer-icon" title="Open in New Tab">
-                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                            <a href="/chatroom/{{ $userType ?: 'general' }}" 
+                               class="btn-open-chatroom"
+                               style="background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border-color); color: #fff; padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Chatrooms
                             </a>
                         </div>
                     </div>
+                </div>
 
+                <!-- In-Dashboard Page Viewer Workspace (Full Window, No Card Framing) -->
+                <div id="dashboardViewerContainer" class="dashboard-viewer-container" {!! request('view') ? 'style="display: flex;"' : 'style="display: none;"' !!}>
                     <div class="viewer-frame-wrapper">
-                        <iframe id="dashboardViewerFrame" class="dashboard-viewer-frame" src="about:blank" frameborder="0"></iframe>
-                        <div id="viewerLoadingSpinner" class="viewer-loader">
+                        <iframe id="dashboardViewerFrame" class="dashboard-viewer-frame" src="{{ request('view') ? e(request('view')) . (str_contains(request('view'), '?') ? '&' : '?') . 'embedded=1' : 'about:blank' }}" frameborder="0"></iframe>
+                        <div id="viewerLoadingSpinner" class="viewer-loader {{ request('view') ? '' : 'hidden' }}">
                             <i class="fa-solid fa-circle-notch fa-spin"></i>
                             <span>Loading page into dashboard...</span>
                         </div>
+                    </div>
                 </div>
 
                 <!-- Publisher Modal -->
@@ -2871,14 +2857,27 @@
         function openInDashboard(url, title) {
             if (!url || url === '#' || url.startsWith('javascript:')) return;
 
-            // Automatically collapse sidebar to accommodate full page
-            if (sidebar && !sidebar.classList.contains('collapsed')) {
+            // Automatically collapse sidebar on smaller viewports to accommodate full page
+            if (window.innerWidth < 1200 && sidebar && !sidebar.classList.contains('collapsed')) {
                 sidebar.classList.add('collapsed');
                 localStorage.setItem('sidebar_collapsed', '1');
             }
 
             if (viewerTitle && title) {
                 viewerTitle.textContent = title;
+            }
+
+            const titleIcon = document.getElementById('viewerTitleIcon');
+            if (titleIcon) {
+                if (url.indexOf('chatroom') !== -1) {
+                    titleIcon.className = 'fa-solid fa-comments';
+                } else if (url.indexOf('marketplace') !== -1) {
+                    titleIcon.className = 'fa-solid fa-store';
+                } else if (url.indexOf('jobs') !== -1) {
+                    titleIcon.className = 'fa-solid fa-briefcase';
+                } else {
+                    titleIcon.className = 'fa-solid fa-book-open';
+                }
             }
 
             if (openNewTabBtn) {
@@ -2888,6 +2887,8 @@
             // Show viewer, hide cards
             if (cardsContainer) cardsContainer.style.display = 'none';
             if (viewerContainer) viewerContainer.style.display = 'flex';
+            const dashContent = document.querySelector('.dashboard-content');
+            if (dashContent) dashContent.classList.add('has-viewer');
             if (viewerSpinner) viewerSpinner.classList.remove('hidden');
 
             // Format URL with embedded parameter if needed
@@ -2917,11 +2918,24 @@
         function closeDashboardViewer() {
             if (viewerContainer) viewerContainer.style.display = 'none';
             if (cardsContainer) cardsContainer.style.display = 'block';
+            const dashContent = document.querySelector('.dashboard-content');
+            if (dashContent) dashContent.classList.remove('has-viewer');
             if (viewerFrame) viewerFrame.src = 'about:blank';
             try {
                 window.history.pushState({}, '', '/home');
             } catch (e) {}
         }
+
+        // Return to dashboard overview when clicking Dashboard or Legals Forum logo
+        document.querySelectorAll('#dashboardSidebar a[href="/home"], .sidebar-brand-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                if (viewerContainer && viewerContainer.style.display !== 'none') {
+                    e.preventDefault();
+                    closeDashboardViewer();
+                    updateSidebarActiveView('/home');
+                }
+            });
+        });
 
         if (viewerFrame && viewerSpinner) {
             viewerFrame.addEventListener('load', function() {
@@ -2973,6 +2987,88 @@
             });
         });
 
+        function updateSidebarActiveView(targetUrl) {
+            if (!targetUrl) return;
+            const cleanUrl = targetUrl.split('?')[0];
+
+            // Remove active state from all submenus and dots
+            document.querySelectorAll('#dashboardSidebar .sidebar-submenu-link').forEach(function(el) {
+                el.classList.remove('active');
+                const dot = el.querySelector('.submenu-active-dot');
+                if (dot) dot.remove();
+            });
+
+            // Find matching submenu link
+            let matchedSub = null;
+            document.querySelectorAll('#dashboardSidebar .sidebar-submenu-link').forEach(function(el) {
+                const href = (el.getAttribute('href') || '').split('?')[0];
+                if (href) {
+                    if (cleanUrl === href) {
+                        matchedSub = el;
+                    } else if (href !== '/chatroom' && cleanUrl.startsWith(href + '/')) {
+                        if (!matchedSub || href.length > (matchedSub.getAttribute('href') || '').split('?')[0].length) {
+                            matchedSub = el;
+                        }
+                    }
+                }
+            });
+
+            if (matchedSub) {
+                // Deactivate top-level main items except parent of this submenu
+                document.querySelectorAll('#dashboardSidebar .sidebar-menu > .menu-item').forEach(function(el) {
+                    el.classList.remove('active');
+                });
+                matchedSub.classList.add('active');
+                if (!matchedSub.querySelector('.submenu-active-dot')) {
+                    const dot = document.createElement('span');
+                    dot.className = 'submenu-active-dot';
+                    matchedSub.appendChild(dot);
+                }
+                const parentItem = matchedSub.closest('.menu-item-has-submenu');
+                if (parentItem) {
+                    parentItem.classList.add('open', 'active');
+                    const subList = parentItem.querySelector('.sidebar-submenu-list');
+                    if (subList) subList.classList.add('show');
+                }
+            } else {
+                // If it's a top-level menu item
+                document.querySelectorAll('#dashboardSidebar .sidebar-menu > .menu-item').forEach(function(el) {
+                    const link = el.querySelector(':scope > a');
+                    const href = link ? (link.getAttribute('href') || '').split('?')[0] : '';
+                    if (href && (cleanUrl === href || (href !== '/' && cleanUrl.startsWith(href)))) {
+                        el.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        // Intercept Community & Services (Chatroom, Marketplace, Jobs) sidebar & card links
+        document.querySelectorAll('#dashboardSidebar a[href*="/chatroom"], #dashboardSidebar a[href*="/marketplace"], #dashboardSidebar a[href*="/jobs"], .btn-open-chatroom').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                if (this.classList.contains('sidebar-submenu-toggle')) return;
+                const href = this.getAttribute('href');
+                if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+                e.preventDefault();
+                const linkTitle = this.textContent.trim() || 'Community & Services';
+                openInDashboard(href, linkTitle);
+                updateSidebarActiveView(href);
+            });
+        });
+
+        // Intercept Legal Library sidebar links
+        document.querySelectorAll('#dashboardSidebar .sidebar-legal-library-item a').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                if (this.classList.contains('sidebar-submenu-toggle')) return;
+                const href = this.getAttribute('href');
+                if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+                e.preventDefault();
+                const linkTitle = this.textContent.trim() || 'Legal Records';
+                openInDashboard(href, linkTitle);
+            });
+        });
+
         // Intercept "Laws Catalog" links
         document.querySelectorAll('.portal-card[href="/"], .sidebar-menu a[href="/"]').forEach(function(link) {
             link.addEventListener('click', function(e) {
@@ -3009,7 +3105,12 @@
             const urlParams = new URLSearchParams(window.location.search);
             const viewParam = urlParams.get('view');
             if (viewParam) {
-                openInDashboard(viewParam, 'Legal Records');
+                let pageTitle = 'Legal Records';
+                if (viewParam.indexOf('chatroom') !== -1) pageTitle = 'Chatroom & Discussions';
+                else if (viewParam.indexOf('marketplace') !== -1) pageTitle = 'Legal Marketplace';
+                else if (viewParam.indexOf('jobs') !== -1) pageTitle = 'Legal Jobs';
+                openInDashboard(viewParam, pageTitle);
+                updateSidebarActiveView(viewParam);
             } else {
                 closeDashboardViewer();
             }
@@ -3017,7 +3118,12 @@
 
         const initialView = new URLSearchParams(window.location.search).get('view');
         if (initialView) {
-            openInDashboard(initialView, 'Legal Records');
+            let pageTitle = 'Legal Records';
+            if (initialView.indexOf('chatroom') !== -1) pageTitle = 'Chatroom & Discussions';
+            else if (initialView.indexOf('marketplace') !== -1) pageTitle = 'Legal Marketplace';
+            else if (initialView.indexOf('jobs') !== -1) pageTitle = 'Legal Jobs';
+            openInDashboard(initialView, pageTitle);
+            updateSidebarActiveView(initialView);
         }
     </script>
 
@@ -3037,6 +3143,8 @@
    s0.parentNode.insertBefore(s1,s0);
    })();
 </script>
-<!--End of Tawk.to Script-->
+<!-- Chatroom Create Modal -->
+@include('chatroom.create_modal')
+
 </body>
 </html>

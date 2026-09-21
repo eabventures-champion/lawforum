@@ -139,6 +139,12 @@
                     <span>Header Menus</span>
                 </a>
             </li>
+            <li class="menu-item {{ Request::is('admin/additional-menus*') ? 'active' : '' }}">
+                <a href="{{ route('admin.additional-menus.index') }}">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>Additional Menus</span>
+                </a>
+            </li>
             <li class="menu-item {{ Request::is('admin/sidebar-ads*') ? 'active' : '' }}">
                 <a href="{{ route('admin.sidebar-ads.index') }}">
                     <i class="fa-solid fa-rectangle-ad"></i>

@@ -246,7 +246,7 @@
             margin-bottom: 0;
         }
 
-        .sidebar-menu .menu-item a {
+        .sidebar-menu .menu-item > a {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -260,25 +260,25 @@
             white-space: nowrap;
         }
 
-        .sidebar-menu .menu-item a i {
+        .sidebar-menu .menu-item > a i {
             width: 20px;
             text-align: center;
             font-size: 16px;
             flex-shrink: 0;
         }
 
-        .sidebar-menu .menu-item a:hover {
+        .sidebar-menu .menu-item > a:hover {
             background: rgba(255, 255, 255, 0.04);
             color: var(--text-primary);
         }
 
-        .sidebar-menu .menu-item.active a {
+        .sidebar-menu .menu-item.active > a {
             background: rgba(59, 130, 246, 0.1);
             color: var(--accent-color);
             font-weight: 600;
         }
 
-        .sidebar-menu .menu-item a .menu-badge {
+        .sidebar-menu .menu-item > a .menu-badge {
             margin-left: auto;
             background: rgba(59, 130, 246, 0.18);
             color: #60a5fa;
@@ -292,7 +292,7 @@
             display: inline-block;
         }
 
-        .sidebar-menu .menu-item.active a .menu-badge {
+        .sidebar-menu .menu-item.active > a .menu-badge {
             background: #3b82f6;
             color: #ffffff;
             border-color: #3b82f6;
@@ -303,12 +303,12 @@
             padding: 16px 8px;
         }
 
-        .sidebar.collapsed .sidebar-menu .menu-item a {
+        .sidebar.collapsed .sidebar-menu .menu-item > a {
             justify-content: center;
             padding: 12px 0;
         }
 
-        .sidebar.collapsed .sidebar-menu .menu-item a span {
+        .sidebar.collapsed .sidebar-menu .menu-item > a span {
             display: none !important;
         }
 
@@ -319,7 +319,7 @@
         }
         .sidebar-submenu-toggle .submenu-arrow {
             margin-left: auto;
-            font-size: 10px;
+            font-size: 11px;
             color: var(--text-muted);
             transition: transform 0.25s ease;
         }
@@ -330,13 +330,17 @@
         .sidebar-submenu-list {
             display: none;
             list-style: none;
-            padding: 4px 0 6px 0;
-            margin: 4px 0 6px 14px;
-            border-left: 2px solid rgba(59, 130, 246, 0.25);
+            padding: 6px;
+            margin: 4px 6px 8px 14px;
+            background: rgba(15, 23, 42, 0.45);
+            border-radius: 10px;
+            border-left: 2px solid rgba(59, 130, 246, 0.35);
         }
         .sidebar-submenu-list.show {
-            display: block;
-            animation: fadeInSubmenu 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            animation: fadeInSubmenu 0.2s ease;
         }
         @keyframes fadeInSubmenu {
             from { opacity: 0; transform: translateY(-4px); }
@@ -348,23 +352,62 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: #60a5fa;
-            padding: 6px 12px 2px;
+            padding: 6px 10px 3px;
             opacity: 0.85;
         }
         .sidebar-submenu-link {
-            display: flex;
-            align-items: center;
-            padding: 6px 12px !important;
-            font-size: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            padding: 8px 10px !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
             color: var(--text-secondary) !important;
-            border-radius: 6px !important;
+            border-radius: 8px !important;
             text-decoration: none !important;
             transition: all 0.2s ease !important;
+            background: transparent;
+            border: 1px solid transparent;
+            white-space: nowrap;
         }
         .sidebar-submenu-link:hover {
             color: #ffffff !important;
             background: rgba(255, 255, 255, 0.06) !important;
-            padding-left: 15px !important;
+        }
+        .sidebar-submenu-link.active {
+            color: #ffffff !important;
+            background: rgba(59, 130, 246, 0.16) !important;
+            border-color: rgba(59, 130, 246, 0.35) !important;
+            font-weight: 600 !important;
+        }
+        .submenu-icon-wrap {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 11px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.2s ease;
+        }
+        .sidebar-submenu-link:hover .submenu-icon-wrap {
+            transform: scale(1.08);
+        }
+        .sidebar-submenu-link.active .submenu-icon-wrap {
+            background: rgba(59, 130, 246, 0.25);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+        .submenu-active-dot {
+            margin-left: auto;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #3b82f6;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.8);
+            flex-shrink: 0;
         }
         .sidebar.collapsed .sidebar-submenu-list,
         .sidebar.collapsed .submenu-arrow {
@@ -1822,6 +1865,9 @@
                     </a>
                 </li>
 
+                {{-- Additional Menus for Researcher (Chatroom, Marketplace, Jobs) --}}
+                @include('partials._sidebar_additional_menus')
+
                 {{-- Legal Library Category Menus (Constitution, Existing Laws, New Laws, Case Laws) --}}
                 @include('partials._sidebar_legal_library')
 
@@ -1923,7 +1969,7 @@
 
                     <!-- Navigation Menus in Dashboard Header -->
                     <nav class="nav-menu-links-premium top-header-nav" aria-label="Portal Navigation">
-                        @include('partials._nav_desktop_menu')
+                        @include('partials._nav_desktop_menu', ['inDashboardHeader' => true])
                     </nav>
                 </div>
                 
@@ -2196,12 +2242,12 @@
         const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
         updateThemeIcons(currentTheme);
 
-        // Intercept top header menu links to open in dashboard
-        document.querySelectorAll('.top-header-nav a').forEach(function(link) {
+        // Intercept top header menu links & sidebar community links to open in dashboard
+        document.querySelectorAll('.top-header-nav a, #dashboardSidebar a[href*="/chatroom"], #dashboardSidebar a[href*="/marketplace"], #dashboardSidebar a[href*="/jobs"]').forEach(function(link) {
             link.addEventListener('click', function(e) {
                 const href = this.getAttribute('href');
                 if (!href || href === '#' || href.startsWith('javascript:')) return;
-                if (this.classList.contains('nav-sub-dropdown-trigger')) return;
+                if (this.classList.contains('nav-sub-dropdown-trigger') || this.classList.contains('sidebar-submenu-toggle')) return;
 
                 e.preventDefault();
                 localStorage.setItem('dashboard_sidebar_collapsed', 'true');

@@ -661,6 +661,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     // Header Navigation Menus CRUD Management
     Route::resource('navigation-menus', 'Admin\NavigationMenuController');
 
+    // Additional Menus Management (Chatroom, Marketplace, Jobs)
+    Route::get('additional-menus', 'Admin\AdditionalMenuController@index')->name('admin.additional-menus.index');
+    Route::post('additional-menus/update', 'Admin\AdditionalMenuController@updateSettings')->name('admin.additional-menus.update');
+    Route::post('additional-menus/chatroom/{id}/pin', 'Admin\AdditionalMenuController@toggleRoomPin')->name('admin.additional-menus.chatroom.pin');
+    Route::post('additional-menus/chatroom/{id}/premium', 'Admin\AdditionalMenuController@toggleRoomPremium')->name('admin.additional-menus.chatroom.premium');
+    Route::delete('additional-menus/chatroom/{id}', 'Admin\AdditionalMenuController@deleteRoom')->name('admin.additional-menus.chatroom.destroy');
+
     // Sidebar Ads Management
     Route::resource('sidebar-ads', 'Admin\SidebarAdController', ['as' => 'admin'])->only(['index', 'edit', 'update']);
 
@@ -813,5 +820,15 @@ Route::get('/update-live-navigation-menu-secret', function() {
     }
 });
 
+// ============================================
+// ADDITIONAL MENUS: CHATROOM, MARKETPLACE, JOBS
+// ============================================
+Route::get('/chatroom', 'ChatroomController@index')->name('chatroom.index');
+Route::get('/chatroom/{category}', 'ChatroomController@index')->name('chatroom.category');
+Route::get('/chatroom/{category}/{slug}', 'ChatroomController@show')->name('chatroom.show');
+Route::post('/chatroom/store', 'ChatroomController@store')->name('chatroom.store');
+Route::post('/chatroom/{id}/reply', 'ChatroomController@postMessage')->name('chatroom.postMessage');
+Route::post('/chatroom/heartbeat/{category}', 'ChatroomController@heartbeat')->name('chatroom.heartbeat');
 
-
+Route::get('/marketplace', 'MarketplaceController@index')->name('marketplace.index');
+Route::get('/jobs', 'JobBoardController@index')->name('jobs.index');

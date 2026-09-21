@@ -363,6 +363,8 @@
         align-items: center !important;
         justify-content: center !important;
         gap: 16px !important;
+        overflow-y: auto !important;
+        padding: 60px 20px 40px !important;
         opacity: 0;
         visibility: hidden;
         transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s;
@@ -398,6 +400,16 @@
     .mobile-nav-panel.open a {
         transform: translateY(0) !important;
         opacity: 1 !important;
+    }
+
+    .mobile-nav-panel .mobile-menu-icon {
+        font-size: 16px !important;
+        width: 18px !important;
+        text-align: center !important;
+        margin-right: 12px !important;
+        flex-shrink: 0 !important;
+        display: inline-block !important;
+        line-height: 1 !important;
     }
 
     .mobile-nav-close {

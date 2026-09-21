@@ -3,6 +3,8 @@
 @if(auth()->check() || request()->cookie('guest_access'))
 @php
     $currentPath = trim(request()->path(), '/');
+    $isGuest = !auth()->check();
+    $isDashboard = (isset($inDashboardHeader) && $inDashboardHeader) || request()->is('home*') || request()->is('accounts/*') || request()->is('subscription*');
 
     // 1. Identify primary section from current URL route
     $activeSection = '';
@@ -16,14 +18,25 @@
         $activeSection = 'new_laws';
     } elseif (strpos($currentPath, 'news') === 0 || strpos($currentPath, 'News') === 0) {
         $activeSection = 'news';
+    } elseif (strpos($currentPath, 'chatroom') === 0) {
+        $activeSection = 'chatroom';
+    } elseif (strpos($currentPath, 'marketplace') === 0) {
+        $activeSection = 'marketplace';
+    } elseif (strpos($currentPath, 'jobs') === 0) {
+        $activeSection = 'jobs';
     }
-
-    $renderedNews = false;
 @endphp
 
 @foreach($headerMenus as $menu)
     @php
         $titleLower = strtolower(trim($menu->title));
+        $isConstitution = ($titleLower === 'constitution' || $menu->slug === 'constitution' || strpos($titleLower, 'constitution') !== false);
+
+        // For guest users, by default only Constitution is active to show in the nav; all others are hidden
+        if ($isGuest && !$isConstitution) {
+            continue;
+        }
+
         $menuUrl = $menu->custom_content ? route('dynamic.page', $menu->slug) : ($menu->url ?? '#');
         $menuPath = trim(parse_url($menuUrl, PHP_URL_PATH) ?? '', '/');
         
@@ -89,19 +102,72 @@
             </div>
         </div>
     @elseif($titleLower === 'news' || strpos($titleLower, 'news') !== false)
-        @php $renderedNews = true; @endphp
-        <a href="/News/Ghana-News/1" class="nav-link-btn nav-link-news {{ $isMenuActive ? 'active' : '' }}" style="color: #f97316 !important; font-weight: 700; text-decoration: none !important;">
+        <a href="{{ (!empty($menuUrl) && $menuUrl !== '#') ? $menuUrl : '/News/Ghana-News/1' }}" class="nav-link-btn nav-link-news {{ $isMenuActive ? 'active' : '' }}" style="color: #f97316 !important; font-weight: 700; text-decoration: none !important;">
             {{ $menu->title }}
         </a>
     @else
         <a href="{{ $menuUrl }}" class="nav-link-btn {{ $isMenuActive ? 'active' : '' }}" style="text-decoration:none !important;">{{ $menu->title }}</a>
     @endif
-@endforeach
 
-{{-- Fallback: Ensure News is always displayed right after Case Laws in orange text --}}
-@if(!$renderedNews)
-    <a href="/News/Ghana-News/1" class="nav-link-btn nav-link-news {{ ($activeSection === 'news') ? 'active' : '' }}" style="color: #f97316 !important; font-weight: 700; text-decoration: none !important;">
-        News
-    </a>
-@endif
+    @php
+        $isResearcher = auth()->check() && !auth()->user()->isAdmin() && (strtolower(auth()->user()->user_type ?? '') === 'researcher');
+        $navbarResearcherAllowed = \App\AdditionalMenuSetting::isEnabled('navbar_researcher_enabled', false);
+        $canShowAdditionalMenus = !$isResearcher || $navbarResearcherAllowed;
+    @endphp
+
+    @if($isConstitution && !$isDashboard && $canShowAdditionalMenus)
+        {{-- Additional Menus Managed at Admin (Chatroom, Marketplace, Jobs) --}}
+        @php
+            $chatroomEnabled = \App\AdditionalMenuSetting::isEnabled('chatroom_enabled', true);
+            $marketplaceEnabled = \App\AdditionalMenuSetting::isEnabled('marketplace_enabled', true);
+            $jobsEnabled = \App\AdditionalMenuSetting::isEnabled('jobs_enabled', true);
+            
+            $isChatroomActive = ($activeSection === 'chatroom') || (strpos($currentPath, 'chatroom') === 0);
+            $isMarketplaceActive = ($activeSection === 'marketplace') || (strpos($currentPath, 'marketplace') === 0);
+            $isJobsActive = ($activeSection === 'jobs') || (strpos($currentPath, 'jobs') === 0);
+        @endphp
+
+        @if($chatroomEnabled)
+            <div class="nav-link-dropdown {{ $isChatroomActive ? 'active' : '' }}">
+                <a href="/chatroom" class="nav-link-btn {{ $isChatroomActive ? 'active' : '' }}" style="text-decoration:none !important;">
+                    Chatroom <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </a>
+                <div class="nav-dropdown-menu">
+                    @if(\App\AdditionalMenuSetting::isEnabled('chatroom_general_enabled', true))
+                        <a href="/chatroom/general" class="{{ ($currentPath === 'chatroom/general' || $currentPath === 'chatroom' || strpos($currentPath, 'chatroom/general/') === 0) ? 'active' : '' }}">
+                            <i class="fa-solid fa-comments" style="color: #3b82f6; width: 16px;"></i> General Room
+                        </a>
+                    @endif
+                    @if(\App\AdditionalMenuSetting::isEnabled('chatroom_student_enabled', true))
+                        <a href="/chatroom/student" class="{{ ($currentPath === 'chatroom/student' || strpos($currentPath, 'chatroom/student/') === 0) ? 'active' : '' }}">
+                            <i class="fa-solid fa-graduation-cap" style="color: #10b981; width: 16px;"></i> Student Room
+                        </a>
+                    @endif
+                    @if(\App\AdditionalMenuSetting::isEnabled('chatroom_lawyer_enabled', true))
+                        <a href="/chatroom/lawyer" class="{{ ($currentPath === 'chatroom/lawyer' || strpos($currentPath, 'chatroom/lawyer/') === 0) ? 'active' : '' }}">
+                            <i class="fa-solid fa-scale-balanced" style="color: #f59e0b; width: 16px;"></i> Lawyer Room
+                        </a>
+                    @endif
+                    @if(\App\AdditionalMenuSetting::isEnabled('chatroom_researcher_enabled', true))
+                        <a href="/chatroom/researcher" class="{{ ($currentPath === 'chatroom/researcher' || strpos($currentPath, 'chatroom/researcher/') === 0) ? 'active' : '' }}">
+                            <i class="fa-solid fa-microscope" style="color: #8b5cf6; width: 16px;"></i> Researcher Room
+                        </a>
+                    @endif
+                </div>
+            </div>
+        @endif
+
+        @if($marketplaceEnabled)
+            <a href="/marketplace" class="nav-link-btn {{ $isMarketplaceActive ? 'active' : '' }}" style="text-decoration:none !important;">
+                Marketplace
+            </a>
+        @endif
+
+        @if($jobsEnabled)
+            <a href="/jobs" class="nav-link-btn {{ $isJobsActive ? 'active' : '' }}" style="text-decoration:none !important;">
+                Jobs
+            </a>
+        @endif
+    @endif
+@endforeach
 @endif
