@@ -2086,6 +2086,232 @@
             width: 18px;
             text-align: center;
         }
+
+        /* ── Community Chatroom & Discussions Hub Card ── */
+        .dashboard-chatroom-card {
+            background: rgba(17, 24, 39, 0.65);
+            border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+            border-radius: 18px;
+            padding: 22px 24px;
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: var(--transition-smooth);
+        }
+
+        .dash-chatroom-main {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .dash-chatroom-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #60a5fa;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+
+        .dash-chatroom-text {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .dash-chatroom-title {
+            font-size: 16.5px;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .dash-chatroom-desc {
+            color: var(--text-secondary, #94a3b8);
+            font-size: 13px;
+            margin: 0;
+            line-height: 1.45;
+        }
+
+        .dash-chatroom-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .btn-dash-start-discussion {
+            background: var(--accent-gradient, linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%));
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            box-shadow: 0 4px 12px var(--accent-glow, rgba(59, 130, 246, 0.35));
+            transition: var(--transition-smooth);
+            white-space: nowrap;
+        }
+
+        .btn-dash-start-discussion:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px var(--accent-glow, rgba(59, 130, 246, 0.5));
+        }
+
+        .btn-dash-open-chatroom {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+            color: #ffffff;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: var(--transition-smooth);
+            white-space: nowrap;
+        }
+
+        .btn-dash-open-chatroom:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.22);
+            color: #ffffff;
+        }
+
+        /* Light Theme Support */
+        [data-theme="light"] .dashboard-chatroom-card {
+            background: #ffffff;
+            border-color: rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="light"] .dash-chatroom-title {
+            color: #0f172a;
+        }
+
+        [data-theme="light"] .dash-chatroom-desc {
+            color: #64748b;
+        }
+
+        [data-theme="light"] .btn-dash-open-chatroom {
+            background: #f1f5f9;
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #0f172a;
+        }
+
+        [data-theme="light"] .btn-dash-open-chatroom:hover {
+            background: #e2e8f0;
+        }
+
+        /* Mobile Layout */
+        @media (max-width: 768px) {
+            .dashboard-chatroom-card {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                padding: 16px 14px !important;
+                gap: 12px !important;
+                border-radius: 16px !important;
+                background: linear-gradient(145deg, rgba(17, 24, 39, 0.85) 0%, rgba(11, 19, 41, 0.95) 100%) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+            }
+
+            [data-theme="light"] .dashboard-chatroom-card {
+                background: #ffffff !important;
+                border-color: rgba(0, 0, 0, 0.08) !important;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+            }
+
+            .dash-chatroom-main {
+                display: grid !important;
+                grid-template-columns: 40px 1fr !important;
+                grid-template-areas: 
+                    "icon title"
+                    "desc desc" !important;
+                gap: 8px 12px !important;
+                align-items: center !important;
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+
+            .dash-chatroom-icon {
+                grid-area: icon !important;
+                width: 40px !important;
+                height: 40px !important;
+                font-size: 17px !important;
+                border-radius: 11px !important;
+            }
+
+            .dash-chatroom-text {
+                display: contents !important;
+            }
+
+            .dash-chatroom-title {
+                grid-area: title !important;
+                font-size: 14.5px !important;
+                font-weight: 700 !important;
+                margin: 0 !important;
+                line-height: 1.3 !important;
+            }
+
+            .dash-chatroom-desc {
+                grid-area: desc !important;
+                font-size: 12px !important;
+                line-height: 1.45 !important;
+                color: #94a3b8 !important;
+                margin: 2px 0 0 0 !important;
+            }
+
+            .dash-chatroom-actions {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 10px !important;
+                width: 100% !important;
+                margin-top: 2px !important;
+            }
+
+            .btn-dash-start-discussion {
+                width: 100% !important;
+                height: 40px !important;
+                padding: 0 6px !important;
+                font-size: 12px !important;
+                justify-content: center !important;
+                border-radius: 10px !important;
+                white-space: nowrap !important;
+                box-sizing: border-box !important;
+            }
+
+            .btn-dash-open-chatroom {
+                width: 100% !important;
+                height: 40px !important;
+                padding: 0 6px !important;
+                font-size: 12px !important;
+                justify-content: center !important;
+                border-radius: 10px !important;
+                white-space: nowrap !important;
+                box-sizing: border-box !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2599,31 +2825,30 @@
                     </div>
 
                     <!-- Community Chatroom & Discussions Hub Card -->
-                    <div style="background: rgba(17, 24, 39, 0.6); border: 1px solid var(--border-color); border-radius: 18px; padding: 24px; margin-top: 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px;">
-                        <div style="display: flex; align-items: center; gap: 16px;">
-                            <div style="width: 52px; height: 52px; border-radius: 14px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #60a5fa;">
+                    <div class="dashboard-chatroom-card">
+                        <div class="dash-chatroom-main">
+                            <div class="dash-chatroom-icon">
                                 <i class="fa-solid fa-comments"></i>
                             </div>
-                            <div>
-                                <h3 style="font-size: 17px; font-weight: 700; color: #fff; margin: 0 0 4px 0;">
+                            <div class="dash-chatroom-text">
+                                <h3 class="dash-chatroom-title">
                                     Community Chatrooms & Discussion Threads
                                 </h3>
-                                <p style="color: var(--text-secondary); font-size: 13px; margin: 0;">
+                                <p class="dash-chatroom-desc">
                                     Start a topic or join active threads in General, Student, Lawyer, and Researcher chatrooms.
                                 </p>
                             </div>
                         </div>
 
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <button type="button" onclick="document.getElementById('createChatroomModal').style.display='flex'" 
-                                    style="background: var(--accent-gradient); border: none; color: #fff; padding: 10px 20px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px var(--accent-glow);">
-                                <i class="fa-solid fa-plus"></i> Start a Discussion
+                        <div class="dash-chatroom-actions">
+                            <button type="button" onclick="document.getElementById('createChatroomModal').style.display='flex'" class="btn-dash-start-discussion">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Start a Discussion</span>
                             </button>
 
-                            <a href="/chatroom/{{ $userType ?: 'general' }}" 
-                               class="btn-open-chatroom"
-                               style="background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border-color); color: #fff; padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
-                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Chatrooms
+                            <a href="/chatroom/{{ $userType ?: 'general' }}" class="btn-dash-open-chatroom">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                <span>Open Chatrooms</span>
                             </a>
                         </div>
                     </div>

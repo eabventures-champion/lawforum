@@ -50,6 +50,19 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Your session has expired. Please refresh the page and try again.',
+                    'csrf_token' => csrf_token(),
+                ], 419);
+            }
+
+            return redirect()->back()
+                ->withInput($request->except('password', 'password_confirmation', '_token'))
+                ->with('error', 'Your session expired due to inactivity. Please submit again.');
+        }
+
         return parent::render($request, $exception);
     }
 }

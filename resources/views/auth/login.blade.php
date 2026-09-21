@@ -374,6 +374,24 @@
         </div>
 
         <!-- Error Alerts -->
+        @if (session('error'))
+            <div class="error-alert">
+                <i class="fa-solid fa-clock-rotate-left error-icon"></i>
+                <div class="error-message">
+                    {{ session('error') }}
+                </div>
+            </div>
+        @endif
+
+        @if (session('status'))
+            <div class="error-alert" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);">
+                <i class="fa-solid fa-circle-check error-icon" style="color: #10b981;"></i>
+                <div class="error-message" style="color: #6ee7b7;">
+                    {{ session('status') }}
+                </div>
+            </div>
+        @endif
+
         @if ($errors->any())
             <div class="error-alert">
                 <i class="fa-solid fa-circle-exclamation error-icon"></i>
