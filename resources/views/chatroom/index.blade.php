@@ -22,31 +22,44 @@
 @section('title', $currentCategoryLabel . ' - Legals Forum Community')
 
 @section('content')
-<div style="max-width: 1200px; margin: 0 auto;">
+<div id="chatroomMainWrapper" data-current-category="{{ $category }}" style="max-width: 1200px; margin: 0 auto; transition: opacity 0.15s ease;">
 
     <!-- Top Banner / Hero -->
-    <div style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%); border: 1px solid var(--border-color); border-radius: 24px; padding: 36px 40px; margin-bottom: 32px; position: relative; overflow: hidden;">
-        <div style="position: absolute; right: -20px; top: -20px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%); pointer-events: none;"></div>
+    <div class="chatroom-hero-banner">
+        <div class="chatroom-hero-glow"></div>
 
-        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; position: relative; z-index: 2;">
-            <div>
-                <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.25); color: #60a5fa; padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
-                    @if($isHub)
-                        <i class="fa-solid fa-layer-group"></i>
-                        Chatroom Hub (All Categories)
-                    @else
-                        <i class="fa-solid {{ $categoryIcons[$category] ?? 'fa-comments' }}"></i>
-                        {{ $currentCategoryLabel }}
-                    @endif
+        <div class="chatroom-hero-inner">
+            <div class="chatroom-hero-text">
+                <div class="chatroom-hero-top-row">
+                    <div class="chatroom-hero-badge">
+                        @if($isHub)
+                            <i class="fa-solid fa-layer-group"></i>
+                            <span>Chatroom Hub</span>
+                        @else
+                            <i class="fa-solid {{ $categoryIcons[$category] ?? 'fa-comments' }}"></i>
+                            <span>{{ $currentCategoryLabel }}</span>
+                        @endif
+                    </div>
+
+                    <!-- Compact live online pill for mobile header row -->
+                    <div class="chatroom-mobile-live-pill">
+                        <span class="live-pulse-dot">
+                            <span class="dot-base"></span>
+                            <span class="dot-ping"></span>
+                        </span>
+                        <span class="live-pill-count"><span id="liveOnlineCountMobile">{{ $onlineCount }}</span> Online</span>
+                    </div>
                 </div>
-                <h1 style="font-size: 2.2rem; font-weight: 800; font-family: var(--font-heading); color: #fff; margin-bottom: 8px; letter-spacing: -0.5px;">
+
+                <h1 class="chatroom-hero-title">
                     @if($isHub)
                         Legal Community Forum & Chatrooms
                     @else
                         {{ $currentCategoryLabel }}
                     @endif
                 </h1>
-                <p style="color: var(--text-secondary); font-size: 15px; max-width: 650px; line-height: 1.6; margin: 0;">
+
+                <p class="chatroom-hero-desc">
                     @if($isHub)
                         Explore legal discourse, collaborative research, case analyses, and study discussions aggregated across all forum rooms.
                     @elseif($category === 'student')
@@ -61,17 +74,17 @@
                 </p>
             </div>
 
-            <!-- Live Online Users Presence Card -->
-            <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 16px; padding: 18px 24px; display: flex; align-items: center; gap: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
-                <div style="position: relative; width: 14px; height: 14px;">
-                    <span style="display: block; width: 100%; height: 100%; background: #10b981; border-radius: 50%;"></span>
-                    <span style="position: absolute; inset: -4px; border: 2px solid #10b981; border-radius: 50%; opacity: 0.75; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></span>
+            <!-- Live Online Users Presence Card (Desktop) -->
+            <div class="chatroom-desktop-presence-card">
+                <div class="live-pulse-dot" style="width: 14px; height: 14px;">
+                    <span class="dot-base"></span>
+                    <span class="dot-ping"></span>
                 </div>
                 <div>
-                    <div style="font-size: 20px; font-weight: 800; color: #fff; line-height: 1;" id="liveOnlineCount">
+                    <div class="desktop-presence-num" id="liveOnlineCount">
                         {{ $onlineCount }}
                     </div>
-                    <small style="color: #10b981; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+                    <small class="desktop-presence-label">
                         {{ $isHub ? 'Online across all rooms' : 'Online in this room' }}
                     </small>
                 </div>
@@ -107,160 +120,182 @@
     @endif
 
     <!-- Category Selector Navigation -->
-    <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 28px;">
+    <div class="chatroom-category-nav">
         <a href="{{ route('chatroom.index') }}" 
-           style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 100px; font-size: 13.5px; font-weight: 600; text-decoration: none; transition: all 0.2s;
-                  {{ $isHub ? 'background: #3b82f6; color: #fff; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);' : 'background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid var(--border-color);' }}">
-            <i class="fa-solid fa-layer-group"></i>
-            Chatroom Hub (All Rooms)
+           class="chatroom-cat-tab {{ $isHub ? 'active' : '' }}">
+            <i class="fa-solid fa-layer-group cat-tab-icon" style="{{ $isHub ? '' : 'color: #60a5fa;' }}"></i>
+            <span>Chatroom Hub<span class="hub-subtext"> (All Rooms)</span></span>
         </a>
         @foreach($categoryLabels as $catKey => $catLabel)
             @php
                 $isActiveCat = (!$isHub && $category === $catKey);
+                $catColorInfo = $categoryColors[$catKey] ?? ['color' => '#60a5fa'];
             @endphp
             <a href="{{ route('chatroom.category', $catKey) }}" 
-               style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 100px; font-size: 13.5px; font-weight: 600; text-decoration: none; transition: all 0.2s;
-                      {{ $isActiveCat ? 'background: #3b82f6; color: #fff; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);' : 'background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid var(--border-color);' }}">
-                <i class="fa-solid {{ $categoryIcons[$catKey] ?? 'fa-comments' }}"></i>
-                {{ $catLabel }}
+               class="chatroom-cat-tab {{ $isActiveCat ? 'active' : '' }}">
+                <i class="fa-solid {{ $categoryIcons[$catKey] ?? 'fa-comments' }} cat-tab-icon" 
+                   style="{{ $isActiveCat ? '' : 'color: ' . $catColorInfo['color'] . ';' }}"></i>
+                <span>{{ $catLabel }}</span>
             </a>
         @endforeach
     </div>
 
     <!-- Actions & Filter Bar -->
-    <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px 20px; margin-bottom: 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;">
-        <!-- Tabs -->
-        <div style="display: flex; gap: 8px;">
+    <div class="chatroom-action-bar">
+        <!-- Topic Filter Tabs -->
+        <div class="chatroom-topic-tabs">
             <a href="{{ $allTabUrl }}" 
-               style="padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; {{ $tab === 'all' ? 'background: rgba(255,255,255,0.1); color: #fff;' : 'color: var(--text-secondary);' }}">
-                All Topics
+               class="chatroom-filter-tab {{ $tab === 'all' ? 'active' : '' }}">
+                <span>All Topics</span>
             </a>
             @guest
                 <a href="javascript:void(0)" onclick="openPremiumLockModal('Premium Rooms Restricted', 'Guest users cannot access premium rooms. Please sign in or register to explore premium discussions.')" 
-                   style="padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 6px;"
+                   class="chatroom-filter-tab"
                    title="Sign in required for premium rooms">
-                    <i class="fa-solid fa-crown" style="color: #f59e0b;"></i> Premium Rooms
+                    <i class="fa-solid fa-crown" style="color: #f59e0b;"></i>
+                    <span>Premium</span>
                     <i class="fa-solid fa-lock" style="font-size: 10px; opacity: 0.7; color: #f59e0b;"></i>
                 </a>
             @else
                 <a href="{{ $premiumTabUrl }}" 
-                   style="padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; {{ $tab === 'premium' ? 'background: rgba(245, 158, 11, 0.15); color: #f59e0b;' : 'color: var(--text-secondary);' }}">
-                    <i class="fa-solid fa-crown mr-1"></i> Premium Rooms
+                   class="chatroom-filter-tab {{ $tab === 'premium' ? 'active' : '' }}">
+                    <i class="fa-solid fa-crown mr-1"></i>
+                    <span>Premium</span>
                 </a>
             @endguest
             <a href="{{ $trendingTabUrl }}" 
-               style="padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; {{ $tab === 'trending' ? 'background: rgba(239, 68, 68, 0.15); color: #f87171;' : 'color: var(--text-secondary);' }}">
-                <i class="fa-solid fa-fire mr-1"></i> Trending
+               class="chatroom-filter-tab {{ $tab === 'trending' ? 'active' : '' }}">
+                <i class="fa-solid fa-fire mr-1"></i>
+                <span>Trending</span>
             </a>
         </div>
 
-        <!-- Search & New Topic Button -->
-        <div style="display: flex; align-items: center; gap: 12px; flex: 1; max-width: 500px; justify-content: flex-end;">
-            <form action="{{ $currentRoute }}" method="GET" style="position: relative; width: 100%; max-width: 280px;">
-                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 12px;"></i>
-                <input type="text" name="q" value="{{ request('q') }}" placeholder="Search discussions..." 
-                       style="width: 100%; background: #070d19; border: 1px solid var(--border-color); border-radius: 100px; padding: 8px 14px 8px 32px; color: #fff; font-size: 13px; outline: none;">
+        <!-- Search Bar & Start Discussion Button -->
+        <div class="chatroom-action-controls">
+            <form action="{{ $currentRoute }}" method="GET" class="chatroom-search-form">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="Search discussions..." class="chatroom-search-input">
+                @if(request('q'))
+                    <a href="{{ $currentRoute }}" class="search-clear-btn" title="Clear search"><i class="fa-solid fa-xmark"></i></a>
+                @endif
             </form>
 
             @if($canStartDiscussion)
-                <button onclick="document.getElementById('createChatroomModal').style.display='flex'" 
-                        style="background: var(--accent-gradient); border: none; color: #fff; padding: 9px 18px; border-radius: 100px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; box-shadow: 0 4px 12px var(--accent-glow);">
-                    <i class="fa-solid fa-plus"></i> Start Discussion
+                <button onclick="document.getElementById('createChatroomModal').style.display='flex'" class="chatroom-new-btn">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Start Discussion</span>
                 </button>
             @endif
         </div>
     </div>
 
     <!-- Discussions List -->
-    <div style="display: flex; flex-direction: column; gap: 14px;">
+    <div class="chatroom-discussions-list">
         @forelse($chatrooms as $room)
             @php
                 $isLockedForGuest = ($room->is_premium && !auth()->check());
                 $catColor = $categoryColors[$room->category] ?? ['color' => '#60a5fa', 'bg' => 'rgba(59, 130, 246, 0.12)', 'border' => 'rgba(59, 130, 246, 0.3)'];
+                $threadUrl = $isLockedForGuest ? 'javascript:void(0)' : route('chatroom.show', [$room->category, $room->slug]);
+                $authorInitial = strtoupper(mb_substr($room->author_name ?? 'U', 0, 1));
             @endphp
-            <div style="background: var(--card-bg); border: 1px solid {{ $room->is_premium ? 'rgba(245, 158, 11, 0.35)' : 'var(--border-color)' }}; border-radius: 16px; padding: 22px 24px; transition: all 0.2s; position: relative;"
-                 onmouseover="this.style.borderColor='{{ $room->is_premium ? 'rgba(245, 158, 11, 0.7)' : 'rgba(59, 130, 246, 0.5)' }}'; this.style.transform='translateY(-2px)'"
-                 onmouseout="this.style.borderColor='{{ $room->is_premium ? 'rgba(245, 158, 11, 0.35)' : 'var(--border-color)' }}'; this.style.transform='translateY(0)'">
-                
-                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 14px; margin-bottom: 12px;">
-                    <div style="flex: 1; min-width: 280px;">
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+            <div class="chatroom-thread-card {{ $room->is_premium ? 'is-premium' : '' }}">
+                <div class="thread-main-col">
+                    <!-- Top Badges & Time Row -->
+                    <div class="thread-badges-row">
+                        <div class="thread-badges-left">
                             @if($room->is_pinned)
-                                <span style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                                <span class="thread-chip chip-pinned">
                                     <i class="fa-solid fa-thumbtack"></i> Pinned
                                 </span>
                             @endif
 
                             {{-- Room Category Badge --}}
                             <a href="{{ route('chatroom.category', $room->category) }}" 
+                               class="thread-chip chip-cat"
                                title="View discussions in {{ $categoryLabels[$room->category] ?? ucfirst($room->category) }}"
-                               style="background: {{ $catColor['bg'] }}; color: {{ $catColor['color'] }}; border: 1px solid {{ $catColor['border'] }}; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; text-decoration: none; transition: opacity 0.2s;"
-                               onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                               style="background: {{ $catColor['bg'] }}; color: {{ $catColor['color'] }}; border: 1px solid {{ $catColor['border'] }};">
                                 <i class="fa-solid {{ $categoryIcons[$room->category] ?? 'fa-comments' }}"></i>
-                                {{ $categoryLabels[$room->category] ?? ucfirst($room->category) }}
+                                <span>{{ $categoryLabels[$room->category] ?? ucfirst($room->category) }}</span>
                             </a>
 
                             @if($room->is_premium)
-                                <span style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.2) 100%); border: 1px solid rgba(245, 158, 11, 0.4); color: #f59e0b; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
-                                    <i class="fa-solid fa-crown"></i> Premium Room
+                                <span class="thread-chip chip-premium">
+                                    <i class="fa-solid fa-crown"></i> Premium
                                     @if($isLockedForGuest)
-                                        <i class="fa-solid fa-lock ml-1" style="font-size: 10px;"></i>
+                                        <i class="fa-solid fa-lock" style="font-size: 10px;"></i>
                                     @endif
                                 </span>
                             @endif
-                            <span style="color: var(--text-secondary); font-size: 12px;">
-                                Started by <strong style="color: #fff;">{{ $room->author_name }}</strong> 
-                                ({{ $room->author_role }})
-                            </span>
-                            <span style="color: var(--text-muted); font-size: 11px;">• {{ $room->created_at->diffForHumans() }}</span>
                         </div>
 
-                        <h3 style="font-size: 17px; font-weight: 700; margin-bottom: 6px;">
-                            @if($isLockedForGuest)
-                                <a href="javascript:void(0)" 
-                                   onclick="openPremiumLockModal('{{ addslashes($room->title) }}', 'This is a premium discussion room. Guest users cannot access premium rooms. Please sign in or register to view and join this discussion.')" 
-                                   style="color: #fff; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-                                    <span>{{ $room->title }}</span>
-                                    <i class="fa-solid fa-lock" style="font-size: 12px; color: #f59e0b;" title="Locked for Guests"></i>
-                                </a>
-                            @else
-                                <a href="{{ route('chatroom.show', [$room->category, $room->slug]) }}" style="color: #fff; text-decoration: none;">
-                                    {{ $room->title }}
-                                </a>
-                            @endif
-                        </h3>
-                        <p style="color: var(--text-secondary); font-size: 13.5px; line-height: 1.5; margin: 0;">
-                            {{ Str::limit($room->description, 140) }}
-                        </p>
+                        <span class="thread-time-badge" title="{{ $room->created_at->format('M d, Y H:i') }}">
+                            <i class="fa-regular fa-clock"></i> {{ $room->created_at->diffForHumans() }}
+                        </span>
                     </div>
 
-                    <!-- Right Stats & Join Button -->
-                    <div style="display: flex; align-items: center; gap: 16px;">
-                        <div style="display: flex; gap: 14px; text-align: center;">
-                            <div style="background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 8px;">
-                                <div style="font-size: 15px; font-weight: 700; color: #fff;">{{ $room->replies_count }}</div>
-                                <small style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Replies</small>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 8px;">
-                                <div style="font-size: 15px; font-weight: 700; color: #fff;">{{ $room->views_count }}</div>
-                                <small style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Views</small>
-                            </div>
-                        </div>
+                    <!-- Title -->
+                    <h3 class="thread-title">
+                        @if($isLockedForGuest)
+                            <a href="javascript:void(0)" 
+                               onclick="openPremiumLockModal('{{ addslashes($room->title) }}', 'This is a premium discussion room. Guest users cannot access premium rooms. Please sign in or register to view and join this discussion.')" 
+                               class="thread-title-link">
+                                <span>{{ $room->title }}</span>
+                                <i class="fa-solid fa-lock lock-icon" title="Locked for Guests"></i>
+                            </a>
+                        @else
+                            <a href="{{ $threadUrl }}" class="thread-title-link">
+                                {{ $room->title }}
+                            </a>
+                        @endif
+                    </h3>
 
+                    <!-- Excerpt Description -->
+                    @if($room->description)
+                        <p class="thread-desc">
+                            {{ Str::limit($room->description, 135) }}
+                        </p>
+                    @endif
+
+                    <!-- Author Meta Row -->
+                    <div class="thread-author-row">
+                        <div class="thread-author-avatar">
+                            {{ $authorInitial }}
+                        </div>
+                        <span class="author-label">Started by</span>
+                        <strong class="author-name">{{ $room->author_name }}</strong>
+                        @if($room->author_role)
+                            <span class="author-role-badge">{{ $room->author_role }}</span>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Right / Footer Stats & Join Button -->
+                <div class="thread-side-col">
+                    <div class="thread-stats-group">
+                        <div class="thread-stat-box" title="{{ $room->replies_count }} {{ Str::plural('reply', $room->replies_count) }}">
+                            <i class="fa-regular fa-comment-dots stat-icon"></i>
+                            <span class="stat-value">{{ $room->replies_count }}</span>
+                            <span class="stat-unit">{{ Str::plural('reply', $room->replies_count) }}</span>
+                        </div>
+                        <div class="thread-stat-box" title="{{ $room->views_count }} {{ Str::plural('view', $room->views_count) }}">
+                            <i class="fa-regular fa-eye stat-icon"></i>
+                            <span class="stat-value">{{ $room->views_count }}</span>
+                            <span class="stat-unit">{{ Str::plural('view', $room->views_count) }}</span>
+                        </div>
+                    </div>
+
+                    <div class="thread-action-wrap">
                         @if($isLockedForGuest)
                             <button type="button" 
                                     onclick="openPremiumLockModal('{{ addslashes($room->title) }}', 'This is a premium discussion room. Guest users cannot access premium rooms. Please sign in or register to view and join this discussion.')"
-                                    style="background: rgba(245, 158, 11, 0.12); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.35); padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;"
-                                    onmouseover="this.style.background='rgba(245, 158, 11, 0.22)'; this.style.borderColor='rgba(245, 158, 11, 0.6)'"
-                                    onmouseout="this.style.background='rgba(245, 158, 11, 0.12)'; this.style.borderColor='rgba(245, 158, 11, 0.35)'">
-                                <i class="fa-solid fa-lock"></i> Locked Room
+                                    class="thread-action-btn btn-locked">
+                                <i class="fa-solid fa-lock"></i>
+                                <span>Locked</span>
                             </button>
                         @else
-                            <a href="{{ route('chatroom.show', [$room->category, $room->slug]) }}" 
-                               style="background: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.25); padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap; transition: all 0.2s;"
-                               onmouseover="this.style.background='#3b82f6'; this.style.color='#fff'"
-                               onmouseout="this.style.background='rgba(59, 130, 246, 0.1)'; this.style.color='#60a5fa'">
-                                Join Thread <i class="fa-solid fa-arrow-right ml-1"></i>
+                            <a href="{{ $threadUrl }}" class="thread-action-btn btn-join">
+                                <span>Join Thread</span>
+                                <i class="fa-solid fa-arrow-right"></i>
                             </a>
                         @endif
                     </div>
@@ -296,11 +331,14 @@
         </div>
     @endif
 
-</div>
+    <!-- Create Discussion Modal (Rendered when user has permission) -->
+    <div id="chatroomModalWrapper">
+        @if($canStartDiscussion)
+            @include('chatroom.create_modal')
+        @endif
+    </div>
 
-@if($canStartDiscussion)
-    @include('chatroom.create_modal')
-@endif
+</div>
 
 <!-- Premium Room Guest Lock Modal -->
 <div id="premiumLockModal" 
@@ -373,22 +411,1106 @@
 
     // Realtime Presence Heartbeat every 25 seconds
     setInterval(function() {
+        var wrapper = document.getElementById('chatroomMainWrapper');
+        var cat = (wrapper && wrapper.getAttribute('data-current-category')) ? wrapper.getAttribute('data-current-category') : 'all';
         $.ajax({
-            url: "{{ route('chatroom.heartbeat', $category) }}",
+            url: "/chatroom/heartbeat/" + cat,
             type: "POST",
             data: { _token: "{{ csrf_token() }}" },
             success: function(res) {
                 if (res && res.onlineCount) {
-                    $('#liveOnlineCount').text(res.onlineCount);
+                    $('#liveOnlineCount, #liveOnlineCountMobile').text(res.onlineCount);
                 }
             }
         });
     }, 25000);
+
+    // Auto-scroll active category tab into view on mobile
+    function scrollActiveCategoryTabIntoView() {
+        var activeTab = document.querySelector('.chatroom-cat-tab.active');
+        if (activeTab && window.innerWidth <= 768) {
+            activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+    }
+
+    $(document).ready(function() {
+        scrollActiveCategoryTabIntoView();
+    });
+
+    // SPA-style smooth navigation for chatrooms without page reload
+    var isChatroomLoading = false;
+
+    function loadChatroomUrl(url, pushHistory) {
+        if (isChatroomLoading) return;
+        var wrapper = document.getElementById('chatroomMainWrapper');
+        if (!wrapper) return;
+
+        isChatroomLoading = true;
+        wrapper.style.opacity = '0.5';
+        wrapper.style.pointerEvents = 'none';
+
+        fetch(url)
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                return response.text();
+            })
+            .then(function(htmlText) {
+                var parser = new DOMParser();
+                var doc = parser.parseFromString(htmlText, 'text/html');
+
+                var newWrapper = doc.getElementById('chatroomMainWrapper');
+                if (newWrapper) {
+                    wrapper.innerHTML = newWrapper.innerHTML;
+                    var newCat = newWrapper.getAttribute('data-current-category') || 'all';
+                    wrapper.setAttribute('data-current-category', newCat);
+                    document.title = doc.title;
+
+                    if (pushHistory) {
+                        window.history.pushState({ chatroomUrl: url }, '', url);
+                    }
+
+                    // Auto-scroll active category tab into view on mobile
+                    scrollActiveCategoryTabIntoView();
+                } else {
+                    window.location.href = url;
+                }
+            })
+            .catch(function(err) {
+                console.warn('Chatroom AJAX navigation fallback:', err);
+                window.location.href = url;
+            })
+            .finally(function() {
+                isChatroomLoading = false;
+                if (wrapper) {
+                    wrapper.style.opacity = '1';
+                    wrapper.style.pointerEvents = '';
+                }
+            });
+    }
+
+    // Intercept clicks on category tabs, filter tabs, and pagination links
+    document.addEventListener('click', function(e) {
+        // 1. Category tabs (Chatroom Hub, General Room, Student Room, Lawyer Room, Researcher Room)
+        var catTab = e.target.closest('.chatroom-cat-tab');
+        if (catTab) {
+            var href = catTab.getAttribute('href');
+            if (href && href !== '#' && !href.startsWith('javascript:')) {
+                e.preventDefault();
+                loadChatroomUrl(href, true);
+                return;
+            }
+        }
+
+        // 2. Filter tabs (All Topics, Trending, Premium Rooms)
+        var filterTab = e.target.closest('.chatroom-filter-tab');
+        if (filterTab) {
+            var href = filterTab.getAttribute('href');
+            if (href && href !== '#' && !href.startsWith('javascript:')) {
+                e.preventDefault();
+                loadChatroomUrl(href, true);
+                return;
+            }
+        }
+
+        // 3. Pagination links inside chatroom
+        var pageLink = e.target.closest('#chatroomMainWrapper .pagination a');
+        if (pageLink) {
+            var href = pageLink.getAttribute('href');
+            if (href && href !== '#' && !href.startsWith('javascript:')) {
+                e.preventDefault();
+                loadChatroomUrl(href, true);
+                return;
+            }
+        }
+    });
+
+    // Intercept search form submission
+    document.addEventListener('submit', function(e) {
+        var searchForm = e.target.closest('.chatroom-search-form');
+        if (searchForm) {
+            e.preventDefault();
+            var action = searchForm.getAttribute('action') || window.location.pathname;
+            var params = new URLSearchParams(new FormData(searchForm)).toString();
+            var fullUrl = action + (params ? '?' + params : '');
+            loadChatroomUrl(fullUrl, true);
+        }
+    });
+
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function(e) {
+        if (location.pathname.indexOf('/chatroom') !== -1) {
+            loadChatroomUrl(location.href, false);
+        }
+    });
 </script>
 @endpush
 
 @push('styles')
 <style>
+    /* Category Selector Navigation Tabs */
+    .chatroom-category-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 24px;
+    }
+
+    .chatroom-cat-tab {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 100px;
+        font-size: 13.5px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-secondary, #94a3b8);
+        border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    }
+
+    .chatroom-cat-tab:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.18);
+        transform: translateY(-1px);
+    }
+
+    .chatroom-cat-tab.active {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+    }
+
+    .cat-tab-icon {
+        font-size: 13px;
+        transition: transform 0.2s ease;
+    }
+
+    .chatroom-cat-tab:hover .cat-tab-icon {
+        transform: scale(1.1);
+    }
+
+    .chatroom-hero-banner {
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.95) 100%);
+        border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+        border-radius: 24px;
+        padding: 32px 36px;
+        margin-bottom: 28px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .chatroom-hero-glow {
+        position: absolute;
+        right: -20px;
+        top: -20px;
+        width: 220px;
+        height: 220px;
+        background: radial-gradient(circle, rgba(59, 130, 246, 0.18) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .chatroom-hero-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .chatroom-hero-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .chatroom-hero-top-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .chatroom-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(59, 130, 246, 0.12);
+        border: 1px solid rgba(59, 130, 246, 0.28);
+        color: #60a5fa;
+        padding: 6px 14px;
+        border-radius: 100px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .chatroom-mobile-live-pill {
+        display: none;
+        align-items: center;
+        gap: 6px;
+        background: rgba(16, 185, 129, 0.12);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: #34d399;
+        padding: 5px 11px;
+        border-radius: 100px;
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+    }
+
+    .live-pulse-dot {
+        position: relative;
+        width: 9px;
+        height: 9px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .dot-base {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: #10b981;
+        border-radius: 50%;
+    }
+
+    .dot-ping {
+        position: absolute;
+        inset: -3px;
+        border: 2px solid #10b981;
+        border-radius: 50%;
+        opacity: 0.75;
+        animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
+    .chatroom-hero-title {
+        font-size: 2.1rem;
+        font-weight: 800;
+        font-family: var(--font-heading);
+        color: #fff;
+        margin: 0 0 10px 0;
+        letter-spacing: -0.5px;
+        line-height: 1.25;
+    }
+
+    .chatroom-hero-desc {
+        color: var(--text-secondary, #94a3b8);
+        font-size: 15px;
+        max-width: 650px;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .chatroom-desktop-presence-card {
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 16px;
+        padding: 18px 24px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        flex-shrink: 0;
+    }
+
+    .desktop-presence-num {
+        font-size: 20px;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1;
+    }
+
+    .desktop-presence-label {
+        color: #10b981;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: block;
+        margin-top: 4px;
+    }
+
+    /* =========================================================
+       Actions & Filter Bar (Desktop Base)
+       ========================================================= */
+    .chatroom-action-bar {
+        background: var(--card-bg, #0b1329);
+        border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+        border-radius: 16px;
+        padding: 14px 18px;
+        margin-bottom: 22px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .chatroom-topic-tabs {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .chatroom-filter-tab {
+        padding: 7px 14px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        color: var(--text-secondary, #94a3b8);
+        background: transparent;
+        border: 1px solid transparent;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .chatroom-filter-tab:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.06);
+    }
+
+    .chatroom-filter-tab.active {
+        background: rgba(255, 255, 255, 0.12) !important;
+        color: #fff !important;
+        border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    }
+
+    .chatroom-action-controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+        max-width: 520px;
+        justify-content: flex-end;
+    }
+
+    .chatroom-search-form {
+        position: relative;
+        width: 100%;
+        max-width: 290px;
+    }
+
+    .chatroom-search-form .search-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted, #64748b);
+        font-size: 13px;
+        pointer-events: none;
+    }
+
+    .chatroom-search-input {
+        width: 100%;
+        background: #070d19;
+        border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+        border-radius: 100px;
+        padding: 9px 34px 9px 38px;
+        color: #fff;
+        font-size: 13px;
+        outline: none;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+    }
+
+    .chatroom-search-input:focus {
+        border-color: #3b82f6;
+        background: #091122;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    .search-clear-btn {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 12px;
+        text-decoration: none;
+        padding: 2px 4px;
+    }
+
+    .search-clear-btn:hover {
+        color: #fff;
+    }
+
+    .chatroom-new-btn {
+        background: var(--accent-gradient, linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%));
+        border: none;
+        color: #fff;
+        padding: 9px 18px;
+        border-radius: 100px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px var(--accent-glow, rgba(59, 130, 246, 0.35));
+        transition: all 0.2s ease;
+    }
+
+    .chatroom-new-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px var(--accent-glow, rgba(59, 130, 246, 0.5));
+    }
+
+    /* =========================================================
+       Discussions List & Thread Card (Desktop Base)
+       ========================================================= */
+    .chatroom-discussions-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .chatroom-thread-card {
+        background: var(--card-bg, #0b1329);
+        border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+        border-radius: 16px;
+        padding: 20px 24px;
+        transition: all 0.2s ease;
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .chatroom-thread-card.is-premium {
+        border-color: rgba(245, 158, 11, 0.35);
+    }
+
+    .chatroom-thread-card:hover {
+        border-color: rgba(59, 130, 246, 0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    .chatroom-thread-card.is-premium:hover {
+        border-color: rgba(245, 158, 11, 0.7);
+    }
+
+    .thread-main-col {
+        flex: 1;
+        min-width: 280px;
+    }
+
+    .thread-badges-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+
+    .thread-badges-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .thread-chip {
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        line-height: 1.2;
+    }
+
+    .chip-pinned {
+        background: rgba(245, 158, 11, 0.15);
+        color: #f59e0b;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .chip-cat {
+        text-decoration: none;
+        transition: opacity 0.2s;
+    }
+
+    .chip-cat:hover {
+        opacity: 0.85;
+    }
+
+    .chip-premium {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.2) 100%);
+        border: 1px solid rgba(245, 158, 11, 0.4);
+        color: #f59e0b;
+    }
+
+    .thread-time-badge {
+        color: var(--text-muted, #64748b);
+        font-size: 11.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+    }
+
+    .thread-author-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 10px;
+        font-size: 12px;
+        color: var(--text-secondary, #94a3b8);
+    }
+
+    .thread-author-avatar {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+        color: #ffffff;
+        font-size: 10.5px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+    }
+
+    .author-label {
+        color: var(--text-muted, #64748b);
+        font-size: 11.5px;
+    }
+
+    .thread-author-row .author-name {
+        color: #f1f5f9;
+        font-weight: 600;
+    }
+
+    .author-role-badge {
+        font-size: 10.5px;
+        padding: 1px 7px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.06);
+        color: #94a3b8;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .thread-title {
+        font-size: 17.5px;
+        font-weight: 700;
+        margin: 0 0 6px 0;
+        line-height: 1.35;
+    }
+
+    .thread-title-link {
+        color: #fff;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .thread-title-link:hover {
+        color: #60a5fa;
+    }
+
+    .thread-title-link .lock-icon {
+        color: #f59e0b;
+        font-size: 12px;
+        margin-left: 6px;
+    }
+
+    .thread-desc {
+        color: var(--text-secondary, #94a3b8);
+        font-size: 13.5px;
+        line-height: 1.55;
+        margin: 0;
+    }
+
+    .thread-side-col {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-shrink: 0;
+    }
+
+    .thread-stats-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .thread-stat-box {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 6px 10px;
+        border-radius: 8px;
+        text-align: center;
+        min-width: 48px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .thread-stat-box .stat-icon {
+        display: none;
+    }
+
+    .thread-stat-box .stat-value {
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.1;
+    }
+
+    .thread-stat-box .stat-unit {
+        font-size: 10px;
+        color: var(--text-muted, #64748b);
+        text-transform: uppercase;
+        margin-top: 2px;
+    }
+
+    .thread-action-wrap {
+        display: flex;
+        align-items: center;
+    }
+
+    .thread-action-btn {
+        padding: 9px 18px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+    }
+
+    .thread-action-btn.btn-join {
+        background: rgba(59, 130, 246, 0.1);
+        color: #60a5fa;
+        border: 1px solid rgba(59, 130, 246, 0.25);
+    }
+
+    .thread-action-btn.btn-join:hover {
+        background: #3b82f6;
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+    }
+
+    .thread-action-btn.btn-locked {
+        background: rgba(245, 158, 11, 0.12);
+        color: #f59e0b;
+        border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    .thread-action-btn.btn-locked:hover {
+        background: rgba(245, 158, 11, 0.22);
+        border-color: rgba(245, 158, 11, 0.6);
+    }
+
+    /* =========================================================
+       Mobile Overrides (max-width: 768px)
+       Placed at the very bottom so mobile styles properly take effect
+       ========================================================= */
+    @media (max-width: 768px) {
+        /* Mobile Category Tabs */
+        .chatroom-category-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding: 2px 2px 8px 2px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .chatroom-category-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chatroom-cat-tab {
+            padding: 7px 13px;
+            font-size: 12px;
+            gap: 6px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 100px;
+        }
+
+        .chatroom-cat-tab.active {
+            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.35);
+        }
+
+        .hub-subtext {
+            display: none;
+        }
+
+        .cat-tab-icon {
+            font-size: 11.5px;
+        }
+
+        /* Mobile Hero Banner */
+        .chatroom-hero-banner {
+            padding: 18px 16px;
+            border-radius: 16px;
+            margin-bottom: 18px;
+            background: linear-gradient(135deg, rgba(23, 33, 54, 0.95) 0%, rgba(13, 20, 36, 0.98) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.22);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        .chatroom-hero-inner {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+        }
+
+        .chatroom-hero-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-wrap: nowrap;
+        }
+
+        .chatroom-hero-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            gap: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .chatroom-mobile-live-pill {
+            display: inline-flex;
+            margin-left: auto;
+            font-size: 11px;
+            padding: 4px 9px;
+            white-space: nowrap;
+        }
+
+        .chatroom-desktop-presence-card {
+            display: none !important;
+        }
+
+        .chatroom-hero-title {
+            font-size: 1.35rem;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+            color: #ffffff;
+        }
+
+        .chatroom-hero-desc {
+            font-size: 13px;
+            line-height: 1.5;
+            color: rgba(203, 213, 225, 0.88);
+        }
+
+        /* Actions & Filter Card Mobile Redesign */
+        .chatroom-action-bar {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            padding: 14px 12px !important;
+            gap: 12px !important;
+            border-radius: 14px !important;
+            margin-bottom: 16px !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+        }
+
+        .chatroom-topic-tabs {
+            display: grid !important;
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            gap: 6px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .chatroom-filter-tab {
+            justify-content: center !important;
+            text-align: center !important;
+            gap: 4px !important;
+            padding: 8px 4px !important;
+            font-size: 11.5px !important;
+            border-radius: 8px !important;
+            background: rgba(255, 255, 255, 0.04) !important;
+            border: 1px solid rgba(255, 255, 255, 0.06) !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            box-sizing: border-box !important;
+        }
+
+        .chatroom-filter-tab span {
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+        }
+
+        .chatroom-action-controls {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 10px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .chatroom-search-form {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .chatroom-search-input {
+            width: 100% !important;
+            height: 42px !important;
+            padding: 0 34px 0 38px !important;
+            font-size: 13.5px !important;
+            border-radius: 12px !important;
+            background: #080f1d !important;
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            box-sizing: border-box !important;
+        }
+
+        .chatroom-search-input:focus {
+            background: #0c162a !important;
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25) !important;
+        }
+
+        .chatroom-new-btn {
+            width: 100% !important;
+            height: 40px !important;
+            justify-content: center !important;
+            border-radius: 12px !important;
+            font-size: 13.5px !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Discussion Thread Card Mobile Redesign */
+        .chatroom-thread-card {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            padding: 15px 14px !important;
+            gap: 10px !important;
+            border-radius: 16px !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.85) 0%, rgba(10, 16, 32, 0.95) 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        .chatroom-thread-card.is-premium {
+            border-color: rgba(245, 158, 11, 0.38) !important;
+            box-shadow: 0 4px 18px rgba(245, 158, 11, 0.08) !important;
+        }
+
+        .thread-main-col {
+            min-width: 0 !important;
+            width: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 6px !important;
+        }
+
+        .thread-badges-row {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 8px !important;
+            margin-bottom: 2px !important;
+            width: 100% !important;
+        }
+
+        .thread-badges-left {
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            flex-wrap: wrap !important;
+        }
+
+        .thread-chip {
+            font-size: 10.5px !important;
+            padding: 3px 8px !important;
+            border-radius: 6px !important;
+            font-weight: 600 !important;
+        }
+
+        .thread-time-badge {
+            font-size: 11px !important;
+            color: #64748b !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+        }
+
+        .thread-title {
+            font-size: 15px !important;
+            font-weight: 700 !important;
+            margin: 2px 0 0 0 !important;
+            line-height: 1.35 !important;
+            letter-spacing: -0.2px !important;
+        }
+
+        .thread-title-link {
+            color: #f8fafc !important;
+        }
+
+        .thread-title-link .lock-icon {
+            font-size: 11px !important;
+            margin-left: 4px !important;
+            color: #f59e0b !important;
+        }
+
+        .thread-desc {
+            font-size: 12.5px !important;
+            line-height: 1.45 !important;
+            color: #94a3b8 !important;
+            margin: 0 !important;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 2 !important;
+            -webkit-box-orient: vertical !important;
+            overflow: hidden !important;
+        }
+
+        .thread-author-row {
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            margin-top: 4px !important;
+            padding-top: 4px !important;
+            flex-wrap: wrap !important;
+        }
+
+        .thread-author-avatar {
+            width: 20px !important;
+            height: 20px !important;
+            font-size: 10px !important;
+            border-radius: 50% !important;
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%) !important;
+            color: #fff !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-weight: 700 !important;
+            flex-shrink: 0 !important;
+        }
+
+        .author-label {
+            font-size: 11px !important;
+            color: #64748b !important;
+        }
+
+        .thread-author-row .author-name {
+            font-size: 12px !important;
+            color: #e2e8f0 !important;
+            font-weight: 600 !important;
+        }
+
+        .author-role-badge {
+            font-size: 10px !important;
+            padding: 1px 6px !important;
+            border-radius: 4px !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            color: #94a3b8 !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        }
+
+        /* Footer: Stats & Button on single clean line */
+        .thread-side-col {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            width: 100% !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
+            padding-top: 10px !important;
+            margin-top: 4px !important;
+            box-sizing: border-box !important;
+        }
+
+        .thread-stats-group {
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+        }
+
+        .thread-stat-box {
+            display: inline-flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 4px !important;
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            min-width: auto !important;
+        }
+
+        .thread-stat-box .stat-icon {
+            display: inline-block !important;
+            font-size: 12px !important;
+            color: #60a5fa !important;
+        }
+
+        .thread-stat-box .stat-value {
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            color: #e2e8f0 !important;
+            line-height: 1 !important;
+        }
+
+        .thread-stat-box .stat-unit {
+            font-size: 11px !important;
+            color: #64748b !important;
+            text-transform: lowercase !important;
+            margin: 0 !important;
+        }
+
+        .thread-action-wrap {
+            margin: 0 !important;
+        }
+
+        .thread-action-btn {
+            padding: 6px 13px !important;
+            font-size: 11.5px !important;
+            font-weight: 600 !important;
+            border-radius: 8px !important;
+            height: auto !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 5px !important;
+        }
+    }
+
     @keyframes ping {
         75%, 100% {
             transform: scale(2);

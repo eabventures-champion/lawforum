@@ -205,12 +205,8 @@
                 </a>
 
                 <div class="mobile-submenu-list" id="mobileChatroomSubmenu" style="display: none;">
-                    <a href="/chatroom" class="mobile-submenu-item {{ (request()->is('chatroom') && !request()->is('chatroom/*')) ? 'active' : '' }}">
-                        <i class="fa-solid fa-layer-group" style="color: #60a5fa; width: 16px;"></i>
-                        <span>Chatroom Hub</span>
-                    </a>
                     @if(\App\AdditionalMenuSetting::isEnabled('chatroom_general_enabled', true))
-                        <a href="/chatroom/general" class="mobile-submenu-item {{ ($currentPath === 'chatroom/general' || strpos($currentPath, 'chatroom/general/') === 0) ? 'active' : '' }}">
+                        <a href="/chatroom/general" class="mobile-submenu-item {{ ($currentPath === 'chatroom/general' || $currentPath === 'chatroom' || strpos($currentPath, 'chatroom/general/') === 0) ? 'active' : '' }}">
                             <i class="fa-solid fa-comments" style="color: #3b82f6; width: 16px;"></i>
                             <span>General</span>
                         </a>
@@ -350,10 +346,12 @@
         display: none;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         gap: 6px;
         width: 100%;
         margin-top: 6px;
         margin-bottom: 6px;
+        text-align: center;
         animation: fadeInSubmenu 0.25s ease forwards;
     }
 
@@ -372,11 +370,13 @@
         transition: all 0.2s ease !important;
         width: auto !important;
         min-width: 190px !important;
+        max-width: 220px !important;
         display: flex !important;
         align-items: center !important;
-        justify-content: flex-start !important;
+        justify-content: center !important;
+        text-align: center !important;
         gap: 10px !important;
-        margin: 2px 0 !important;
+        margin: 2px auto !important;
         text-decoration: none !important;
     }
 
