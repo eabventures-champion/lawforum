@@ -12,7 +12,14 @@
         $roleOnClick = '';
         $userType = Auth::user()->user_type;
         $roleLink = '/home';
-        if ($userType === 'student') {
+        if (Auth::user()->isAdmin()) {
+            $roleIcon = 'fa-shield-halved';
+            $roleBg = 'rgba(239, 68, 68, 0.15)';
+            $roleColor = '#f87171';
+            $roleBorder = 'rgba(239, 68, 68, 0.3)';
+            $roleTitle = 'Administrator';
+            $roleLink = '/admin';
+        } elseif ($userType === 'student') {
             $roleIcon = 'fa-graduation-cap';
             $roleBg = 'rgba(59, 130, 246, 0.15)';
             $roleColor = '#60a5fa';

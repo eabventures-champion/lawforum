@@ -232,6 +232,10 @@ class ChatroomController extends Controller
             if ($request->has('is_premium') && ($user->hasFullAccess() || $user->isAdmin())) {
                 $isPremium = true;
             }
+            $isPinned = false;
+            if ($request->has('is_pinned') && $user->isAdmin()) {
+                $isPinned = true;
+            }
         }
 
         $slug = Chatroom::generateUniqueSlug($request->input('title'));
@@ -246,6 +250,7 @@ class ChatroomController extends Controller
             'slug'             => $slug,
             'description'      => $request->input('description'),
             'is_premium'       => $isPremium,
+            'is_pinned'        => $isPinned,
             'last_activity_at' => now(),
         ]);
 
@@ -267,7 +272,9 @@ class ChatroomController extends Controller
     {
         $room = Chatroom::findOrFail($id);
 
-        if ($room->is_locked) {
+        $isAdmin = auth()->check() && auth()->user()->isAdmin();
+
+        if ($room->is_locked && !$isAdmin) {
             return back()->with('error', 'This discussion thread has been locked by an administrator.');
         }
 

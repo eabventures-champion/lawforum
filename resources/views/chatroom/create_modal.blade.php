@@ -63,7 +63,7 @@
 
                     <!-- Premium Toggle (for Subscribers/Admins) -->
                     @if(auth()->user()->hasFullAccess() || auth()->user()->isAdmin())
-                        <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 12px; padding: 12px 14px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between;">
+                        <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
                             <div>
                                 <div style="font-weight: 700; color: #f59e0b; font-size: 12.5px; display: flex; align-items: center; gap: 6px;">
                                     <i class="fa-solid fa-crown"></i> Publish as Premium Forum Room
@@ -71,6 +71,19 @@
                                 <small style="color: var(--text-secondary); font-size: 11px;">Features your room with VIP badge and highlighted ranking.</small>
                             </div>
                             <input type="checkbox" name="is_premium" value="1" style="width: 18px; height: 18px; cursor: pointer; accent-color: #f59e0b;">
+                        </div>
+                    @endif
+
+                    <!-- Pin to Top Toggle (Admins) -->
+                    @if(auth()->user()->isAdmin())
+                        <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 12px; padding: 12px 14px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <div style="font-weight: 700; color: #60a5fa; font-size: 12.5px; display: flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-thumbtack"></i> Pin Discussion to Top (Admin)
+                                </div>
+                                <small style="color: var(--text-secondary); font-size: 11px;">Pins this discussion at the top of category listings.</small>
+                            </div>
+                            <input type="checkbox" name="is_pinned" value="1" style="width: 18px; height: 18px; cursor: pointer; accent-color: #3b82f6;">
                         </div>
                     @endif
 

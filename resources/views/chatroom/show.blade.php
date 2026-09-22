@@ -89,6 +89,23 @@
                         <i class="fa-solid fa-crown"></i> Premium Room
                     </span>
                 @endif
+
+                @if(auth()->check() && auth()->user()->isAdmin())
+                    <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+                        <form action="{{ route('admin.additional-menus.chatroom.pin', $room->id) }}" method="POST" style="display: inline;">
+                            @csrf
+                            <button type="submit" title="{{ $room->is_pinned ? 'Unpin Discussion' : 'Pin Discussion' }}" style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: #f59e0b; padding: 5px 10px; border-radius: 8px; font-size: 11.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+                                <i class="fa-solid fa-thumbtack"></i> <span>{{ $room->is_pinned ? 'Pinned' : 'Pin' }}</span>
+                            </button>
+                        </form>
+                        <form action="{{ route('admin.additional-menus.chatroom.lock', $room->id) }}" method="POST" style="display: inline;">
+                            @csrf
+                            <button type="submit" title="{{ $room->is_locked ? 'Unlock Discussion' : 'Lock Discussion' }}" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 5px 10px; border-radius: 8px; font-size: 11.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+                                <i class="fa-solid {{ $room->is_locked ? 'fa-lock' : 'fa-lock-open' }}"></i> <span>{{ $room->is_locked ? 'Locked' : 'Lock' }}</span>
+                            </button>
+                        </form>
+                    </div>
+                @endif
             </div>
 
             <h1 class="thread-hero-title">
@@ -122,7 +139,7 @@
                                 </div>
                                 <div class="message-author-info">
                                     <span class="message-author-name">{{ $msg->author_name }}</span>
-                                    <span class="message-role-tag">{{ $msg->author_role }}</span>
+                                    <span class="message-role-tag {{ $msg->author_role === 'Admin' ? 'role-admin' : '' }}">{{ $msg->author_role }}</span>
                                 </div>
                             </div>
                             <span class="message-time">{{ $msg->created_at->diffForHumans() }}</span>
@@ -148,12 +165,18 @@
                 <span>Participate in this Thread</span>
             </h4>
 
-            @if($room->is_locked)
+            @if($room->is_locked && (!auth()->check() || !auth()->user()->isAdmin()))
                 <div class="thread-locked-alert">
                     <i class="fa-solid fa-lock"></i>
                     <span>This discussion is locked from further replies.</span>
                 </div>
             @else
+                @if($room->is_locked)
+                    <div class="thread-locked-alert" style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; margin-bottom: 16px;">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>This thread is locked for regular members, but as an <strong>Administrator</strong> you can post official responses.</span>
+                    </div>
+                @endif
                 <form id="replyForm" action="{{ route('chatroom.postMessage', $room->id) }}" method="POST">
                     @csrf
 
@@ -613,6 +636,13 @@
         font-weight: 700;
     }
 
+    .message-role-tag.role-admin {
+        background: rgba(239, 68, 68, 0.18) !important;
+        color: #f87171 !important;
+        border: 1px solid rgba(239, 68, 68, 0.35) !important;
+        letter-spacing: 0.3px;
+    }
+
     .message-time {
         color: var(--text-muted, #64748b);
         font-size: 12px;
@@ -1040,7 +1070,7 @@
                                     </div>
                                     <div class="message-author-info">
                                         <span class="message-author-name">${$('<div>').text(res.author).html()}</span>
-                                        <span class="message-role-tag">${$('<div>').text(res.role).html()}</span>
+                                        <span class="message-role-tag ${res.role === 'Admin' ? 'role-admin' : ''}">${$('<div>').text(res.role).html()}</span>
                                     </div>
                                 </div>
                                 <span class="message-time">Just now</span>

@@ -666,6 +666,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::post('additional-menus/update', 'Admin\AdditionalMenuController@updateSettings')->name('admin.additional-menus.update');
     Route::post('additional-menus/chatroom/{id}/pin', 'Admin\AdditionalMenuController@toggleRoomPin')->name('admin.additional-menus.chatroom.pin');
     Route::post('additional-menus/chatroom/{id}/premium', 'Admin\AdditionalMenuController@toggleRoomPremium')->name('admin.additional-menus.chatroom.premium');
+    Route::post('additional-menus/chatroom/{id}/lock', 'Admin\AdditionalMenuController@toggleRoomLock')->name('admin.additional-menus.chatroom.lock');
     Route::delete('additional-menus/chatroom/{id}', 'Admin\AdditionalMenuController@deleteRoom')->name('admin.additional-menus.chatroom.destroy');
 
     // Sidebar Ads Management

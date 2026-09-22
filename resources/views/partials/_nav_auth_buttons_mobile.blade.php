@@ -11,10 +11,22 @@
         $uType = Auth::user()->user_type;
         $roleLabel = 'Dashboard';
         $roleIcon = 'fa-circle-user';
-        if ($uType === 'student') { $roleLabel = 'Student Portal'; $roleIcon = 'fa-graduation-cap'; }
-        elseif ($uType === 'lawyer') { $roleLabel = 'Lawyer Portal'; $roleIcon = 'fa-gavel'; }
-        elseif ($uType === 'researcher') { $roleLabel = 'Researcher Portal'; $roleIcon = 'fa-microscope'; }
+        $roleUrl = '/home';
+        if (Auth::user()->isAdmin()) {
+            $roleLabel = 'Admin Portal';
+            $roleIcon = 'fa-shield-halved';
+            $roleUrl = '/admin';
+        } elseif ($uType === 'student') { 
+            $roleLabel = 'Student Portal'; 
+            $roleIcon = 'fa-graduation-cap'; 
+        } elseif ($uType === 'lawyer') { 
+            $roleLabel = 'Lawyer Portal'; 
+            $roleIcon = 'fa-gavel'; 
+        } elseif ($uType === 'researcher') { 
+            $roleLabel = 'Researcher Portal'; 
+            $roleIcon = 'fa-microscope'; 
+        }
     @endphp
-    <a href="/home"><i class="fa-solid {{ $roleIcon }}" style="margin-right: 6px;"></i> {{ $roleLabel }}</a>
+    <a href="{{ $roleUrl }}"><i class="fa-solid {{ $roleIcon }}" style="margin-right: 6px;"></i> {{ $roleLabel }}</a>
     <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="color: #f43f5e;"><i class="fa-solid fa-power-off" style="margin-right: 6px;"></i> Sign Out</a>
 @endguest

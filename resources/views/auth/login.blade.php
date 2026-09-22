@@ -346,6 +346,165 @@
             color: #ffffff !important;
             transform: translateX(-3px);
         }
+
+        /* Mobile Overrides (max-width: 768px) */
+        @media (max-width: 768px) {
+            html, body {
+                overflow: hidden !important;
+                height: 100% !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                max-height: 100dvh !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 100% !important;
+                overscroll-behavior: none !important;
+                overscroll-behavior-y: none !important;
+                touch-action: manipulation !important;
+            }
+
+            body {
+                padding: 14px 16px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                overflow: hidden !important;
+            }
+
+            .ambient-blob-1, .ambient-blob-2 {
+                width: 70vw !important;
+                height: 70vw !important;
+                filter: blur(70px) !important;
+            }
+
+            .auth-container {
+                padding: 22px 18px !important;
+                border-radius: 20px !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                overflow: hidden !important;
+                box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45) !important;
+                background: rgba(13, 20, 38, 0.65) !important;
+                border: 1px solid rgba(255, 255, 255, 0.09) !important;
+            }
+
+            .auth-back-nav {
+                margin-bottom: 10px !important;
+            }
+
+            .btn-auth-back {
+                padding: 5px 12px !important;
+                font-size: 12px !important;
+                border-radius: 8px !important;
+                gap: 6px !important;
+            }
+
+            .brand-header {
+                margin-bottom: 22px !important;
+            }
+
+            .brand-logo {
+                width: 48px !important;
+                height: 48px !important;
+                font-size: 20px !important;
+                border-radius: 14px !important;
+                margin-bottom: 12px !important;
+                box-shadow: 0 6px 18px var(--accent-glow) !important;
+            }
+
+            .brand-name {
+                font-size: 20px !important;
+                letter-spacing: -0.3px !important;
+                margin-bottom: 3px !important;
+            }
+
+            .brand-tagline {
+                font-size: 12.5px !important;
+            }
+
+            .error-alert {
+                padding: 11px 13px !important;
+                margin-bottom: 16px !important;
+                border-radius: 10px !important;
+                gap: 10px !important;
+            }
+
+            .error-icon {
+                font-size: 15px !important;
+            }
+
+            .error-message {
+                font-size: 12px !important;
+            }
+
+            .form-group {
+                margin-bottom: 16px !important;
+            }
+
+            .form-label {
+                font-size: 11px !important;
+                margin-bottom: 6px !important;
+                letter-spacing: 0.4px !important;
+            }
+
+            .form-control {
+                height: 44px !important;
+                padding: 0 14px 0 42px !important;
+                font-size: 13.5px !important;
+                border-radius: 10px !important;
+            }
+
+            .input-icon {
+                left: 14px !important;
+                font-size: 14px !important;
+            }
+
+            .toggle-password {
+                right: 14px !important;
+                font-size: 14px !important;
+            }
+
+            .form-options {
+                margin-bottom: 20px !important;
+                font-size: 12.5px !important;
+            }
+
+            .remember-me {
+                gap: 6px !important;
+                font-size: 12px !important;
+            }
+
+            .remember-checkbox {
+                width: 16px !important;
+                height: 16px !important;
+                border-radius: 5px !important;
+            }
+
+            .forgot-link {
+                font-size: 12px !important;
+            }
+
+            .btn-submit {
+                height: 44px !important;
+                padding: 0 !important;
+                font-size: 14px !important;
+                border-radius: 10px !important;
+                box-shadow: 0 4px 16px var(--accent-glow) !important;
+            }
+
+            .auth-footer {
+                margin-top: 18px !important;
+                font-size: 12.5px !important;
+            }
+
+            .auth-return-wrap {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -449,7 +608,7 @@
 
         <div class="auth-footer">
             <div>Don't have an account? <a href="{{ route('register') }}">Sign Up</a></div>
-            <div style="margin-top: 14px;">
+            <div class="auth-return-wrap" style="margin-top: 14px;">
                 <a href="javascript:void(0)" onclick="handleGoBack()" class="auth-return-link">
                     <i class="fa-solid fa-arrow-left"></i>
                     <span>Return to Previous Page</span>

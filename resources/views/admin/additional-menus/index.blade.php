@@ -163,14 +163,19 @@
 
 <!-- Chatroom Discussions Moderation Table -->
 <div class="card-table">
-    <div class="table-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="table-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
         <div>
             <h2 class="table-title">Community Chatrooms & Threads</h2>
             <p style="color: var(--text-secondary); font-size: 13px; margin: 4px 0 0 0;">Manage created rooms, toggle premium status, pin priority discussions, or moderate topics.</p>
         </div>
-        <a href="{{ route('chatroom.index') }}" target="_blank" class="btn btn-secondary" style="font-size: 13px;">
-            <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i> View Live Chatroom
-        </a>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button type="button" onclick="document.getElementById('createChatroomModal').style.display='flex'" class="btn btn-primary" style="font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-plus"></i> Start Discussion
+            </button>
+            <a href="{{ route('chatroom.index') }}" target="_blank" class="btn btn-secondary" style="font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> View Live Chatroom
+            </a>
+        </div>
     </div>
 
     <table class="custom-table">
@@ -181,7 +186,7 @@
                 <th>Author</th>
                 <th>Replies</th>
                 <th>Status</th>
-                <th style="width: 220px;">Actions</th>
+                <th style="width: 280px;">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -191,6 +196,9 @@
                         <div style="font-weight: 700; color: #fff; font-size: 14px; display: flex; align-items: center; gap: 8px;">
                             @if($room->is_pinned)
                                 <span title="Pinned Topic" style="color: #f59e0b;"><i class="fa-solid fa-thumbtack"></i></span>
+                            @endif
+                            @if($room->is_locked)
+                                <span title="Locked Topic" style="color: #ef4444;"><i class="fa-solid fa-lock"></i></span>
                             @endif
                             <a href="{{ route('chatroom.show', [$room->category, $room->slug]) }}" target="_blank" style="color: inherit; text-decoration: none;">
                                 {{ $room->title }}
@@ -229,30 +237,52 @@
                         <span style="font-weight: 700; color: #fff;">{{ $room->messages_count }}</span>
                     </td>
                     <td>
-                        @if($room->is_premium)
-                            <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: 700;">
-                                <i class="fa-solid fa-crown mr-1"></i> Premium
-                            </span>
-                        @else
-                            <span class="badge" style="background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); padding: 4px 10px; border-radius: 100px; font-size: 11px;">
-                                Standard
-                            </span>
-                        @endif
+                        <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
+                            @if($room->is_premium)
+                                <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); padding: 3px 8px; border-radius: 100px; font-size: 10.5px; font-weight: 700;">
+                                    <i class="fa-solid fa-crown mr-1"></i> Premium
+                                </span>
+                            @else
+                                <span class="badge" style="background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); padding: 3px 8px; border-radius: 100px; font-size: 10.5px;">
+                                    Standard
+                                </span>
+                            @endif
+
+                            @if($room->is_locked)
+                                <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 3px 8px; border-radius: 100px; font-size: 10.5px; font-weight: 700;">
+                                    <i class="fa-solid fa-lock mr-1"></i> Locked
+                                </span>
+                            @endif
+                        </div>
                     </td>
                     <td>
-                        <div style="display: flex; gap: 8px;">
+                        <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                            <!-- Join / Participate in Thread -->
+                            <a href="{{ route('chatroom.show', [$room->category, $room->slug]) }}" target="_blank" class="btn btn-primary" style="padding: 6px 10px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;" title="Join & Reply in this Thread">
+                                <i class="fa-solid fa-comments"></i>
+                                <span>Join Thread</span>
+                            </a>
+
                             <!-- Toggle Pin -->
                             <form action="{{ route('admin.additional-menus.chatroom.pin', $room->id) }}" method="POST" style="display: inline;">
                                 @csrf
-                                <button type="submit" class="btn btn-secondary" style="padding: 6px 10px; font-size: 11px;" title="{{ $room->is_pinned ? 'Unpin' : 'Pin' }}">
+                                <button type="submit" class="btn btn-secondary" style="padding: 6px 9px; font-size: 11px;" title="{{ $room->is_pinned ? 'Unpin Discussion' : 'Pin Discussion' }}">
                                     <i class="fa-solid fa-thumbtack {{ $room->is_pinned ? 'text-warning' : '' }}"></i>
+                                </button>
+                            </form>
+
+                            <!-- Toggle Lock -->
+                            <form action="{{ route('admin.additional-menus.chatroom.lock', $room->id) }}" method="POST" style="display: inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-secondary" style="padding: 6px 9px; font-size: 11px;" title="{{ $room->is_locked ? 'Unlock Thread for Replies' : 'Lock Thread from Replies' }}">
+                                    <i class="fa-solid {{ $room->is_locked ? 'fa-lock text-danger' : 'fa-lock-open' }}"></i>
                                 </button>
                             </form>
 
                             <!-- Toggle Premium -->
                             <form action="{{ route('admin.additional-menus.chatroom.premium', $room->id) }}" method="POST" style="display: inline;">
                                 @csrf
-                                <button type="submit" class="btn btn-secondary" style="padding: 6px 10px; font-size: 11px;" title="Toggle Premium Status">
+                                <button type="submit" class="btn btn-secondary" style="padding: 6px 9px; font-size: 11px;" title="Toggle Premium Status">
                                     <i class="fa-solid fa-crown {{ $room->is_premium ? 'text-warning' : '' }}"></i>
                                 </button>
                             </form>
@@ -261,7 +291,7 @@
                             <form action="{{ route('admin.additional-menus.chatroom.destroy', $room->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this chatroom?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger" style="padding: 6px 10px; font-size: 11px;" title="Delete Chatroom">
+                                <button type="submit" class="btn btn-danger" style="padding: 6px 9px; font-size: 11px;" title="Delete Chatroom">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </form>
@@ -271,7 +301,7 @@
             @empty
                 <tr>
                     <td colspan="6" style="text-align: center; padding: 32px; color: var(--text-secondary);">
-                        No community chatrooms created yet. Students, lawyers, and researchers can create discussions from their dashboard.
+                        No community chatrooms created yet. Students, lawyers, researchers, and admins can create discussions.
                     </td>
                 </tr>
             @endforelse
@@ -284,4 +314,6 @@
         </div>
     @endif
 </div>
+
+@include('chatroom.create_modal')
 @endsection

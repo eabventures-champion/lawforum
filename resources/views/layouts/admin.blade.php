@@ -145,6 +145,12 @@
                     <span>Additional Menus</span>
                 </a>
             </li>
+            <li class="menu-item">
+                <a href="{{ route('chatroom.index') }}" target="_blank">
+                    <i class="fa-solid fa-comments"></i>
+                    <span>Live Chatrooms</span>
+                </a>
+            </li>
             <li class="menu-item {{ Request::is('admin/sidebar-ads*') ? 'active' : '' }}">
                 <a href="{{ route('admin.sidebar-ads.index') }}">
                     <i class="fa-solid fa-rectangle-ad"></i>

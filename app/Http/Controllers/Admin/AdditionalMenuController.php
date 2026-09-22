@@ -92,6 +92,20 @@ class AdditionalMenuController extends Controller
         return back()->with('success', 'Chatroom premium status updated.');
     }
 
+    public function toggleRoomLock($id)
+    {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $room = Chatroom::findOrFail($id);
+        $room->is_locked = !$room->is_locked;
+        $room->save();
+
+        $statusText = $room->is_locked ? 'locked from replies' : 'unlocked for replies';
+        return back()->with('success', "Chatroom discussion is now {$statusText}.");
+    }
+
     public function deleteRoom($id)
     {
         if (!auth()->user()->isAdmin()) {

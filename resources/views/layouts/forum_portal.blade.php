@@ -445,7 +445,11 @@
                         <a href="/get-started" class="btn-signup">Sign Up Free</a>
                     @endif
                 @else
-                    <a href="/home" class="btn-login"><i class="fa-solid fa-house mr-1"></i> Dashboard</a>
+                    @if(auth()->user()->isAdmin())
+                        <a href="/admin" class="btn-login"><i class="fa-solid fa-gauge-high mr-1"></i> Admin Portal</a>
+                    @else
+                        <a href="/home" class="btn-login"><i class="fa-solid fa-house mr-1"></i> Dashboard</a>
+                    @endif
                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn-login" style="color: #f43f5e;">
                         <i class="fa-solid fa-power-off mr-1"></i> Sign Out
                     </a>

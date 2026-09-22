@@ -1878,45 +1878,91 @@
                 box-shadow: none;
                 visibility: hidden;
             }
-            .sidebar.mobile-open {
+            .sidebar.mobile-open,
+            .sidebar.collapsed.mobile-open {
                 left: 0 !important;
                 transform: none !important;
                 box-shadow: 0 0 40px rgba(0, 0, 0, 0.8) !important;
-                visibility: visible;
+                visibility: visible !important;
             }
-            .sidebar .sidebar-toggle {
+            .sidebar .sidebar-toggle,
+            .sidebar.collapsed .sidebar-toggle {
                 display: none !important;
             }
             .mobile-sidebar-close {
                 display: inline-flex !important;
             }
-            .sidebar.collapsed {
+            .sidebar.collapsed,
+            .sidebar {
                 width: 280px !important;
             }
-            .sidebar .sidebar-brand-link {
+            .sidebar .sidebar-header,
+            .sidebar.collapsed .sidebar-header {
                 display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                padding: 18px 18px !important;
+                min-height: 78px !important;
             }
-            .sidebar .sidebar-logo-text {
+            .sidebar .sidebar-brand-link,
+            .sidebar.collapsed .sidebar-brand-link {
+                display: flex !important;
+                align-items: center !important;
+                gap: 12px !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+            }
+            .sidebar .sidebar-logo-text,
+            .sidebar.collapsed .sidebar-logo-text {
                 display: block !important;
                 opacity: 1 !important;
                 width: auto !important;
+                visibility: visible !important;
             }
-            .sidebar .menu-label {
+            .sidebar .menu-label,
+            .sidebar.collapsed .menu-label {
                 display: block !important;
                 opacity: 1 !important;
                 width: auto !important;
+                visibility: visible !important;
             }
-            .sidebar .sidebar-menu .menu-item a {
+            .sidebar .sidebar-menu,
+            .sidebar.collapsed .sidebar-menu {
+                padding: 12px 10px !important;
+            }
+            .sidebar .sidebar-menu .menu-item > a,
+            .sidebar.collapsed .sidebar-menu .menu-item > a {
                 justify-content: flex-start !important;
                 padding: 10px 14px !important;
+                gap: 12px !important;
             }
-            .sidebar .sidebar-menu .menu-item a span {
+            .sidebar .sidebar-menu .menu-item > a span,
+            .sidebar.collapsed .sidebar-menu .menu-item > a span {
                 display: inline !important;
                 opacity: 1 !important;
                 width: auto !important;
+                visibility: visible !important;
             }
-            .sidebar .sidebar-user-info {
+            .sidebar .sidebar-footer,
+            .sidebar.collapsed .sidebar-footer {
+                padding: 14px 14px 18px !important;
+            }
+            .sidebar .sidebar-user-card,
+            .sidebar.collapsed .sidebar-user-card {
+                padding: 10px 12px !important;
+                justify-content: space-between !important;
+            }
+            .sidebar .sidebar-user-info,
+            .sidebar.collapsed .sidebar-user-info {
                 display: block !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+            }
+            .sidebar .sidebar-user-chevron,
+            .sidebar.collapsed .sidebar-user-chevron {
+                display: block !important;
+                opacity: 1 !important;
+                visibility: visible !important;
             }
             .dashboard-content {
                 padding: 18px 20px 40px !important;
@@ -2932,13 +2978,18 @@
         // Restore sidebar state (desktop only)
         if (window.innerWidth > 768 && localStorage.getItem('sidebar_collapsed') === '1') {
             sidebar.classList.add('collapsed');
+        } else if (window.innerWidth <= 768 && sidebar) {
+            sidebar.classList.remove('collapsed');
         }
 
         // Mobile Sidebar Drawer functions
         function openMobileSidebar() {
             const sb = document.getElementById('dashboardSidebar');
             const bd = document.getElementById('sidebarBackdrop');
-            if (sb) sb.classList.add('mobile-open');
+            if (sb) {
+                sb.classList.remove('collapsed');
+                sb.classList.add('mobile-open');
+            }
             if (bd) bd.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -3082,8 +3133,8 @@
         function openInDashboard(url, title) {
             if (!url || url === '#' || url.startsWith('javascript:')) return;
 
-            // Automatically collapse sidebar on smaller viewports to accommodate full page
-            if (window.innerWidth < 1200 && sidebar && !sidebar.classList.contains('collapsed')) {
+            // Automatically collapse sidebar on desktop/tablet viewports (769px - 1199px) to accommodate full page
+            if (window.innerWidth > 768 && window.innerWidth < 1200 && sidebar && !sidebar.classList.contains('collapsed')) {
                 sidebar.classList.add('collapsed');
                 localStorage.setItem('sidebar_collapsed', '1');
             }
