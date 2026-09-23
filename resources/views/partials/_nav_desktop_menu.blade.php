@@ -110,9 +110,14 @@
     @endif
 
     @php
-        $isResearcher = auth()->check() && !auth()->user()->isAdmin() && (strtolower(auth()->user()->user_type ?? '') === 'researcher');
+        $isAdmin = auth()->check() && (
+            (method_exists(auth()->user(), 'isAdmin') && auth()->user()->isAdmin())
+            || (auth()->user()->role_id == 1)
+            || (strtolower(auth()->user()->user_type ?? '') === 'admin')
+        );
+        $isResearcher = auth()->check() && !$isAdmin && (strtolower(auth()->user()->user_type ?? '') === 'researcher');
         $navbarResearcherAllowed = \App\AdditionalMenuSetting::isEnabled('navbar_researcher_enabled', false);
-        $canShowAdditionalMenus = !$isResearcher || $navbarResearcherAllowed;
+        $canShowAdditionalMenus = !$isAdmin && (!$isResearcher || $navbarResearcherAllowed);
     @endphp
 
     @if($isConstitution && !$isDashboard && $canShowAdditionalMenus)

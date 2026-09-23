@@ -61,17 +61,134 @@
                                   style="width: 100%; background: #070d19; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 13.5px; outline: none; resize: vertical;"></textarea>
                     </div>
 
-                    <!-- Premium Toggle (for Subscribers/Admins) -->
-                    @if(auth()->user()->hasFullAccess() || auth()->user()->isAdmin())
-                        <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
-                            <div>
-                                <div style="font-weight: 700; color: #f59e0b; font-size: 12.5px; display: flex; align-items: center; gap: 6px;">
-                                    <i class="fa-solid fa-crown"></i> Publish as Premium Forum Room
+                    <!-- Premium Toggle (for Researchers, Lawyers, Subscribers, Admins) -->
+                    @php
+                        $userRole = strtolower(auth()->user()->user_type ?? '');
+                        $canPublishPremium = auth()->user()->hasFullAccess() 
+                            || auth()->user()->isAdmin() 
+                            || in_array($userRole, ['researcher', 'lawyer']);
+                        $initialCode = 'SEC-' . strtoupper(Str::random(6));
+                    @endphp
+
+                    @if($canPublishPremium)
+                        <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; transition: all 0.25s ease;">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div>
+                                    <div style="font-weight: 700; color: #f59e0b; font-size: 12.5px; display: flex; align-items: center; gap: 6px;">
+                                        <i class="fa-solid fa-crown"></i> Publish as Premium Forum Room
+                                    </div>
+                                    <small style="color: var(--text-secondary); font-size: 11px;">Features your room with VIP badge, access controls, and highlighted ranking.</small>
                                 </div>
-                                <small style="color: var(--text-secondary); font-size: 11px;">Features your room with VIP badge and highlighted ranking.</small>
+                                <input type="checkbox" name="is_premium" id="toggleIsPremium" value="1" onchange="togglePremiumSettings(this.checked)" style="width: 18px; height: 18px; cursor: pointer; accent-color: #f59e0b;">
                             </div>
-                            <input type="checkbox" name="is_premium" value="1" style="width: 18px; height: 18px; cursor: pointer; accent-color: #f59e0b;">
+
+                            <!-- Expandable Premium Configuration Settings -->
+                            <div id="premiumSettingsContainer" style="display: none; margin-top: 14px; padding-top: 14px; border-top: 1px dashed rgba(245, 158, 11, 0.3);">
+                                
+                                <!-- Access Method Heading -->
+                                <label style="display: block; font-size: 11.5px; font-weight: 700; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+                                    <i class="fa-solid fa-shield-halved mr-1"></i> Choose Access Method to Join Thread:
+                                </label>
+
+                                <!-- Access Methods Grid -->
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+                                    <!-- Option 1: Security Pass (Active) -->
+                                    <label style="background: rgba(15, 23, 42, 0.7); border: 1.5px solid #f59e0b; border-radius: 10px; padding: 10px 12px; cursor: pointer; display: flex; align-items: flex-start; gap: 8px;">
+                                        <input type="radio" name="access_type" value="security_pass" checked style="accent-color: #f59e0b; margin-top: 3px;">
+                                        <div>
+                                            <div style="font-size: 12px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 5px;">
+                                                <i class="fa-solid fa-key" style="color: #f59e0b;"></i> Security Pass
+                                            </div>
+                                            <div style="font-size: 10.5px; color: var(--text-secondary); line-height: 1.35; margin-top: 2px;">
+                                                Creator generates a security code. Participants request code to join.
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <!-- Option 2: Pay an Entry Fee (In Development) -->
+                                    <label style="background: rgba(15, 23, 42, 0.35); border: 1px dashed rgba(255, 255, 255, 0.15); border-radius: 10px; padding: 10px 12px; cursor: not-allowed; opacity: 0.65; display: flex; align-items: flex-start; gap: 8px;" title="This payment feature is currently under active development">
+                                        <input type="radio" name="access_type" value="fee" disabled style="margin-top: 3px;">
+                                        <div>
+                                            <div style="font-size: 12px; font-weight: 700; color: #94a3b8; display: flex; align-items: center; gap: 5px;">
+                                                <i class="fa-solid fa-credit-card"></i> Pay Entry Fee
+                                                <span style="background: rgba(239, 68, 68, 0.2); color: #f87171; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 4px; text-transform: uppercase;">Coming Soon</span>
+                                            </div>
+                                            <div style="font-size: 10.5px; color: #64748b; line-height: 1.35; margin-top: 2px;">
+                                                Monetized participation. (Under active development)
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <!-- Security Code Generator Block -->
+                                <div style="background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 10px; padding: 12px; margin-bottom: 12px;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                                        <label style="font-size: 11.5px; font-weight: 600; color: #e2e8f0;">Discussion Security Code *</label>
+                                        <button type="button" onclick="generateNewSecurityCode()" style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; font-size: 10.5px; font-weight: 600; padding: 3px 8px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                                            <i class="fa-solid fa-arrows-rotate"></i> Regenerate Code
+                                        </button>
+                                    </div>
+                                    <input type="text" name="security_code" id="inputSecurityCode" value="{{ $initialCode }}" 
+                                           style="width: 100%; background: #070d19; border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 8px; padding: 8px 12px; color: #fbbf24; font-family: monospace; font-size: 14px; font-weight: 700; letter-spacing: 1.5px; outline: none;">
+                                    <small style="display: block; color: var(--text-secondary); font-size: 10.5px; margin-top: 4px;">
+                                        Share this code with participants who request to join your thread.
+                                    </small>
+                                </div>
+
+                                <!-- Researcher Contact Channels to Demand Code -->
+                                <div style="margin-bottom: 12px;">
+                                    <label style="display: block; font-size: 11.5px; font-weight: 600; color: #e2e8f0; margin-bottom: 6px;">
+                                        Your Channels for Code Requests (Where members can demand pass):
+                                    </label>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                        <div>
+                                            <div style="display: flex; align-items: center; gap: 5px; font-size: 11px; color: #34d399; margin-bottom: 3px; font-weight: 600;">
+                                                <i class="fa-brands fa-whatsapp"></i> WhatsApp Number
+                                            </div>
+                                            <input type="text" name="creator_whatsapp" value="{{ auth()->user()->phone ?? '' }}" placeholder="e.g. 0501234567" 
+                                                   style="width: 100%; background: #070d19; border: 1px solid var(--border-color); border-radius: 8px; padding: 7px 10px; color: #fff; font-size: 12.5px; outline: none;">
+                                        </div>
+                                        <div>
+                                            <div style="display: flex; align-items: center; gap: 5px; font-size: 11px; color: #60a5fa; margin-bottom: 3px; font-weight: 600;">
+                                                <i class="fa-solid fa-envelope"></i> Request Email
+                                            </div>
+                                            <input type="email" name="creator_email" value="{{ auth()->user()->email ?? '' }}" placeholder="name@example.com" 
+                                                   style="width: 100%; background: #070d19; border: 1px solid var(--border-color); border-radius: 8px; padding: 7px 10px; color: #fff; font-size: 12.5px; outline: none;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 1-Month Validity Notice -->
+                                <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 8px; padding: 9px 12px; display: flex; align-items: flex-start; gap: 8px;">
+                                    <i class="fa-solid fa-clock-rotate-left" style="color: #60a5fa; font-size: 13px; margin-top: 2px;"></i>
+                                    <div style="font-size: 11px; color: #94a3b8; line-height: 1.4;">
+                                        <strong style="color: #93c5fd;">Validity Duration:</strong> At most <strong>1 month (30 days)</strong>. After 1 month, public discussion locks, but you (as the creator) retain continuous access to all content.
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
+
+                        <script>
+                            function togglePremiumSettings(isChecked) {
+                                const container = document.getElementById('premiumSettingsContainer');
+                                if (container) {
+                                    container.style.display = isChecked ? 'block' : 'none';
+                                }
+                            }
+
+                            function generateNewSecurityCode() {
+                                const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+                                let code = 'SEC-';
+                                for (let i = 0; i < 6; i++) {
+                                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+                                }
+                                const input = document.getElementById('inputSecurityCode');
+                                if (input) {
+                                    input.value = code;
+                                }
+                            }
+                        </script>
                     @endif
 
                     <!-- Pin to Top Toggle (Admins) -->

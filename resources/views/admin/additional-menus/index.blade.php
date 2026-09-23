@@ -242,6 +242,18 @@
                                 <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); padding: 3px 8px; border-radius: 100px; font-size: 10.5px; font-weight: 700;">
                                     <i class="fa-solid fa-crown mr-1"></i> Premium
                                 </span>
+                                @if($room->security_code)
+                                    <span style="font-family: monospace; font-size: 11px; color: #fbbf24; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; border: 1px dashed rgba(245, 158, 11, 0.3);">
+                                        Pass: {{ $room->security_code }}
+                                    </span>
+                                @endif
+                                @if($room->isExpired())
+                                    <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 3px 8px; border-radius: 100px; font-size: 10.5px; font-weight: 700;">
+                                        <i class="fa-solid fa-clock-rotate-left mr-1"></i> 1-Mo Expired
+                                    </span>
+                                @elseif($room->expires_at)
+                                    <small style="color: #94a3b8; font-size: 10.5px;">{{ $room->daysRemaining() }}d remaining</small>
+                                @endif
                             @else
                                 <span class="badge" style="background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); padding: 3px 8px; border-radius: 100px; font-size: 10.5px;">
                                     Standard

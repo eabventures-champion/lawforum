@@ -193,9 +193,8 @@
     <div class="chatroom-discussions-list">
         @forelse($chatrooms as $room)
             @php
-                $isLockedForGuest = ($room->is_premium && !auth()->check());
                 $catColor = $categoryColors[$room->category] ?? ['color' => '#60a5fa', 'bg' => 'rgba(59, 130, 246, 0.12)', 'border' => 'rgba(59, 130, 246, 0.3)'];
-                $threadUrl = $isLockedForGuest ? 'javascript:void(0)' : route('chatroom.show', [$room->category, $room->slug]);
+                $threadUrl = route('chatroom.show', [$room->category, $room->slug]);
                 $authorInitial = strtoupper(mb_substr($room->author_name ?? 'U', 0, 1));
             @endphp
             <div class="chatroom-thread-card {{ $room->is_premium ? 'is-premium' : '' }}">
@@ -221,10 +220,23 @@
                             @if($room->is_premium)
                                 <span class="thread-chip chip-premium">
                                     <i class="fa-solid fa-crown"></i> Premium
-                                    @if($isLockedForGuest)
-                                        <i class="fa-solid fa-lock" style="font-size: 10px;"></i>
-                                    @endif
                                 </span>
+
+                                @if($room->security_code)
+                                    <span class="thread-chip" style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 11px;">
+                                        <i class="fa-solid fa-key"></i> Security Pass
+                                    </span>
+                                @endif
+
+                                @if($room->isExpired())
+                                    <span class="thread-chip" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.35); color: #f87171; font-size: 11px;">
+                                        <i class="fa-solid fa-lock"></i> 1-Month Ended
+                                    </span>
+                                @elseif($room->expires_at)
+                                    <span class="thread-chip" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.25); color: #93c5fd; font-size: 11px;">
+                                        <i class="fa-regular fa-clock"></i> {{ $room->daysRemaining() }}d left
+                                    </span>
+                                @endif
                             @endif
                         </div>
 
@@ -235,18 +247,12 @@
 
                     <!-- Title -->
                     <h3 class="thread-title">
-                        @if($isLockedForGuest)
-                            <a href="javascript:void(0)" 
-                               onclick="openPremiumLockModal('{{ addslashes($room->title) }}', 'This is a premium discussion room. Guest users cannot access premium rooms. Please sign in or register to view and join this discussion.')" 
-                               class="thread-title-link">
-                                <span>{{ $room->title }}</span>
-                                <i class="fa-solid fa-lock lock-icon" title="Locked for Guests"></i>
-                            </a>
-                        @else
-                            <a href="{{ $threadUrl }}" class="thread-title-link">
-                                {{ $room->title }}
-                            </a>
-                        @endif
+                        <a href="{{ $threadUrl }}" class="thread-title-link">
+                            <span>{{ $room->title }}</span>
+                            @if($room->is_premium && !$room->isUnlockedBy(auth()->user(), session()->getId()))
+                                <i class="fa-solid fa-lock lock-icon" style="color: #f59e0b; margin-left: 6px; font-size: 12px;" title="Security Pass Required"></i>
+                            @endif
+                        </a>
                     </h3>
 
                     <!-- Excerpt Description -->
@@ -285,13 +291,11 @@
                     </div>
 
                     <div class="thread-action-wrap">
-                        @if($isLockedForGuest)
-                            <button type="button" 
-                                    onclick="openPremiumLockModal('{{ addslashes($room->title) }}', 'This is a premium discussion room. Guest users cannot access premium rooms. Please sign in or register to view and join this discussion.')"
-                                    class="thread-action-btn btn-locked">
-                                <i class="fa-solid fa-lock"></i>
-                                <span>Locked</span>
-                            </button>
+                        @if($room->is_premium && !$room->isUnlockedBy(auth()->user(), session()->getId()))
+                            <a href="{{ $threadUrl }}" class="thread-action-btn btn-locked" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); color: #fbbf24;" title="Enter Security Pass to Join">
+                                <i class="fa-solid fa-key"></i>
+                                <span>Security Pass</span>
+                            </a>
                         @else
                             <a href="{{ $threadUrl }}" class="thread-action-btn btn-join">
                                 <span>Join Thread</span>

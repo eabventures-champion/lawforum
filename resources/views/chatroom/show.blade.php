@@ -39,34 +39,206 @@
         </div>
     @endif
 
-    @if($room->is_premium && !auth()->check())
-        <!-- Locked Gate for Guest Users -->
+    @if($room->is_premium && !$isUnlocked && !$isCreator && !$isAdmin)
+        <!-- Security Pass Gate for Non-Unlocked Visitors -->
         <div class="thread-locked-gate">
             <div class="locked-gate-icon">
-                <i class="fa-solid fa-crown"></i>
+                <i class="fa-solid fa-key"></i>
             </div>
-            <div class="locked-gate-tag">
-                <i class="fa-solid fa-lock"></i> Premium Room Locked
+            <div class="locked-gate-tag" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.35); color: #f59e0b;">
+                <i class="fa-solid fa-shield-halved"></i> Premium Room • Security Pass Protected
             </div>
             <h2 class="locked-gate-title">
                 {{ $room->title }}
             </h2>
-            <p class="locked-gate-desc">
-                Guest users cannot access premium rooms. Sign in to your account or register to unlock access to exclusive legal discussions, case studies, and practitioner rooms.
-            </p>
-            <div class="locked-gate-actions">
-                <button type="button" onclick="openLoginModal()" class="locked-btn-primary">
-                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to Access
-                </button>
-                <a href="/get-started" class="locked-btn-secondary">
-                    <i class="fa-solid fa-user-plus"></i> Create Free Account
-                </a>
-                <a href="{{ route('chatroom.category', $room->category) }}" class="locked-btn-outline">
-                    Browse Free Topics
-                </a>
+            <div style="font-size: 13px; color: #94a3b8; margin-bottom: 16px;">
+                Discussion initiated by <strong style="color: #fff;">{{ $room->author_name }}</strong> 
+                <span style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600; margin-left: 4px;">{{ $room->author_role }}</span>
+                @if($room->expires_at)
+                    • <span style="color: #fbbf24;"><i class="fa-solid fa-clock-rotate-left"></i> Valid until {{ $room->expires_at->format('M d, Y') }}</span>
+                @endif
+            </div>
+
+            @if($room->description)
+                <p class="locked-gate-desc" style="font-style: italic; background: rgba(0,0,0,0.25); border-left: 3px solid #f59e0b; padding: 10px 14px; border-radius: 6px; text-align: left; max-width: 580px; margin: 0 auto 24px auto;">
+                    "{{ Str::limit($room->description, 220) }}"
+                </p>
+            @endif
+
+            <!-- Section 1: Enter Security Pass -->
+            <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 16px; padding: 22px; max-width: 480px; margin: 0 auto 24px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                <div style="font-size: 13.5px; font-weight: 700; color: #fff; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <i class="fa-solid fa-lock" style="color: #f59e0b;"></i> Enter Security Pass to Unlock & Join
+                </div>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 14px;">
+                    If the author has provided you with the security pass code, enter it below to participate.
+                </p>
+
+                <form action="{{ route('chatroom.unlockPass', $room->id) }}" method="POST" style="display: flex; gap: 8px;">
+                    @csrf
+                    <input type="text" name="security_code" required placeholder="e.g. SEC-XXXXXX" 
+                           style="flex: 1; background: #070d19; border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 10px; padding: 10px 14px; color: #fbbf24; font-family: monospace; font-size: 14px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; outline: none;">
+                    <button type="submit" 
+                            style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #fff; border: none; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);">
+                        <i class="fa-solid fa-arrow-right-to-bracket mr-1"></i> Unlock & Join
+                    </button>
+                </form>
+            </div>
+
+            <!-- Section 2: Demand / Request Pass from Researcher -->
+            <div style="max-width: 540px; margin: 0 auto; padding-top: 14px; border-top: 1px dashed rgba(255, 255, 255, 0.1);">
+                <div style="font-size: 12.5px; font-weight: 700; color: #cbd5e1; margin-bottom: 12px;">
+                    Don't have the pass code? Request access from {{ $room->author_name }}:
+                </div>
+
+                <div class="locked-gate-actions">
+                    @if($room->whats_app_request_url)
+                        <a href="{{ $room->whats_app_request_url }}" target="_blank" 
+                           style="background: #15803d; color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(21, 128, 61, 0.3); transition: transform 0.2s;"
+                           onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <i class="fa-brands fa-whatsapp" style="font-size: 16px;"></i> Request via WhatsApp
+                        </a>
+                    @endif
+
+                    <button type="button" onclick="document.getElementById('requestPassModal').style.display='flex'" 
+                            style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); color: #60a5fa; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;"
+                            onmouseover="this.style.background='rgba(59, 130, 246, 0.25)'" onmouseout="this.style.background='rgba(59, 130, 246, 0.15)'">
+                        <i class="fa-solid fa-envelope"></i> Request via Email / Platform
+                    </button>
+
+                    <a href="{{ route('chatroom.category', $room->category) }}" 
+                       style="background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); text-decoration: none; padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                        Browse Other Topics
+                    </a>
+                </div>
             </div>
         </div>
     @else
+        <!-- Creator / Admin VIP Control Banner -->
+        @if($isCreator || $isAdmin)
+            <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(15, 23, 42, 0.95) 100%); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 16px; padding: 16px 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(245, 158, 11, 0.2); color: #f59e0b; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+                            <i class="fa-solid fa-crown"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 14px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px;">
+                                <span>Researcher Creator Panel</span>
+                                <span style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700;">VIP Discussion</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">
+                                @if($room->isExpired())
+                                    <span style="color: #ef4444;"><i class="fa-solid fa-lock"></i> 1-Month Duration Concluded (Expired on {{ $room->expires_at->format('M d, Y') }}) — Content Preserved for You</span>
+                                @elseif($room->expires_at)
+                                    <span style="color: #34d399;"><i class="fa-solid fa-clock"></i> Active • {{ $room->daysRemaining() }} days left of 1-month validity</span>
+                                @else
+                                    <span style="color: #34d399;"><i class="fa-solid fa-circle-check"></i> Active</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Pass Display & Share Controls -->
+                    @if($room->security_code)
+                        <div style="display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.4); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 10px; padding: 6px 12px;">
+                            <span style="font-size: 11.5px; color: var(--text-secondary);">Security Pass:</span>
+                            <code id="creatorPassCode" style="color: #fbbf24; font-size: 14px; font-weight: 800; letter-spacing: 1px;">{{ $room->security_code }}</code>
+                            <button type="button" onclick="copySecurityPass('{{ $room->security_code }}')" 
+                                    style="background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.4); color: #fbbf24; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer;">
+                                <i class="fa-regular fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Creator Action Tools -->
+                <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding-top: 10px; border-top: 1px dashed rgba(245, 158, 11, 0.2);">
+                    <div style="font-size: 12px; color: #cbd5e1; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-share-nodes" style="color: #f59e0b;"></i>
+                        <span>Share Pass with Participants:</span>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        @php
+                            $shareMsg = "Join my premium legal discussion \"" . $room->title . "\" on Legals Forum. Use security pass: " . $room->security_code . " at: " . route('chatroom.show', [$room->category, $room->slug]);
+                            $waShareUrl = "https://wa.me/?text=" . rawurlencode($shareMsg);
+                            $emailShareUrl = "mailto:?subject=" . rawurlencode("Invitation to Premium Discussion: " . $room->title) . "&body=" . rawurlencode($shareMsg);
+                        @endphp
+                        <a href="{{ $waShareUrl }}" target="_blank" 
+                           style="background: #15803d; color: #fff; text-decoration: none; padding: 5px 12px; border-radius: 8px; font-size: 11.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
+                            <i class="fa-brands fa-whatsapp"></i> Share on WhatsApp
+                        </a>
+                        <a href="{{ $emailShareUrl }}" 
+                           style="background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #93c5fd; text-decoration: none; padding: 5px 12px; border-radius: 8px; font-size: 11.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
+                            <i class="fa-solid fa-envelope"></i> Share via Email
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Incoming Pending Pass Requests (if any) -->
+                @if(isset($pendingRequests) && $pendingRequests->isNotEmpty())
+                    <div style="margin-top: 14px; background: rgba(0,0,0,0.3); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 10px; padding: 12px;">
+                        <div style="font-size: 12.5px; font-weight: 700; color: #fbbf24; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-inbox"></i> Incoming Pass Requests ({{ $pendingRequests->count() }})
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            @foreach($pendingRequests as $pReq)
+                                <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 12px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;">
+                                    <div>
+                                        <div style="font-size: 13px; font-weight: 700; color: #fff;">
+                                            {{ $pReq->requester_name }}
+                                            <span style="font-weight: 400; color: var(--text-secondary); font-size: 12px;">({{ $pReq->requester_email }})</span>
+                                            @if($pReq->requester_phone)
+                                                <span style="color: #34d399; font-size: 11.5px; margin-left: 6px;"><i class="fa-brands fa-whatsapp"></i> {{ $pReq->requester_phone }}</span>
+                                            @endif
+                                        </div>
+                                        @if($pReq->note)
+                                            <div style="font-size: 11.5px; color: #94a3b8; margin-top: 2px;">"{{ $pReq->note }}"</div>
+                                        @endif
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <form action="{{ route('chatroom.approveRequest', [$room->id, $pReq->id]) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            <button type="submit" style="background: #2563eb; color: #fff; border: none; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; cursor: pointer;">
+                                                <i class="fa-solid fa-check mr-1"></i> Approve & Email Code
+                                            </button>
+                                        </form>
+                                        @if($pReq->requester_phone)
+                                            @php
+                                                $reqCleanPhone = preg_replace('/[^0-9]/', '', $pReq->requester_phone);
+                                                if (strlen($reqCleanPhone) === 10 && strpos($reqCleanPhone, '0') === 0) {
+                                                    $reqCleanPhone = '233' . substr($reqCleanPhone, 1);
+                                                }
+                                                $reqWaText = "Hello " . $pReq->requester_name . ", here is your security pass for \"" . $room->title . "\": " . $room->security_code;
+                                                $reqWaUrl = "https://wa.me/" . $reqCleanPhone . "?text=" . rawurlencode($reqWaText);
+                                            @endphp
+                                            <a href="{{ $reqWaUrl }}" target="_blank" style="background: #15803d; color: #fff; text-decoration: none; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600;">
+                                                <i class="fa-brands fa-whatsapp"></i> Send via WhatsApp
+                                            </a>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            </div>
+        @endif
+
+        <!-- Expiration Alert if Room Ended 1-Month Validity -->
+        @if($room->isExpired())
+            <div style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; color: #fca5a5;">
+                <i class="fa-solid fa-clock-rotate-left" style="font-size: 20px; color: #ef4444; flex-shrink: 0;"></i>
+                <div style="font-size: 13px; line-height: 1.45;">
+                    @if($isCreator || $isAdmin)
+                        <strong style="color: #fff;">1-Month Validity Concluded:</strong> This premium discussion thread reached its 30-day active period on {{ $room->expires_at->format('M d, Y') }}. Public replies are locked, but as the researcher/creator you maintain permanent access to view all content and messages.
+                    @else
+                        <strong style="color: #fff;">Discussion Concluded:</strong> This premium discussion reached its 1-month validity period on {{ $room->expires_at->format('M d, Y') }} and is now locked for new replies.
+                    @endif
+                </div>
+            </div>
+        @endif
         <!-- Main Original Post / Discussion Card -->
         <div class="thread-hero-card {{ $room->is_premium ? 'is-premium' : '' }}">
             <div class="thread-hero-header">
@@ -165,13 +337,24 @@
                 <span>Participate in this Thread</span>
             </h4>
 
-            @if($room->is_locked && (!auth()->check() || !auth()->user()->isAdmin()))
+            @if(($room->is_locked || $room->isExpired()) && (!auth()->check() || (!auth()->user()->isAdmin() && (empty($room->user_id) || $room->user_id !== auth()->id()))))
                 <div class="thread-locked-alert">
                     <i class="fa-solid fa-lock"></i>
-                    <span>This discussion is locked from further replies.</span>
+                    <span>
+                        @if($room->isExpired())
+                            This premium discussion concluded after its 1-month validity period on {{ $room->expires_at->format('M d, Y') }} and is closed for new replies.
+                        @else
+                            This discussion is locked from further replies.
+                        @endif
+                    </span>
                 </div>
             @else
-                @if($room->is_locked)
+                @if($room->isExpired() && ($isCreator || $isAdmin))
+                    <div class="thread-locked-alert" style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; margin-bottom: 16px;">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        <span>This thread reached its 1-month duration limit, but as the <strong>Researcher / Author</strong> you retain continuous access to post and archive responses.</span>
+                    </div>
+                @elseif($room->is_locked)
                     <div class="thread-locked-alert" style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; margin-bottom: 16px;">
                         <i class="fa-solid fa-shield-halved"></i>
                         <span>This thread is locked for regular members, but as an <strong>Administrator</strong> you can post official responses.</span>
@@ -210,6 +393,77 @@
         </div>
     @endif
 
+</div>
+
+<!-- Modal for In-App Security Pass Request -->
+<div id="requestPassModal" 
+     onclick="if(event.target === this) this.style.display='none'"
+     style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 300000; align-items: center; justify-content: center; padding: 20px 16px; backdrop-filter: blur(8px);">
+    <div style="background: #0f172a; border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 18px; width: 100%; max-width: 500px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.6); animation: modalSlideUp 0.25s ease;">
+        <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(245, 158, 11, 0.2); color: #f59e0b; display: flex; align-items: center; justify-content: center;">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+                <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #fff;">Request Security Pass</h3>
+            </div>
+            <button type="button" onclick="document.getElementById('requestPassModal').style.display='none'" 
+                    style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 18px;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <form action="{{ route('chatroom.requestPass', $room->id) }}" method="POST" style="padding: 20px;">
+            @csrf
+            <p style="font-size: 12.5px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.45;">
+                Send a request to <strong>{{ $room->author_name }}</strong> to demand the access pass for <em>"{{ $room->title }}"</em>.
+            </p>
+
+            <div style="margin-bottom: 12px;">
+                <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; margin-bottom: 4px;">Your Full Name *</label>
+                <input type="text" name="requester_name" required value="{{ auth()->check() ? auth()->user()->name : (session('guest_chat_name') ?? request()->cookie('guest_chat_name')) }}" placeholder="e.g. Ama Mensah" 
+                       style="width: 100%; background: #070d19; border: 1px solid var(--border-color); border-radius: 8px; padding: 9px 12px; color: #fff; font-size: 13px; outline: none;">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                <div>
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; margin-bottom: 4px;">Your Email *</label>
+                    <input type="email" name="requester_email" required value="{{ auth()->check() ? auth()->user()->email : (session('guest_chat_email') ?? request()->cookie('guest_chat_email')) }}" placeholder="name@example.com" 
+                           style="width: 100%; background: #070d19; border: 1px solid var(--border-color); border-radius: 8px; padding: 9px 12px; color: #fff; font-size: 13px; outline: none;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; margin-bottom: 4px;">WhatsApp / Phone</label>
+                    <input type="tel" name="requester_phone" value="{{ auth()->check() ? auth()->user()->phone : (session('guest_chat_contact') ?? request()->cookie('guest_chat_contact')) }}" placeholder="e.g. 0501234567" 
+                           style="width: 100%; background: #070d19; border: 1px solid var(--border-color); border-radius: 8px; padding: 9px 12px; color: #fff; font-size: 13px; outline: none;">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; margin-bottom: 4px;">Note to Researcher (Optional)</label>
+                <textarea name="note" rows="2" placeholder="Briefly mention your interest or background in this topic..." 
+                          style="width: 100%; background: #070d19; border: 1px solid var(--border-color); border-radius: 8px; padding: 8px 12px; color: #fff; font-size: 12.5px; outline: none; resize: vertical;"></textarea>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                @if($room->email_request_url)
+                    <a href="{{ $room->email_request_url }}" style="font-size: 11.5px; color: #60a5fa; text-decoration: underline;">
+                        Or open in email client
+                    </a>
+                @else
+                    <span></span>
+                @endif
+                <div style="display: flex; gap: 8px;">
+                    <button type="button" onclick="document.getElementById('requestPassModal').style.display='none'" 
+                            style="background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 7px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; cursor: pointer;">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            style="background: #2563eb; color: #fff; border: none; padding: 7px 18px; border-radius: 8px; font-size: 12.5px; font-weight: 700; cursor: pointer;">
+                        Send Request
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 @push('styles')
@@ -1108,6 +1362,29 @@
             }
         });
     }, 25000);
+
+    // Copy Security Pass
+    window.copySecurityPass = function(code) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Security Pass copied to clipboard: ' + code);
+            }).catch(() => {
+                fallbackCopy(code);
+            });
+        } else {
+            fallbackCopy(code);
+        }
+    };
+
+    function fallbackCopy(code) {
+        const temp = document.createElement('textarea');
+        temp.value = code;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+        alert('Security Pass copied to clipboard: ' + code);
+    }
 </script>
 @endpush
 @endsection

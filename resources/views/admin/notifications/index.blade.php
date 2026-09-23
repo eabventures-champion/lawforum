@@ -73,6 +73,18 @@
                 </div>
             </div>
         </div>
+
+        <div class="stat-card" style="padding: 20px; border-left: 3px solid #f59e0b;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <div style="color: #f59e0b; font-size: 13px; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Pass Requests</div>
+                    <div style="font-size: 24px; font-weight: 700; color: #fff;">{{ $totalPassRequests ?? 0 }}</div>
+                </div>
+                <div style="background: rgba(245, 158, 11, 0.1); padding: 12px; border-radius: 12px;">
+                    <i class="fa-solid fa-key" style="font-size: 20px; color: #f59e0b;"></i>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Main Content Panel -->
@@ -109,11 +121,19 @@
                             $data = $notification->data;
                         @endphp
                         <tr id="notification-row-{{ $notification->id }}" style="border-bottom: 1px solid var(--border-color); transition: background 0.2s; @if($isUnread) background-color: rgba(59, 130, 246, 0.03); font-weight: 500; @endif" class="notification-item-row">
+                            @php
+                                $senderName = $data['name'] ?? $data['requester_name'] ?? 'Guest Submitter';
+                                $senderEmail = $data['email'] ?? $data['requester_email'] ?? null;
+                            @endphp
                             <!-- Type Column -->
                             <td style="padding: 16px 24px;">
                                 @if($notification->type === 'signup')
                                     <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; background: rgba(16, 185, 129, 0.1); color: #10b981;">
                                         <i class="fa-solid fa-user-plus"></i> User Signup
+                                    </span>
+                                @elseif($notification->type === 'chatroom_pass_request' || ($data['type'] ?? '') === 'chatroom_pass_request')
+                                    <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; background: rgba(245, 158, 11, 0.12); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.25);">
+                                        <i class="fa-solid fa-key"></i> Pass Request
                                     </span>
                                 @else
                                     @php
@@ -133,14 +153,31 @@
 
                             <!-- Sender Column -->
                             <td style="padding: 16px 24px;">
-                                <div style="color: #fff; font-size: 14px;">{{ $data['name'] ?? 'Guest Submitter' }}</div>
-                                <div style="color: var(--text-secondary); font-size: 12px;">{{ $data['email'] ?? 'N/A' }}</div>
+                                <div style="color: #fff; font-size: 14px; font-weight: 500;">{{ $senderName }}</div>
+                                @if(!empty($senderEmail))
+                                    <div style="color: #60a5fa; font-size: 12px; margin-top: 2px; display: inline-flex; align-items: center; gap: 4px;">
+                                        <i class="fa-solid fa-envelope" style="font-size: 10px;"></i>
+                                        <span>{{ $senderEmail }}</span>
+                                    </div>
+                                @else
+                                    <div style="color: #ef4444; font-size: 11px; margin-top: 2px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                                        <i class="fa-solid fa-circle-exclamation" style="font-size: 10px;"></i>
+                                        <span>Email Missing (Compulsory)</span>
+                                    </div>
+                                @endif
                             </td>
 
                             <!-- Summary Column -->
                             <td style="padding: 16px 24px;">
                                 @if($notification->type === 'signup')
                                     <span style="color: var(--text-secondary); font-size: 13px;">New signup from <strong>{{ $data['country'] ?? 'Unknown' }}</strong></span>
+                                @elseif($notification->type === 'chatroom_pass_request' || ($data['type'] ?? '') === 'chatroom_pass_request')
+                                    <div style="color: #fff; font-size: 13px; max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500;">
+                                        <i class="fa-solid fa-lock" style="color: #f59e0b; font-size: 11px; margin-right: 4px;"></i> {{ $data['chatroom_title'] ?? $data['subject'] ?? 'Premium Discussion Pass' }}
+                                    </div>
+                                    <div style="color: var(--text-secondary); font-size: 12px; max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        Pass requested by {{ $senderName }}
+                                    </div>
                                 @else
                                     <div style="color: #fff; font-size: 13px; max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                         {{ $data['subject'] ?? 'No Subject' }}
@@ -218,10 +255,21 @@
                         <div id="modal-sender-name" style="color: #fff; font-size: 14px; font-weight: 500;"></div>
                     </div>
                     <div>
-                        <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 2px;">Email Address</div>
-                        <div id="modal-sender-email" style="color: #fff; font-size: 14px; font-weight: 500;"></div>
+                        <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 2px; display: flex; align-items: center; justify-content: space-between;">
+                            <span>Sender Email</span>
+                            <span id="modal-email-compulsory-tag" style="font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 1px 6px; border-radius: 4px; background: rgba(16, 185, 129, 0.15); color: #10b981;">Compulsory</span>
+                        </div>
+                        <div id="modal-sender-email" style="font-size: 14px; font-weight: 500;"></div>
                     </div>
                 </div>
+
+                <!-- Missing Email Alert -->
+                <div id="modal-missing-email-warning" style="display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; color: #ef4444; font-size: 12px; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span><strong>Email Missing:</strong> The sender's email address is compulsory. Without a valid email address, an email reply cannot be sent.</span>
+                </div>
+
+                <!-- Signup Extra -->
                 <div id="modal-signup-extra" style="display: none; grid-template-columns: 1fr 1fr; gap: 12px; border-top: 1px solid var(--border-color); padding-top: 12px;">
                     <div>
                         <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 2px;">Registered User ID</div>
@@ -232,6 +280,32 @@
                         <div id="modal-user-country" style="color: #fff; font-size: 14px;"></div>
                     </div>
                 </div>
+
+                <!-- Pass Request Extra -->
+                <div id="modal-pass-request-extra" style="display: none; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                    <div style="margin-bottom: 12px;">
+                        <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 2px;">Premium Discussion Thread</div>
+                        <div id="modal-pass-room-title" style="color: #fff; font-size: 14px; font-weight: 600;"></div>
+                    </div>
+                    <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+                        <div style="color: #f59e0b; font-size: 12px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-key"></i> Security Pass Access Demand
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 12px; margin: 0; line-height: 1.5;">
+                            This user is requesting the security pass code to participate in this discussion room. You or the thread researcher can forward the security pass code directly to their compulsory email address or via WhatsApp.
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <a id="modal-pass-room-link" href="#" target="_blank" class="btn btn-action" style="padding: 6px 14px; background: #3b82f6; color: #fff; border-radius: 6px; font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-door-open"></i> Go to Discussion Room
+                        </a>
+                        <a id="modal-pass-email-link" href="#" class="btn btn-action" style="padding: 6px 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 6px; font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-envelope"></i> Email Security Code
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Complaint Extra -->
                 <div id="modal-complaint-extra" style="display: none; border-top: 1px solid var(--border-color); padding-top: 12px;">
                     <div style="margin-bottom: 12px;">
                         <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 2px;">Subject</div>
@@ -256,14 +330,17 @@
 
             <!-- Reply Form Section -->
             <div id="modal-reply-form-section" style="display: none; border-top: 1px solid var(--border-color); padding-top: 20px;">
-                <h4 style="margin: 0 0 12px 0; color: #fff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-                    <i class="fa-solid fa-reply" style="color: #10b981;"></i> Reply to User Submitter
+                <h4 style="margin: 0 0 12px 0; color: #fff; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: space-between;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-reply" style="color: #10b981;"></i> Reply to User Submitter
+                    </span>
+                    <span id="modal-reply-recipient-hint" style="color: #60a5fa; font-size: 12px; font-weight: 400;"></span>
                 </h4>
                 <form id="reply-form" onsubmit="submitAdminReply(event)">
                     @csrf
                     <input type="hidden" id="reply-complaint-id" name="complaint_id">
                     <div style="margin-bottom: 16px;">
-                        <textarea id="reply-message" name="message" required placeholder="Type your reply message here... The submitter will receive this reply directly as a clean HTML email response." style="width: 100%; height: 120px; background: #1f2937; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; color: #fff; font-size: 13px; font-family: inherit; resize: vertical; outline: none;"></textarea>
+                        <textarea id="reply-message" name="message" required placeholder="Type your reply message here... The submitter will receive this reply directly as a clean HTML email response to their compulsory email address." style="width: 100%; height: 120px; background: #1f2937; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; color: #fff; font-size: 13px; font-family: inherit; resize: vertical; outline: none;"></textarea>
                     </div>
                     <div style="display: flex; justify-content: flex-end; gap: 12px;">
                         <button type="button" class="btn btn-secondary btn-action" onclick="closeDetailsModal()" style="height: 38px; padding: 0 16px;">Cancel</button>
@@ -290,41 +367,111 @@
         const sName = document.getElementById('modal-sender-name');
         const sEmail = document.getElementById('modal-sender-email');
         const signupExtra = document.getElementById('modal-signup-extra');
+        const passExtra = document.getElementById('modal-pass-request-extra');
         const complaintExtra = document.getElementById('modal-complaint-extra');
         const repliesSection = document.getElementById('modal-replies-section');
         const repliesList = document.getElementById('modal-replies-list');
         const replyFormSection = document.getElementById('modal-reply-form-section');
         const replyComplaintId = document.getElementById('reply-complaint-id');
         const replyMessage = document.getElementById('reply-message');
+        const emailWarning = document.getElementById('modal-missing-email-warning');
+        const emailTag = document.getElementById('modal-email-compulsory-tag');
 
         // Reset elements
         signupExtra.style.display = 'none';
+        if (passExtra) passExtra.style.display = 'none';
         complaintExtra.style.display = 'none';
         repliesSection.style.display = 'none';
         replyFormSection.style.display = 'none';
+        if (emailWarning) emailWarning.style.display = 'none';
         replyMessage.value = '';
 
-        sName.textContent = notification.data.name || 'Guest Submitter';
-        sEmail.textContent = notification.data.email || 'N/A';
+        const notifData = notification.data || {};
+        const senderName = notifData.name || notifData.requester_name || 'Guest Submitter';
+        const senderEmail = notifData.email || notifData.requester_email || '';
+
+        sName.textContent = senderName;
+
+        if (senderEmail && senderEmail.trim() !== '') {
+            sEmail.innerHTML = `<a href="mailto:${senderEmail}" style="color: #60a5fa; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;"><i class="fa-solid fa-envelope" style="font-size: 11px;"></i> ${senderEmail}</a> <span style="color: #10b981; font-size: 11px; margin-left: 6px;"><i class="fa-solid fa-circle-check"></i> (Compulsory Verified)</span>`;
+            if (emailWarning) emailWarning.style.display = 'none';
+            if (emailTag) {
+                emailTag.textContent = 'Compulsory (Verified)';
+                emailTag.style.background = 'rgba(16, 185, 129, 0.15)';
+                emailTag.style.color = '#10b981';
+            }
+        } else {
+            sEmail.innerHTML = `<span style="color: #ef4444; font-weight: 600;"><i class="fa-solid fa-circle-xmark"></i> Missing (Compulsory)</span>`;
+            if (emailWarning) emailWarning.style.display = 'flex';
+            if (emailTag) {
+                emailTag.textContent = 'Compulsory (Missing)';
+                emailTag.style.background = 'rgba(239, 68, 68, 0.15)';
+                emailTag.style.color = '#ef4444';
+            }
+        }
 
         if (notification.type === 'signup') {
             title.innerHTML = `<i class="fa-solid fa-user-plus" style="color: #10b981;"></i> User Registration Alert`;
-            document.getElementById('modal-user-id').textContent = '#' + notification.data.user_id;
-            document.getElementById('modal-user-country').textContent = notification.data.country || 'Unknown';
+            document.getElementById('modal-user-id').textContent = '#' + (notifData.user_id || 'N/A');
+            document.getElementById('modal-user-country').textContent = notifData.country || 'Unknown';
             signupExtra.style.display = 'grid';
+        } else if (notification.type === 'chatroom_pass_request' || notifData.type === 'chatroom_pass_request') {
+            title.innerHTML = `<i class="fa-solid fa-key" style="color: #f59e0b;"></i> Security Pass Request Details`;
+            document.getElementById('modal-pass-room-title').textContent = notifData.chatroom_title || notifData.subject || 'Premium Discussion Room';
+            
+            const roomLink = document.getElementById('modal-pass-room-link');
+            if (roomLink && notifData.chatroom_id) {
+                roomLink.href = `/discussion-rooms/${notifData.chatroom_id}`;
+                roomLink.style.display = 'inline-flex';
+            } else if (roomLink) {
+                roomLink.style.display = 'none';
+            }
+
+            const emailLink = document.getElementById('modal-pass-email-link');
+            if (emailLink && senderEmail) {
+                emailLink.href = `mailto:${senderEmail}?subject=` + encodeURIComponent('Security Pass for ' + (notifData.chatroom_title || 'Premium Discussion Room')) + '&body=' + encodeURIComponent('Hello ' + senderName + ',\n\nHere is the security pass code to participate in the discussion room:\n\nSecurity Pass: \n\nBest regards,\nLawsforum Team');
+                emailLink.style.display = 'inline-flex';
+            } else if (emailLink) {
+                emailLink.style.display = 'none';
+            }
+
+            if (passExtra) passExtra.style.display = 'block';
         } else {
-            const cType = notification.data.type || 'complaint';
+            const cType = notifData.type || 'complaint';
             const icon = cType === 'complaint' ? 'triangle-exclamation' : 'lightbulb';
             const color = cType === 'complaint' ? '#ef4444' : '#eab308';
             title.innerHTML = `<i class="fa-solid fa-${icon}" style="color: ${color};"></i> ${cType.charAt(0).toUpperCase() + cType.slice(1)} Details`;
             
-            document.getElementById('modal-complaint-subject').textContent = notification.data.subject || 'No Subject';
-            document.getElementById('modal-complaint-text').textContent = notification.data.message || 'No Message';
+            document.getElementById('modal-complaint-subject').textContent = notifData.subject || 'No Subject';
+            document.getElementById('modal-complaint-text').textContent = notifData.message || 'No Message';
             complaintExtra.style.display = 'block';
 
             // Setup reply structures
-            replyComplaintId.value = notification.data.complaint_id;
-            replyFormSection.style.display = 'block';
+            if (notifData.complaint_id) {
+                replyComplaintId.value = notifData.complaint_id;
+                
+                const recipientHint = document.getElementById('modal-reply-recipient-hint');
+                const submitBtn = document.getElementById('reply-submit-btn');
+                if (recipientHint) {
+                    recipientHint.textContent = senderEmail ? `To: ${senderEmail}` : 'Cannot send: Sender email is compulsory';
+                }
+
+                if (!senderEmail) {
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.style.opacity = '0.5';
+                        submitBtn.title = 'Cannot reply: sender email is compulsory';
+                    }
+                } else {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = '1';
+                        submitBtn.title = '';
+                    }
+                }
+
+                replyFormSection.style.display = 'block';
+            }
 
             // Display historical replies if any
             repliesList.innerHTML = '';
@@ -502,14 +649,16 @@
                 closeDetailsModal();
                 window.location.reload();
             } else {
-                alert('Could not dispatch email. Response logged locally.');
-                window.location.reload();
+                alert(data.message || 'Could not dispatch email. Response logged locally.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Send Reply Email`;
             }
         })
         .catch(err => {
             console.error('Error sending reply:', err);
-            alert('Response logged. Email connection could not be established.');
-            window.location.reload();
+            alert('Failed to send reply. Please check your connection and compulsory sender email.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Send Reply Email`;
         });
     }
 

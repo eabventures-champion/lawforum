@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('user_bookmarks')) {
+            return;
+        }
+
         Schema::table('user_bookmarks', function (Blueprint $table) {
             if (!Schema::hasColumn('user_bookmarks', 'document_type')) {
                 $table->string('document_type')->nullable()->after('act_group');

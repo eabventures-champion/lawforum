@@ -14,6 +14,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         // 1. Ghana Constitution articles
         DB::statement("ALTER TABLE ghana_articles ADD FULLTEXT INDEX ft_ghana_articles (articles, gh_title, chapter, section)");
 
@@ -56,6 +60,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         DB::statement("ALTER TABLE ghana_articles DROP INDEX ft_ghana_articles");
         DB::statement("ALTER TABLE gh_amended_articles DROP INDEX ft_gh_amended_articles");
         DB::statement("ALTER TABLE all_constitutions DROP INDEX ft_all_constitutions");

@@ -3050,7 +3050,9 @@
                             <input id="feedback-name" type="text" name="name" value="{{ auth()->user() ? auth()->user()->name . ' ' . auth()->user()->lname : '' }}" placeholder="John Doe" style="width: 100%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 12px; border-radius: 8px; color: #fff; font-size: 13px; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#3b82f6';" onblur="this.style.borderColor='rgba(255, 255, 255, 0.08)';">
                         </div>
                         <div>
-                            <label for="feedback-email" style="display: block; color: rgba(255, 255, 255, 0.7); font-size: 11px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Email Address</label>
+                            <label for="feedback-email" style="display: block; color: rgba(255, 255, 255, 0.7); font-size: 11px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                Email Address <span style="color: #ef4444; font-weight: 700;">*</span> <span style="color: #f87171; font-size: 10px; text-transform: none; font-weight: 600;">(Compulsory)</span>
+                            </label>
                             <input id="feedback-email" type="email" name="email" value="{{ auth()->user() ? auth()->user()->email : '' }}" placeholder="john@example.com" required style="width: 100%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 12px; border-radius: 8px; color: #fff; font-size: 13px; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#3b82f6';" onblur="this.style.borderColor='rgba(255, 255, 255, 0.08)';">
                         </div>
                     </div>
@@ -3166,7 +3168,11 @@
                       closeFeedbackModal();
                   }, 3000);
               } else {
-                  alert(data.message || 'An error occurred during submission.');
+                  const errorMsg = (data.errors && data.errors.email ? data.errors.email[0] : null) 
+                                || (data.errors ? Object.values(data.errors).flat().join('\n') : null)
+                                || data.message 
+                                || 'An error occurred during submission. Sender email is compulsory.';
+                  alert(errorMsg);
                   submitBtn.disabled = false;
                   submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Submit Feedback`;
               }

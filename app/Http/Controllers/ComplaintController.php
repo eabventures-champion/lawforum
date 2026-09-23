@@ -15,7 +15,12 @@ class ComplaintController extends Controller
             'email' => 'required|email|max:255',
             'type' => 'required|in:complaint,suggestion',
             'subject' => 'required|string|max:255',
-            'message' => 'required|string|min:10',
+            'message' => 'required|string|min:5',
+        ], [
+            'email.required' => 'The sender\'s email address is compulsory so our administration team can review and reply to your feedback.',
+            'email.email' => 'Please enter a valid email address.',
+            'subject.required' => 'Please provide a subject for your submission.',
+            'message.required' => 'Please enter your message details.',
         ]);
 
         $complaint = Complaint::create([

@@ -729,9 +729,13 @@ Route::group(['prefix' => 'accounts', 'middleware' => ['auth']], function () {
 Route::post('/impersonate/leave', 'Admin\UserController@leaveImpersonation')->name('impersonate.leave');
 Route::get('/impersonate/leave', 'Admin\UserController@leaveImpersonation')->name('impersonate.leave.get');
 
-// Dedicated Admin Login Routes
+// Dedicated Admin Login & 2FA Routes
 Route::get('/admin/login', 'Admin\LoginController@showLoginForm')->name('admin.login');
 Route::post('/admin/login', 'Admin\LoginController@login')->name('admin.login.submit');
+Route::get('/admin/login/verify-2fa', 'Admin\LoginController@show2faForm')->name('admin.login.2fa');
+Route::post('/admin/login/verify-2fa', 'Admin\LoginController@verify2fa')->name('admin.login.2fa.verify');
+Route::post('/admin/login/resend-2fa', 'Admin\LoginController@resend2fa')->name('admin.login.2fa.resend');
+Route::get('/admin/login/cancel-2fa', 'Admin\LoginController@cancel2fa')->name('admin.login.cancel');
 
 // Dynamic Page Routing
 Route::get('page/{slug}', 'PageController@show')->name('dynamic.page');
@@ -829,6 +833,9 @@ Route::get('/chatroom/{category}', 'ChatroomController@index')->name('chatroom.c
 Route::get('/chatroom/{category}/{slug}', 'ChatroomController@show')->name('chatroom.show');
 Route::post('/chatroom/store', 'ChatroomController@store')->name('chatroom.store');
 Route::post('/chatroom/{id}/reply', 'ChatroomController@postMessage')->name('chatroom.postMessage');
+Route::post('/chatroom/{id}/unlock-pass', 'ChatroomController@unlockWithPass')->name('chatroom.unlockPass');
+Route::post('/chatroom/{id}/request-pass', 'ChatroomController@requestPass')->name('chatroom.requestPass');
+Route::post('/chatroom/{id}/approve-request/{requestId}', 'ChatroomController@approveRequest')->name('chatroom.approveRequest');
 Route::post('/chatroom/heartbeat/{category}', 'ChatroomController@heartbeat')->name('chatroom.heartbeat');
 
 Route::get('/marketplace', 'MarketplaceController@index')->name('marketplace.index');

@@ -175,9 +175,14 @@
     @endif
 
     @php
-        $isResearcherMob = auth()->check() && !auth()->user()->isAdmin() && (strtolower(auth()->user()->user_type ?? '') === 'researcher');
+        $isAdminMob = auth()->check() && (
+            (method_exists(auth()->user(), 'isAdmin') && auth()->user()->isAdmin())
+            || (auth()->user()->role_id == 1)
+            || (strtolower(auth()->user()->user_type ?? '') === 'admin')
+        );
+        $isResearcherMob = auth()->check() && !$isAdminMob && (strtolower(auth()->user()->user_type ?? '') === 'researcher');
         $navbarResearcherAllowedMob = \App\AdditionalMenuSetting::isEnabled('navbar_researcher_enabled', false);
-        $canShowAdditionalMenusMob = !$isResearcherMob || $navbarResearcherAllowedMob;
+        $canShowAdditionalMenusMob = !$isAdminMob && (!$isResearcherMob || $navbarResearcherAllowedMob);
     @endphp
 
     @if($isConstitution && !$isDashboard && $canShowAdditionalMenusMob)

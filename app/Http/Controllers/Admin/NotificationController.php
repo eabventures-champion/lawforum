@@ -29,6 +29,7 @@ class NotificationController extends Controller
         $unreadAlerts = AdminNotification::whereNull('read_at')->count();
         $totalSignups = AdminNotification::where('type', 'signup')->count();
         $totalComplaints = AdminNotification::where('type', 'complaint')->count();
+        $totalPassRequests = AdminNotification::where('type', 'chatroom_pass_request')->count();
 
         // Prefetch replies for modal logs
         foreach ($notifications as $notification) {
@@ -48,6 +49,7 @@ class NotificationController extends Controller
             'unreadAlerts',
             'totalSignups',
             'totalComplaints',
+            'totalPassRequests',
             'filter'
         ));
     }
@@ -106,6 +108,17 @@ class NotificationController extends Controller
 
         $complaint = Complaint::findOrFail($id);
         $replyText = $request->input('message');
+
+        // Verify sender email is present (compulsory)
+        if (empty($complaint->email)) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'The sender\'s email address is compulsory. Cannot dispatch reply without a valid email recipient.'
+                ], 422);
+            }
+            return redirect()->back()->with('error', 'The sender\'s email address is compulsory to dispatch a reply.');
+        }
 
         // 1. Save reply to database
         $reply = ComplaintReply::create([

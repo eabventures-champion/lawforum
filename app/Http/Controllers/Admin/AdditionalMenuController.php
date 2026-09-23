@@ -87,6 +87,17 @@ class AdditionalMenuController extends Controller
 
         $room = Chatroom::findOrFail($id);
         $room->is_premium = !$room->is_premium;
+        if ($room->is_premium) {
+            if (empty($room->access_type)) {
+                $room->access_type = 'security_pass';
+            }
+            if (empty($room->security_code)) {
+                $room->security_code = 'SEC-' . strtoupper(\Illuminate\Support\Str::random(6));
+            }
+            if (empty($room->expires_at)) {
+                $room->expires_at = now()->addDays(30);
+            }
+        }
         $room->save();
 
         return back()->with('success', 'Chatroom premium status updated.');
