@@ -5,6 +5,7 @@
     $currentPath = trim(request()->path(), '/');
     $isGuest = !auth()->check();
     $isDashboard = (isset($inDashboardHeader) && $inDashboardHeader) || request()->is('home*') || request()->is('accounts/*') || request()->is('subscription*');
+    $userHasFullAccess = auth()->check() ? auth()->user()->hasFullAccess() : false;
 
     // 1. Identify primary section from current URL route
     $activeSection = '';
@@ -37,7 +38,10 @@
             continue;
         }
 
-        $menuUrl = $menu->custom_content ? route('dynamic.page', $menu->slug) : ($menu->url ?? '#');
+        // For logged-in users who do not have full access (no subscription & no active demo), lock non-Constitution menus
+        $isMenuLocked = auth()->check() && !$userHasFullAccess && !$isConstitution;
+
+        $menuUrl = $isMenuLocked ? url('/subscription') : ($menu->custom_content ? route('dynamic.page', $menu->slug) : ($menu->url ?? '#'));
         $menuPath = trim(parse_url($menuUrl, PHP_URL_PATH) ?? '', '/');
         
         $isMenuActive = false;
@@ -67,46 +71,76 @@
 
     @if($menu->is_dropdown)
         <div class="nav-link-dropdown {{ $isMenuActive ? 'active' : '' }}">
-            <a href="{{ $menuUrl }}" class="nav-link-btn {{ $isMenuActive ? 'active' : '' }}" style="text-decoration:none !important;">
-                {{ $menu->title }} <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+            <a href="{{ $menuUrl }}" class="nav-link-btn {{ $isMenuActive ? 'active' : '' }}" style="text-decoration:none !important;" @if($isMenuLocked) data-locked="true" title="Subscribe to unlock {{ $menu->title }}" @endif>
+                {{ $menu->title }}
+                @if($isMenuLocked)
+                    <i class="fa-solid fa-lock" style="font-size: 10px; margin-left: 4px; color: #f87171;"></i>
+                @endif
+                <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
             </a>
             <div class="nav-dropdown-menu">
+                @if($isMenuLocked)
+                    <a href="{{ url('/subscription') }}" data-locked="true" style="background: rgba(239, 68, 68, 0.12); color: #f87171; font-weight: 700; border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 6px; padding: 7px 10px; margin: 4px 6px; font-size: 11.5px; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-lock" style="font-size: 10px;"></i> Subscribe to Unlock {{ $menu->title }}
+                    </a>
+                @endif
                 @foreach($menu->children as $child)
                     @php
-                        $childUrl = $child->custom_content ? route('dynamic.page', $child->slug) : ($child->url ?? '#');
+                        $childUrl = $isMenuLocked ? url('/subscription') : ($child->custom_content ? route('dynamic.page', $child->slug) : ($child->url ?? '#'));
                         $childPath = trim(parse_url($childUrl, PHP_URL_PATH) ?? '', '/');
-                        $isChildActive = !empty($childPath) && $childPath !== '#' && ($currentPath === $childPath || strpos($currentPath, $childPath . '/') === 0);
+                        $isChildActive = !$isMenuLocked && !empty($childPath) && $childPath !== '#' && ($currentPath === $childPath || strpos($currentPath, $childPath . '/') === 0);
                     @endphp
                     @if($child->is_dropdown && $child->children->count() > 0)
                         {{-- Sub-dropdown item --}}
                         <div class="nav-sub-dropdown {{ $isChildActive ? 'active' : '' }}">
-                            <a href="#" class="nav-sub-dropdown-trigger {{ $isChildActive ? 'active' : '' }}" onclick="event.preventDefault()">
-                                {{ $child->title }}
+                            <a href="{{ $isMenuLocked ? url('/subscription') : '#' }}" class="nav-sub-dropdown-trigger {{ $isChildActive ? 'active' : '' }}" @if(!$isMenuLocked) onclick="event.preventDefault()" @else data-locked="true" @endif>
+                                <span>{{ $child->title }}</span>
+                                @if($isMenuLocked)
+                                    <i class="fa-solid fa-lock" style="font-size: 9px; margin-left: 6px; color: #f87171; opacity: 0.85;"></i>
+                                @endif
                                 <i class="fa-solid fa-chevron-right" style="font-size: 9px; margin-left: auto;"></i>
                             </a>
                             <div class="nav-sub-dropdown-menu">
                                 @foreach($child->children as $grandchild)
                                     @php
-                                        $gcUrl = $grandchild->custom_content ? route('dynamic.page', $grandchild->slug) : ($grandchild->url ?? '#');
+                                        $gcUrl = $isMenuLocked ? url('/subscription') : ($grandchild->custom_content ? route('dynamic.page', $grandchild->slug) : ($grandchild->url ?? '#'));
                                         $gcPath = trim(parse_url($gcUrl, PHP_URL_PATH) ?? '', '/');
-                                        $isGcActive = !empty($gcPath) && $gcPath !== '#' && ($currentPath === $gcPath || strpos($currentPath, $gcPath . '/') === 0);
+                                        $isGcActive = !$isMenuLocked && !empty($gcPath) && $gcPath !== '#' && ($currentPath === $gcPath || strpos($currentPath, $gcPath . '/') === 0);
                                     @endphp
-                                    <a href="{{ $gcUrl }}" class="{{ $isGcActive ? 'active' : '' }}">{{ $grandchild->title }}</a>
+                                    <a href="{{ $gcUrl }}" class="{{ $isGcActive ? 'active' : '' }}" @if($isMenuLocked) data-locked="true" @endif>
+                                        {{ $grandchild->title }}
+                                        @if($isMenuLocked)
+                                            <i class="fa-solid fa-lock" style="font-size: 8px; margin-left: auto; color: #f87171; opacity: 0.8;"></i>
+                                        @endif
+                                    </a>
                                 @endforeach
                             </div>
                         </div>
                     @else
-                        <a href="{{ $childUrl }}" class="{{ $isChildActive ? 'active' : '' }}">{{ $child->title }}</a>
+                        <a href="{{ $childUrl }}" class="{{ $isChildActive ? 'active' : '' }}" @if($isMenuLocked) data-locked="true" @endif>
+                            {{ $child->title }}
+                            @if($isMenuLocked)
+                                <i class="fa-solid fa-lock" style="font-size: 9px; margin-left: auto; color: #f87171; opacity: 0.8;"></i>
+                            @endif
+                        </a>
                     @endif
                 @endforeach
             </div>
         </div>
     @elseif($titleLower === 'news' || strpos($titleLower, 'news') !== false)
-        <a href="{{ (!empty($menuUrl) && $menuUrl !== '#') ? $menuUrl : '/News/Ghana-News/1' }}" class="nav-link-btn nav-link-news {{ $isMenuActive ? 'active' : '' }}" style="color: #f97316 !important; font-weight: 700; text-decoration: none !important;">
+        <a href="{{ $isMenuLocked ? url('/subscription') : ((!empty($menuUrl) && $menuUrl !== '#') ? $menuUrl : '/News/Ghana-News/1') }}" class="nav-link-btn nav-link-news {{ $isMenuActive ? 'active' : '' }}" style="color: #f97316 !important; font-weight: 700; text-decoration: none !important;" @if($isMenuLocked) data-locked="true" title="Subscribe to unlock News & Articles" @endif>
             {{ $menu->title }}
+            @if($isMenuLocked)
+                <i class="fa-solid fa-lock" style="font-size: 10px; margin-left: 4px; color: #f87171;"></i>
+            @endif
         </a>
     @else
-        <a href="{{ $menuUrl }}" class="nav-link-btn {{ $isMenuActive ? 'active' : '' }}" style="text-decoration:none !important;">{{ $menu->title }}</a>
+        <a href="{{ $menuUrl }}" class="nav-link-btn {{ $isMenuActive ? 'active' : '' }}" style="text-decoration:none !important;" @if($isMenuLocked) data-locked="true" title="Subscribe to unlock {{ $menu->title }}" @endif>
+            {{ $menu->title }}
+            @if($isMenuLocked)
+                <i class="fa-solid fa-lock" style="font-size: 10px; margin-left: 4px; color: #f87171;"></i>
+            @endif
+        </a>
     @endif
 
     @php
@@ -133,30 +167,44 @@
         @endphp
 
         @if($chatroomEnabled)
+            @php
+                $isChatroomLocked = auth()->check() && !$userHasFullAccess;
+            @endphp
             <div class="nav-link-dropdown {{ $isChatroomActive ? 'active' : '' }}">
-                <a href="/chatroom" class="nav-link-btn {{ $isChatroomActive ? 'active' : '' }}" style="text-decoration:none !important;">
-                    Chatroom <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                <a href="{{ $isChatroomLocked ? url('/subscription') : '/chatroom' }}" class="nav-link-btn {{ $isChatroomActive ? 'active' : '' }}" style="text-decoration:none !important;" @if($isChatroomLocked) data-locked="true" title="Subscribe to unlock Chatroom" @endif>
+                    Chatroom
+                    @if($isChatroomLocked)
+                        <i class="fa-solid fa-lock" style="font-size: 10px; margin-left: 4px; color: #f87171;"></i>
+                    @else
+                        <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                    @endif
                 </a>
                 <div class="nav-dropdown-menu">
-                    @if(\App\AdditionalMenuSetting::isEnabled('chatroom_general_enabled', true))
-                        <a href="/chatroom/general" class="{{ ($currentPath === 'chatroom/general' || $currentPath === 'chatroom' || strpos($currentPath, 'chatroom/general/') === 0) ? 'active' : '' }}">
-                            <i class="fa-solid fa-comments" style="color: #3b82f6; width: 16px;"></i> General Room
+                    @if($isChatroomLocked)
+                        <a href="{{ url('/subscription') }}" data-locked="true" style="background: rgba(239, 68, 68, 0.12); color: #f87171; font-weight: 700; border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 6px; padding: 7px 10px; margin: 4px 6px; font-size: 11.5px; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-lock" style="font-size: 10px;"></i> Subscribe to Unlock Chatrooms
                         </a>
-                    @endif
-                    @if(\App\AdditionalMenuSetting::isEnabled('chatroom_student_enabled', true))
-                        <a href="/chatroom/student" class="{{ ($currentPath === 'chatroom/student' || strpos($currentPath, 'chatroom/student/') === 0) ? 'active' : '' }}">
-                            <i class="fa-solid fa-graduation-cap" style="color: #10b981; width: 16px;"></i> Student Room
-                        </a>
-                    @endif
-                    @if(\App\AdditionalMenuSetting::isEnabled('chatroom_lawyer_enabled', true))
-                        <a href="/chatroom/lawyer" class="{{ ($currentPath === 'chatroom/lawyer' || strpos($currentPath, 'chatroom/lawyer/') === 0) ? 'active' : '' }}">
-                            <i class="fa-solid fa-scale-balanced" style="color: #f59e0b; width: 16px;"></i> Lawyer Room
-                        </a>
-                    @endif
-                    @if(\App\AdditionalMenuSetting::isEnabled('chatroom_researcher_enabled', true))
-                        <a href="/chatroom/researcher" class="{{ ($currentPath === 'chatroom/researcher' || strpos($currentPath, 'chatroom/researcher/') === 0) ? 'active' : '' }}">
-                            <i class="fa-solid fa-microscope" style="color: #8b5cf6; width: 16px;"></i> Researcher Room
-                        </a>
+                    @else
+                        @if(\App\AdditionalMenuSetting::isEnabled('chatroom_general_enabled', true))
+                            <a href="/chatroom/general" class="{{ ($currentPath === 'chatroom/general' || $currentPath === 'chatroom' || strpos($currentPath, 'chatroom/general/') === 0) ? 'active' : '' }}">
+                                <i class="fa-solid fa-comments" style="color: #3b82f6; width: 16px;"></i> General Room
+                            </a>
+                        @endif
+                        @if(\App\AdditionalMenuSetting::isEnabled('chatroom_student_enabled', true))
+                            <a href="/chatroom/student" class="{{ ($currentPath === 'chatroom/student' || strpos($currentPath, 'chatroom/student/') === 0) ? 'active' : '' }}">
+                                <i class="fa-solid fa-graduation-cap" style="color: #10b981; width: 16px;"></i> Student Room
+                            </a>
+                        @endif
+                        @if(\App\AdditionalMenuSetting::isEnabled('chatroom_lawyer_enabled', true))
+                            <a href="/chatroom/lawyer" class="{{ ($currentPath === 'chatroom/lawyer' || strpos($currentPath, 'chatroom/lawyer/') === 0) ? 'active' : '' }}">
+                                <i class="fa-solid fa-scale-balanced" style="color: #f59e0b; width: 16px;"></i> Lawyer Room
+                            </a>
+                        @endif
+                        @if(\App\AdditionalMenuSetting::isEnabled('chatroom_researcher_enabled', true))
+                            <a href="/chatroom/researcher" class="{{ ($currentPath === 'chatroom/researcher' || strpos($currentPath, 'chatroom/researcher/') === 0) ? 'active' : '' }}">
+                                <i class="fa-solid fa-microscope" style="color: #8b5cf6; width: 16px;"></i> Researcher Room
+                            </a>
+                        @endif
                     @endif
                 </div>
             </div>

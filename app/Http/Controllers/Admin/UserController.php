@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Subscription;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -164,6 +165,23 @@ class UserController extends Controller
               ->orWhere('phone', 'N/A');
         })->count();
 
+        // Calculate Account Holders, Collaborators, and Teams counts
+        $teamMemberIds = \App\SubscriptionTeamMember::where('status', 'accepted')->pluck('member_id')->filter()->unique()->all();
+        $teamOwnerIds = User::where('check_subscription', 1)
+            ->whereHas('subscription', function($q) {
+                $q->where('max_users', '>', 1);
+            })->pluck('id')->unique()->all();
+        $allTeamUserIds = array_unique(array_merge($teamMemberIds, $teamOwnerIds));
+
+        $accountHoldersQuery = clone $tabCountsQuery;
+        $totalAccountHolders = $accountHoldersQuery->whereIn('id', $teamOwnerIds)->count();
+
+        $collaboratorsQuery = clone $tabCountsQuery;
+        $totalCollaborators = $collaboratorsQuery->whereIn('id', $teamMemberIds)->count();
+
+        $teamsQuery = clone $tabCountsQuery;
+        $totalTeams = $teamsQuery->whereIn('id', $allTeamUserIds)->count();
+
         // Calculate Ghana tab count
         $ghanaQuery = clone $tabCountsQuery;
         $totalGhana = $ghanaQuery->where('country', 'Ghana')->count();
@@ -209,6 +227,12 @@ class UserController extends Controller
                       ->orWhere('phone', '')
                       ->orWhere('phone', 'N/A');
                 });
+            } elseif ($filter === 'account_holders') {
+                $query->whereIn('id', $teamOwnerIds);
+            } elseif ($filter === 'collaborators') {
+                $query->whereIn('id', $teamMemberIds);
+            } elseif ($filter === 'teams') {
+                $query->whereIn('id', $allTeamUserIds);
             } elseif ($filter === 'Ghana') {
                 $query->where('country', 'Ghana');
             } else {
@@ -233,7 +257,12 @@ class UserController extends Controller
             }
         }
 
-        $users = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+        $users = $query->with(['subscription', 'teamMembership.owner', 'teamMembers.member'])
+            ->orderByRaw("COALESCE((SELECT owner_id FROM subscription_team_members WHERE member_id = users.id AND status = 'accepted' LIMIT 1), users.id) DESC")
+            ->orderByRaw("CASE WHEN (SELECT 1 FROM subscription_team_members WHERE member_id = users.id AND status = 'accepted' LIMIT 1) IS NULL THEN 0 ELSE 1 END ASC")
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
 
         if ($request->ajax()) {
             return response()->json([
@@ -241,13 +270,16 @@ class UserController extends Controller
                 'totalAll' => $totalAll,
                 'totalWithPhone' => $totalWithPhone,
                 'totalEmailOnly' => $totalEmailOnly,
+                'totalAccountHolders' => $totalAccountHolders,
+                'totalCollaborators' => $totalCollaborators,
+                'totalTeams' => $totalTeams,
                 'totalGhana' => $totalGhana,
                 'continentCounts' => $continentCounts,
                 'countries' => $countries
             ]);
         }
 
-        return view('admin.users.index', compact('users', 'totalAll', 'totalWithPhone', 'totalEmailOnly', 'totalGhana', 'continentCounts', 'countries'));
+        return view('admin.users.index', compact('users', 'totalAll', 'totalWithPhone', 'totalEmailOnly', 'totalAccountHolders', 'totalCollaborators', 'totalTeams', 'totalGhana', 'continentCounts', 'countries'));
     }
 
     public function continentsPreview(Request $request)
@@ -400,7 +432,7 @@ class UserController extends Controller
                 break;
         }
 
-        $users = $query->orderBy('created_at', 'desc')->get();
+        $users = $query->with('subscription')->orderBy('created_at', 'desc')->get();
 
         $fileName = 'users_export_' . date('Y-m-d_H-i-s') . '.csv';
         
@@ -429,7 +461,14 @@ class UserController extends Controller
                     if ($col === 'name') {
                         $row[] = $user->name . ' ' . $user->lname;
                     } elseif ($col === 'subscription_status') {
-                        $row[] = $user->subscription_expiry && Carbon::parse($user->subscription_expiry)->isFuture() ? 'Active' : 'Inactive';
+                        $planName = $user->getSubscriptionPlanName();
+                        if ($user->subscription_expiry && Carbon::parse($user->subscription_expiry)->isFuture()) {
+                            $row[] = $planName ? "Active ({$planName})" : 'Active';
+                        } else {
+                            $row[] = $planName ? "Inactive ({$planName})" : 'Inactive';
+                        }
+                    } elseif ($col === 'subscription_plan') {
+                        $row[] = $user->getSubscriptionPlanName() ?? 'None';
                     } elseif ($col === 'created_at') {
                         $row[] = $user->created_at ? $user->created_at->format('Y-m-d H:i:s') : 'N/A';
                     } else {
@@ -447,8 +486,9 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $user = User::findOrFail($id);
-        return view('admin.users.edit', compact('user'));
+        $user = User::with('subscription')->findOrFail($id);
+        $subscriptions = Subscription::orderBy('price', 'asc')->get();
+        return view('admin.users.edit', compact('user', 'subscriptions'));
     }
 
     public function update(Request $request, $id)
@@ -462,6 +502,7 @@ class UserController extends Controller
             'phone' => 'nullable|string|max:20',
             'country' => 'nullable|string|max:100',
             'role_id' => 'required|integer',
+            'subscription_id' => 'nullable|exists:subscriptions,id',
             'subscription_expiry' => 'nullable|date',
         ]);
 
@@ -472,6 +513,7 @@ class UserController extends Controller
             'phone' => $request->phone,
             'country' => $request->country,
             'role_id' => $request->role_id,
+            'subscription_id' => $request->subscription_id ?: null,
             'check_subscription' => $request->has('check_subscription') ? 1 : 0,
             'subscription_expiry' => $request->filled('subscription_expiry') ? Carbon::parse($request->subscription_expiry) : null,
         ]);

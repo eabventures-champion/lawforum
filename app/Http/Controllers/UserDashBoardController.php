@@ -60,9 +60,23 @@ class UserDashBoardController extends Controller
             return redirect('/subscription')->with('error', 'Your demo period has expired. Please subscribe to regain access to your bookmarks and full platform features.');
         }
 
-        $bookmarks = UserBookmark::where(['user_id' => $user_id])->orderBy('created_at', 'desc')->get();
+        $teamUserIds = $authUser->getTeamUserIds();
+        $isTeam = count($teamUserIds) > 1;
+
+        $bookmarks = UserBookmark::whereIn('user_id', $teamUserIds)
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // De-duplicate team bookmarks so the exact same section and act is never repeated
+        if ($isTeam) {
+            $bookmarks = $bookmarks->unique(function ($item) {
+                return ($item->section_id ?: '0') . '___' . trim(strtolower($item->act_title)) . '___' . trim(strtolower($item->act_section));
+            })->values();
+        }
+
         $order_by_dates = $bookmarks;
-        return view('user_dashboard.bookmarks', compact('bookmarks', 'order_by_dates'));
+        return view('user_dashboard.bookmarks', compact('bookmarks', 'order_by_dates', 'isTeam'));
     }
 
     /**
@@ -199,6 +213,7 @@ class UserDashBoardController extends Controller
             'created_at'     => date('F j, Y', strtotime($bookmark->created_at)),
             'content_html'   => $contentHtml,
             'page_url'       => $resolvedPageUrl,
+            'can_delete'     => ($bookmark->user_id === auth()->id() || auth()->user()->isTeamOwner()),
         ]);
     }
 
@@ -243,11 +258,15 @@ class UserDashBoardController extends Controller
         $actSection = $request->input('act_section');
         $pageUrl = $request->input('page_url');
 
+        $authUser = auth()->user();
+        $teamUserIds = $authUser->getTeamUserIds();
+        $isTeam = count($teamUserIds) > 1;
+
         // Form unique key for user section
         $userSectionKey = $userId . '_' . $docType . '_' . $actId . '_' . $sectionId;
 
-        // Check if bookmark exists
-        $existing = UserBookmark::where('user_id', $userId)
+        // Check if bookmark exists for this user or any teammate in team workspace
+        $existing = UserBookmark::whereIn('user_id', $teamUserIds)
             ->where(function ($query) use ($userSectionKey, $sectionId, $actTitle, $actSection) {
                 $query->where('user_section', $userSectionKey)
                     ->orWhere(function ($q2) use ($sectionId, $actTitle, $actSection) {
@@ -261,15 +280,31 @@ class UserDashBoardController extends Controller
             ->first();
 
         if ($existing) {
-            $existing->delete();
-            $totalBookmarks = UserBookmark::where('user_id', $userId)->count();
+            // If the user created it, or if the team owner removes it, delete the bookmark
+            if ($existing->user_id === $userId || $authUser->isTeamOwner()) {
+                $existing->delete();
+                $totalBookmarks = UserBookmark::whereIn('user_id', $teamUserIds)->count();
 
-            return response()->json([
-                'success'    => true,
-                'bookmarked' => false,
-                'count'      => $totalBookmarks,
-                'message'    => 'Bookmark removed.'
-            ]);
+                return response()->json([
+                    'success'    => true,
+                    'bookmarked' => false,
+                    'count'      => $totalBookmarks,
+                    'message'    => 'Bookmark removed.'
+                ]);
+            } else {
+                // If a collaborator clicks on a section already bookmarked by the team owner or another teammate,
+                // do NOT duplicate it. Instead inform them that it is already saved in the team workspace.
+                $creator = $existing->user ? trim($existing->user->name . ' ' . $existing->user->lname) : ($existing->user_name ?: 'a team member');
+                $totalBookmarks = UserBookmark::whereIn('user_id', $teamUserIds)->count();
+
+                return response()->json([
+                    'success'            => true,
+                    'bookmarked'         => true,
+                    'already_bookmarked' => true,
+                    'count'              => $totalBookmarks,
+                    'message'            => "This section is already bookmarked for your team workspace by {$creator}."
+                ]);
+            }
         }
 
         $bookmark = UserBookmark::create([
@@ -285,14 +320,14 @@ class UserDashBoardController extends Controller
             'page_url'      => $pageUrl,
         ]);
 
-        $totalBookmarks = UserBookmark::where('user_id', $userId)->count();
+        $totalBookmarks = UserBookmark::whereIn('user_id', $teamUserIds)->count();
 
         return response()->json([
             'success'    => true,
             'bookmarked' => true,
             'count'      => $totalBookmarks,
             'bookmark'   => $bookmark,
-            'message'    => 'Section bookmarked successfully!'
+            'message'    => $isTeam ? 'Section bookmarked for your team workspace!' : 'Section bookmarked successfully!'
         ]);
     }
 
@@ -305,12 +340,12 @@ class UserDashBoardController extends Controller
             return response()->json(['bookmarked_section_ids' => [], 'user_section_keys' => []]);
         }
 
-        $userId = auth()->id();
+        $teamUserIds = auth()->user()->getTeamUserIds();
         $actTitle = $request->input('act_title');
         $actId = $request->input('act_id');
         $docType = $request->input('document_type');
 
-        $query = UserBookmark::where('user_id', $userId);
+        $query = UserBookmark::whereIn('user_id', $teamUserIds);
         if ($actTitle) {
             $query->where('act_title', $actTitle);
         }
@@ -321,7 +356,7 @@ class UserDashBoardController extends Controller
             $query->where('document_type', $docType);
         }
 
-        $bookmarks = $query->get(['id', 'section_id', 'act_section', 'user_section']);
+        $bookmarks = $query->get(['id', 'user_id', 'section_id', 'act_section', 'user_section']);
 
         return response()->json([
             'bookmarks'              => $bookmarks,
@@ -335,14 +370,29 @@ class UserDashBoardController extends Controller
      */
     public function destroy_bookmark($id)
     {
+        $authUser = auth()->user();
+        $teamUserIds = $authUser->getTeamUserIds();
+
+        // Allow owner to delete any bookmark in team, or user to delete their own bookmark
         $bookmark = UserBookmark::where('id', $id)
-            ->where('user_id', auth()->id())
+            ->whereIn('user_id', $teamUserIds)
             ->firstOrFail();
+
+        // If not the owner and not own bookmark, prevent unauthorized deletion
+        if ($bookmark->user_id !== $authUser->id && !$authUser->isTeamOwner()) {
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Only the account holder or bookmark creator can remove this bookmark.'
+                ], 403);
+            }
+            return redirect()->back()->with('error', 'Only the account holder or bookmark creator can remove this bookmark.');
+        }
 
         $bookmark->delete();
 
         if (request()->ajax() || request()->wantsJson()) {
-            $newCount = UserBookmark::where('user_id', auth()->id())->count();
+            $newCount = UserBookmark::whereIn('user_id', $teamUserIds)->count();
             return response()->json([
                 'success' => true,
                 'count'   => $newCount,
@@ -377,15 +427,72 @@ class UserDashBoardController extends Controller
     //Processing
     public function process(Subscription $subscription){
         $user = User::findOrFail(auth()->user()->id);
-            $user->check_subscription = 1;
-            $user->subscription_id = $subscription->id;
-            $user->subscription_downloads = $subscription->no_downloads;
-            $user->subscription_expiry = Carbon::today()->addDays($subscription->duration);
-            $user->downloads_counts = 0;
 
-        $user->saveOrFail();
+        // Collaborator guard: If user is a collaborator under another account holder
+        if ($user->isTeamMember()) {
+            $membership = $user->teamMembership;
+            $owner = $user->getTeamOwner();
 
-        return 'successful';
+            if (!$membership || !$membership->can_manage_billing) {
+                $ownerName = $owner ? trim($owner->name . ' ' . $owner->lname) : 'the primary Account Holder';
+                return response()->json([
+                    'status' => 'permission_denied',
+                    'message' => "You are collaborating under {$ownerName}'s team workspace. Permission from the Account Holder is required to modify or purchase subscriptions."
+                ], 403);
+            }
+
+            // If collaborator has permission, update the primary account holder's subscription!
+            $targetUser = $owner ?: $user;
+        } else {
+            $targetUser = $user;
+        }
+
+        // Guard: Prevent re-processing if user is already actively subscribed to this exact plan
+        if ($targetUser->check_subscription && (int)$targetUser->subscription_id === (int)$subscription->id && $targetUser->subscription_expiry && Carbon::parse($targetUser->subscription_expiry)->isFuture()) {
+            return response()->json([
+                'status' => 'already_active',
+                'message' => 'The workspace already has an active subscription for this plan.'
+            ], 400);
+        }
+
+        $targetUser->check_subscription = 1;
+        $targetUser->subscription_id = $subscription->id;
+        $targetUser->subscription_downloads = $subscription->no_downloads;
+
+        // Carry over any remaining days from existing active subscription or trial
+        $existingDaysRemaining = 0;
+        if ($targetUser->subscription_expiry && Carbon::parse($targetUser->subscription_expiry)->isFuture()) {
+            $existingDaysRemaining = max(0, (int) ceil(now()->diffInDays(Carbon::parse($targetUser->subscription_expiry), false)));
+        }
+
+        $trialDaysRemaining = 0;
+        if (method_exists($targetUser, 'demoRemainingDays')) {
+            $trialDaysRemaining = max(0, (int)$targetUser->demoRemainingDays());
+        }
+
+        $carryOverDays = max($existingDaysRemaining, $trialDaysRemaining);
+        $totalDays = (int)$subscription->duration + $carryOverDays;
+        $targetUser->subscription_expiry = Carbon::today()->addDays($totalDays);
+        $targetUser->downloads_counts = 0;
+
+        // Turn off demo mode so the user transitions into a full active subscriber
+        $targetUser->is_demo_mode = 0;
+
+        $targetUser->saveOrFail();
+
+        // If this was an authorized collaborator who completed the purchase, clear their pending request
+        if ($user->isTeamMember() && isset($membership) && $membership) {
+            $membership->update([
+                'billing_request_status' => 'approved',
+                'billing_request_plan_id' => null,
+                'billing_request_note' => null,
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Subscription activated successfully.'
+        ]);
     }
 
     //----------------------------------------------------------Notes-------------------------------------------------------------
@@ -470,18 +577,26 @@ class UserDashBoardController extends Controller
             return response()->json(['notes' => []]);
         }
 
-        $notes = UserNote::where('user_id', auth()->id())
+        $teamUserIds = auth()->user()->getTeamUserIds();
+
+        $notes = UserNote::whereIn('user_id', $teamUserIds)
             ->where('document_type', $request->document_type)
             ->where('document_id', $request->document_id)
+            ->with(['user', 'comments.user'])
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($note) {
+                $authorName = $note->user ? trim($note->user->name . ' ' . $note->user->lname) : 'Researcher';
+                $isMe = $note->user_id === auth()->id();
                 return [
                     'id'               => $note->id,
                     'note_content'     => $note->note_content,
                     'highlighted_text' => $note->highlighted_text,
                     'note_color'       => $note->note_color,
                     'article_section'  => $note->article_section,
+                    'author_name'      => $isMe ? 'You' : $authorName,
+                    'is_me'            => $isMe,
+                    'comments_count'   => $note->comments->count(),
                     'created_at'       => $note->created_at->diffForHumans(),
                 ];
             });
@@ -490,7 +605,7 @@ class UserDashBoardController extends Controller
     }
 
     /**
-     * Show all notes for the user on the dashboard.
+     * Show all notes for the user on the dashboard (with team collaboration).
      */
     public function show_user_notes($user_id)
     {
@@ -499,11 +614,51 @@ class UserDashBoardController extends Controller
             return redirect('/subscription')->with('error', 'Your demo period has expired. Please subscribe to regain access to your notes and full platform features.');
         }
 
-        $notes = UserNote::where('user_id', $user_id)
+        $teamUserIds = $authUser->getTeamUserIds();
+        $isTeam = count($teamUserIds) > 1;
+
+        $notes = UserNote::whereIn('user_id', $teamUserIds)
+            ->with(['user', 'comments.user'])
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('user_dashboard.notes', compact('notes'));
+        return view('user_dashboard.notes', compact('notes', 'isTeam'));
+    }
+
+    /**
+     * Add a collaborative discussion comment on a shared note.
+     */
+    public function add_note_comment(Request $request, $id)
+    {
+        if (!auth()->check()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized.'], 401);
+        }
+
+        $request->validate([
+            'comment' => 'required|string|max:1000',
+        ]);
+
+        $teamUserIds = auth()->user()->getTeamUserIds();
+        $note = UserNote::whereIn('user_id', $teamUserIds)->findOrFail($id);
+
+        $comment = \App\UserNoteComment::create([
+            'user_note_id' => $note->id,
+            'user_id' => auth()->id(),
+            'comment' => trim($request->comment),
+        ]);
+
+        $comment->load('user');
+        $authorName = $comment->user ? trim($comment->user->name . ' ' . $comment->user->lname) : 'Researcher';
+
+        return response()->json([
+            'success' => true,
+            'comment' => [
+                'id' => $comment->id,
+                'comment' => $comment->comment,
+                'author_name' => $authorName,
+                'created_at' => $comment->created_at->diffForHumans(),
+            ],
+        ]);
     }
 
     /**
@@ -544,6 +699,19 @@ class UserDashBoardController extends Controller
             } catch (\Exception $e) {}
         }
 
+        $note->load(['user', 'comments.user']);
+        $authorName = $note->user ? trim($note->user->name . ' ' . $note->user->lname) : 'Researcher';
+        $isMe = ($note->user_id === auth()->id());
+        $commentsData = $note->comments->map(function ($c) {
+            return [
+                'id' => $c->id,
+                'author_name' => $c->user ? trim($c->user->name . ' ' . $c->user->lname) : 'Researcher',
+                'is_me' => ($c->user_id === auth()->id()),
+                'comment' => $c->comment,
+                'created_at' => $c->created_at->diffForHumans(),
+            ];
+        });
+
         return response()->json([
             'success'          => true,
             'id'               => $note->id,
@@ -555,6 +723,9 @@ class UserDashBoardController extends Controller
             'document_type'    => $note->document_type ?? 'document',
             'page_url'         => $note->page_url,
             'created_at'       => $note->created_at ? $note->created_at->format('F j, Y \a\t g:i A') : '',
+            'author_name'      => $authorName,
+            'is_me'            => $isMe,
+            'comments'         => $commentsData,
             'section_html'     => $sectionHtml,
             'pdf_url'          => route('notes.download.pdf', $note->id),
             'word_url'         => route('notes.download.word', $note->id)

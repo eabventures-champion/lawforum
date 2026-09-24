@@ -18,7 +18,7 @@ class DashboardController extends Controller
         $totalUsers = User::count();
         
         $activeSubscriptions = User::where('subscription_expiry', '>=', Carbon::today())->count();
-        $activeSubscribers = User::where('subscription_expiry', '>=', Carbon::today())->get();
+        $activeSubscribers = User::where('subscription_expiry', '>=', Carbon::today())->with('subscription')->get();
         
         $totalNews = NewsContent::count();
         
@@ -28,7 +28,7 @@ class DashboardController extends Controller
                      ExecutiveAct::count();
 
         // Get recent signups
-        $recentUsers = User::orderBy('created_at', 'desc')->take(8)->get();
+        $recentUsers = User::with('subscription')->orderBy('created_at', 'desc')->take(8)->get();
         
         // Get recent news
         $recentNews = NewsContent::orderBy('created_at', 'desc')->take(8)->get();

@@ -195,8 +195,14 @@
             </li>
             <li class="menu-item {{ Request::is('admin/subscriptions*') ? 'active' : '' }}">
                 <a href="{{ route('admin.subscriptions.index') }}">
-                    <i class="fa-solid fa-credit-card"></i>
+                    <i class="fa-solid fa-list-check"></i>
                     <span>Subscription Plans</span>
+                </a>
+            </li>
+            <li class="menu-item {{ Request::is('admin/payment-settings*') ? 'active' : '' }}">
+                <a href="{{ route('admin.payment-settings.index') }}">
+                    <i class="fa-solid fa-credit-card"></i>
+                    <span>Payment Gateway (Flutterwave)</span>
                 </a>
             </li>
             <li class="menu-item {{ Request::is('admin/maintenance-settings*') ? 'active' : '' }}">

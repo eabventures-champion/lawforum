@@ -167,12 +167,11 @@ class NotificationController extends Controller
         ";
 
         try {
-            Mail::send([], [], function ($message) use ($recipientEmail, $subject, $emailHtml) {
+            Mail::html($emailHtml, function ($message) use ($recipientEmail, $subject) {
                 $message->to($recipientEmail)
-                        ->subject($subject)
-                        ->setBody($emailHtml, 'text/html');
+                        ->subject($subject);
             });
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             // Log email failure but proceed so database storage completes
             logger()->error('Failed to send complaint reply email: ' . $e->getMessage());
         }

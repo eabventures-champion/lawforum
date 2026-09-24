@@ -19,4 +19,12 @@ class UserNote extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get comments/discussion on this note.
+     */
+    public function comments()
+    {
+        return $this->hasMany(UserNoteComment::class, 'user_note_id')->orderBy('created_at', 'asc');
+    }
 }

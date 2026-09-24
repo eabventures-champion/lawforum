@@ -570,7 +570,7 @@
             <div class="form-group">
                 <label for="email" class="form-label">E-Mail Address</label>
                 <div class="input-wrapper">
-                    <input id="email" type="email" class="form-control" name="email" value="{{ old('email', Cookie::get('remember_email')) }}" placeholder="admin@admin.com" required autocomplete="email" autofocus>
+                    <input id="email" type="email" class="form-control" name="email" value="{{ old('email', request('email', session('pending_team_invite_email', Cookie::get('remember_email')))) }}" placeholder="admin@admin.com" required autocomplete="email" autofocus>
                     <i class="fa-solid fa-envelope input-icon"></i>
                 </div>
             </div>

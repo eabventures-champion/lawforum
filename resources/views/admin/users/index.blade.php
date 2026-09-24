@@ -175,6 +175,44 @@
         background: rgba(59, 130, 246, 0.3);
         color: #93c5fd;
     }
+
+    /* ── Collaborator & Team Drawer Styling ───────────── */
+    .is-collaborator-row {
+        background: rgba(56, 189, 248, 0.02) !important;
+    }
+    .is-collaborator-row:hover {
+        background: rgba(56, 189, 248, 0.05) !important;
+    }
+    .collaborator-hierarchy-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(56, 189, 248, 0.08);
+        border: 1px solid rgba(56, 189, 248, 0.22);
+        border-radius: 6px;
+        padding: 3px 8px;
+        font-size: 11px;
+        color: #93c5fd;
+        margin-top: 5px;
+        width: fit-content;
+    }
+    .collaborator-hierarchy-tag a {
+        color: #38bdf8;
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+    .collaborator-hierarchy-tag a:hover {
+        color: #7dd3fc;
+    }
+    .btn-toggle-team-drawer {
+        transition: all 0.2s ease;
+    }
+    .btn-toggle-team-drawer:hover {
+        background: rgba(16, 185, 129, 0.22) !important;
+        border-color: rgba(16, 185, 129, 0.5) !important;
+        transform: translateY(-1px);
+    }
 </style>
 
 <div class="page-header">
@@ -266,6 +304,16 @@
                 <a href="{{ route('admin.users.index', array_merge(request()->except(['page']), ['filter' => ''])) }}" class="filter-tab tab-btn {{ !request('filter') ? 'active' : '' }}" data-filter="">
                     <span>All Users</span>
                     <span id="tab-count-all" class="tab-badge-count">{{ $totalAll }}</span>
+                </a>
+                <a href="{{ route('admin.users.index', array_merge(request()->except(['page']), ['filter' => 'account_holders'])) }}" class="filter-tab tab-btn {{ request('filter') === 'account_holders' ? 'active' : '' }}" data-filter="account_holders">
+                    <i class="fa-solid fa-crown" style="font-size: 10px; color: #fbbf24;"></i>
+                    <span>Account Holders</span>
+                    <span id="tab-count-account-holders" class="tab-badge-count">{{ $totalAccountHolders }}</span>
+                </a>
+                <a href="{{ route('admin.users.index', array_merge(request()->except(['page']), ['filter' => 'collaborators'])) }}" class="filter-tab tab-btn {{ request('filter') === 'collaborators' ? 'active' : '' }}" data-filter="collaborators">
+                    <i class="fa-solid fa-user-group" style="font-size: 10px; color: #38bdf8;"></i>
+                    <span>Collaborators</span>
+                    <span id="tab-count-collaborators" class="tab-badge-count">{{ $totalCollaborators }}</span>
                 </a>
                 <a href="{{ route('admin.users.index', array_merge(request()->except(['page']), ['filter' => 'with_phone'])) }}" class="filter-tab tab-btn {{ request('filter') === 'with_phone' ? 'active' : '' }}" data-filter="with_phone">
                     <i class="fa-solid fa-phone" style="font-size: 10px; color: #10b981;"></i>
@@ -410,6 +458,12 @@
                 if (countPhone) countPhone.textContent = data.totalWithPhone;
                 if (countEmail) countEmail.textContent = data.totalEmailOnly;
                 
+                const countAccountHolders = document.getElementById('tab-count-account-holders');
+                if (countAccountHolders && data.totalAccountHolders !== undefined) countAccountHolders.textContent = data.totalAccountHolders;
+
+                const countCollaborators = document.getElementById('tab-count-collaborators');
+                if (countCollaborators && data.totalCollaborators !== undefined) countCollaborators.textContent = data.totalCollaborators;
+
                 const countGhana = document.getElementById('tab-count-ghana');
                 if (countGhana) countGhana.textContent = data.totalGhana;
 
@@ -557,6 +611,20 @@
         }
     });
 
+    // Toggle Team Drawer for Account Holder
+    window.toggleTeamDrawer = function(ownerId) {
+        const drawer = document.getElementById('team-drawer-' + ownerId);
+        const chevron = document.getElementById('chevron-drawer-' + ownerId);
+        if (!drawer) return;
+        if (drawer.style.display === 'none' || !drawer.style.display) {
+            drawer.style.display = 'table-row';
+            if (chevron) chevron.style.transform = 'rotate(180deg)';
+        } else {
+            drawer.style.display = 'none';
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+        }
+    };
+
     function submitBulkDelete() {
         const checkedCheckboxes = document.querySelectorAll('.user-checkbox:checked');
         const ids = Array.from(checkedCheckboxes).map(cb => cb.value);
@@ -631,6 +699,9 @@
                     </label>
                     <label style="display: inline-flex; align-items: center; gap: 8px; color: #fff; font-size: 13px; cursor: pointer; margin-bottom: 0;">
                         <input type="checkbox" name="columns[]" value="subscription_status" checked style="cursor: pointer; width: 15px; height: 15px;"> Subs Status
+                    </label>
+                    <label style="display: inline-flex; align-items: center; gap: 8px; color: #fff; font-size: 13px; cursor: pointer; margin-bottom: 0;">
+                        <input type="checkbox" name="columns[]" value="subscription_plan" checked style="cursor: pointer; width: 15px; height: 15px;"> Subs Plan
                     </label>
                     <label style="display: inline-flex; align-items: center; gap: 8px; color: #fff; font-size: 13px; cursor: pointer; margin-bottom: 0;">
                         <input type="checkbox" name="columns[]" value="created_at" checked style="cursor: pointer; width: 15px; height: 15px;"> Reg Date

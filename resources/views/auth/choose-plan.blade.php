@@ -335,30 +335,35 @@
                     <i class="fa fa-balance-scale"></i>
                 </div>
             </a>
-            <h1 class="brand-name">Welcome to Legals Forum!</h1>
-            <p class="brand-tagline">Choose how you'd like to get started</p>
+            <h1 class="brand-name">{{ $headerTitle ?? 'Welcome to Legals Forum!' }}</h1>
+            @if(!empty($headerSubtitle))
+                <p class="brand-tagline">{{ $headerSubtitle }}</p>
+            @endif
         </div>
 
         <div class="plans-grid">
             <!-- Demo Plan -->
             <div class="plan-card demo">
                 <div class="plan-icon-wrapper">
-                    <i class="fa-solid fa-rocket"></i>
+                    <i class="{{ $demoIcon ?? 'fa-solid fa-rocket' }}"></i>
                 </div>
-                <h3 class="plan-title">Start Free Demo</h3>
-                <p class="plan-subtitle">Full access for 60 days</p>
+                <h3 class="plan-title">{{ $demoTitle ?? 'Start Free Demo' }}</h3>
+                @if(!empty($demoSubtitle))
+                    <p class="plan-subtitle">{{ $demoSubtitle }}</p>
+                @endif
                 
-                <ul class="feature-list">
-                    <li><i class="fa-solid fa-check"></i> <span>Access all sections & content</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Download legal books</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Search case laws</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>15-day extension available</span></li>
-                </ul>
+                @if(!empty($demoFeatures) && count($demoFeatures) > 0)
+                    <ul class="feature-list">
+                        @foreach($demoFeatures as $feature)
+                            <li><i class="fa-solid fa-check"></i> <span>{{ $feature }}</span></li>
+                        @endforeach
+                    </ul>
+                @endif
 
                 <form method="POST" action="/register/activate-demo">
                     @csrf
                     <button type="submit" class="btn btn-primary">
-                        Continue with Demo
+                        {{ $demoButtonText ?? 'Continue with Demo' }}
                     </button>
                 </form>
             </div>
@@ -366,24 +371,44 @@
             <!-- Subscribe Plan -->
             <div class="plan-card subscribe">
                 <div class="plan-icon-wrapper">
-                    <i class="fa-solid fa-crown"></i>
+                    <i class="{{ $subscribeIcon ?? 'fa-solid fa-crown' }}"></i>
                 </div>
-                <h3 class="plan-title">Subscribe Now</h3>
-                <p class="plan-subtitle">Unlimited premium access</p>
+                <h3 class="plan-title">{{ $subscribeTitle ?? 'Subscribe Now' }}</h3>
+                @if(!empty($subscribeSubtitle))
+                    <p class="plan-subtitle">{{ $subscribeSubtitle }}</p>
+                @endif
                 
-                <ul class="feature-list">
-                    <li><i class="fa-solid fa-check"></i> <span>Everything in Demo</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>No time restrictions</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Priority support</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Early access to new features</span></li>
-                </ul>
+                @if(!empty($subscribeFeatures) && count($subscribeFeatures) > 0)
+                    <ul class="feature-list">
+                        @foreach($subscribeFeatures as $feature)
+                            <li><i class="fa-solid fa-check"></i> <span>{{ $feature }}</span></li>
+                        @endforeach
+                    </ul>
+                @endif
 
-                <button type="button" class="btn btn-outline" disabled>
-                    Coming Soon
-                    <div class="tooltip">Subscription plans coming soon</div>
-                </button>
+                @if(isset($subscribeButtonAction) && $subscribeButtonAction === 'link' && !empty($subscribeButtonUrl))
+                    <a href="{{ $subscribeButtonUrl }}" class="btn btn-primary" style="width: 100%; text-decoration: none;">
+                        {{ $subscribeButtonText ?? 'Subscribe Now' }}
+                    </a>
+                @else
+                    <button type="button" class="btn btn-outline" style="width: 100%;">
+                        {{ $subscribeButtonText ?? 'Coming Soon' }}
+                        @if(!empty($subscribeButtonTooltip))
+                            <span class="tooltip">{{ $subscribeButtonTooltip }}</span>
+                        @endif
+                    </button>
+                @endif
             </div>
         </div>
+
+        @if(auth()->check() && auth()->user()->hasVerifiedEmail())
+        <div style="text-align: center; margin-top: 32px;">
+            <a href="{{ route('home') }}" style="color: #94a3b8; font-size: 13.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 500; transition: color 0.2s;" onmouseover="this.style.color='#f3f4f6'" onmouseout="this.style.color='#94a3b8'">
+                <i class="fa-solid fa-arrow-left" style="font-size: 12px;"></i>
+                <span>Return to Dashboard</span>
+            </a>
+        </div>
+        @endif
     </div>
 
 <!--Start of Tawk.to Script-->

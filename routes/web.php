@@ -108,6 +108,19 @@ Route::get('/subscription','UserDashBoardController@subscription_index');
 Route::get('/process/{subscription}', 'UserDashBoardController@process')->name('process');
 Route::get('/accounts/subscription/{subscription}','UserDashBoardController@show_user_subscriptions');
 
+//-------------------------------------------------------TEAM COLLABORATION & SHARED WORKSPACE------------
+Route::get('/team', 'TeamController@index')->name('team.index');
+Route::post('/team/invite', 'TeamController@invite')->name('team.invite');
+Route::post('/team/invites/{id}/resend', 'TeamController@resendInvite')->name('team.invite.resend');
+Route::delete('/team/members/{id}', 'TeamController@removeMember')->name('team.member.remove');
+Route::get('/team/join/{token}', 'TeamController@acceptInvite')->name('team.join');
+Route::post('/team/billing/request', 'TeamController@requestBillingPlan')->name('team.billing.request');
+Route::post('/team/members/{id}/toggle-billing', 'TeamController@toggleBillingPermission')->name('team.member.toggle_billing');
+Route::post('/team/members/{id}/respond-billing-request', 'TeamController@respondBillingRequest')->name('team.member.respond_billing_request');
+
+// Note Collaborative Comments
+Route::post('/notes/{id}/comments', 'UserDashBoardController@add_note_comment')->name('notes.comment.add');
+
 //---------------------------------------------------------------------------END OF DASHBOARD---------------------------------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------SEARCH ENGINE------------------------------------------------------------------------------------------------------
@@ -578,7 +591,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 // Demo mode routes (authenticated, not yet verified)
 Route::middleware('auth')->group(function () {
     Route::get('/register/choose-plan', 'DemoController@choosePlan')->name('register.choose-plan');
-    Route::post('/register/activate-demo', 'DemoController@activateDemo')->name('register.activate-demo');
+    Route::match(['get', 'post'], '/register/activate-demo', 'DemoController@activateDemo')->name('register.activate-demo');
 });
 
 // CUSTOM ADMIN DASHBOARD ROUTES
@@ -692,6 +705,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::post('subscriptions/{subscription}/toggle-status', 'Admin\SubscriptionController@toggleStatus')->name('admin.subscriptions.toggle');
     Route::post('subscriptions/{subscription}/toggle-button', 'Admin\SubscriptionController@toggleButton')->name('admin.subscriptions.toggle-button');
     Route::post('subscriptions/toggle-all-buttons', 'Admin\SubscriptionController@toggleAllButtons')->name('admin.subscriptions.toggle-all-buttons');
+
+    // Payment Gateway (Flutterwave) Settings Management
+    Route::get('payment-settings', 'Admin\PaymentSettingController@index')->name('admin.payment-settings.index');
+    Route::post('payment-settings/update', 'Admin\PaymentSettingController@update')->name('admin.payment-settings.update');
+    Route::post('payment-settings/toggle-mode', 'Admin\PaymentSettingController@toggleMode')->name('admin.payment-settings.toggle-mode');
 
     // Platform Feature Updates & Tours Management
     Route::resource('platform-updates', 'Admin\PlatformUpdateController', ['as' => 'admin']);

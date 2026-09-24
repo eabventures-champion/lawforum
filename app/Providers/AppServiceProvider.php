@@ -29,6 +29,24 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
+        // Dynamically bind active Flutterwave payment gateway keys to configuration
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('payment_settings')) {
+                $pubKey = \App\PaymentSetting::getPublicKey();
+                if (!empty($pubKey)) {
+                    config(['services.flutterwave.public_key' => $pubKey]);
+                }
+                $secKey = \App\PaymentSetting::getSecretKey();
+                if (!empty($secKey)) {
+                    config(['services.flutterwave.secret_key' => $secKey]);
+                }
+                $encKey = \App\PaymentSetting::getEncryptionKey();
+                if (!empty($encKey)) {
+                    config(['services.flutterwave.encryption_key' => $encKey]);
+                }
+            }
+        } catch (\Exception $e) {}
+
         // Share active navigation menus and sidebar ads globally with all views
         view()->composer('*', function ($view) {
             try {

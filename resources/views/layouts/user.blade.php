@@ -1864,6 +1864,22 @@
                         <span>Subscription</span>
                     </a>
                 </li>
+                <li class="menu-item {{ request()->is('team*') ? 'active' : '' }}">
+                    <a href="/team">
+                        <i class="fa-solid fa-users-rectangle"></i>
+                        <span>Team Workspace</span>
+                        @php
+                            $sidebarUser = auth()->user();
+                            $sidebarTeamSub = $sidebarUser ? $sidebarUser->getTeamSubscription() : null;
+                            $sidebarSeats = $sidebarTeamSub ? (int)$sidebarTeamSub->max_users : 1;
+                        @endphp
+                        @if($sidebarUser && $sidebarUser->isInTeam() && $sidebarSeats > 1)
+                            <span class="menu-badge" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa; border-color: rgba(59, 130, 246, 0.4); font-size: 10px; padding: 2px 7px;">
+                                {{ $sidebarSeats }} Seats
+                            </span>
+                        @endif
+                    </a>
+                </li>
 
                 {{-- Additional Menus for Researcher (Chatroom, Marketplace, Jobs) --}}
                 @include('partials._sidebar_additional_menus')

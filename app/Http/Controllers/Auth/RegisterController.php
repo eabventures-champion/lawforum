@@ -144,6 +144,27 @@ class RegisterController extends Controller
      */
     protected function registered(\Illuminate\Http\Request $request, $user)
     {
+        // Check if there is an active pending team invitation for this user
+        $token = session('pending_team_invite_token');
+        $invite = null;
+        if ($token) {
+            $invite = \App\SubscriptionTeamMember::where('invite_token', $token)->where('status', 'pending')->first();
+        }
+        if (!$invite && $user->email) {
+            $invite = \App\SubscriptionTeamMember::where('email', strtolower($user->email))->where('status', 'pending')->first();
+        }
+
+        if ($invite) {
+            $invite->update([
+                'member_id' => $user->id,
+                'status' => 'accepted',
+                'accepted_at' => now(),
+            ]);
+            session()->forget(['pending_team_invite_token', 'pending_team_invite_email']);
+
+            return redirect()->route('team.index')->with('status', 'Congratulations! Your account has been created and you have joined the collaborative research team workspace.');
+        }
+
         session()->flash('new_registration', true);
         return redirect()->route('register.choose-plan');
     }

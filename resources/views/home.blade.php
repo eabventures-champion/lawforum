@@ -2364,17 +2364,23 @@
     @php
         $user = auth()->user();
         $userType = $user->user_type;
-        $isDemo = $user->is_demo_mode;
+        $hasSubscription = $user->hasActiveSubscription();
+        $activeSub = $user->check_subscription ? \App\Subscription::find($user->subscription_id) : $user->getTeamSubscription();
+        $planName = $activeSub ? $activeSub->type : 'Premium';
+        $subExpiryDate = $user->subscription_expiry ? \Carbon\Carbon::parse($user->subscription_expiry) : ($user->getTeamSubscription() && $user->getTeamOwner() ? \Carbon\Carbon::parse($user->getTeamOwner()->subscription_expiry) : null);
+        $subDaysRemaining = $subExpiryDate ? max(0, (int) ceil(now()->diffInDays($subExpiryDate, false))) : 0;
+
+        $isDemo = $hasSubscription ? false : $user->is_demo_mode;
         $demoStarted = $user->demo_started_at;
         $demoUsed = $user->demo_used;
         $demoDays = (int) \App\DemoSetting::get('demo_duration_days', 60);
         $extensionDays = (int) \App\DemoSetting::get('demo_extension_days', 15);
         $totalDemoDays = $demoDays + ($user->demo_extended ? $extensionDays : 0);
         $remaining = $user->demoRemainingDays();
-        $demoActive = $user->isDemoActive();
-        $extensionActive = $user->isDemoExtensionActive();
-        $demoExpired = $demoUsed && !$isDemo && !$demoActive;
-        $hasSubscription = $user->check_subscription && $user->subscription_expiry && \Carbon\Carbon::parse($user->subscription_expiry)->isFuture();
+        $demoActive = $hasSubscription ? false : $user->isDemoActive();
+        $extensionActive = $hasSubscription ? false : $user->isDemoExtensionActive();
+        $demoExpired = $hasSubscription ? false : ($demoUsed && !$isDemo && !$demoActive);
+        $canSwitchToDemo = !$hasSubscription && !$user->demo_used && !$user->is_demo_mode;
         $researcherTypeLabel = $user->researcher_type === 'Other' ? $user->researcher_type_other : $user->researcher_type;
 
         if ($isDemo && $demoStarted) {
@@ -2489,6 +2495,22 @@
                         <span>Subscription</span>
                     </a>
                 </li>
+                <li class="menu-item {{ request()->is('team*') ? 'active' : '' }}">
+                    <a href="/team">
+                        <i class="fa-solid fa-users-rectangle"></i>
+                        <span>Team Workspace</span>
+                        @php
+                            $sidebarUser = auth()->user();
+                            $sidebarTeamSub = $sidebarUser ? $sidebarUser->getTeamSubscription() : null;
+                            $sidebarSeats = $sidebarTeamSub ? (int)$sidebarTeamSub->max_users : 1;
+                        @endphp
+                        @if($sidebarUser && $sidebarUser->isInTeam() && $sidebarSeats > 1)
+                            <span class="menu-badge" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa; border-color: rgba(59, 130, 246, 0.4); font-size: 10px; padding: 2px 7px;">
+                                {{ $sidebarSeats }} Seats
+                            </span>
+                        @endif
+                    </a>
+                </li>
                 {{-- Additional Menus for Researcher (Chatroom, Marketplace, Jobs) --}}
                 @include('partials._sidebar_additional_menus')
 
@@ -2530,7 +2552,24 @@
                                 <span>My Profile</span>
                             </a>
                         </li>
-                        @if($isDemo && $demoStarted)
+                        @if($hasSubscription)
+                        <li class="sidebar-validity-item" style="padding: 10px 12px; margin: 6px 0 8px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 10px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                                <div style="display: flex; align-items: center; gap: 9px;">
+                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(16, 185, 129, 0.18); display: flex; align-items: center; justify-content: center; color: #34d399; font-size: 13px;">
+                                        <i class="fa-solid fa-crown"></i>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 1px;">
+                                        <span style="font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8;">Subscription</span>
+                                        <span style="font-size: 11.5px; font-weight: 700; color: #fff;">{{ $planName }} Plan</span>
+                                    </div>
+                                </div>
+                                <span style="font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 5px; background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);">
+                                    {{ $subDaysRemaining }}d left
+                                </span>
+                            </div>
+                        </li>
+                        @elseif($isDemo && $demoStarted)
                         <li class="sidebar-validity-item" style="padding: 10px 12px; margin: 6px 0 8px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px;">
                             <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
                                 <div style="display: flex; align-items: center; gap: 9px;">
@@ -2557,6 +2596,30 @@
                                     {{ $extensionActive ? 'Extension' : ($demoActive ? 'Active' : 'Expired') }}
                                 </span>
                             </div>
+                        @elseif($canSwitchToDemo)
+                        <li class="sidebar-validity-item" style="padding: 10px 12px; margin: 6px 0 8px; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 10px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                                <div style="display: flex; align-items: center; gap: 9px;">
+                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(59, 130, 246, 0.18); display: flex; align-items: center; justify-content: center; color: #60a5fa; font-size: 13px;">
+                                        <i class="fa-solid fa-rocket"></i>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 1px;">
+                                        <span style="font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8;">Free Trial Available</span>
+                                        <span style="font-size: 11px; font-weight: 600; color: #93c5fd;">{{ $demoDays }} Days Demo</span>
+                                    </div>
+                                </div>
+                                <a href="{{ route('register.choose-plan') }}" style="font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35); white-space: nowrap;">
+                                    Switch
+                                </a>
+                            </div>
+                        </li>
+                        @endif
+                        @if($canSwitchToDemo)
+                        <li>
+                            <a href="{{ route('register.choose-plan') }}" class="sidebar-user-link-item" style="color: #60a5fa; font-weight: 600;">
+                                <i class="fa-solid fa-rocket" style="color: #3b82f6;"></i>
+                                <span>Switch to Demo Package</span>
+                            </a>
                         </li>
                         @endif
                         <li>
@@ -2685,7 +2748,24 @@
                                         <span>My Profile</span>
                                     </a>
                                 </li>
-                                @if($isDemo && $demoStarted)
+                                @if($hasSubscription)
+                                <li style="padding: 10px 14px; margin: 4px 6px 8px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 10px;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                                        <div style="display: flex; align-items: center; gap: 9px;">
+                                            <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(16, 185, 129, 0.18); display: flex; align-items: center; justify-content: center; color: #34d399; font-size: 13px;">
+                                                <i class="fa-solid fa-crown"></i>
+                                            </div>
+                                            <div style="display: flex; flex-direction: column; gap: 1px;">
+                                                <span style="font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8;">Subscription</span>
+                                                <span style="font-size: 11.5px; font-weight: 700; color: #fff;">{{ $planName }} Plan</span>
+                                            </div>
+                                        </div>
+                                        <span style="font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 5px; background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);">
+                                            {{ $subDaysRemaining }}d left
+                                        </span>
+                                    </div>
+                                </li>
+                                @elseif($isDemo && $demoStarted)
                                 <li style="padding: 10px 14px; margin: 4px 6px 8px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px;">
                                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
                                         <div style="display: flex; align-items: center; gap: 9px;">
@@ -2712,6 +2792,30 @@
                                             {{ $extensionActive ? 'Extension' : ($demoActive ? 'Active' : 'Expired') }}
                                         </span>
                                     </div>
+                                @elseif($canSwitchToDemo)
+                                <li style="padding: 10px 14px; margin: 4px 6px 8px; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 10px;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                                        <div style="display: flex; align-items: center; gap: 9px;">
+                                            <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(59, 130, 246, 0.18); display: flex; align-items: center; justify-content: center; color: #60a5fa; font-size: 13px;">
+                                                <i class="fa-solid fa-rocket"></i>
+                                            </div>
+                                            <div style="display: flex; flex-direction: column; gap: 1px;">
+                                                <span style="font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8;">Free Trial Available</span>
+                                                <span style="font-size: 11px; font-weight: 600; color: #93c5fd;">{{ $demoDays }}-Day Free Demo</span>
+                                            </div>
+                                        </div>
+                                        <a href="{{ route('register.choose-plan') }}" style="font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35); white-space: nowrap;">
+                                            Switch
+                                        </a>
+                                    </div>
+                                </li>
+                                @endif
+                                @if($canSwitchToDemo)
+                                <li>
+                                    <a href="{{ route('register.choose-plan') }}" class="profile-dropdown-item" style="color: #60a5fa; font-weight: 600;">
+                                        <i class="fa-solid fa-rocket" style="color: #3b82f6;"></i>
+                                        <span>Switch to Demo Package</span>
+                                    </a>
                                 </li>
                                 @endif
                                 <li>
@@ -2762,6 +2866,24 @@
 
                 <!-- Container for Dashboard Cards & Overview -->
                 <div id="dashboardCardsContainer" class="dashboard-cards-container" {!! request('view') ? 'style="display: none;"' : '' !!}>
+                    @if(session('success'))
+                        <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #a7f3d0; font-size: 14px; font-weight: 600; box-shadow: 0 4px 16px rgba(16, 185, 129, 0.15);">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fa-solid fa-circle-check" style="font-size: 18px; color: #34d399;"></i>
+                                <span>{{ session('success') }}</span>
+                            </div>
+                            <button type="button" onclick="this.parentElement.remove()" style="background: none; border: none; color: #a7f3d0; cursor: pointer; font-size: 18px; line-height: 1; opacity: 0.8;">&times;</button>
+                        </div>
+                    @endif
+                    @if(session('error'))
+                        <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #fca5a5; font-size: 14px; font-weight: 600; box-shadow: 0 4px 16px rgba(239, 68, 68, 0.15);">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fa-solid fa-circle-exclamation" style="font-size: 18px; color: #ef4444;"></i>
+                                <span>{{ session('error') }}</span>
+                            </div>
+                            <button type="button" onclick="this.parentElement.remove()" style="background: none; border: none; color: #fca5a5; cursor: pointer; font-size: 18px; line-height: 1; opacity: 0.8;">&times;</button>
+                        </div>
+                    @endif
                     <!-- Unified Welcome & Account Header (No Card Frame) -->
                     <div class="welcome-account-card">
                         <!-- Left: Welcome Info -->
@@ -2810,7 +2932,19 @@
                             </div>
                             @endif
 
-                            @if($isDemo && $demoStarted)
+                            @if($hasSubscription)
+                            <div class="welcome-meta-divider"></div>
+                            <div class="welcome-meta-item">
+                                <span class="meta-label">Subscription</span>
+                                <div class="meta-value">
+                                    <span class="type-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 100px; font-weight: 700;">
+                                        <i class="fa-solid fa-crown" style="color: #10b981; font-size: 11px;"></i>
+                                        <span>{{ $planName }}</span>
+                                        <span style="opacity: 0.8; font-weight: 600; font-size: 11px;">({{ $subDaysRemaining }}d left)</span>
+                                    </span>
+                                </div>
+                            </div>
+                            @elseif($isDemo && $demoStarted)
                             <div class="welcome-meta-divider"></div>
                             <div class="welcome-meta-item">
                                 <span class="meta-label">Trial Validity</span>
@@ -2839,26 +2973,97 @@
                                     </span>
                                 </div>
                             </div>
-                            @elseif($hasSubscription)
+                            @elseif(!$user->isAdmin())
                             <div class="welcome-meta-divider"></div>
                             <div class="welcome-meta-item">
-                                <span class="meta-label">Subscription</span>
+                                <span class="meta-label">Subscription Status</span>
                                 <div class="meta-value">
-                                    <span class="type-badge" style="background: rgba(16, 185, 129, 0.14); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);">
-                                        <i class="fa-solid fa-circle-check"></i>
-                                        Active Member
-                                    </span>
+                                    @if($canSwitchToDemo)
+                                        <a href="{{ route('register.choose-plan') }}" title="Click to switch to free demo" class="type-badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.35); display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 100px; font-weight: 700; text-decoration: none; transition: all 0.2s;">
+                                            <i class="fa-solid fa-rocket" style="font-size: 10px;"></i>
+                                            <span>Demo Available</span>
+                                        </a>
+                                    @else
+                                        <span class="type-badge" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 100px; font-weight: 700;">
+                                            <i class="fa-solid fa-lock" style="font-size: 10px;"></i>
+                                            <span>No Active Plan</span>
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
                             @endif
                         </div>
 
-                        @if($extensionActive)
+                        @if($hasSubscription)
+                            <div style="width: 100%; margin-top: 14px; display: flex;">
+                                <div class="demo-warning-banner" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #a7f3d0; display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 12px 18px; border-radius: 12px; gap: 12px; flex-wrap: wrap;">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <i class="fa-solid fa-circle-check" style="font-size: 16px; color: #34d399;"></i>
+                                        <span style="font-size: 13.5px; color: #ecfdf5;">Your <strong>{{ $planName }}</strong> subscription is active. Valid until <strong>{{ $subExpiryDate ? $subExpiryDate->format('M j, Y') : '' }}</strong> ({{ $subDaysRemaining }} days remaining).</span>
+                                    </div>
+                                    <a href="{{ url('/subscription') }}" style="color: #34d399; font-size: 12.5px; font-weight: 700; text-decoration: underline;">Manage Plan</a>
+                                </div>
+                            </div>
+                        @elseif($extensionActive)
                             <div style="width: 100%; margin-top: 14px; display: flex;">
                                 <div class="demo-warning-banner extension-warn">
                                     <i class="fa-solid fa-triangle-exclamation" style="font-size: 15px;"></i>
                                     <span>Your main demo period has ended. You have <strong>{{ $remaining }} day{{ $remaining !== 1 ? 's' : '' }}</strong> left in your extension. <a href="{{ url('/subscription') }}">Subscribe to keep full access</a>.</span>
                                 </div>
+                            </div>
+                        @elseif($demoActive)
+                            {{-- Active demo trial --}}
+                        @elseif(!$user->isAdmin())
+                            <div style="width: 100%; margin-top: 14px; display: flex;">
+                                @if($canSwitchToDemo)
+                                    <div class="demo-warning-banner" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.14), rgba(29, 78, 216, 0.08)); border: 1px solid rgba(59, 130, 246, 0.35); color: #bfdbfe; display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 16px 20px; border-radius: 12px; gap: 16px; flex-wrap: wrap; box-shadow: 0 4px 20px rgba(37, 99, 235, 0.15);">
+                                        <div style="display: flex; align-items: center; gap: 14px; flex: 1; min-width: 260px;">
+                                            <div style="width: 42px; height: 42px; border-radius: 50%; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); display: flex; align-items: center; justify-content: center; color: #60a5fa; font-size: 17px; flex-shrink: 0;">
+                                                <i class="fa-solid fa-rocket"></i>
+                                            </div>
+                                            <div>
+                                                <div style="font-size: 14.5px; font-weight: 700; color: #ffffff; margin-bottom: 3px; display: flex; align-items: center; gap: 8px;">
+                                                    <span>Switch to Free Demo Package or Subscribe</span>
+                                                    <span style="font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; background: rgba(59, 130, 246, 0.25); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); text-transform: uppercase;">{{ $demoDays }} Days Free</span>
+                                                </div>
+                                                <div style="font-size: 13px; color: #cbd5e1; line-height: 1.45;">
+                                                    You previously selected "Make Payment" without completing payment. You can return to switch your account to the <strong>{{ $demoDays }}-Day Free Demo</strong> to immediately unlock all platform features, or proceed with a subscription.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                            <a href="{{ route('register.choose-plan') }}" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #ffffff; font-size: 13px; font-weight: 700; padding: 10px 18px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4); transition: transform 0.2s ease;">
+                                                <i class="fa-solid fa-rocket" style="font-size: 12px;"></i>
+                                                <span>Switch to Demo Package</span>
+                                            </a>
+                                            <a href="{{ url('/subscription') }}" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #ffffff; font-size: 13px; font-weight: 600; padding: 10px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;">
+                                                <i class="fa-solid fa-crown" style="font-size: 12px; color: #fbbf24;"></i>
+                                                <span>Make Payment</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="demo-warning-banner" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(185, 28, 28, 0.08)); border: 1px solid rgba(239, 68, 68, 0.35); color: #fca5a5; display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 16px 20px; border-radius: 12px; gap: 16px; flex-wrap: wrap; box-shadow: 0 4px 20px rgba(239, 68, 68, 0.15);">
+                                        <div style="display: flex; align-items: center; gap: 14px; flex: 1; min-width: 260px;">
+                                            <div style="width: 42px; height: 42px; border-radius: 50%; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); display: flex; align-items: center; justify-content: center; color: #f87171; font-size: 17px; flex-shrink: 0;">
+                                                <i class="fa-solid fa-lock"></i>
+                                            </div>
+                                            <div>
+                                                <div style="font-size: 14.5px; font-weight: 700; color: #ffffff; margin-bottom: 3px; display: flex; align-items: center; gap: 8px;">
+                                                    <span>Subscription Required for Full Platform Access</span>
+                                                    <span style="font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; background: rgba(239, 68, 68, 0.25); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); text-transform: uppercase;">Locked</span>
+                                                </div>
+                                                <div style="font-size: 13px; color: #cbd5e1; line-height: 1.45;">
+                                                    This account does not have an active subscription. Subscribe now to unlock <strong>Existing Laws</strong>, <strong>New Laws</strong>, <strong>Case Laws</strong>, <strong>News &amp; Articles</strong>, and <strong>Community Chatrooms</strong>. The <strong>Constitution</strong> remains freely accessible.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a href="{{ url('/subscription') }}" style="background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4); transition: transform 0.2s ease, box-shadow 0.2s ease;">
+                                            <i class="fa-solid fa-crown" style="font-size: 12px;"></i>
+                                            <span>Subscribe to Unlock All</span>
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
                         @elseif($demoExpired || ($demoUsed && !$isDemo))
                             <div style="width: 100%; margin-top: 14px; display: flex;">
@@ -2871,31 +3076,47 @@
                     </div>
 
                     <!-- Community Chatroom & Discussions Hub Card -->
-                    <div class="dashboard-chatroom-card">
+                    <div class="dashboard-chatroom-card" @if(!$homeUserHasAccess) style="border-color: rgba(239, 68, 68, 0.25); background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(13, 20, 38, 0.6));" @endif>
                         <div class="dash-chatroom-main">
-                            <div class="dash-chatroom-icon">
-                                <i class="fa-solid fa-comments"></i>
+                            <div class="dash-chatroom-icon" @if(!$homeUserHasAccess) style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #f87171;" @endif>
+                                <i class="fa-solid {{ $homeUserHasAccess ? 'fa-comments' : 'fa-lock' }}"></i>
                             </div>
                             <div class="dash-chatroom-text">
                                 <h3 class="dash-chatroom-title">
                                     Community Chatrooms & Discussion Threads
+                                    @if(!$homeUserHasAccess)
+                                        <span style="font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); margin-left: 8px; vertical-align: middle;">
+                                            <i class="fa-solid fa-lock" style="font-size: 9px;"></i> Locked
+                                        </span>
+                                    @endif
                                 </h3>
                                 <p class="dash-chatroom-desc">
-                                    Start a topic or join active threads in General, Student, Lawyer, and Researcher chatrooms.
+                                    @if($homeUserHasAccess)
+                                        Start a topic or join active threads in General, Student, Lawyer, and Researcher chatrooms.
+                                    @else
+                                        Chatroom discussions and threads require an active subscription plan to view and participate.
+                                    @endif
                                 </p>
                             </div>
                         </div>
 
                         <div class="dash-chatroom-actions">
-                            <button type="button" onclick="document.getElementById('createChatroomModal').style.display='flex'" class="btn-dash-start-discussion">
-                                <i class="fa-solid fa-plus"></i>
-                                <span>Start a Discussion</span>
-                            </button>
+                            @if($homeUserHasAccess)
+                                <button type="button" onclick="document.getElementById('createChatroomModal').style.display='flex'" class="btn-dash-start-discussion">
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span>Start a Discussion</span>
+                                </button>
 
-                            <a href="/chatroom/{{ $userType ?: 'general' }}" class="btn-dash-open-chatroom">
-                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                <span>Open Chatrooms</span>
-                            </a>
+                                <a href="/chatroom/{{ $userType ?: 'general' }}" class="btn-dash-open-chatroom">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                    <span>Open Chatrooms</span>
+                                </a>
+                            @else
+                                <a href="{{ url('/subscription') }}" class="btn-dash-open-chatroom" style="background: linear-gradient(135deg, #ef4444, #dc2626); border-color: rgba(239, 68, 68, 0.5); color: #ffffff;">
+                                    <i class="fa-solid fa-lock"></i>
+                                    <span>Subscribe to Unlock Chatroom</span>
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -3253,6 +3474,12 @@
                 
                 // Allow Quick Search to navigate directly to homepage
                 if (this.classList.contains('quick-search-btn')) return;
+
+                // If link is locked or points to subscription, navigate directly to subscription page
+                if (this.getAttribute('data-locked') === 'true' || href.indexOf('/subscription') !== -1) {
+                    window.location.href = href;
+                    return;
+                }
 
                 // If it's a dropdown trigger without an active page link, let dropdown open
                 if (this.classList.contains('nav-sub-dropdown-trigger')) return;

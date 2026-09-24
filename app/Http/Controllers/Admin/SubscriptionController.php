@@ -32,20 +32,46 @@ class SubscriptionController extends Controller
     {
         $validated = $request->validate([
             'type' => 'required|string|max:191',
+            'currency' => 'nullable|string|max:10',
             'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
+            'duration_text' => 'nullable|string|max:100',
             'no_downloads' => 'required|integer|min:0',
+            'max_users' => 'required|integer|min:1',
+            'highlight_text' => 'nullable|string|max:191',
+            'badge' => 'nullable|string|max:50',
+            'button_text' => 'nullable|string|max:100',
+            'features' => 'nullable|array',
+            'features.*' => 'nullable|string',
             'general_notes' => 'nullable|string',
             'specific_notes' => 'nullable|string',
-            'badge' => 'nullable|string|max:50',
             'is_popular' => 'nullable|boolean',
             'is_active' => 'nullable|boolean',
             'is_button_disabled' => 'nullable|boolean',
         ]);
 
+        $validated['currency'] = !empty($validated['currency']) ? trim($validated['currency']) : 'GHS';
+        $validated['button_text'] = !empty($validated['button_text']) ? trim($validated['button_text']) : 'Subscribe Now';
         $validated['is_active'] = $request->has('is_active');
         $validated['is_popular'] = $request->has('is_popular');
         $validated['is_button_disabled'] = $request->has('is_button_disabled');
+
+        // Clean features array
+        $rawFeatures = $request->input('features', []);
+        if (is_array($rawFeatures)) {
+            $cleaned = array_values(array_filter(array_map('trim', $rawFeatures), function ($item) {
+                return $item !== '' && $item !== null;
+            }));
+            $validated['features'] = $cleaned;
+            
+            // Keep legacy fields populated for backward compatibility
+            if (empty($validated['general_notes']) && isset($cleaned[0])) {
+                $validated['general_notes'] = $cleaned[0];
+            }
+            if (empty($validated['specific_notes']) && isset($cleaned[1])) {
+                $validated['specific_notes'] = $cleaned[1];
+            }
+        }
 
         // If this plan is marked as popular, clear is_popular on other plans
         if ($validated['is_popular']) {
@@ -73,20 +99,46 @@ class SubscriptionController extends Controller
     {
         $validated = $request->validate([
             'type' => 'required|string|max:191',
+            'currency' => 'nullable|string|max:10',
             'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
+            'duration_text' => 'nullable|string|max:100',
             'no_downloads' => 'required|integer|min:0',
+            'max_users' => 'required|integer|min:1',
+            'highlight_text' => 'nullable|string|max:191',
+            'badge' => 'nullable|string|max:50',
+            'button_text' => 'nullable|string|max:100',
+            'features' => 'nullable|array',
+            'features.*' => 'nullable|string',
             'general_notes' => 'nullable|string',
             'specific_notes' => 'nullable|string',
-            'badge' => 'nullable|string|max:50',
             'is_popular' => 'nullable|boolean',
             'is_active' => 'nullable|boolean',
             'is_button_disabled' => 'nullable|boolean',
         ]);
 
+        $validated['currency'] = !empty($validated['currency']) ? trim($validated['currency']) : 'GHS';
+        $validated['button_text'] = !empty($validated['button_text']) ? trim($validated['button_text']) : 'Subscribe Now';
         $validated['is_active'] = $request->has('is_active');
         $validated['is_popular'] = $request->has('is_popular');
         $validated['is_button_disabled'] = $request->has('is_button_disabled');
+
+        // Clean features array
+        $rawFeatures = $request->input('features', []);
+        if (is_array($rawFeatures)) {
+            $cleaned = array_values(array_filter(array_map('trim', $rawFeatures), function ($item) {
+                return $item !== '' && $item !== null;
+            }));
+            $validated['features'] = $cleaned;
+
+            // Keep legacy fields populated for backward compatibility
+            if (isset($cleaned[0])) {
+                $validated['general_notes'] = $cleaned[0];
+            }
+            if (isset($cleaned[1])) {
+                $validated['specific_notes'] = $cleaned[1];
+            }
+        }
 
         if ($validated['is_popular']) {
             Subscription::where('id', '!=', $subscription->id)

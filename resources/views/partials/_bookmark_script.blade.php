@@ -214,7 +214,11 @@
                     if (res.bookmarked) {
                         btnEl.classList.add('is-bookmarked');
                         if (icon) icon.className = 'fa-solid fa-bookmark';
-                        showBookmarkToast(res.message || 'Section bookmarked successfully!', 'success');
+                        if (res.already_bookmarked) {
+                            showBookmarkToast(res.message, 'info');
+                        } else {
+                            showBookmarkToast(res.message || 'Section bookmarked successfully!', 'success');
+                        }
                     } else {
                         btnEl.classList.remove('is-bookmarked');
                         if (icon) icon.className = 'fa-regular fa-bookmark';
@@ -299,6 +303,19 @@
                             var icon = btn.querySelector('i');
                             if (icon) icon.className = 'fa-solid fa-bookmark';
                         });
+                    });
+                }
+                if (res && res.bookmarks) {
+                    res.bookmarks.forEach(function(b) {
+                        if (b.act_section) {
+                            var escapedSec = b.act_section.replace(/["\\]/g, '\\$&');
+                            var btns = document.querySelectorAll('.btn-bookmark-toggle[data-act-section="' + escapedSec + '"]');
+                            btns.forEach(function(btn) {
+                                btn.classList.add('is-bookmarked');
+                                var icon = btn.querySelector('i');
+                                if (icon) icon.className = 'fa-solid fa-bookmark';
+                            });
+                        }
                     });
                 }
             }

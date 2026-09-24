@@ -26,6 +26,17 @@ class ChatroomController extends Controller
      */
     public function index(Request $request, $category = 'all')
     {
+        if (auth()->check() && !auth()->user()->hasFullAccess()) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An active subscription is required to access the Community Chatrooms.',
+                    'redirect' => url('/subscription')
+                ], 403);
+            }
+            return redirect('/subscription')->with('error', 'An active subscription is required to access the Community Chatrooms.');
+        }
+
         if (!in_array($category, $this->validCategories)) {
             $category = 'all';
         }
@@ -79,6 +90,17 @@ class ChatroomController extends Controller
      */
     public function show(Request $request, $category, $slug)
     {
+        if (auth()->check() && !auth()->user()->hasFullAccess()) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An active subscription is required to access the Community Chatrooms.',
+                    'redirect' => url('/subscription')
+                ], 403);
+            }
+            return redirect('/subscription')->with('error', 'An active subscription is required to access the Community Chatrooms.');
+        }
+
         $room = Chatroom::where('slug', $slug)->with(['user', 'messages.user'])->firstOrFail();
 
         $sessionId = $request->session()->getId();
@@ -126,6 +148,17 @@ class ChatroomController extends Controller
      */
     public function store(Request $request)
     {
+        if (auth()->check() && !auth()->user()->hasFullAccess()) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An active subscription is required to publish discussions.',
+                    'redirect' => url('/subscription')
+                ], 403);
+            }
+            return redirect('/subscription')->with('error', 'An active subscription is required to publish discussions.');
+        }
+
         $isGuest = !auth()->check();
 
         if ($isGuest) {
@@ -518,6 +551,17 @@ class ChatroomController extends Controller
      */
     public function postMessage(Request $request, $id)
     {
+        if (auth()->check() && !auth()->user()->hasFullAccess()) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An active subscription is required to participate in discussions.',
+                    'redirect' => url('/subscription')
+                ], 403);
+            }
+            return redirect('/subscription')->with('error', 'An active subscription is required to participate in discussions.');
+        }
+
         $room = Chatroom::findOrFail($id);
 
         $user = auth()->user();

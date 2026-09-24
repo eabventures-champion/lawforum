@@ -62,14 +62,177 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Check if user currently has an active, valid paid subscription.
+     * Check if user currently has an active, valid paid subscription (own or via team).
      */
     public function hasActiveSubscription()
     {
         if ($this->isAdmin()) {
             return true;
         }
-        return $this->check_subscription && $this->subscription_expiry && Carbon::parse($this->subscription_expiry)->isFuture();
+        if ($this->check_subscription && $this->subscription_expiry && Carbon::parse($this->subscription_expiry)->isFuture()) {
+            return true;
+        }
+        // Check if user is an accepted member of a team whose owner has an active subscription
+        $membership = $this->teamMembership()->with('owner')->first();
+        if ($membership && $membership->owner && $membership->owner->hasActiveSubscription()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Team members invited by this user (if this user is the primary subscriber).
+     */
+    public function teamMembers()
+    {
+        return $this->hasMany(SubscriptionTeamMember::class, 'owner_id');
+    }
+
+    /**
+     * Team membership if this user joined someone else's subscription.
+     */
+    public function teamMembership()
+    {
+        return $this->hasOne(SubscriptionTeamMember::class, 'member_id')->where('status', 'accepted');
+    }
+
+    /**
+     * Get the team owner User object for this user (self if owner, or owner model if member).
+     */
+    public function getTeamOwner()
+    {
+        if ($this->isTeamOwner()) {
+            return $this;
+        }
+        $membership = $this->teamMembership()->with('owner')->first();
+        if ($membership && $membership->owner) {
+            return $membership->owner;
+        }
+        return null;
+    }
+
+    /**
+     * The subscription plan assigned to the user.
+     */
+    public function subscription()
+    {
+        return $this->belongsTo(Subscription::class, 'subscription_id');
+    }
+
+    /**
+     * Get the subscription plan model for this user (own or team owner's).
+     */
+    public function getSubscriptionPlan()
+    {
+        if ($this->relationLoaded('subscription') && $this->subscription) {
+            return $this->subscription;
+        }
+        if ($this->subscription_id) {
+            return Subscription::find($this->subscription_id);
+        }
+        return $this->getTeamSubscription();
+    }
+
+    /**
+     * Get the subscription plan name / kind (e.g. Starter, Essential, Premium, Unlimited).
+     */
+    public function getSubscriptionPlanName(): ?string
+    {
+        $sub = $this->getSubscriptionPlan();
+        return $sub ? $sub->type : null;
+    }
+
+    /**
+     * Get the active Subscription model for this user (own or team owner's).
+     */
+    public function getTeamSubscription()
+    {
+        if ($this->subscription_id) {
+            return Subscription::find($this->subscription_id);
+        }
+        $owner = $this->getTeamOwner();
+        if ($owner && $owner->subscription_id) {
+            return Subscription::find($owner->subscription_id);
+        }
+        return null;
+    }
+
+    /**
+     * Check if user is the primary owner of a multi-user team plan.
+     */
+    public function isTeamOwner(): bool
+    {
+        if (!$this->check_subscription || !$this->subscription_id) {
+            return false;
+        }
+        $sub = Subscription::find($this->subscription_id);
+        return $sub && (int) $sub->max_users > 1;
+    }
+
+    /**
+     * Check if user is an accepted member of someone else's team.
+     */
+    public function isTeamMember(): bool
+    {
+        return $this->teamMembership()->exists();
+    }
+
+    /**
+     * Check if user belongs to any multi-user collaborative team (as owner or member).
+     */
+    public function isInTeam(): bool
+    {
+        return $this->isTeamOwner() || $this->isTeamMember();
+    }
+
+    /**
+     * Check if user is authorized to manage or purchase subscriptions for their workspace.
+     * Solo users & Team Owners have full billing authority.
+     * Collaborators require explicit permission (can_manage_billing) granted by the Account Holder.
+     */
+    public function canManageTeamBilling(): bool
+    {
+        if ($this->isAdmin() || $this->isTeamOwner()) {
+            return true;
+        }
+
+        if ($this->isTeamMember()) {
+            $membership = $this->teamMembership;
+            return (bool) ($membership && $membership->can_manage_billing);
+        }
+
+        return true;
+    }
+
+    /**
+     * Get array of all user IDs in this user's team workspace.
+     * Returns [$this->id] if solo user.
+     */
+    public function getTeamUserIds(): array
+    {
+        if ($this->isTeamOwner()) {
+            $memberIds = $this->teamMembers()
+                ->where('status', 'accepted')
+                ->whereNotNull('member_id')
+                ->pluck('member_id')
+                ->toArray();
+            return array_values(array_unique(array_merge([$this->id], $memberIds)));
+        }
+
+        if ($this->isTeamMember()) {
+            $membership = $this->teamMembership()->with('owner.teamMembers')->first();
+            if ($membership && $membership->owner) {
+                $owner = $membership->owner;
+                $peerIds = $owner->teamMembers()
+                    ->where('status', 'accepted')
+                    ->whereNotNull('member_id')
+                    ->pluck('member_id')
+                    ->toArray();
+                return array_values(array_unique(array_merge([$owner->id, $this->id], $peerIds)));
+            }
+        }
+
+        return [$this->id];
     }
 
     /**

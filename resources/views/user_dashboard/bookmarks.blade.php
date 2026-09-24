@@ -194,6 +194,7 @@
         border-left: 4px solid #f59e0b;
         box-sizing: border-box;
         position: relative;
+        overflow: hidden;
     }
     .bookmark-card[data-type="constitution"] { border-left-color: #3b82f6; }
     .bookmark-card[data-type="case_law"] { border-left-color: #10b981; }
@@ -247,21 +248,87 @@
         opacity: 0.9;
     }
 
+    .bookmark-doc-source {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 8px;
+        padding: 5px 10px;
+        margin-top: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    .bookmark-doc-source:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.12);
+    }
+    .bookmark-doc-source i {
+        color: #60a5fa;
+        font-size: 11px;
+        flex-shrink: 0;
+    }
+    .bookmark-doc-source span {
+        font-size: 11.5px;
+        color: #94a3b8;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        line-height: 1.35;
+    }
+
+    .collaborator-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3.5px 7px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+        max-width: 95px;
+        overflow: hidden;
+        line-height: 1.2;
+        flex-shrink: 1;
+        min-width: 0;
+    }
+    .collaborator-pill .collab-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+        max-width: 70px;
+    }
+    .collaborator-pill.pill-team {
+        background: rgba(16, 185, 129, 0.12);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+    .collaborator-pill.pill-mine {
+        background: rgba(59, 130, 246, 0.12);
+        color: #60a5fa;
+        border: 1px solid rgba(59, 130, 246, 0.25);
+    }
+
     .btn-view-bookmark {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: 5px;
         background: rgba(59, 130, 246, 0.1);
         border: 1px solid rgba(59, 130, 246, 0.25);
         color: #60a5fa;
-        padding: 6px 13px;
+        padding: 6px 10px;
         border-radius: 8px;
-        font-size: 12px;
+        font-size: 11.5px;
         font-weight: 600;
         text-decoration: none;
         cursor: pointer;
         transition: all 0.2s ease;
         white-space: nowrap;
+        flex-shrink: 0;
     }
     .btn-view-bookmark:hover {
         background: #3b82f6;
@@ -270,26 +337,101 @@
         box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
 
-    .btn-delete-bookmark {
+    .bookmark-card .btn-delete-bookmark {
+        width: 30px;
+        height: 30px;
+        padding: 0;
         display: inline-flex;
         align-items: center;
-        gap: 5px;
+        justify-content: center;
         background: rgba(239, 68, 68, 0.08);
         border: 1px solid rgba(239, 68, 68, 0.2);
         color: #f87171;
-        padding: 6px 11px;
         border-radius: 8px;
-        font-size: 12px;
+        font-size: 11.5px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s ease;
         white-space: nowrap;
+        flex-shrink: 0;
     }
-    .btn-delete-bookmark:hover {
+    .bookmark-card .btn-delete-bookmark:hover {
         background: #ef4444;
         color: #fff;
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    /* Modal Footer Buttons */
+    .bm-footer-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 7px !important;
+        padding: 8px 16px !important;
+        border-radius: 8px !important;
+        font-size: 12.5px !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        white-space: nowrap !important;
+        text-decoration: none !important;
+        box-sizing: border-box !important;
+        line-height: 1.4 !important;
+        width: auto !important;
+        height: auto !important;
+        min-height: 34px !important;
+    }
+    .bm-footer-btn i {
+        font-size: 12.5px !important;
+    }
+    .bm-btn-note {
+        background: rgba(59, 130, 246, 0.12) !important;
+        border: 1px solid rgba(59, 130, 246, 0.3) !important;
+        color: #60a5fa !important;
+    }
+    .bm-btn-note:hover {
+        background: #3b82f6 !important;
+        border-color: #3b82f6 !important;
+        color: #fff !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35) !important;
+    }
+    .bm-btn-danger {
+        background: rgba(239, 68, 68, 0.12) !important;
+        border: 1px solid rgba(239, 68, 68, 0.3) !important;
+        color: #f87171 !important;
+    }
+    .bm-btn-danger:hover {
+        background: #ef4444 !important;
+        border-color: #ef4444 !important;
+        color: #fff !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35) !important;
+    }
+    .bm-btn-primary {
+        background: rgba(245, 158, 11, 0.15) !important;
+        border: 1px solid rgba(245, 158, 11, 0.35) !important;
+        color: #f59e0b !important;
+    }
+    .bm-btn-primary:hover {
+        background: #f59e0b !important;
+        border-color: #f59e0b !important;
+        color: #0b1120 !important;
+        font-weight: 700 !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35) !important;
+    }
+    .bm-btn-secondary {
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        color: #cbd5e1 !important;
+    }
+    .bm-btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.15) !important;
+        border-color: rgba(255, 255, 255, 0.25) !important;
+        color: #fff !important;
+        transform: translateY(-1px) !important;
     }
 
     /* 1. CARDS / GRID VIEW */
@@ -403,11 +545,16 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    #bookmarksListDashboard.view-linear .bookmark-doc-title {
+    #bookmarksListDashboard.view-linear .bookmark-doc-title,
+    #bookmarksListDashboard.view-linear .bookmark-doc-source {
         font-size: 11.5px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        margin-top: 2px;
+        padding: 0;
+        background: transparent;
+        border: none;
     }
     #bookmarksListDashboard.view-linear .bookmark-card-footer {
         border-top: none;
@@ -691,6 +838,20 @@
     <div class="bookmarks-filter-bar">
         <input type="text" id="bookmarkSearchInput" class="bookmarks-search-input" placeholder="Search by section, act title, or keyword..." onkeyup="filterBookmarks()">
         
+        @if(isset($isTeam) && $isTeam)
+            <div class="team-filter-group" style="display: inline-flex; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); padding: 3px; border-radius: 9px; gap: 4px; flex-shrink: 0;">
+                <button type="button" class="team-toggle-btn active" id="btnBmFilterAll" onclick="setBookmarkOwnerFilter('all')" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;">
+                    All ({{ count($bookmarks) }})
+                </button>
+                <button type="button" class="team-toggle-btn" id="btnBmFilterMine" onclick="setBookmarkOwnerFilter('mine')" style="background: transparent; color: var(--text-secondary); border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                    <i class="fa-solid fa-user" style="font-size: 10px; margin-right: 4px;"></i> Mine ({{ $bookmarks->where('user_id', auth()->id())->count() }})
+                </button>
+                <button type="button" class="team-toggle-btn" id="btnBmFilterTeam" onclick="setBookmarkOwnerFilter('team')" style="background: transparent; color: var(--text-secondary); border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                    <i class="fa-solid fa-users" style="font-size: 10px; margin-right: 4px;"></i> Team ({{ $bookmarks->where('user_id', '!=', auth()->id())->count() }})
+                </button>
+            </div>
+        @endif
+
         {{-- Custom Dropdown: Categories --}}
         <div class="custom-filter-dropdown" id="dropdownBmCategoryContainer">
             <input type="hidden" id="bookmarkCategoryFilter" value="all">
@@ -759,16 +920,25 @@
                 } elseif ($docType === 'pre_1992') {
                     $badgeClass = 'badge-pre-1992';
                     $badgeIcon = 'fa-solid fa-scroll';
-                    $typeLabel = $bookmark->act_group ?: 'Existing Law';
+                    $typeLabel = ($bookmark->act_group && strtolower($bookmark->act_group) !== 'general') ? $bookmark->act_group : 'Existing Law';
+                } else {
+                    if (in_array(strtolower($typeLabel), ['general', 'acts of parliament', 'legislation', 'act'])) {
+                        $typeLabel = 'Legislation';
+                    }
                 }
             @endphp
-            <div class="bookmark-card" id="bookmark-card-{{ $bookmark->id }}" data-type="{{ $docType }}" data-search="{{ strtolower($bookmark->act_section . ' ' . $bookmark->act_title . ' ' . $bookmark->act_group) }}">
+            @php
+                $isMyBookmark = ($bookmark->user_id === auth()->id());
+                $bAuthor = $bookmark->user ? trim($bookmark->user->name . ' ' . $bookmark->user->lname) : 'Team Member';
+            @endphp
+            <div class="bookmark-card" id="bookmark-card-{{ $bookmark->id }}" data-type="{{ $docType }}" data-owner="{{ $isMyBookmark ? 'mine' : 'team' }}" data-search="{{ strtolower($bookmark->act_section . ' ' . $bookmark->act_title . ' ' . $bookmark->act_group . ' ' . $bAuthor) }}">
                 <div class="bookmark-card-main-wrapper">
                     <div class="bookmark-card-top">
                         <span class="bookmark-type-badge {{ $badgeClass }}">
                             <i class="{{ $badgeIcon }}"></i>
                             <span>{{ $typeLabel }}</span>
                         </span>
+
                         <span class="bookmark-date" title="Bookmarked on {{ $bookmark->created_at }}">
                             <i class="fa-regular fa-clock"></i>
                             {{ date("M j, Y", strtotime($bookmark->created_at)) }}
@@ -779,9 +949,9 @@
                         <div class="bookmark-section-title" onclick="openBookmarkPreviewModal({{ $bookmark->id }})" title="Click to view section">
                             {{ $bookmark->act_section }}
                         </div>
-                        <div class="bookmark-doc-title" title="{{ $bookmark->act_title }}">
-                            <i class="fa-regular fa-file-lines mr-1" style="opacity: 0.6;"></i>
-                            {{ $bookmark->act_title }}
+                        <div class="bookmark-doc-source" onclick="openBookmarkPreviewModal({{ $bookmark->id }})" title="{{ $bookmark->act_title }}">
+                            <i class="fa-regular fa-file-lines"></i>
+                            <span>{{ $bookmark->act_title }}</span>
                         </div>
                     </div>
                 </div>
@@ -794,9 +964,34 @@
                     <button type="button" class="btn-view-bookmark" onclick="openBookmarkPreviewModal({{ $bookmark->id }})">
                         <i class="fa-solid fa-book-open"></i> View Section
                     </button>
-                    <button type="button" class="btn-delete-bookmark" onclick="deleteBookmarkDashboard({{ $bookmark->id }})">
-                        <i class="fa-solid fa-trash-can"></i> Remove
-                    </button>
+
+                    <div style="display: flex; align-items: center; gap: 6px; margin-left: auto; min-width: 0; flex-shrink: 1;">
+                        @if(isset($isTeam) && $isTeam)
+                            @if($isMyBookmark)
+                                <span class="collaborator-pill pill-mine" title="Saved by you">
+                                    <i class="fa-solid fa-user" style="font-size: 10px; flex-shrink: 0;"></i>
+                                    <span class="collab-name">Mine</span>
+                                </span>
+                                <button type="button" class="btn-delete-bookmark" onclick="deleteBookmarkDashboard({{ $bookmark->id }})" title="Remove Bookmark">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            @else
+                                <span class="collaborator-pill pill-team" title="Shared by {{ $bAuthor }}">
+                                    <i class="fa-solid fa-users" style="font-size: 10px; flex-shrink: 0;"></i>
+                                    <span class="collab-name">{{ $bAuthor }}</span>
+                                </span>
+                                @if(auth()->user()->isTeamOwner())
+                                    <button type="button" class="btn-delete-bookmark" onclick="deleteBookmarkDashboard({{ $bookmark->id }})" title="Remove Team Bookmark">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                @endif
+                            @endif
+                        @else
+                            <button type="button" class="btn-delete-bookmark" onclick="deleteBookmarkDashboard({{ $bookmark->id }})" title="Remove Bookmark">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        @endif
+                    </div>
                 </div>
             </div>
         @empty
@@ -915,7 +1110,7 @@
                 <textarea id="bmNoteInput" placeholder="Write your legal observations, analysis, or personal study notes on this section..." style="width: 100%; min-height: 100px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 10px; padding: 12px 14px; color: #fff; font-size: 14px; line-height: 1.6; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
 
                 <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px;">
-                    <button type="button" class="btn-delete-bookmark" onclick="closeBmNoteDrawer()" style="background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); color: #cbd5e1;">
+                    <button type="button" class="bm-footer-btn bm-btn-secondary" onclick="closeBmNoteDrawer()" style="padding: 6px 14px !important; min-height: auto !important; font-size: 12px !important;">
                         Cancel
                     </button>
                     <button type="button" id="btnSaveBmNote" class="btn-save-inline" onclick="saveBmNote()">
@@ -926,19 +1121,19 @@
         </div>
 
         <div class="bm-modal-footer">
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <button type="button" id="btnBmToggleNote" class="btn-view-bookmark" onclick="toggleBmNoteDrawer()" style="background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.35); color: #60a5fa; font-weight: 600;">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <button type="button" id="btnBmToggleNote" class="bm-footer-btn bm-btn-note" onclick="toggleBmNoteDrawer()">
                     <i class="fa-solid fa-pen-to-square"></i> Add Note
                 </button>
-                <button type="button" id="bmModalDeleteBtn" class="btn-delete-bookmark" onclick="deleteActiveModalBookmark()">
+                <button type="button" id="bmModalDeleteBtn" class="bm-footer-btn bm-btn-danger" onclick="deleteActiveModalBookmark()">
                     <i class="fa-solid fa-trash-can"></i> Remove Bookmark
                 </button>
             </div>
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <a id="bmModalFullReaderLink" href="#" target="_blank" class="btn-view-bookmark" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.35); color: #f59e0b;">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <a id="bmModalFullReaderLink" href="#" target="_blank" class="bm-footer-btn bm-btn-primary">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Reader
                 </a>
-                <button type="button" class="btn-view-bookmark" onclick="closeBookmarkModal()" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.15); color: #e2e8f0;">
+                <button type="button" class="bm-footer-btn bm-btn-secondary" onclick="closeBookmarkModal()">
                     Close
                 </button>
             </div>
@@ -1070,6 +1265,16 @@ function openBookmarkPreviewModal(bookmarkId) {
                 fullReaderLink.style.display = 'inline-flex';
             } else {
                 fullReaderLink.style.display = 'none';
+            }
+
+            // Remove bookmark button permission check
+            const deleteBtn = document.getElementById('bmModalDeleteBtn');
+            if (deleteBtn) {
+                if (res.can_delete === false) {
+                    deleteBtn.style.display = 'none';
+                } else {
+                    deleteBtn.style.display = 'inline-flex';
+                }
             }
         } else {
             titleEl.textContent = 'Unable to Load Section';
@@ -1242,20 +1447,41 @@ function saveBmNote() {
     });
 }
 
+window.currentBookmarkOwnerFilter = 'all';
+
+function setBookmarkOwnerFilter(owner) {
+    window.currentBookmarkOwnerFilter = owner;
+    document.querySelectorAll('.team-toggle-btn').forEach(function(btn) {
+        btn.classList.remove('active');
+        btn.style.background = 'transparent';
+        btn.style.color = 'var(--text-secondary)';
+    });
+    var activeBtn = document.getElementById('btnBmFilter' + owner.charAt(0).toUpperCase() + owner.slice(1));
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.style.background = 'rgba(59, 130, 246, 0.2)';
+        activeBtn.style.color = '#60a5fa';
+    }
+    filterBookmarks();
+}
+
 function filterBookmarks() {
     var searchVal = (document.getElementById('bookmarkSearchInput').value || '').toLowerCase().trim();
     var catVal = document.getElementById('bookmarkCategoryFilter').value;
+    var ownerVal = window.currentBookmarkOwnerFilter || 'all';
     var cards = document.querySelectorAll('.bookmark-card');
     var visibleCount = 0;
 
     cards.forEach(function(card) {
         var cardType = card.getAttribute('data-type');
         var cardSearch = card.getAttribute('data-search') || '';
+        var cardOwner = card.getAttribute('data-owner') || 'mine';
 
         var matchesCategory = (catVal === 'all' || cardType === catVal);
         var matchesSearch = (!searchVal || cardSearch.indexOf(searchVal) !== -1);
+        var matchesOwner = (ownerVal === 'all' || cardOwner === ownerVal);
 
-        if (matchesCategory && matchesSearch) {
+        if (matchesCategory && matchesSearch && matchesOwner) {
             card.style.display = (document.getElementById('bookmarksListDashboard').classList.contains('view-linear')) ? 'flex' : 'flex';
             visibleCount++;
         } else {

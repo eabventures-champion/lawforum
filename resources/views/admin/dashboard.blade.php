@@ -200,17 +200,43 @@
                                 </div>
                             </td>
                             <td>
-                                @if($user->check_subscription && $user->subscription_expiry >= \Carbon\Carbon::today())
-                                    <span class="badge badge-success" style="display: inline-flex; align-items: center; gap: 5px;">
-                                        <i class="fa-solid fa-circle-check" style="font-size: 10px;"></i> Active
-                                    </span>
-                                    <div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">
-                                        Expires {{ \Carbon\Carbon::parse($user->subscription_expiry)->format('M d, Y') }}
+                                @php
+                                    $recentPlan = $user->getSubscriptionPlan();
+                                    $recentPlanName = $recentPlan ? $recentPlan->type : null;
+                                    $isUserActive = ($user->check_subscription && $user->subscription_expiry >= \Carbon\Carbon::today()) || $user->hasActiveSubscription();
+                                @endphp
+                                @if($isUserActive)
+                                    <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                                        <span class="badge badge-success" style="display: inline-flex; align-items: center; gap: 5px;">
+                                            <i class="fa-solid fa-circle-check" style="font-size: 10px;"></i> Active
+                                        </span>
+                                        @if($recentPlanName)
+                                            <span class="badge" style="font-size: 10.5px; padding: 2px 7px; border-radius: 4px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); display: inline-flex; align-items: center; gap: 4px; font-weight: 600;">
+                                                <i class="fa-solid fa-crown" style="font-size: 9px; color: #fbbf24;"></i> {{ $recentPlanName }}
+                                            </span>
+                                        @endif
                                     </div>
+                                    @if($user->subscription_expiry)
+                                        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">
+                                            Expires {{ \Carbon\Carbon::parse($user->subscription_expiry)->format('M d, Y') }}
+                                        </div>
+                                    @endif
                                 @else
-                                    <span class="badge badge-danger" style="display: inline-flex; align-items: center; gap: 5px;">
-                                        <i class="fa-solid fa-circle-xmark" style="font-size: 10px;"></i> Inactive
-                                    </span>
+                                    <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                                        <span class="badge badge-danger" style="display: inline-flex; align-items: center; gap: 5px;">
+                                            <i class="fa-solid fa-circle-xmark" style="font-size: 10px;"></i> Inactive
+                                        </span>
+                                        @if($recentPlanName)
+                                            <span class="badge" style="font-size: 10.5px; padding: 2px 6px; border-radius: 4px; background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid rgba(255, 255, 255, 0.1); display: inline-flex; align-items: center; gap: 4px;">
+                                                <i class="fa-solid fa-crown" style="font-size: 9px; opacity: 0.6;"></i> {{ $recentPlanName }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                    @if($user->subscription_expiry)
+                                        <div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">
+                                            Expired {{ \Carbon\Carbon::parse($user->subscription_expiry)->format('M d, Y') }}
+                                        </div>
+                                    @endif
                                 @endif
                             </td>
                             <td>
@@ -329,6 +355,7 @@
                     <tr style="border-bottom: 1px solid var(--border-color); background: rgba(255,255,255,0.02);">
                         <th style="padding: 12px 16px; color: var(--text-secondary); font-size: 11px; font-weight: 600; text-transform: uppercase;">Name</th>
                         <th style="padding: 12px 16px; color: var(--text-secondary); font-size: 11px; font-weight: 600; text-transform: uppercase;">Email</th>
+                        <th style="padding: 12px 16px; color: var(--text-secondary); font-size: 11px; font-weight: 600; text-transform: uppercase;">Plan</th>
                         <th style="padding: 12px 16px; color: var(--text-secondary); font-size: 11px; font-weight: 600; text-transform: uppercase;">Country</th>
                         <th style="padding: 12px 16px; color: var(--text-secondary); font-size: 11px; font-weight: 600; text-transform: uppercase;">Expiry Date</th>
                     </tr>
@@ -338,6 +365,16 @@
                         <tr style="border-bottom: 1px solid var(--border-color);">
                             <td style="padding: 12px 16px; color: #fff; font-size: 14px;">{{ $subscriber->name }} {{ $subscriber->lname }}</td>
                             <td style="padding: 12px 16px; color: var(--text-secondary); font-size: 13px;">{{ $subscriber->email }}</td>
+                            <td style="padding: 12px 16px;">
+                                @php $plan = $subscriber->getSubscriptionPlanName(); @endphp
+                                @if($plan)
+                                    <span class="badge" style="font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); display: inline-flex; align-items: center; gap: 4px; font-weight: 600;">
+                                        <i class="fa-solid fa-crown" style="font-size: 10px; color: #fbbf24;"></i> {{ $plan }}
+                                    </span>
+                                @else
+                                    <span style="color: var(--text-secondary); font-size: 12px;">Standard</span>
+                                @endif
+                            </td>
                             <td style="padding: 12px 16px; color: var(--text-secondary); font-size: 13px;">{{ $subscriber->country ?? 'N/A' }}</td>
                             <td style="padding: 12px 16px; color: #10b981; font-size: 13px; font-weight: 500;">
                                 {{ \Carbon\Carbon::parse($subscriber->subscription_expiry)->format('Y-m-d') }}
@@ -345,7 +382,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" style="padding: 32px 16px; text-align: center; color: var(--text-secondary);">
+                            <td colspan="5" style="padding: 32px 16px; text-align: center; color: var(--text-secondary);">
                                 No active subscribers found at this moment.
                             </td>
                         </tr>

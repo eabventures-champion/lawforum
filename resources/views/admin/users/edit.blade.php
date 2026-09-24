@@ -73,6 +73,21 @@
             </div>
 
             <div class="form-group">
+                <label for="subscription_id" class="form-label">Subscription Plan</label>
+                <select id="subscription_id" name="subscription_id" class="form-control">
+                    <option value="">-- No Plan Assigned --</option>
+                    @if(isset($subscriptions))
+                        @foreach($subscriptions as $sub)
+                            <option value="{{ $sub->id }}" {{ old('subscription_id', $user->subscription_id) == $sub->id ? 'selected' : '' }}>
+                                {{ $sub->type }} ({{ $sub->currency }} {{ number_format($sub->price, 2) }} &bull; {{ $sub->duration }} days)
+                            </option>
+                        @endforeach
+                    @endif
+                </select>
+                @error('subscription_id') <small style="color: var(--danger-color);">{{ $message }}</small> @enderror
+            </div>
+
+            <div class="form-group">
                 <label for="subscription_expiry" class="form-label">Subscription Expiration Date</label>
                 <input type="date" id="subscription_expiry" name="subscription_expiry" class="form-control" value="{{ old('subscription_expiry', $user->subscription_expiry ? \Carbon\Carbon::parse($user->subscription_expiry)->format('Y-m-d') : '') }}">
                 @error('subscription_expiry') <small style="color: var(--danger-color);">{{ $message }}</small> @enderror

@@ -157,6 +157,120 @@
         opacity: 0.9;
     }
 
+    .note-doc-source {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 8px;
+        padding: 5px 10px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    .note-doc-source:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.12);
+    }
+    .note-doc-source i {
+        color: #60a5fa;
+        font-size: 11px;
+        flex-shrink: 0;
+    }
+    .note-doc-source span {
+        font-size: 11.5px;
+        color: #94a3b8;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        line-height: 1.35;
+    }
+
+    .collaborator-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3.5px 9px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+        line-height: 1.2;
+    }
+    .collaborator-pill.pill-team {
+        background: rgba(16, 185, 129, 0.12);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+    .collaborator-pill.pill-mine {
+        background: rgba(59, 130, 246, 0.12);
+        color: #60a5fa;
+        border: 1px solid rgba(59, 130, 246, 0.25);
+    }
+
+    /* Compact Download Capsule */
+    .compact-download-group {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border-color);
+        border-radius: 7px;
+        padding: 2px;
+        gap: 1px;
+        transition: all 0.2s ease;
+    }
+    .compact-download-group:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+    .compact-dl-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 25px;
+        height: 24px;
+        border-radius: 5px;
+        font-size: 12px;
+        text-decoration: none;
+        transition: all 0.18s ease;
+    }
+    .compact-dl-btn.dl-pdf {
+        color: #f87171;
+    }
+    .compact-dl-btn.dl-pdf:hover {
+        background: rgba(239, 68, 68, 0.22);
+        color: #fca5a5;
+        transform: scale(1.08);
+    }
+    .compact-dl-btn.dl-word {
+        color: #60a5fa;
+    }
+    .compact-dl-btn.dl-word:hover {
+        background: rgba(59, 130, 246, 0.22);
+        color: #93c5fd;
+        transform: scale(1.08);
+    }
+    .compact-dl-divider {
+        width: 1px;
+        height: 14px;
+        background: rgba(255, 255, 255, 0.1);
+        margin: 0 1px;
+    }
+    .btn-delete-compact {
+        color: #ef4444 !important;
+        border-color: rgba(239, 68, 68, 0.25) !important;
+        background: rgba(239, 68, 68, 0.06) !important;
+    }
+    .btn-delete-compact:hover {
+        background: rgba(239, 68, 68, 0.22) !important;
+        border-color: rgba(239, 68, 68, 0.45) !important;
+        color: #fca5a5 !important;
+        transform: translateY(-1px);
+    }
+
     .note-quote-box {
         background: rgba(245, 158, 11, 0.06);
         border-left: 3px solid rgba(245, 158, 11, 0.4);
@@ -279,12 +393,7 @@
         margin-bottom: 3px;
     }
     #notesListDashboard.view-grid .note-doc-subtitle {
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-bottom: 8px;
+        display: none !important;
     }
     #notesListDashboard.view-grid .note-quote-box {
         display: -webkit-box;
@@ -301,12 +410,42 @@
     }
     #notesListDashboard.view-grid .note-card-footer {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 6px;
+        flex-direction: column;
+        gap: 7px;
         padding-top: 10px;
         border-top: 1px solid rgba(255, 255, 255, 0.06);
         min-width: 0;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    #notesListDashboard.view-grid .note-footer-actions-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        min-width: 0;
+    }
+    #notesListDashboard.view-grid .note-footer-btns-left {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        min-width: 0;
+        flex-shrink: 0;
+    }
+    #notesListDashboard.view-grid .note-footer-btns-right {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+    #notesListDashboard.view-grid .note-footer-shared-row {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        padding-top: 2px;
     }
     #notesListDashboard.view-grid .note-linear-date {
         display: none;
@@ -413,6 +552,9 @@
         min-width: 0;
         color: #cbd5e1;
     }
+    #notesListDashboard.view-linear .note-doc-source {
+        display: none !important;
+    }
     #notesListDashboard.view-linear .note-card-footer {
         border-top: none;
         padding-top: 0;
@@ -421,6 +563,31 @@
         align-items: center;
         gap: 8px;
         margin-left: auto;
+    }
+    #notesListDashboard.view-linear .note-footer-actions-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    #notesListDashboard.view-linear .note-footer-btns-left {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+    }
+    #notesListDashboard.view-linear .note-footer-btns-right {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+    }
+    #notesListDashboard.view-linear .note-footer-shared-row {
+        display: flex;
+        align-items: center;
+        order: -1;
+    }
+    #notesListDashboard.view-linear .collaborator-pill {
+        max-width: 140px;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     #notesListDashboard.view-linear .note-linear-date {
         display: none;
@@ -817,9 +984,11 @@
             -webkit-line-clamp: 2 !important;
         }
         #notesListDashboard .note-doc-subtitle {
-            font-size: 12px !important;
-            white-space: normal !important;
-            -webkit-line-clamp: 2 !important;
+            display: none !important;
+        }
+        #notesListDashboard .note-doc-source {
+            display: flex !important;
+            margin-bottom: 6px !important;
         }
         #notesListDashboard .note-quote-box {
             white-space: normal !important;
@@ -833,6 +1002,12 @@
         #notesListDashboard .note-card-footer {
             border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
             padding-top: 10px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 7px !important;
+            width: 100% !important;
+        }
+        #notesListDashboard .note-footer-actions-row {
             display: flex !important;
             justify-content: space-between !important;
             align-items: center !important;
@@ -898,6 +1073,20 @@
     <!-- Filter and Search Controls -->
     <div class="notes-filter-bar">
         <input type="text" class="notes-search-input" id="searchNotes" placeholder="Search by note, citation, or legal title..." oninput="filterNotes()">
+
+        @if(isset($isTeam) && $isTeam)
+            <div class="team-filter-group" style="display: inline-flex; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); padding: 3px; border-radius: 9px; gap: 4px; flex-shrink: 0;">
+                <button type="button" class="team-toggle-btn active" id="btnNoteFilterAll" onclick="setNoteOwnerFilter('all')" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;">
+                    All ({{ count($notes) }})
+                </button>
+                <button type="button" class="team-toggle-btn" id="btnNoteFilterMine" onclick="setNoteOwnerFilter('mine')" style="background: transparent; color: var(--text-secondary); border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                    <i class="fa-solid fa-user" style="font-size: 10px; margin-right: 4px;"></i> Mine ({{ $notes->where('user_id', auth()->id())->count() }})
+                </button>
+                <button type="button" class="team-toggle-btn" id="btnNoteFilterTeam" onclick="setNoteOwnerFilter('team')" style="background: transparent; color: var(--text-secondary); border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                    <i class="fa-solid fa-users" style="font-size: 10px; margin-right: 4px;"></i> Team ({{ $notes->where('user_id', '!=', auth()->id())->count() }})
+                </button>
+            </div>
+        @endif
 
         {{-- Custom Dropdown: Documents --}}
         <div class="custom-filter-dropdown" id="dropdownDocTypeContainer">
@@ -1008,19 +1197,31 @@
 
                 $mainTitle = $note->article_section ?: $note->document_title;
                 $subTitle = ($note->article_section && $note->document_title) ? $note->document_title : '';
+                $isMyNote = ($note->user_id === auth()->id());
+                $noteAuthor = $note->user ? trim($note->user->name . ' ' . $note->user->lname) : 'Team Member';
             @endphp
             <div class="note-dashboard-card"
                  data-color="{{ $note->note_color ?? 'yellow' }}"
                  data-type="{{ $note->document_type }}"
-                 data-search="{{ strtolower($note->note_content . ' ' . $note->highlighted_text . ' ' . $note->article_section . ' ' . $note->document_title) }}"
+                 data-owner="{{ $isMyNote ? 'mine' : 'team' }}"
+                 data-search="{{ strtolower($note->note_content . ' ' . $note->highlighted_text . ' ' . $note->article_section . ' ' . $note->document_title . ' ' . $noteAuthor) }}"
                  id="noteCard{{ $note->id }}">
 
                 <div class="note-card-main-wrapper">
                     <div class="note-card-top">
-                        <span class="note-type-badge {{ $badgeClass }}">
-                            <i class="fa-solid {{ $docIcon }}"></i>
-                            <span>{{ $badgeText }}</span>
-                        </span>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span class="note-type-badge {{ $badgeClass }}">
+                                <i class="fa-solid {{ $docIcon }}"></i>
+                                <span>{{ $badgeText }}</span>
+                            </span>
+
+                            @if($note->comments && $note->comments->count() > 0)
+                                <span style="background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.3); padding: 2px 7px; border-radius: 5px; font-size: 10.5px; font-weight: 700;" title="{{ $note->comments->count() }} comment(s)">
+                                    <i class="fa-solid fa-comments"></i> {{ $note->comments->count() }}
+                                </span>
+                            @endif
+                        </div>
+
                         <span class="note-date" title="{{ $note->created_at ? $note->created_at->format('M j, Y \a\t g:i A') : '' }}">
                             <i class="fa-regular fa-clock"></i>
                             {{ $note->created_at ? $note->created_at->format('M j, Y') : '' }}
@@ -1040,6 +1241,13 @@
                             @endif
                         </div>
 
+                        @if($subTitle)
+                            <div class="note-doc-source" onclick="openNotePreviewModal({{ $note->id }})" title="{{ $subTitle }}">
+                                <i class="fa-regular fa-file-lines"></i>
+                                <span>{{ html_entity_decode($subTitle, ENT_QUOTES, 'UTF-8') }}</span>
+                            </div>
+                        @endif
+
                         <div class="note-linear-desc-row">
                             @if($note->highlighted_text)
                                 <div class="note-quote-box" onclick="openNotePreviewModal({{ $note->id }})" title="Click to view full note">
@@ -1053,18 +1261,20 @@
                             </div>
                         </div>
 
-                        {{-- Quick Inline Edit Box --}}
-                        <div class="note-quick-edit-container" id="noteQuickEditContainer{{ $note->id }}">
-                            <textarea class="note-quick-edit-textarea" id="noteQuickEditTextarea{{ $note->id }}">{{ $note->note_content }}</textarea>
-                            <div class="note-quick-edit-actions">
-                                <button type="button" class="btn-save-inline" onclick="saveQuickEditNote({{ $note->id }})">
-                                    <i class="fa-solid fa-check mr-1"></i> Save
-                                </button>
-                                <button type="button" class="btn-cancel-inline" onclick="cancelQuickEditNote({{ $note->id }})">
-                                    Cancel
-                                </button>
+                        {{-- Quick Inline Edit Box (only for author) --}}
+                        @if($isMyNote)
+                            <div class="note-quick-edit-container" id="noteQuickEditContainer{{ $note->id }}">
+                                <textarea class="note-quick-edit-textarea" id="noteQuickEditTextarea{{ $note->id }}">{{ $note->note_content }}</textarea>
+                                <div class="note-quick-edit-actions">
+                                    <button type="button" class="btn-save-inline" onclick="saveQuickEditNote({{ $note->id }})">
+                                        <i class="fa-solid fa-check mr-1"></i> Save
+                                    </button>
+                                    <button type="button" class="btn-cancel-inline" onclick="cancelQuickEditNote({{ $note->id }})">
+                                        Cancel
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
 
@@ -1074,29 +1284,60 @@
                         {{ $note->created_at ? $note->created_at->format('M j, Y') : '' }}
                     </span>
 
-                    <div style="display: flex; gap: 4px; align-items: center; min-width: 0;">
-                        <button type="button" class="btn-view-note" onclick="openNotePreviewModal({{ $note->id }})" title="View Full Note">
-                            <i class="fa-solid fa-book-open"></i> View
-                        </button>
-                        <button type="button" class="btn-action-note" onclick="openNoteEditModal({{ $note->id }})" title="Edit in Modal" style="color: #60a5fa; font-weight: 600;">
-                            <i class="fa-solid fa-pen-to-square"></i> Edit
-                        </button>
-                        <button type="button" class="btn-action-note btn-icon-square" onclick="startQuickEditNote({{ $note->id }})" title="Quick Inline Edit">
-                            <i class="fa-solid fa-bolt"></i>
-                        </button>
+                    {{-- Actions and Compact Downloads Row --}}
+                    <div class="note-footer-actions-row">
+                        <div class="note-footer-btns-left">
+                            @if($isMyNote)
+                                <button type="button" class="btn-view-note" onclick="openNotePreviewModal({{ $note->id }})" title="View Full Note">
+                                    <i class="fa-solid fa-book-open"></i> View
+                                </button>
+                                <button type="button" class="btn-action-note" onclick="openNoteEditModal({{ $note->id }})" title="Edit in Modal" style="color: #60a5fa; font-weight: 600;">
+                                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </button>
+                                <button type="button" class="btn-action-note btn-icon-square" onclick="startQuickEditNote({{ $note->id }})" title="Quick Inline Edit">
+                                    <i class="fa-solid fa-bolt"></i>
+                                </button>
+                            @else
+                                <button type="button" class="btn-view-note" onclick="openNotePreviewModal({{ $note->id }})" title="View & Discuss">
+                                    <i class="fa-solid fa-comments"></i> View & Discuss
+                                </button>
+                            @endif
+                        </div>
+
+                        <div class="note-footer-btns-right">
+                            {{-- Compact Download Capsule (PDF & Word) --}}
+                            <div class="compact-download-group">
+                                <a href="{{ route('notes.download.pdf', $note->id) }}" class="compact-dl-btn dl-pdf" title="Download as PDF">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </a>
+                                <span class="compact-dl-divider"></span>
+                                <a href="{{ route('notes.download.word', $note->id) }}" class="compact-dl-btn dl-word" title="Download as Word (.doc)">
+                                    <i class="fa-solid fa-file-word"></i>
+                                </a>
+                            </div>
+
+                            @if($isMyNote || (auth()->check() && auth()->user()->isTeamOwner()))
+                                <button type="button" class="btn-action-note btn-icon-square btn-delete-compact" onclick="deleteNoteDashboard({{ $note->id }})" title="Delete Note">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            @endif
+                        </div>
                     </div>
 
-                    <div style="display: flex; gap: 4px; align-items: center;">
-                        <a href="{{ route('notes.download.pdf', $note->id) }}" class="btn-action-note btn-icon-square" title="Download as PDF">
-                            <i class="fa-solid fa-file-pdf" style="color: #f87171;"></i>
-                        </a>
-                        <a href="{{ route('notes.download.word', $note->id) }}" class="btn-action-note btn-icon-square" title="Download as Word (.doc)">
-                            <i class="fa-solid fa-file-word" style="color: #60a5fa;"></i>
-                        </a>
-                        <button type="button" class="btn-action-note btn-icon-square" style="color: #ef4444;" onclick="deleteNoteDashboard({{ $note->id }})" title="Delete Note">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>
+                    {{-- Shared By / Creator on Next Line --}}
+                    @if(isset($isTeam) && $isTeam)
+                        <div class="note-footer-shared-row">
+                            @if($isMyNote)
+                                <span class="collaborator-pill pill-mine" title="Created by you">
+                                    <i class="fa-solid fa-user"></i> Mine
+                                </span>
+                            @else
+                                <span class="collaborator-pill pill-team" title="Shared by {{ $noteAuthor }}">
+                                    <i class="fa-solid fa-users"></i> Shared by {{ $noteAuthor }}
+                                </span>
+                            @endif
+                        </div>
+                    @endif
                 </div>
             </div>
         @empty
@@ -1138,6 +1379,9 @@
                     <span id="noteModalBadge" class="note-type-badge badge-constitution">
                         <i id="noteModalBadgeIcon" class="fa-solid fa-landmark"></i>
                         <span id="noteModalBadgeText">Constitution</span>
+                    </span>
+                    <span id="noteModalAuthorBadge" style="display: none; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 700;">
+                        <i class="fa-solid fa-users mr-1"></i> <span id="noteModalAuthorText"></span>
                     </span>
                     <span id="noteModalDate" class="note-date">
                         <i class="fa-regular fa-clock"></i>
@@ -1186,12 +1430,35 @@
                     </div>
                     <div id="noteModalContextHtml" style="color: #cbd5e1; font-size: 14.5px; line-height: 1.8; max-height: 240px; overflow-y: auto; background: rgba(0,0,0,0.2); padding: 14px 18px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.04);"></div>
                 </div>
+
+                {{-- Team Collaboration & Discussion Comments --}}
+                <div id="noteModalDiscussionWrapper" style="margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #a78bfa; display: flex; align-items: center; gap: 7px;">
+                            <i class="fa-solid fa-comments"></i> Team Discussion & Notes
+                            <span id="noteModalCommentCountBadge" style="background: rgba(167, 139, 250, 0.2); color: #c4b5fd; padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 700;">0</span>
+                        </div>
+                    </div>
+
+                    {{-- Comments Feed --}}
+                    <div id="noteModalCommentsList" style="display: flex; flex-direction: column; gap: 10px; max-height: 220px; overflow-y: auto; margin-bottom: 14px; padding-right: 4px;">
+                        {{-- Injected dynamically via JS --}}
+                    </div>
+
+                    {{-- Add Comment Box --}}
+                    <div style="display: flex; gap: 8px; align-items: flex-start;">
+                        <textarea id="noteCommentInput" placeholder="Add a collaborative note or reply to team members..." style="flex: 1; min-height: 52px; max-height: 100px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 9px; padding: 10px 12px; color: #f8fafc; font-size: 13.5px; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
+                        <button type="button" id="btnPostNoteComment" onclick="postNoteComment()" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); border: none; color: #fff; padding: 12px 18px; border-radius: 9px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: opacity 0.2s ease;">
+                            <i class="fa-solid fa-paper-plane"></i> Send
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="note-modal-footer">
             <div style="display: flex; gap: 8px; align-items: center;">
-                <button type="button" class="btn-action-note" onclick="openNoteEditModalFromActive()" style="padding: 7px 14px; background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.35); color: #93c5fd; font-weight: 600;">
+                <button type="button" id="noteModalEditBtn" class="btn-action-note" onclick="openNoteEditModalFromActive()" style="padding: 7px 14px; background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.35); color: #93c5fd; font-weight: 600;">
                     <i class="fa-solid fa-pen-to-square mr-1"></i> Edit Note
                 </button>
                 <a id="noteModalPdfLink" href="#" class="btn-action-note" style="padding: 7px 12px; background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.3); color: #f87171;">
@@ -1357,6 +1624,11 @@
         contextWrapper.style.display = 'none';
         loader.style.display = 'block';
         contentWrapper.style.display = 'none';
+        const authorBadgeEl = document.getElementById('noteModalAuthorBadge');
+        if (authorBadgeEl) authorBadgeEl.style.display = 'none';
+        renderNoteComments([]);
+        const commentInputEl = document.getElementById('noteCommentInput');
+        if (commentInputEl) commentInputEl.value = '';
         backdrop.classList.add('active');
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
@@ -1384,6 +1656,27 @@
                 docTitleEl.textContent = res.document_title || '';
                 dateText.textContent = res.created_at || '';
                 noteTextEl.textContent = res.note_content || '';
+
+                // Author Badge
+                const authorBadge = document.getElementById('noteModalAuthorBadge');
+                const authorText = document.getElementById('noteModalAuthorText');
+                if (res.author_name) {
+                    if (authorBadge && authorText) {
+                        authorText.textContent = res.is_me ? 'My Note' : 'Shared by ' + res.author_name;
+                        authorBadge.style.display = 'inline-flex';
+                    }
+                } else if (authorBadge) {
+                    authorBadge.style.display = 'none';
+                }
+
+                // Edit / Delete buttons conditional on ownership
+                const editBtn = document.getElementById('noteModalEditBtn');
+                const deleteBtn = document.getElementById('noteModalDeleteBtn');
+                if (editBtn) editBtn.style.display = res.is_me ? 'inline-flex' : 'none';
+                if (deleteBtn) deleteBtn.style.display = res.is_me ? 'inline-flex' : 'none';
+
+                // Render Comments
+                renderNoteComments(res.comments || []);
 
                 if (res.highlighted_text && res.highlighted_text.trim()) {
                     quoteEl.textContent = '"' + res.highlighted_text + '"';
@@ -1691,11 +1984,126 @@
         });
     }
 
+    // ====== TEAM COLLABORATION: COMMENTS & OWNER FILTER ======
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function renderNoteComments(comments) {
+        const listEl = document.getElementById('noteModalCommentsList');
+        const badgeEl = document.getElementById('noteModalCommentCountBadge');
+        if (!listEl) return;
+
+        const count = comments ? comments.length : 0;
+        if (badgeEl) badgeEl.textContent = count;
+
+        if (!comments || comments.length === 0) {
+            listEl.innerHTML = '<div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 14px 0; font-style: italic;">No team discussion yet. Start the conversation below!</div>';
+            return;
+        }
+
+        listEl.innerHTML = comments.map(c => `
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 9px; padding: 10px 14px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                    <span style="font-weight: 700; font-size: 12.5px; color: ${c.is_me ? '#93c5fd' : '#34d399'};">
+                        <i class="fa-solid fa-user-circle mr-1"></i> ${escapeHtml(c.author_name)} ${c.is_me ? '<span style="font-size: 10px; opacity: 0.7; font-weight: normal;">(You)</span>' : ''}
+                    </span>
+                    <span style="font-size: 11px; color: var(--text-muted);">${c.created_at || ''}</span>
+                </div>
+                <div style="font-size: 13.5px; color: #e2e8f0; line-height: 1.5; white-space: pre-wrap;">${escapeHtml(c.comment)}</div>
+            </div>
+        `).join('');
+
+        listEl.scrollTop = listEl.scrollHeight;
+    }
+
+    function postNoteComment() {
+        if (!currentActiveNoteId) return;
+        const input = document.getElementById('noteCommentInput');
+        const commentText = input ? input.value.trim() : '';
+        if (!commentText) return;
+
+        const btn = document.getElementById('btnPostNoteComment');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+        fetch('/notes/' + currentActiveNoteId + '/comments', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ comment: commentText })
+        })
+        .then(res => res.json())
+        .then(res => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send';
+
+            if (res && res.success && res.comment) {
+                input.value = '';
+                if (!cachedNotesData[currentActiveNoteId]) cachedNotesData[currentActiveNoteId] = {};
+                if (!cachedNotesData[currentActiveNoteId].comments) cachedNotesData[currentActiveNoteId].comments = [];
+
+                res.comment.is_me = true;
+                cachedNotesData[currentActiveNoteId].comments.push(res.comment);
+                renderNoteComments(cachedNotesData[currentActiveNoteId].comments);
+
+                // Update card comments count in DOM if available
+                const card = document.getElementById('noteCard' + currentActiveNoteId);
+                if (card) {
+                    let cardComments = card.querySelector('[title*="comment(s)"]');
+                    if (cardComments) {
+                        cardComments.innerHTML = `<i class="fa-solid fa-comments"></i> ${cachedNotesData[currentActiveNoteId].comments.length}`;
+                    }
+                }
+
+                if (typeof showToast === 'function') showToast('Collaborative note posted!', 'success');
+            } else {
+                alert(res.message || 'Unable to post comment.');
+            }
+        })
+        .catch(err => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send';
+            alert('Network error posting comment.');
+        });
+    }
+
+    window.currentNoteOwnerFilter = 'all';
+
+    function setNoteOwnerFilter(owner) {
+        window.currentNoteOwnerFilter = owner;
+        document.querySelectorAll('.team-toggle-btn').forEach(function(btn) {
+            btn.classList.remove('active');
+            btn.style.background = 'transparent';
+            btn.style.color = 'var(--text-secondary)';
+        });
+        var activeBtn = document.getElementById('btnNoteFilter' + owner.charAt(0).toUpperCase() + owner.slice(1));
+        if (activeBtn) {
+            activeBtn.classList.add('active');
+            activeBtn.style.background = 'rgba(59, 130, 246, 0.2)';
+            activeBtn.style.color = '#60a5fa';
+        }
+        filterNotes();
+    }
+
     // ====== FILTER & SEARCH ======
     function filterNotes() {
         const searchVal = (document.getElementById('searchNotes').value || '').toLowerCase().trim();
         const docType = document.getElementById('filterDocType').value;
         const color = document.getElementById('filterColor').value;
+        const ownerVal = window.currentNoteOwnerFilter || 'all';
         const cards = document.querySelectorAll('.note-dashboard-card');
         let visibleCount = 0;
 
@@ -1703,6 +2111,7 @@
             const cardType = card.getAttribute('data-type');
             const cardColor = card.getAttribute('data-color');
             const cardSearch = card.getAttribute('data-search') || '';
+            const cardOwner = card.getAttribute('data-owner') || 'mine';
 
             let matchType = false;
             if (docType === 'all') {
@@ -1715,8 +2124,9 @@
 
             const matchColor = (color === 'all' || cardColor === color);
             const matchSearch = (!searchVal || cardSearch.indexOf(searchVal) !== -1);
+            const matchOwner = (ownerVal === 'all' || cardOwner === ownerVal);
 
-            if (matchType && matchColor && matchSearch) {
+            if (matchType && matchColor && matchSearch && matchOwner) {
                 card.style.display = (document.getElementById('notesListDashboard').classList.contains('view-linear')) ? 'flex' : 'flex';
                 visibleCount++;
             } else {
@@ -1732,6 +2142,7 @@
 
     function resetNoteFilters() {
         document.getElementById('searchNotes').value = '';
+        setNoteOwnerFilter('all');
         selectCustomFilter('filterDocType', 'all', 'All Documents', 'labelDocType', 'dropdownDocTypeMenu');
         selectCustomFilter('filterColor', 'all', 'All Colors', 'labelColor', 'dropdownColorMenu');
         filterNotes();

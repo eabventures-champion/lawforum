@@ -44,4 +44,10 @@ return [
         ],
     ],
 
+    'flutterwave' => [
+        'public_key' => env('FLUTTERWAVE_PUBLIC_KEY', 'FLWPUBK-8f9fbb57646670b5149ef0af2fd24834-X'),
+        'secret_key' => env('FLUTTERWAVE_SECRET_KEY', ''),
+        'encryption_key' => env('FLUTTERWAVE_ENCRYPTION_KEY', ''),
+    ],
+
 ];

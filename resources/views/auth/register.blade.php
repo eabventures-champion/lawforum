@@ -371,6 +371,14 @@
             <p class="brand-tagline">Join Legals Forum to download legal books & search case laws</p>
         </div>
 
+        <!-- Status Alerts -->
+        @if (session('status'))
+            <div style="background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 14px 18px; margin-bottom: 24px; color: #93c5fd; font-size: 13.5px; display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-circle-info" style="color: #60a5fa; font-size: 16px; flex-shrink: 0;"></i>
+                <span>{{ session('status') }}</span>
+            </div>
+        @endif
+
         <!-- Error Alerts -->
         @if ($errors->any())
             <div class="error-alert">
@@ -437,7 +445,7 @@
                 <div class="form-group full-width">
                     <label for="email" class="form-label">E-Mail Address</label>
                     <div class="input-wrapper">
-                        <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="john.doe@example.com" required autocomplete="email">
+                        <input id="email" type="email" class="form-control" name="email" value="{{ old('email', request('email', session('pending_team_invite_email'))) }}" placeholder="john.doe@example.com" required autocomplete="email">
                         <i class="fa-solid fa-envelope input-icon"></i>
                     </div>
                 </div>
