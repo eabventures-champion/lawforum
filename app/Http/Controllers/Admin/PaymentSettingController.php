@@ -71,10 +71,6 @@ class PaymentSettingController extends Controller
         // Write directly into .env
         PaymentSetting::syncToEnv();
 
-        try {
-            Artisan::call('config:clear');
-        } catch (\Exception $e) {}
-
         $modeLabel = ($mode === 'live') ? 'LIVE (Production)' : 'TEST (Sandbox)';
 
         return redirect()->route('admin.payment-settings.index')
@@ -86,6 +82,10 @@ class PaymentSettingController extends Controller
      */
     public function toggleMode(Request $request)
     {
+        if ($request->isMethod('get')) {
+            return redirect()->route('admin.payment-settings.index');
+        }
+
         $currentMode = PaymentSetting::getMode();
         $targetMode = ($currentMode === 'live') ? 'test' : 'live';
 
@@ -103,10 +103,6 @@ class PaymentSettingController extends Controller
 
         PaymentSetting::set('flutterwave_mode', $targetMode);
         PaymentSetting::syncToEnv();
-
-        try {
-            Artisan::call('config:clear');
-        } catch (\Exception $e) {}
 
         $label = ($targetMode === 'live') ? 'LIVE (Production)' : 'TEST (Sandbox)';
         $msg = "Flutterwave environment switched to {$label} and synced to .env successfully!";

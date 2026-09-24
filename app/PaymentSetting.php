@@ -142,6 +142,7 @@ class PaymentSetting extends Model
         }
 
         $content = file_get_contents($envPath);
+        $original = $content;
 
         foreach ($values as $key => $val) {
             $val = trim((string)$val);
@@ -155,6 +156,10 @@ class PaymentSetting extends Model
             } else {
                 $content = rtrim($content) . "\n{$key}={$val}\n";
             }
+        }
+
+        if ($content === $original) {
+            return true;
         }
 
         file_put_contents($envPath, $content);

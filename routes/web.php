@@ -709,7 +709,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     // Payment Gateway (Flutterwave) Settings Management
     Route::get('payment-settings', 'Admin\PaymentSettingController@index')->name('admin.payment-settings.index');
     Route::post('payment-settings/update', 'Admin\PaymentSettingController@update')->name('admin.payment-settings.update');
-    Route::post('payment-settings/toggle-mode', 'Admin\PaymentSettingController@toggleMode')->name('admin.payment-settings.toggle-mode');
+    Route::match(['get', 'post'], 'payment-settings/toggle-mode', 'Admin\PaymentSettingController@toggleMode')->name('admin.payment-settings.toggle-mode');
 
     // Platform Feature Updates & Tours Management
     Route::resource('platform-updates', 'Admin\PlatformUpdateController', ['as' => 'admin']);

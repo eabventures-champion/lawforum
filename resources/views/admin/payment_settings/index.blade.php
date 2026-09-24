@@ -19,13 +19,10 @@
         </span>
 
         <!-- Quick 1-Click Alternate Mode Button -->
-        <form action="{{ route('admin.payment-settings.toggle-mode') }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to alternate to {{ $mode === 'live' ? 'Test (Sandbox)' : 'Live (Production)' }} mode? This will instantly sync your .env file.');">
-            @csrf
-            <button type="submit" class="btn" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; {{ $mode === 'live' ? 'background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); color: #fbbf24;' : 'background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399;' }}">
-                <i class="fa-solid fa-repeat"></i>
-                Switch to {{ $mode === 'live' ? 'Test Mode' : 'Live Mode' }}
-            </button>
-        </form>
+        <button type="button" id="quickToggleModeBtn" onclick="togglePaymentMode()" class="btn" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; {{ $mode === 'live' ? 'background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); color: #fbbf24;' : 'background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399;' }}">
+            <i class="fa-solid fa-repeat"></i>
+            <span>Switch to {{ $mode === 'live' ? 'Test Mode' : 'Live Mode' }}</span>
+        </button>
 
         <a href="{{ route('admin.subscriptions.index') }}" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-primary); text-decoration: none; font-size: 13px; font-weight: 600;">
             <i class="fa-solid fa-list-check"></i> Manage Plans
@@ -320,6 +317,46 @@
             icon.classList.remove('fa-eye-slash');
             icon.classList.add('fa-eye');
         }
+    }
+
+    function togglePaymentMode() {
+        const isLive = '{{ $mode }}' === 'live';
+        const targetLabel = isLive ? 'Test (Sandbox)' : 'Live (Production)';
+
+        if (!confirm('Are you sure you want to alternate to ' + targetLabel + ' mode? This will sync your .env file.')) {
+            return;
+        }
+
+        const btn = document.getElementById('quickToggleModeBtn');
+        btn.disabled = true;
+        btn.style.opacity = '0.7';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Switching...';
+
+        fetch('{{ route("admin.payment-settings.toggle-mode") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(async response => {
+            const data = await response.json();
+            if (!response.ok || !data.success) {
+                alert(data.message || 'Error alternating mode.');
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.innerHTML = '<i class="fa-solid fa-repeat"></i> Switch to ' + (isLive ? 'Test Mode' : 'Live Mode');
+                return;
+            }
+            window.location.href = '{{ route("admin.payment-settings.index") }}';
+        })
+        .catch(() => {
+            // Smoothly redirect after slight delay
+            setTimeout(() => {
+                window.location.href = '{{ route("admin.payment-settings.index") }}';
+            }, 800);
+        });
     }
 </script>
 @endsection
